@@ -11,17 +11,55 @@ class Equation(Scene):
         self.play(TransformFromCopy(t1[1], t2[1]))
         self.wait()
 
-class Quintic01(Scene):
+class Quintic02(Scene):
     def construct(self):
 
-        e1a = r" =  x^5"
-        e1b = r" + ax^4"
-        e1c = r" + bx^3"
-        e1d = r" + cx^2"
-        e1e = r" + dx"
-        e1f = r" + e"
+        def hide_chars(chars):
+            for char in chars:
+                char.set_color(BLACK)
 
-        e1 = rf"y {e1a}{e1b}{e1c}{e1d}{e1e}{e1f}"
+        Y = MathTex(r'y^1\ ')
+        E1 = MathTex(r'=\ 1x^5', r'+\ ax^4', r'+\ bx^3', r'+\ cx^2', r'+\ dx^1', r'+\ ex^0')
+        E3 = MathTex(r'=\ 1z^5', r'+\ 0z^4', r'+\ pz^3', r'+\ qz^2', r'+\ rz^1', r'+\ sz^0')
+
+        hide_chars([
+            Y[0][1],
+            E1[0][1], E1[4][3], E1[5][2], E1[5][3],
+            E3[0][1], E3[4][3], E3[5][2], E3[5][3],
+            ])
+
+        E2 = E1.copy().arrange(DOWN, aligned_edge = LEFT)
+        G1 = VGroup(E1, E2).arrange(DOWN, aligned_edge = LEFT)
+        G2 = VGroup(Y, G1).arrange(RIGHT, aligned_edge = UP);
+
+        self.play(FadeIn(Y))
+        self.play(Create(E1))
+        self.wait(3)
+        self.play(TransformFromCopy(E1, E2, path_arc = 2))
+        self.wait(3)
+
+        self.play(Transform(E1, E3))
+        self.wait(3)
+
+
+class Quintic03(Scene):
+    def construct(self):
+
+        e1z = r"= x^5"
+        e1a = r"+ ax^4"
+        e1b = r"+ bx^3"
+        e1c = r"cx^2"
+        e2d = r"+ dx"
+        e2e = r"+ e"
+
+        e1 = r"y = x^5 + ax^4 + bx^3 + cx^2 + dx + e"
+
+        E1 = VGroup(MathTex(e1))
+
+        self.play(Create(E1))
+        self.wait(3)
+
+        
         e2 = r"y = (z+h)^5 + a(z+h)^4 + b(z+h)^3 + c(z+h)^2 + d(z+h) + e"
         e3 = r"y = z^5 + 0z^4 + pz^3 + qz^2 + rz + s"
 
@@ -33,44 +71,10 @@ class Quintic01(Scene):
             dx   & = d(z+h)   = dz   +  dh \\
             e    & = e
         """
-        E1a = MathTex(e1a)
-        E1b = MathTex(e1b)
-        E1c = MathTex(e1c)
-        E1d = MathTex(e1d)
-        E1e = MathTex(e1e)
-        E1f = MathTex(e1f)
-
-#E1 = MathTex(e1)
-
-        E1a = MathTex(e1a)
-        E1b = MathTex(e1b)
-        E1c = MathTex(e1c)
-        E1d = MathTex(e1d)
-        E1e = MathTex(e1e)
-        E1f = MathTex(e1f)
-        
         E1 = MathTex(e1)
         E2 = MathTex(e2)
         E3 = MathTex(e3)
         E4 = MathTex(e4)
-
-        g = Group(E1, E2, E3, E1a, E1b, E1c, E1d, E1e, E1f).arrange(DOWN, aligned_edge = LEFT)
-
-        self.play(Create(E1))
-        self.wait(3)
-        self.play(TransformFromCopy(E1, E2))
-        self.wait(3)
-        self.play(TransformFromCopy(E1, E3))
-        self.wait(3)
-        self.play(Create(E1a))
-        self.play(Create(E1b))
-        self.play(Create(E1c))
-        self.play(Create(E1d))
-        self.play(Create(E1e))
-        self.play(Create(E1f))
-        self.wait(3)
-        self.play(Create(E4))
-        self.wait(3)
 
         Y = r"\begin{pmatrix} y \\ \hline x^5 \\ ax^4 \\ bx^3 \\ cx^2 \\ dx \\ e \end{pmatrix}"
         
@@ -101,15 +105,38 @@ class Quintic01(Scene):
         
         E8 = MathTex(Y, r"=", M1, Z1)
         E9 = MathTex(Y, r"=", M2, Z2)
-
-        #self.add(index_labels(E8[2]))
-        #self.add(E8)
         
-        #for p in E8[2]:
-        #    p.set_color(BLUE)
-        #    self.wait(1)
+        g = Group(E1, E2, E3, E8).arrange(DOWN, aligned_edge = LEFT)
 
-        self.play(ReplacementTransform(E4, E8))
-        self.wait(5)
-        self.play(ReplacementTransform(E8, E9))
-        self.wait(5)
+        self.play(Create(E1))
+        self.wait(3)
+
+        #self.play(TransformFromCopy(E1, E2))
+        #self.wait(3)
+        #self.play(TransformFromCopy(E1, E3))
+        #self.wait(3)
+        #self.play(Create(E4))
+        #self.wait(3)
+
+        #self.play(Create(E8))
+        #self.wait(3)
+
+        #self.play(ReplacementTransform(E4, E8))
+        #self.wait(5)
+        #self.play(ReplacementTransform(E8, E9))
+        #self.wait(5)
+
+class Quintic01(Scene):
+    def construct(self):
+
+        e1 = 'y = x^5 + ax^4 + bx^3 + cx^2 + dx + e'
+        E1 = MathTex(e1)
+        e2 = 'y = z^5 + 0z^4 + pz^3 + qz^2 + rz + s'
+        E2 = MathTex(e2)
+        G = VGroup(E1, E2).arrange_submobjects(DOWN, aligned_edge = LEFT);
+        self.play(Create(G))
+        self.wait(3)
+        X5 = VGroup(E1[0][2], E1[0][3], E1[0][6], E1[0][7])
+        Z5 = VGroup(E2[0][2], E2[0][3])
+        self.play(Transform(X5, Z5))
+        self.wait(3)
