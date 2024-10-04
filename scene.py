@@ -163,25 +163,12 @@ class Quintic01(Scene):
         pause()
 
         M = VGroup(E3, E6)
-        self.wait(3)
-
         E7 = E6.copy().arrange(DOWN, aligned_edge = RIGHT)
         E8 = VGroup(E3.copy(), E7).arrange(DOWN, aligned_edge = RIGHT)
         E8.move_to(M)
-
         self.play(Transform(E3, E8[0]))
         for index in range(6):
             self.play(Transform(E6[index], E7[index]))
-
-        #for index in range(6):
-        #    self.play(TransformMatchingShapes(M[index], E8[index]))
-
-        #E7 = VGroup(E3, E6.copy().arrange(DOWN, aligned_edge = RIGHT))
-        #E7.arrange(DOWN, aligned_edge = RIGHT)
-        #E8 = VGroup(E3, E7).arrange(RIGHT, aligned_edge = UP)
-
-        #self.play(TransformMatchingShapes(E6, E8))
-
         self.wait(10)
 
 
