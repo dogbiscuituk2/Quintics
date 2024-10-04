@@ -47,7 +47,7 @@ class Quintic01(Scene):
             r'(cx^2=', 
             r'(dx^1=', 
             r'(ex^0='
-            ).arrange(DOWN, aligned_edge = LEFT)
+            ).arrange(DOWN, aligned_edge = RIGHT)
 
         E1 = MathTex(
             r'ax^5)+', 
@@ -58,12 +58,12 @@ class Quintic01(Scene):
             r'ex^0)')
 
         E3 = MathTex(
-            r'az^5)+', 
-            r'0z^4)+', 
-            r'pz^3)+', 
-            r'qz^2)+', 
-            r'rz^1)+', 
-            r'sz^0)')
+            r'az^5+', 
+            r'00z^4+', 
+            r'01^1pz^3+', 
+            r'01^1qz^2+', 
+            r'01^1rz+', 
+            r'hs^1)')
 
         E4 = MathTex(
             r'a(z+h)^5', 
@@ -89,43 +89,49 @@ class Quintic01(Scene):
                 r'5hz^4+',
                 r'10h^2z^3+',
                 r'10h^3z^2+',
-                r'5h^4z+',
-                r'h^5)'),
+                r'05h^4z+',
+                r'sh^5)'),
             MathTex(
                 r'az^4+',
-                r'4ahz^3+',
+                r'04ahz^3+',
                 r'6ah^2z^2+',
                 r'4ah^3z+',
                 r'ah^4)'),
             MathTex(
                 r'bz^3+',
-                r'3bhz^2+',
+                r'03bhz^2+',
                 r'3bh^2z+',
                 r'bh^3)'),
             MathTex(
                 r'cz^2+',
-                r'2chz+',
+                r'02chz+',
                 r'ch^2)'),
             MathTex(
                 r'dz+',
-                r'dh)^1'),
+                r'dh^1)'),
             MathTex(
-                r'e)^1')
+                r'eh^1)')
         )
 
         hide_chars([
             Y1[0][0], Y1[0][1], Y1[0][3],
             Y2[0][0], Y2[0][1], Y2[1][0], Y2[2][0], Y2[3][0], Y2[4][0], Y2[4][3], Y2[5][0], Y2[5][2], Y2[5][3],
             E1[0][0], E1[0][3], E1[1][3], E1[2][3], E1[3][3], E1[4][2], E1[4][3], E1[5][1], E1[5][2], E1[5][3],
-            E3[0][0], E3[0][3], E3[1][3], E3[2][3], E3[3][3], E3[4][2], E3[4][3], E3[5][1], E3[5][2], E3[5][3],
+            E3[0][0], E3[1][0], E3[2][0], E3[2][1], E3[2][2], E3[3][0], E3[3][1], E3[3][2], E3[4][0], E3[4][1], E3[4][2], E3[5][0], E3[5][2], E3[5][3],
             E4[0][0], E4[4][6], E4[5][1], E4[5][2],
             E5[0][0], E5[4][6], E5[5][1], E5[5][2],
-            E6[0][0][0], E6[0][5][2], E6[1][4][3], E6[2][3][3], E6[3][2][3], E6[4][1][2], E6[4][1][3], E6[5][0][1], E6[5][0][2],
+
+            E6[0][0][0], E6[0][4][0], E6[0][5][0], E6[0][5][3], 
+            E6[1][1][0], E6[1][4][3], 
+            E6[2][1][0], E6[2][3][3], 
+            E6[3][1][0], E6[3][2][3], 
+            E6[4][1][2], E6[4][1][3], 
+            E6[5][0][1], E6[5][0][2], E6[5][0][3],
             ])
 
         E2 = E1.copy().arrange(DOWN, aligned_edge = LEFT)
         G1 = VGroup(E1, E2).arrange(DOWN, aligned_edge = LEFT)
-        Y = VGroup(Y1, Y2).arrange(DOWN, aligned_edge = LEFT)
+        Y = VGroup(Y1, Y2).arrange(DOWN, aligned_edge = RIGHT)
         G3 = VGroup(Y, G1).arrange(RIGHT, aligned_edge = UP);
 
         self.play(FadeIn(Y1))
@@ -153,17 +159,28 @@ class Quintic01(Scene):
 
         E3.move_to(E1, aligned_edge = LEFT)
         self.play(Indicate(E1))
-        self.play(Transform(E1, E3))
+        self.play(ReplacementTransform(E1, E3))
         pause()
 
-        self.play(Indicate(Y))
-        self.play(Indicate(E3))
-        self.play(Indicate(E6))
+        M = VGroup(E3, E6)
+        self.wait(3)
 
-        #E7 = E6.copy()
+        E7 = E6.copy().arrange(DOWN, aligned_edge = RIGHT)
+        E8 = VGroup(E3.copy(), E7).arrange(DOWN, aligned_edge = RIGHT)
+        E8.move_to(M)
+
+        self.play(Transform(E3, E8[0]))
+        for index in range(6):
+            self.play(Transform(E6[index], E7[index]))
+
+        #for index in range(6):
+        #    self.play(TransformMatchingShapes(M[index], E8[index]))
+
+        #E7 = VGroup(E3, E6.copy().arrange(DOWN, aligned_edge = RIGHT))
         #E7.arrange(DOWN, aligned_edge = RIGHT)
         #E8 = VGroup(E3, E7).arrange(RIGHT, aligned_edge = UP)
-        #self.play(Transform(E6, E7))
+
+        #self.play(TransformMatchingShapes(E6, E8))
 
         self.wait(10)
 
