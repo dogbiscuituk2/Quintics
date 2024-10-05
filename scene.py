@@ -1,31 +1,5 @@
 from manim import *
 
-class Equation(Scene):
-    def construct(self):
-        t1 = Tex(r"$x_{1, 2} =$", r"$\frac{-b \pm \sqrt{D}}{2a}$", font_size = 96)
-        t2 = Tex(r"$x_{1, 2} =$", r"$\frac{-b \pm \sqrt{b^2 - 4ac}}{2a}$", font_size = 96)
-        g = VGroup(t1, t2).arrange(DOWN, aligned_edge = LEFT, buff = 1)
-        self.play(Write(t1))
-        self.wait(0.5)
-        self.play(TransformFromCopy(t1[0], t2[0]))
-        self.play(TransformFromCopy(t1[1], t2[1]))
-        self.wait()
-
-class Quintic00(Scene):
-    def construct(self):
-
-        def hide_chars2(tex):
-            x = tex.get_part_by_tex('%')
-            print(x)
-            print(type(x))
-            print(x.get_tex_string())
-
-        Y1 = MathTex(
-            r'(ay^1\ %123')
-        
-        hide_chars2(Y1)
-
-
 class Quintic01(Scene):
     def construct(self):
 
@@ -37,80 +11,79 @@ class Quintic01(Scene):
         def pause():
             self.wait(0)
 
-        Y1 = MathTex(
-            r'(ay^1=')
-        
+        Y1 = MathTex(r'(ay^1=')
+
         Y2 = MathTex(
-            r'(ax^5=', 
-            r'(ax^4=', 
-            r'(bx^3=', 
-            r'(cx^2=', 
-            r'(dx^1=', 
-            r'(ex^0='
+            '(ax^5=', 
+            '(ax^4=', 
+            '(bx^3=', 
+            '(cx^2=', 
+            '(dx^1=', 
+            '(ex^0='
             ).arrange(DOWN, aligned_edge = RIGHT)
 
         E1 = MathTex(
-            r'ax^5)+', 
-            r'ax^4)+', 
-            r'bx^3)+', 
-            r'cx^2)+', 
-            r'dx^1)+', 
-            r'ex^0)')
+            'ax^5)+', 
+            'ax^4)+', 
+            'bx^3)+', 
+            'cx^2)+', 
+            'dx^1)+', 
+            'ex^0)')
 
         E3 = MathTex(
-            r'az^5+', 
-            r'00z^4+', 
-            r'01^1pz^3+', 
-            r'01^1qz^2+', 
-            r'01^1rz+', 
-            r'hs^1)')
+            'az^5+', 
+            '00z^4+', 
+            '01^1pz^3+', 
+            '01^1qz^2+', 
+            '01^1rz+', 
+            'hs^1)')
 
         E4 = MathTex(
-            r'a(z+h)^5', 
-            r'a(z+h)^4', 
-            r'b(z+h)^3', 
-            r'c(z+h)^2', 
-            r'd(z+h)^1', 
-            r'e)^1'
+            'a(z+h)^5', 
+            'a(z+h)^4', 
+            'b(z+h)^3', 
+            'c(z+h)^2', 
+            'd(z+h)^1', 
+            'e)^1'
             ).arrange(DOWN, aligned_edge = LEFT)
 
         E5 = MathTex(
-            r'a(z^5 + 5hz^4 + 10h^2z^3 + 10h^3z^2 + 5h^4z + h^5)',
-            r'a(z^4 + 4hz^3 + 6h^2z^2 + 4h^3z + h^4)',
-            r'b(z^3 + 3hz^2 + 3h^2z + h^3)',
-            r'c(z^2 + 2hz + h^2)',
-            r'd(z + h)^1',
-            r'e)^1'
+            'a(z^5 + 5hz^4 + 10h^2z^3 + 10h^3z^2 + 5h^4z + h^5)',
+            'a(z^4 + 4hz^3 + 6h^2z^2 + 4h^3z + h^4)',
+            'b(z^3 + 3hz^2 + 3h^2z + h^3)',
+            'c(z^2 + 2hz + h^2)',
+            'd(z + h)^1',
+            'e)^1'
         )
 
         E6 = VGroup(
             MathTex(
-                r'az^5+',
-                r'5hz^4+',
-                r'10h^2z^3+',
-                r'10h^3z^2+',
-                r'05h^4z+',
-                r'sh^5)'),
+                'az^5+',
+                '5hz^4+',
+                '10h^2z^3+',
+                '10h^3z^2+',
+                '05h^4z+',
+                'sh^5)'),
             MathTex(
-                r'az^4+',
-                r'04ahz^3+',
-                r'6ah^2z^2+',
-                r'4ah^3z+',
-                r'ah^4)'),
+                'az^4+',
+                '04ahz^3+',
+                '6ah^2z^2+',
+                '4ah^3z+',
+                'ah^4)'),
             MathTex(
-                r'bz^3+',
-                r'03bhz^2+',
-                r'3bh^2z+',
-                r'bh^3)'),
+                'bz^3+',
+                '03bhz^2+',
+                '3bh^2z+',
+                'bh^3)'),
             MathTex(
-                r'cz^2+',
-                r'02chz+',
-                r'ch^2)'),
+                'cz^2+',
+                '02chz+',
+                'ch^2)'),
             MathTex(
-                r'dz+',
-                r'dh^1)'),
+                'dz+',
+                'dh^1)'),
             MathTex(
-                r'eh^1)')
+                'eh^1)')
         )
 
         hide_chars([
@@ -128,6 +101,44 @@ class Quintic01(Scene):
             E6[4][1][2], E6[4][1][3], 
             E6[5][0][1], E6[5][0][2], E6[5][0][3],
             ])
+
+        Y3 = Matrix([
+            ['(ay^1)'],
+            ['(ax^5)'],
+            ['(ax^4)'],
+            ['(bx^3)'],
+            ['(cx^2)'],
+            ['(dx^1)'],
+            ['(ex^0)']])
+
+        hide_chars([
+            Y3[0][0][0][0], Y3[0][0][0][1], Y3[0][0][0][3], Y3[0][0][0][4],
+            Y3[0][1][0][0], Y3[0][1][0][1], Y3[0][1][0][4],
+            Y3[0][2][0][0], Y3[0][2][0][4],
+            Y3[0][3][0][0], Y3[0][3][0][4],
+            Y3[0][4][0][0], Y3[0][4][0][4],
+            Y3[0][5][0][0], Y3[0][5][0][3], Y3[0][5][0][4],
+            Y3[0][6][0][0], Y3[0][6][0][2], Y3[0][6][0][3], Y3[0][6][0][4],
+        ])
+
+        M9 = [
+            ['(z^5', '(0z^4', '(pz^3', '(qz^2', '(^1rz', '(s^1'],
+            ['(z^5', '(5hz^4', '(10h^2z^3', '(10h^3z^2', '(5h^4z', '(h^5'],
+            ['', '(az^4', '(4ahz^3', '(6ah^2z^2', '(4ah^3z', '(ah^4'],
+            ['', '', '(bz^3', '(3bhz^2', '(3bh^2z', '(bh^3'],
+            ['', '', '', '(cz^2', '(2chz', '(ch^2'],
+            ['', '', '', '', '(dz', '(dh^1'],
+            ['', '', '', '', '', '(eh^0']
+        ]
+
+        M3 = Matrix(M9, h_buff = 2.0)
+
+        hide_chars([
+            M3[0][4][0][1],
+            M3[0][5][0][2],
+            M3[0][35][0][3],
+            M3[0][41][0][2], M3[0][41][0][3],
+        ])
 
         E2 = E1.copy().arrange(DOWN, aligned_edge = LEFT)
         G1 = VGroup(E1, E2).arrange(DOWN, aligned_edge = LEFT)
@@ -169,7 +180,16 @@ class Quintic01(Scene):
         self.play(Transform(E3, E8[0]))
         for index in range(6):
             self.play(Transform(E6[index], E7[index]))
+        pause()
+
+################################################################################
+
+        VGroup(Y3, M3).arrange(RIGHT, aligned_edge = UP)
+        self.play(TransformMatchingShapes(Y, Y3))
+        self.play(TransformMatchingShapes(M, M3))
+
         self.wait(10)
+
 
 
 class Quintic02(Scene):
@@ -255,18 +275,3 @@ class Quintic02(Scene):
         #self.wait(5)
         #self.play(ReplacementTransform(E8, E9))
         #self.wait(5)
-
-class Quintic03(Scene):
-    def construct(self):
-
-        e1 = 'y = x^5 + ax^4 + bx^3 + cx^2 + dx + e'
-        E1 = MathTex(e1)
-        e2 = 'y = z^5 + 0z^4 + pz^3 + qz^2 + rz + s'
-        E2 = MathTex(e2)
-        G = VGroup(E1, E2).arrange_submobjects(DOWN, aligned_edge = LEFT);
-        self.play(Create(G))
-        self.wait(3)
-        X5 = VGroup(E1[0][2], E1[0][3], E1[0][6], E1[0][7])
-        Z5 = VGroup(E2[0][2], E2[0][3])
-        self.play(Transform(X5, Z5))
-        self.wait(3)
