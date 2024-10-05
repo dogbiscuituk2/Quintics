@@ -11,7 +11,7 @@ class Quintic01(Scene):
         def pause():
             self.wait(0)
 
-        Y1 = MathTex(r'(ay^1=')
+        Y1 = MathTex('(ay^1=')
 
         Y2 = MathTex(
             '(ax^5=', 
@@ -19,8 +19,7 @@ class Quintic01(Scene):
             '(bx^3=', 
             '(cx^2=', 
             '(dx^1=', 
-            '(ex^0='
-            ).arrange(DOWN, aligned_edge = RIGHT)
+            '(ex^0=').arrange(DOWN, aligned_edge = RIGHT)
 
         E1 = MathTex(
             'ax^5)+', 
@@ -44,8 +43,7 @@ class Quintic01(Scene):
             'b(z+h)^3', 
             'c(z+h)^2', 
             'd(z+h)^1', 
-            'e)^1'
-            ).arrange(DOWN, aligned_edge = LEFT)
+            'e)^1').arrange(DOWN, aligned_edge = LEFT)
 
         E5 = MathTex(
             'a(z^5 + 5hz^4 + 10h^2z^3 + 10h^3z^2 + 5h^4z + h^5)',
@@ -53,8 +51,7 @@ class Quintic01(Scene):
             'b(z^3 + 3hz^2 + 3h^2z + h^3)',
             'c(z^2 + 2hz + h^2)',
             'd(z + h)^1',
-            'e)^1'
-        )
+            'e)^1')
 
         E6 = VGroup(
             MathTex(
@@ -100,7 +97,7 @@ class Quintic01(Scene):
             E6[3][1][0], E6[3][2][3], 
             E6[4][1][2], E6[4][1][3], 
             E6[5][0][1], E6[5][0][2], E6[5][0][3],
-            ])
+        ])
 
         Y3 = Matrix([
             ['(ay^1)'],
@@ -109,19 +106,21 @@ class Quintic01(Scene):
             ['(bx^3)'],
             ['(cx^2)'],
             ['(dx^1)'],
-            ['(ex^0)']])
+            ['(ex^0)']], bracket_h_buff = 0)
+
+        for i in range(7):
+            hide_chars([Y3[0][i][0][0], Y3[0][i][0][4]])
 
         hide_chars([
-            Y3[0][0][0][0], Y3[0][0][0][1], Y3[0][0][0][3], Y3[0][0][0][4],
-            Y3[0][1][0][0], Y3[0][1][0][1], Y3[0][1][0][4],
-            Y3[0][2][0][0], Y3[0][2][0][4],
-            Y3[0][3][0][0], Y3[0][3][0][4],
-            Y3[0][4][0][0], Y3[0][4][0][4],
-            Y3[0][5][0][0], Y3[0][5][0][3], Y3[0][5][0][4],
-            Y3[0][6][0][0], Y3[0][6][0][2], Y3[0][6][0][3], Y3[0][6][0][4],
-        ])
+            Y3[0][0][0][1], Y3[0][0][0][3],
+            Y3[0][1][0][1],
+            Y3[0][2][0][4],
+            Y3[0][3][0][4],
+            Y3[0][4][0][4],
+            Y3[0][5][0][3],
+            Y3[0][6][0][2], Y3[0][6][0][3]])
 
-        m3 = [
+        M3 = Matrix([
             ['(z^5', '(0z^4', '(pz^3', '(qz^2', '(^1rz', '(s^1'],
             ['(z^5', '(5hz^4', '(10h^2z^3', '(10h^3z^2', '(5h^4z', '(h^5'],
             ['', '(az^4', '(4ahz^3', '(6ah^2z^2', '(4ah^3z', '(ah^4'],
@@ -129,29 +128,29 @@ class Quintic01(Scene):
             ['', '', '', '(cz^2', '(2chz', '(ch^2'],
             ['', '', '', '', '(dz', '(dh^1'],
             ['', '', '', '', '', '(eh^0']
-        ]
+        ], bracket_h_buff = 0, h_buff = 1.9)
 
-        M3 = Matrix(m3, h_buff = 1.9)
+        for i in range(6):
+            hide_chars(M3[0][i][0][0])
+            for j in range(i, 6):
+                hide_chars(M3[0][6 * (i + 1) + j][0][0])
 
         hide_chars([
-            M3[0][0][0][0],
-            M3[0][1][0][0],
-            M3[0][2][0][0],
-            M3[0][3][0][0],
-            M3[0][4][0][0], M3[0][4][0][1],
-            M3[0][5][0][0], M3[0][5][0][2],
-
-            M3[0][6][0][0], M3[0][7][0][0], M3[0][8][0][0], M3[0][9][0][0], M3[0][10][0][0], M3[0][11][0][0],
-            M3[0][13][0][0], M3[0][14][0][0], M3[0][15][0][0], M3[0][16][0][0], M3[0][17][0][0],
-            M3[0][20][0][0], M3[0][21][0][0], M3[0][22][0][0], M3[0][23][0][0],
-            M3[0][20][0][0], M3[0][21][0][0], M3[0][22][0][0], M3[0][23][0][0],
-            M3[0][27][0][0], M3[0][28][0][0], M3[0][29][0][0],
-            M3[0][34][0][0], M3[0][35][0][0],
-            M3[0][41][0][0],
-
+            M3[0][4][0][1],
+            M3[0][5][0][2],
             M3[0][35][0][3],
-            M3[0][41][0][2], M3[0][41][0][3],
-        ])
+            M3[0][41][0][2], M3[0][41][0][3]])
+
+        Z1 = Matrix([
+            ['(1^0'],
+            ['(1^0'],
+            ['(1^0'],
+            ['(1^0'],
+            ['(1^0'],
+            ['(1^0']], bracket_h_buff = 0)
+
+        for i in range(6):
+            hide_chars([Z1[0][i][0][0], Z1[0][i][0][2]])
 
         E2 = E1.copy().arrange(DOWN, aligned_edge = LEFT)
         G1 = VGroup(E1, E2).arrange(DOWN, aligned_edge = LEFT)
@@ -186,6 +185,8 @@ class Quintic01(Scene):
         self.play(ReplacementTransform(E1, E3))
         pause()
 
+        EQ = MathTex('=')
+
         M = VGroup(E3, E6)
         E7 = E6.copy().arrange(DOWN, aligned_edge = RIGHT)
         E8 = VGroup(E3.copy(), E7).arrange(DOWN, aligned_edge = RIGHT)
@@ -197,9 +198,11 @@ class Quintic01(Scene):
 
 ################################################################################
 
-        VGroup(Y3, M3).arrange(RIGHT, aligned_edge = UP)
+        VGroup(Y3, EQ, M3, Z1).arrange(RIGHT, aligned_edge = UP)
         self.play(TransformMatchingShapes(Y, Y3))
+        self.play(FadeIn(EQ))
         self.play(TransformMatchingShapes(M, M3))
+        self.play(FadeIn(Z1))
 
         self.wait(10)
 
