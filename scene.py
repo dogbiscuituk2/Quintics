@@ -128,7 +128,7 @@ class Quintic01(Scene):
             ['', '', '', '(cz^2', '(2chz', '(ch^2'],
             ['', '', '', '', '(dz', '(dh^1'],
             ['', '', '', '', '', '(eh^0']
-        ], bracket_h_buff = 0, h_buff = 1.9)
+        ], bracket_h_buff = 0.1, h_buff = 1.8)
 
         for i in range(6):
             hide_chars(M3[0][i][0][0])
