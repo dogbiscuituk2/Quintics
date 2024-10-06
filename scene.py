@@ -3,22 +3,27 @@ from manim import *
 class Quintic01(Scene):
     def construct(self):
 
-        def hide_chars(chars):
-            for char in chars:
-                #char.set_color(RED)
-                char.set_opacity(0)
+        def get_count(s):
+            return s.count()
 
-        def pause():
-            self.wait(0)
+        def hide_chars(*args):
+            for arg in args:
+                #arg.set_color(RED)
+                arg.set_opacity(0)
 
         def make_tex(*args):
-            tex = MathTex(*[f'({arg}' for arg in args])
+            s = [f'({arg}' for arg in args]
+            tex = MathTex(*s)
             for t in tex:
                 t[0].set_color(RED)
                 #t[0].set_opacity(0)
             return tex
 
-        Y1 = make_tex(r'y\ =')
+        def pause():
+            self.wait(0)
+
+        Y1 = make_tex(r'y^1\ =')
+        hide_chars(Y1[0][2])
         Y2 = make_tex(r'x^5\ =', r'ax^4\ =', r'bx^3\ =', r'cx^2\ =', r'dx\ =', r'e\ =').arrange(DOWN, aligned_edge = RIGHT)
         E1 = make_tex('x^5+', 'ax^4+', 'bx^3+', 'cx^2+', 'dx+', 'e')
         E3 = make_tex('z^5+', '0z^4+', 'pz^3+', 'qz^2+', 'rz+', 's')
@@ -49,16 +54,16 @@ class Quintic01(Scene):
             ['(ex^0)']], bracket_h_buff = 0)
 
         for i in range(7):
-            hide_chars([Y3[0][i][0][0], Y3[0][i][0][4]])
+            hide_chars(Y3[0][i][0][0], Y3[0][i][0][4])
 
-        hide_chars([
+        hide_chars(
             Y3[0][0][0][1], Y3[0][0][0][3],
             Y3[0][1][0][1],
             Y3[0][2][0][4],
             Y3[0][3][0][4],
             Y3[0][4][0][4],
             Y3[0][5][0][3],
-            Y3[0][6][0][2], Y3[0][6][0][3]])
+            Y3[0][6][0][2], Y3[0][6][0][3])
 
         M3 = Matrix([
             ['(z^5', '(0z^4', '(pz^3', '(qz^2', '(^1rz', '(s^1'],
@@ -75,11 +80,11 @@ class Quintic01(Scene):
             for j in range(i, 6):
                 hide_chars(M3[0][6 * (i + 1) + j][0][0])
 
-        hide_chars([
+        hide_chars(
             M3[0][4][0][1],
             M3[0][5][0][2],
             M3[0][35][0][3],
-            M3[0][41][0][2], M3[0][41][0][3]])
+            M3[0][41][0][2], M3[0][41][0][3])
 
         Z1 = Matrix([
             ['(1^0'],
@@ -90,7 +95,7 @@ class Quintic01(Scene):
             ['(1^0']], bracket_h_buff = 0)
 
         for i in range(6):
-            hide_chars([Z1[0][i][0][0], Z1[0][i][0][2]])
+            hide_chars(Z1[0][i][0][0], Z1[0][i][0][2])
 
         E2 = E1.copy().arrange(DOWN, aligned_edge = LEFT)
         G1 = VGroup(E1, E2).arrange(DOWN, aligned_edge = LEFT)
