@@ -100,7 +100,7 @@ class Quintic01(Scene):
         E2 = E1.copy().arrange(DOWN, aligned_edge = LEFT)
         G1 = VGroup(E1, E2).arrange(DOWN, aligned_edge = LEFT)
         Y = VGroup(Y1, Y2).arrange(DOWN, aligned_edge = RIGHT)
-        G3 = VGroup(Y, G1).arrange(RIGHT, aligned_edge = UP);
+        G3 = VGroup(Y, G1).arrange(RIGHT, aligned_edge = UP).move_to(LEFT);
 
         self.play(FadeIn(Y1))
         self.play(Create(E1))
