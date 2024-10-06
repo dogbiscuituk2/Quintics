@@ -102,27 +102,48 @@ class Quintic01(Scene):
         Y = VGroup(Y1, Y2).arrange(DOWN, aligned_edge = RIGHT)
         G3 = VGroup(Y, G1).arrange(RIGHT, aligned_edge = UP).move_to(LEFT);
 
+# Start with the general quintic
+
         self.play(FadeIn(Y1))
         self.play(Create(E1))
         pause()
 
+# Make a vertical copy
+
         self.play(TransformFromCopy(E1, E2, path_arc = 2))
         pause()
 
+# Convert each term into an LHS
+
         self.play(TransformMatchingShapes(E2, Y2))
         pause()
+
+# Add each binomial term as an RHS
 
         E4.move_to(E2, aligned_edge = LEFT)
         self.play(Create(E4))
         pause()
 
+# Expand each binomial term and distribute the coefficients
+
         for index in range(6):
             E5[index].move_to(E4[index], aligned_edge = LEFT)
+# Flash
             if index < 5:
                 self.play(Indicate(E4[index]))
-            self.play(TransformMatchingShapes(E4[index], E5[index]))
+# Expand
+            if index < 4:
+                self.play(TransformMatchingShapes(E4[index], E5[index]))
+            else:
+                E5[index].move_to(E4[index])
+                E4[index].set_opacity(0)
+# Distribute
             E6[index].move_to(E5[index], aligned_edge = LEFT)
-            self.play(TransformMatchingShapes(E5[index], E6[index]))
+            if index < 5:
+                self.play(TransformMatchingShapes(E5[index], E6[index]))
+            else:
+                E6[index].move_to(E5[index])
+                E5[index].set_opacity(0)
         pause()
 
         E3.move_to(E1, aligned_edge = LEFT)
