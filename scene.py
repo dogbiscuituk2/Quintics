@@ -11,93 +11,33 @@ class Quintic01(Scene):
         def pause():
             self.wait(0)
 
-        Y1 = MathTex('(ay^1=')
+        def make_tex(*args):
+            tex = MathTex(*[f'({arg}' for arg in args])
+            for t in tex:
+                t[0].set_color(RED)
+                #t[0].set_opacity(0)
+            return tex
 
-        Y2 = MathTex(
-            '(ax^5=', 
-            '(ax^4=', 
-            '(bx^3=', 
-            '(cx^2=', 
-            '(dx^1=', 
-            '(ex^0=').arrange(DOWN, aligned_edge = RIGHT)
-
-        E1 = MathTex(
-            'ax^5)+', 
-            'ax^4)+', 
-            'bx^3)+', 
-            'cx^2)+', 
-            'dx^1)+', 
-            'ex^0)')
-
-        E3 = MathTex(
-            'az^5+', 
-            '00z^4+', 
-            '01^1pz^3+', 
-            '01^1qz^2+', 
-            '01^1rz+', 
-            'hs^1)')
-
-        E4 = MathTex(
-            'a(z+h)^5', 
-            'a(z+h)^4', 
-            'b(z+h)^3', 
-            'c(z+h)^2', 
-            'd(z+h)^1', 
-            'e)^1').arrange(DOWN, aligned_edge = LEFT)
-
-        E5 = MathTex(
+        Y1 = make_tex(r'y\ =')
+        Y2 = make_tex(r'x^5\ =', r'ax^4\ =', r'bx^3\ =', r'cx^2\ =', r'dx\ =', r'e\ =').arrange(DOWN, aligned_edge = RIGHT)
+        E1 = make_tex('x^5+', 'ax^4+', 'bx^3+', 'cx^2+', 'dx+', 'e')
+        E3 = make_tex('z^5+', '0z^4+', 'pz^3+', 'qz^2+', 'rz+', 's')
+        E4 = make_tex('(z+h)^5', 'a(z+h)^4', 'b(z+h)^3', 'c(z+h)^2', 'd(z+h)', 'e').arrange(DOWN, aligned_edge = LEFT)
+        E5 = make_tex(
             'a(z^5 + 5hz^4 + 10h^2z^3 + 10h^3z^2 + 5h^4z + h^5)',
             'a(z^4 + 4hz^3 + 6h^2z^2 + 4h^3z + h^4)',
             'b(z^3 + 3hz^2 + 3h^2z + h^3)',
             'c(z^2 + 2hz + h^2)',
-            'd(z + h)^1',
-            'e)^1')
-
+            'd(z + h)',
+            'e')
         E6 = VGroup(
-            MathTex(
-                'az^5+',
-                '5hz^4+',
-                '10h^2z^3+',
-                '10h^3z^2+',
-                '05h^4z+',
-                'sh^5)'),
-            MathTex(
-                'az^4+',
-                '04ahz^3+',
-                '6ah^2z^2+',
-                '4ah^3z+',
-                'ah^4)'),
-            MathTex(
-                'bz^3+',
-                '03bhz^2+',
-                '3bh^2z+',
-                'bh^3)'),
-            MathTex(
-                'cz^2+',
-                '02chz+',
-                'ch^2)'),
-            MathTex(
-                'dz+',
-                'dh^1)'),
-            MathTex(
-                'eh^1)')
+            make_tex('z^5+', '5hz^4+', '10h^2z^3+', '10h^3z^2+', '5h^4z+', 'sh^5'),
+            make_tex('az^4+', '4ahz^3+', '6ah^2z^2+', '4ah^3z+', 'ah^4'),
+            make_tex('bz^3+', '3bhz^2+', '3bh^2z+', 'bh^3'),
+            make_tex('cz^2+', '2chz+', 'ch^2'),
+            make_tex('dz+', 'dh'),
+            make_tex('e')
         )
-
-        hide_chars([
-            Y1[0][0], Y1[0][1], Y1[0][3],
-            Y2[0][0], Y2[0][1], Y2[1][0], Y2[2][0], Y2[3][0], Y2[4][0], Y2[4][3], Y2[5][0], Y2[5][2], Y2[5][3],
-            E1[0][0], E1[0][3], E1[1][3], E1[2][3], E1[3][3], E1[4][2], E1[4][3], E1[5][1], E1[5][2], E1[5][3],
-            E3[0][0], E3[1][0], E3[2][0], E3[2][1], E3[2][2], E3[3][0], E3[3][1], E3[3][2], E3[4][0], E3[4][1], E3[4][2], E3[5][0], E3[5][2], E3[5][3],
-            E4[0][0], E4[4][6], E4[5][1], E4[5][2],
-            E5[0][0], E5[4][6], E5[5][1], E5[5][2],
-
-            E6[0][0][0], E6[0][4][0], E6[0][5][0], E6[0][5][3], 
-            E6[1][1][0], E6[1][4][3], 
-            E6[2][1][0], E6[2][3][3], 
-            E6[3][1][0], E6[3][2][3], 
-            E6[4][1][2], E6[4][1][3], 
-            E6[5][0][1], E6[5][0][2], E6[5][0][3],
-        ])
 
         Y3 = Matrix([
             ['(ay^1)'],
@@ -199,13 +139,78 @@ class Quintic01(Scene):
 ################################################################################
 
         VGroup(Y3, EQ, M3, Z1).arrange(RIGHT, aligned_edge = UP)
+        EQ.move_to(EQ.get_center() + 2.9 * DOWN)
+        Z1.move_to(Z1.get_center() + 0.5 * DOWN)
         self.play(TransformMatchingShapes(Y, Y3))
         self.play(FadeIn(EQ))
         self.play(TransformMatchingShapes(M, M3))
         self.play(FadeIn(Z1))
+        pause()
+
+        def replace(S, t):
+            return TransformMatchingShapes(S, MathTex(t).move_to(S.get_center()))
+
+        self.play(
+            Indicate(M3[0][0]),
+            Indicate(M3[0][6]))
+        self.play(
+            replace(M3[0][0], '1'),
+            replace(M3[0][6], '1'),
+            replace(Z1[0][0], 'z^5'))
+
+        self.play(
+            Indicate(M3[0][1]),
+            Indicate(M3[0][7]),
+            Indicate(M3[0][13]))
+        self.play(
+            replace(M3[0][1], '0'),
+            replace(M3[0][7], '5h'),
+            replace(M3[0][13], 'a'),
+            replace(Z1[0][1], 'z^4'))
+
+        self.play(
+            Indicate(M3[0][2]),
+            Indicate(M3[0][8]),
+            Indicate(M3[0][14]),
+            Indicate(M3[0][20]))
+        self.play(
+            replace(M3[0][2], 'p'),
+            replace(M3[0][8], '10h^2'),
+            replace(M3[0][14], '4ah'),
+            replace(M3[0][20], 'b'),
+            replace(Z1[0][2], 'z^3'))
+
+        self.play(
+            Indicate(M3[0][3]),
+            Indicate(M3[0][9]),
+            Indicate(M3[0][15]),
+            Indicate(M3[0][21]),
+            Indicate(M3[0][27]))
+        self.play(
+            replace(M3[0][3], 'q'),
+            replace(M3[0][9], '10h^3'),
+            replace(M3[0][15], '6ah^2'),
+            replace(M3[0][21], '3bh'),
+            replace(M3[0][27], 'c'),
+            replace(Z1[0][3], 'z^2'))
+
+        self.play(
+            Indicate(M3[0][4]),
+            Indicate(M3[0][10]),
+            Indicate(M3[0][16]),
+            Indicate(M3[0][22]),
+            Indicate(M3[0][28]),
+            Indicate(M3[0][34]))
+        self.play(
+            replace(M3[0][4], 'r'),
+            replace(M3[0][10], '5h^4'),
+            replace(M3[0][16], '4ah^3'),
+            replace(M3[0][22], '3bh^2'),
+            replace(M3[0][28], '2ch'),
+            replace(M3[0][34], 'd'),
+            replace(Z1[0][4], 'z'))
 
         self.wait(10)
-
 
 
 class Quintic02(Scene):
