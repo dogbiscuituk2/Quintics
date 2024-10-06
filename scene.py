@@ -3,20 +3,20 @@ from manim import *
 class Quintic01(Scene):
     def construct(self):
 
-        def get_count(s):
-            return s.count()
-
         def hide_chars(*args):
             for arg in args:
                 #arg.set_color(RED)
                 arg.set_opacity(0)
+        
+        def indicate(args):
+            self.play(Indicate(VGroup(*args)))
 
         def make_tex(*args):
             s = [f'({arg}' for arg in args]
             tex = MathTex(*s)
             for t in tex:
-                t[0].set_color(RED)
-                #t[0].set_opacity(0)
+                #t[0].set_color(RED)
+                t[0].set_opacity(0)
             return tex
 
         def pause():
@@ -52,7 +52,7 @@ class Quintic01(Scene):
             ['(cx^2)'],
             ['(dx^1)'],
             ['(ex^0)']], bracket_h_buff = 0)
-
+        
         for i in range(7):
             hide_chars(Y3[0][i][0][0], Y3[0][i][0][4])
 
@@ -116,7 +116,7 @@ class Quintic01(Scene):
 # Show the reduced quintic in z
 
         E3.move_to(E1, aligned_edge = LEFT)
-        self.play(Indicate(E1))
+        indicate([E1])
         self.play(ReplacementTransform(E1, E3))
         pause()
 
@@ -137,7 +137,7 @@ class Quintic01(Scene):
             E5[index].move_to(E4[index], aligned_edge = LEFT)
 # Flash
             if index < 5:
-                self.play(Indicate(E4[index]))
+                indicate([E4[index]])
 # Expand
             if index < 4:
                 self.play(TransformMatchingShapes(E4[index], E5[index]))
@@ -153,30 +153,20 @@ class Quintic01(Scene):
                 #E5[index].set_opacity(0)
         pause()
 
-        EQ = MathTex('=')
+# Right align the fully expanded binomials
 
         M = VGroup(E3, E6)
         E7 = E6.copy().arrange(DOWN, aligned_edge = RIGHT)
         E8 = VGroup(E3.copy(), E7).arrange(DOWN, aligned_edge = RIGHT)
         E8.move_to(M)
-
-        #self.play(Transform(E3, E8[0]))
-        #for index in range(6):
-        #    self.play(Transform(E6[index], E7[index]))
         self.play(
             Transform(E3, E8[0]),
-            Transform(E6[0], E7[0]),
-            Transform(E6[1], E7[1]),
-            Transform(E6[2], E7[2]),
-            Transform(E6[3], E7[3]),
-            Transform(E6[4], E7[4]),
-            Transform(E6[5], E7[5]))
-
-        
+            [Transform(E6[i], E7[i]) for i in range(6)])
         pause()
 
-################################################################################
+# Convert to matrix equation Y=MZ
 
+        EQ = MathTex('=')
         VGroup(Y3, EQ, M3, Z1).arrange(RIGHT, aligned_edge = UP)
         EQ.move_to(EQ.get_center() + 2.9 * DOWN)
         Z1.move_to(Z1.get_center() + 0.5 * DOWN)
@@ -186,68 +176,53 @@ class Quintic01(Scene):
         self.play(FadeIn(Z1))
         pause()
 
+# Move all powers of z out of M and into Z
+
         def replace(S, t):
             return TransformMatchingShapes(S, MathTex(t).move_to(S.get_center()))
+        
+        M = M3[0]
+        Z = Z1[0]
 
+        indicate([M[0], M[6]])
         self.play(
-            Indicate(M3[0][0]),
-            Indicate(M3[0][6]))
-        self.play(
-            replace(M3[0][0], '1'),
-            replace(M3[0][6], '1'),
-            replace(Z1[0][0], 'z^5'))
+            replace(M[0], '1'),
+            replace(M[6], '1'),
+            replace(Z[0], 'z^5'))
 
+        indicate([M[1], M[7], M[13]])
         self.play(
-            Indicate(M3[0][1]),
-            Indicate(M3[0][7]),
-            Indicate(M3[0][13]))
-        self.play(
-            replace(M3[0][1], '0'),
-            replace(M3[0][7], '5h'),
-            replace(M3[0][13], 'a'),
-            replace(Z1[0][1], 'z^4'))
+            replace(M[ 1], '0'),
+            replace(M[ 7], '5h'),
+            replace(M[13], 'a'),
+            replace(Z[ 1], 'z^4'))
 
+        indicate([M[2], M[8], M[14], M[20]])
         self.play(
-            Indicate(M3[0][2]),
-            Indicate(M3[0][8]),
-            Indicate(M3[0][14]),
-            Indicate(M3[0][20]))
-        self.play(
-            replace(M3[0][2], 'p'),
-            replace(M3[0][8], '10h^2'),
-            replace(M3[0][14], '4ah'),
-            replace(M3[0][20], 'b'),
-            replace(Z1[0][2], 'z^3'))
+            replace(M[ 2], 'p'),
+            replace(M[ 8], '10h^2'),
+            replace(M[14], '4ah'),
+            replace(M[20], 'b'),
+            replace(Z[ 2], 'z^3'))
 
+        indicate([M[3], M[9], M[15], M[21], M[27]])
         self.play(
-            Indicate(M3[0][3]),
-            Indicate(M3[0][9]),
-            Indicate(M3[0][15]),
-            Indicate(M3[0][21]),
-            Indicate(M3[0][27]))
+            replace(M[ 3], 'q'),
+            replace(M[ 9], '10h^3'),
+            replace(M[15], '6ah^2'),
+            replace(M[21], '3bh'),
+            replace(M[27], 'c'),
+            replace(Z[ 3], 'z^2'))
+        
+        indicate([M[4], M[10], M[16], M[22], M[28], M[34]])
         self.play(
-            replace(M3[0][3], 'q'),
-            replace(M3[0][9], '10h^3'),
-            replace(M3[0][15], '6ah^2'),
-            replace(M3[0][21], '3bh'),
-            replace(M3[0][27], 'c'),
-            replace(Z1[0][3], 'z^2'))
-
-        self.play(
-            Indicate(M3[0][4]),
-            Indicate(M3[0][10]),
-            Indicate(M3[0][16]),
-            Indicate(M3[0][22]),
-            Indicate(M3[0][28]),
-            Indicate(M3[0][34]))
-        self.play(
-            replace(M3[0][4], 'r'),
-            replace(M3[0][10], '5h^4'),
-            replace(M3[0][16], '4ah^3'),
-            replace(M3[0][22], '3bh^2'),
-            replace(M3[0][28], '2ch'),
-            replace(M3[0][34], 'd'),
-            replace(Z1[0][4], 'z'))
+            replace(M[ 4], 'r'),
+            replace(M[10], '5h^4'),
+            replace(M[16], '4ah^3'),
+            replace(M[22], '3bh^2'),
+            replace(M[28], '2ch'),
+            replace(M[34], 'd'),
+            replace(Z[ 4], 'z'))
 
         self.wait(10)
 
