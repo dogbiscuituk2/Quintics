@@ -102,7 +102,7 @@ class Quintic01(Scene):
         Y = VGroup(Y1, Y2).arrange(DOWN, aligned_edge = RIGHT)
         G3 = VGroup(Y, G1).arrange(RIGHT, aligned_edge = UP).move_to(LEFT);
 
-# Start with the general quintic
+# Start with the general quintic in x
 
         self.play(FadeIn(Y1))
         self.play(Create(E1))
@@ -111,6 +111,13 @@ class Quintic01(Scene):
 # Make a vertical copy
 
         self.play(TransformFromCopy(E1, E2, path_arc = 2))
+        pause()
+
+# Show the reduced quintic in z
+
+        E3.move_to(E1, aligned_edge = LEFT)
+        self.play(Indicate(E1))
+        self.play(ReplacementTransform(E1, E3))
         pause()
 
 # Convert each term into an LHS
@@ -139,16 +146,11 @@ class Quintic01(Scene):
                 E4[index].set_opacity(0)
 # Distribute
             E6[index].move_to(E5[index], aligned_edge = LEFT)
-            if index < 5:
-                self.play(TransformMatchingShapes(E5[index], E6[index]))
-            else:
-                E6[index].move_to(E5[index])
-                E5[index].set_opacity(0)
-        pause()
-
-        E3.move_to(E1, aligned_edge = LEFT)
-        self.play(Indicate(E1))
-        self.play(ReplacementTransform(E1, E3))
+            #if index < 5:
+            self.play(TransformMatchingShapes(E5[index], E6[index]))
+            #else:
+                #E6[index].move_to(E5[index])
+                #E5[index].set_opacity(0)
         pause()
 
         EQ = MathTex('=')
@@ -157,9 +159,20 @@ class Quintic01(Scene):
         E7 = E6.copy().arrange(DOWN, aligned_edge = RIGHT)
         E8 = VGroup(E3.copy(), E7).arrange(DOWN, aligned_edge = RIGHT)
         E8.move_to(M)
-        self.play(Transform(E3, E8[0]))
-        for index in range(6):
-            self.play(Transform(E6[index], E7[index]))
+
+        #self.play(Transform(E3, E8[0]))
+        #for index in range(6):
+        #    self.play(Transform(E6[index], E7[index]))
+        self.play(
+            Transform(E3, E8[0]),
+            Transform(E6[0], E7[0]),
+            Transform(E6[1], E7[1]),
+            Transform(E6[2], E7[2]),
+            Transform(E6[3], E7[3]),
+            Transform(E6[4], E7[4]),
+            Transform(E6[5], E7[5]))
+
+        
         pause()
 
 ################################################################################
