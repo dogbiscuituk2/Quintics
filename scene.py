@@ -179,7 +179,8 @@ class Quintic01(Scene):
 # Move all powers of z out of M and into Z
 
         def replace(S, t):
-            return TransformMatchingShapes(S, MathTex(t).move_to(S.get_center()))
+            return Transform(S, MathTex(t).move_to(S.get_center()))
+            #return TransformMatchingShapes(S, MathTex(t).move_to(S.get_center()))
         
         M = M3[0]
         Z = Z1[0]
@@ -189,6 +190,7 @@ class Quintic01(Scene):
             replace(M[0], '1'),
             replace(M[6], '1'),
             replace(Z[0], 'z^5'))
+        indicate([Z[0]])
 
         indicate([M[1], M[7], M[13]])
         self.play(
@@ -196,6 +198,7 @@ class Quintic01(Scene):
             replace(M[ 7], '5h'),
             replace(M[13], 'a'),
             replace(Z[ 1], 'z^4'))
+        indicate([Z[1]])
 
         indicate([M[2], M[8], M[14], M[20]])
         self.play(
@@ -204,6 +207,7 @@ class Quintic01(Scene):
             replace(M[14], '4ah'),
             replace(M[20], 'b'),
             replace(Z[ 2], 'z^3'))
+        indicate([Z[2]])
 
         indicate([M[3], M[9], M[15], M[21], M[27]])
         self.play(
@@ -213,6 +217,7 @@ class Quintic01(Scene):
             replace(M[21], '3bh'),
             replace(M[27], 'c'),
             replace(Z[ 3], 'z^2'))
+        indicate([Z[3]])
         
         indicate([M[4], M[10], M[16], M[22], M[28], M[34]])
         self.play(
@@ -223,6 +228,7 @@ class Quintic01(Scene):
             replace(M[28], '2ch'),
             replace(M[34], 'd'),
             replace(Z[ 4], 'z'))
+        indicate([Z[4]])
 
         self.wait(10)
 
