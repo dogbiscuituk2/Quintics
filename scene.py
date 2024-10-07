@@ -23,43 +23,76 @@ class Quintic01(Scene):
             self.wait(0)
 
         def replace(S, t):
-            return TransformMatchingShapes(
-                S,
-                MathTex(t).move_to(S.get_center()),
-                transform_mismatches=False,
-                fade_transform_mismatches=True
-                )
+            return TransformMatchingShapes(S, MathTex(t).move_to(S.get_center()))
 
-        Y1 = make_tex(r'y^1\ =')
+        y1 = r'y^1\ ='
+        y2 = [r'x^5\ =', r'ax^4\ =', r'bx^3\ =', r'cx^2\ =', r'dx\ =', r'e\ =']
+        e1 = ['x^5+', 'ax^4+', 'bx^3+', 'cx^2+', 'dx+', 'e']
+        e2 = ['z^5+', '0z^4+', 'pz^3+', 'qz^2+', 'rz+', 's']
+        e3 = ['(z+h)^5', 'a(z+h)^4', 'b(z+h)^3', 'c(z+h)^2', 'd(z+h)', 'e']
+        e4 = [
+                'a(z^5 + 5hz^4 + 10h^2z^3 + 10h^3z^2 + 5h^4z + h^5)',
+                'a(z^4 + 4hz^3 + 6h^2z^2 + 4h^3z + h^4)',
+                'b(z^3 + 3hz^2 + 3h^2z + h^3)',
+                'c(z^2 + 2hz + h^2)',
+                'd(z + h)',
+                'e']
+        e5 = [
+                ['z^5+', '5hz^4+', '10h^2z^3+', '10h^3z^2+', '5h^4z+', 'h^5'],
+                ['az^4+', '4ahz^3+', '6ah^2z^2+', '4ah^3z+', 'ah^4'],
+                ['bz^3+', '3bhz^2+', '3bh^2z+', 'bh^3'],
+                ['cz^2+', '2chz+', 'ch^2'],
+                ['dz+', 'dh'],
+                ['e']]
+        y3 = [
+                ['(ay^1)'],
+                ['(ax^5)'],
+                ['(ax^4)'],
+                ['(bx^3)'],
+                ['(cx^2)'],
+                ['(dx^1)'],
+                ['(ex^0)']]
+        m3 = [
+                ['(z^5', '(0z^4', '(pz^3', '(qz^2', '(^1rz', '(s^1'],
+                ['(z^5', '(5hz^4', '(10h^2z^3', '(10h^3z^2', '(5h^4z', '(h^5'],
+                ['', '(az^4', '(4ahz^3', '(6ah^2z^2', '(4ah^3z', '(ah^4'],
+                ['', '', '(bz^3', '(3bhz^2', '(3bh^2z', '(bh^3'],
+                ['', '', '', '(cz^2', '(2chz', '(ch^2'],
+                ['', '', '', '', '(dz', '(dh^1'],
+                ['', '', '', '', '', '(eh^0']]
+        z0 = ['(1^0']
+        z1 = [z0, z0, z0, z0, z0, z0]
+        z = [
+                ['1', '0', 'p', 'q', 'r', 's'],
+                ['1', '5h', '10h^2', '10h^3', '5h^4', 'h^5'],
+                ['', 'a', '4ah', '6ah^2', '4ah^3', 'ah^4'],
+                ['', '', 'b', '3bh', '3bh^2', 'bh^3'],
+                ['', '', '', 'c', '2ch', 'ch^2'],
+                ['', '', '', '', 'd', 'dh'],
+                ['', '', '', '', '', 'e']]
+        e6 = [
+                ['0=5h+a', 'a=-5h'],
+                ['p=10h^2-20h^2+b', 'p=b-10h^2'],
+                ['q=10h^3-30h^3+3bh+c', 'q=3bh+c-20h^3'],
+                ['r=5h^4-20h^4+3bh^2+2ch+d', 'r=3bh^2+2ch+d-15h^4'],
+                ['s=h^5-5h^5+bh^3+ch^2+dh+e', 's=bh^3+ch^2+dh+e-4h^5']]
+        y4 = [['p'], ['q'], ['r'], ['s']]
+        m4 = [
+                [ '0',   '0',   '0', '-10',  '0', 'b'],
+                [ '0',   '0', '-20',   '0', '3b', 'c'],
+                [ '0', '-15',   '0',  '3b', '2c', 'd'],
+                ['-4',   '0',   'b',   'c',  'd', 'e']]
+        h4 = [['h^5'], ['h^4'], ['h^3'], ['h^2'], ['h'], ['1']]
+
+        Y1 = make_tex(y1)
         hide_chars(Y1[0][2])
-        Y2 = make_tex(r'x^5\ =', r'ax^4\ =', r'bx^3\ =', r'cx^2\ =', r'dx\ =', r'e\ =').arrange(DOWN, aligned_edge = RIGHT)
-        E1 = make_tex('x^5+', 'ax^4+', 'bx^3+', 'cx^2+', 'dx+', 'e')
-        E3 = make_tex('z^5+', '0z^4+', 'pz^3+', 'qz^2+', 'rz+', 's')
-        E4 = make_tex('(z+h)^5', 'a(z+h)^4', 'b(z+h)^3', 'c(z+h)^2', 'd(z+h)', 'e').arrange(DOWN, aligned_edge = LEFT)
-        E5 = make_tex(
-            'a(z^5 + 5hz^4 + 10h^2z^3 + 10h^3z^2 + 5h^4z + h^5)',
-            'a(z^4 + 4hz^3 + 6h^2z^2 + 4h^3z + h^4)',
-            'b(z^3 + 3hz^2 + 3h^2z + h^3)',
-            'c(z^2 + 2hz + h^2)',
-            'd(z + h)',
-            'e')
-        E6 = VGroup(
-            make_tex('z^5+', '5hz^4+', '10h^2z^3+', '10h^3z^2+', '5h^4z+', 'h^5'),
-            make_tex('az^4+', '4ahz^3+', '6ah^2z^2+', '4ah^3z+', 'ah^4'),
-            make_tex('bz^3+', '3bhz^2+', '3bh^2z+', 'bh^3'),
-            make_tex('cz^2+', '2chz+', 'ch^2'),
-            make_tex('dz+', 'dh'),
-            make_tex('e')
-        )
-
-        Y3 = Matrix([
-            ['(ay^1)'],
-            ['(ax^5)'],
-            ['(ax^4)'],
-            ['(bx^3)'],
-            ['(cx^2)'],
-            ['(dx^1)'],
-            ['(ex^0)']], bracket_h_buff = 0)
+        Y2 = make_tex(*y2).arrange(DOWN, aligned_edge = RIGHT)
+        E1 = make_tex(*e1)
+        E2 = make_tex(*e2)
+        E3 = make_tex(*e3).arrange(DOWN, aligned_edge = LEFT)
+        E4 = make_tex(*e4)
+        E5 = VGroup(*[make_tex(*e) for e in e5])
+        Y3 = Matrix(y3, bracket_h_buff = 0)
         
         for i in range(7):
             hide_chars(Y3[0][i][0][0], Y3[0][i][0][4])
@@ -73,15 +106,7 @@ class Quintic01(Scene):
             Y3[0][5][0][3],
             Y3[0][6][0][2], Y3[0][6][0][3])
 
-        M3 = Matrix([
-            ['(z^5', '(0z^4', '(pz^3', '(qz^2', '(^1rz', '(s^1'],
-            ['(z^5', '(5hz^4', '(10h^2z^3', '(10h^3z^2', '(5h^4z', '(h^5'],
-            ['', '(az^4', '(4ahz^3', '(6ah^2z^2', '(4ah^3z', '(ah^4'],
-            ['', '', '(bz^3', '(3bhz^2', '(3bh^2z', '(bh^3'],
-            ['', '', '', '(cz^2', '(2chz', '(ch^2'],
-            ['', '', '', '', '(dz', '(dh^1'],
-            ['', '', '', '', '', '(eh^0']
-        ], bracket_h_buff = 0.2, h_buff = 1.75)
+        M3 = Matrix(m3, bracket_h_buff = 0.2, h_buff = 1.75)
 
         for i in range(6):
             hide_chars(M3[0][i][0][0])
@@ -94,14 +119,13 @@ class Quintic01(Scene):
             M3[0][35][0][3],
             M3[0][41][0][2], M3[0][41][0][3])
 
-        z = ['(1^0']
-        Z1 = Matrix([z, z, z, z, z, z], bracket_h_buff = 0)
+        Z1 = Matrix(z1, bracket_h_buff = 0)
 
         for i in range(6):
             hide_chars(Z1[0][i][0][0], Z1[0][i][0][2])
 
-        E2 = E1.copy().arrange(DOWN, aligned_edge = LEFT)
-        G1 = VGroup(E1, E2).arrange(DOWN, aligned_edge = LEFT)
+        E1V = E1.copy().arrange(DOWN, aligned_edge = LEFT)
+        G1 = VGroup(E1, E1V).arrange(DOWN, aligned_edge = LEFT)
         Y = VGroup(Y1, Y2).arrange(DOWN, aligned_edge = RIGHT)
         G3 = VGroup(Y, G1).arrange(RIGHT, aligned_edge = UP).move_to(1.2 * LEFT);
 
@@ -113,58 +137,58 @@ class Quintic01(Scene):
 
 # Make a vertical copy
 
-        self.play(TransformFromCopy(E1, E2, path_arc = 2))
+        self.play(TransformFromCopy(E1, E1V, path_arc = 2))
         pause()
 
 # Show the reduced quintic in z
 
-        E3.move_to(E1, aligned_edge = LEFT)
+        E2.move_to(E1, aligned_edge = LEFT)
         indicate([E1])
-        self.play(ReplacementTransform(E1, E3))
+        self.play(ReplacementTransform(E1, E2))
         pause()
 
-# Convert each term into an LHS
+# Convert each x-term into an LHS
 
-        self.play(TransformMatchingShapes(E2, Y2))
+        self.play(TransformMatchingShapes(E1V, Y2))
         pause()
 
-# Add each binomial term as an RHS
+# Add each binomial x-term as an RHS
 
-        E4.move_to(E2, aligned_edge = LEFT)
-        self.play(Create(E4))
+        E3.move_to(E1V, aligned_edge = LEFT)
+        self.play(Create(E3))
         pause()
 
-# Expand each binomial term and distribute the coefficients
+# Expand each binomial x-term and distribute the coefficients
 
-        for index in range(6):
-            E5[index].move_to(E4[index], aligned_edge = LEFT)
+        for i in range(6):
+            E4[i].move_to(E3[i], aligned_edge = LEFT)
 # Flash
-            if index < 5:
-                indicate([E4[index]])
+            if i < 5:
+                indicate([E3[i]])
 # Expand
-            if index < 4:
-                self.play(TransformMatchingShapes(E4[index], E5[index]))
+            if i < 4:
+                self.play(TransformMatchingShapes(E3[i], E4[i]))
             else:
-                E5[index].move_to(E4[index])
-                E4[index].set_opacity(0)
+                E4[i].move_to(E3[i])
+                E3[i].set_opacity(0)
 # Distribute
-            E6[index].move_to(E5[index], aligned_edge = LEFT)
-            #if index < 5:
-            self.play(TransformMatchingShapes(E5[index], E6[index]))
+            E5[i].move_to(E4[i], aligned_edge = LEFT)
+            #if i < 5:
+            self.play(TransformMatchingShapes(E4[i], E5[i]))
             #else:
-                #E6[index].move_to(E5[index])
-                #E5[index].set_opacity(0)
+                #E5[i].move_to(E4[i])
+                #E4[i].set_opacity(0)
         pause()
 
 # Right align the fully expanded binomials
 
-        M = VGroup(E3, E6)
-        E7 = E6.copy().arrange(DOWN, aligned_edge = RIGHT)
-        E8 = VGroup(E3.copy(), E7).arrange(DOWN, aligned_edge = RIGHT)
+        M = VGroup(E2, E5)
+        E7 = E5.copy().arrange(DOWN, aligned_edge = RIGHT)
+        E8 = VGroup(E2.copy(), E7).arrange(DOWN, aligned_edge = RIGHT)
         E8.move_to(M)
         self.play(
-            Transform(E3, E8[0]),
-            [Transform(E6[i], E7[i]) for i in range(6)])
+            Transform(E2, E8[0]),
+            [Transform(E5[i], E7[i]) for i in range(6)])
         pause()
 
 # Convert to matrix equation Y=MZ
@@ -184,26 +208,30 @@ class Quintic01(Scene):
         M = M3[0]
         Z = Z1[0]
 
-        z = [
-            ['1', '1'],
-            ['0', '5h', 'a'],
-            ['p', '10h^2', '4ah', 'b'],
-            ['q', '10h^3', '6ah^2', '3bh', 'c'],
-            ['r', '5h^4', '4ah^3', '3bh^2', '2ch', 'd']]
+        def get_element(row, column):
+            return M[6 * row + column]
 
-        def new_target(i, j):
-            T = MathTex(f'z^{5 - i}' if i < 4 else 'z')
-            T.move_to(M[i + 6 * j], RIGHT)
+        def new_target(row, column):
+            T = MathTex(f'z^{5 - column}' if column < 4 else 'z')
+            T.move_to(get_element(row, column), RIGHT)
             T.generate_target()
-            T.target.move_to(Z[i], DOWN)
+            T.target.move_to(Z[column], DOWN)
             return T
 
-        for i in range(5):
-            T = [MoveToTarget(new_target(i, j)) for j in range(i + 2)]
-            T.append(FadeOut(Z[i]))
-            indicate([M[i + 6 * j] for j in range(i + 2)])
+        for column in range(5):
+            rows = range(column + 2)
+            T = [MoveToTarget(new_target(row, column)) for row in rows]
+            T.append(FadeOut(Z[column]))
+            indicate([get_element(row, column) for row in rows])
             self.play(*T)
-            self.play([replace(M[i + 6 * j], z[i][j]) for j in range(i + 2)])
+            self.play([replace(get_element(row, column), z[row][column]) for row in rows])
 
+# Highlight the second column of M
 
-        self.wait(10)
+        def get_column(column):
+            return VGroup(*[get_element(row, column) for row in range(column + 2)])
+
+        for column in range(6):
+            self.play(Indicate(get_column(column)))
+
+        self.wait(3)
