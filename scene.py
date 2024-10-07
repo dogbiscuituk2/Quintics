@@ -194,61 +194,28 @@ class Quintic01(Scene):
         def new_targets(i):
             T = [MoveToTarget(new_target(i, j)) for j in range(i + 2)]
             T.append(FadeOut(Z[i]))
-            return T
+            indicate([M[i + 6 * j] for j in range(i + 2)])
+            self.play(*T)
 
-        T = new_targets(0)
-
-        indicate([M[0], M[6]])
-        self.play(*T)
-            #MoveToTarget(T[0]),
-            #MoveToTarget(T[1]),
-            #FadeOut(Z[0]))
+        new_targets(0)
         self.play(
             replace(M[0], '1'),
             replace(M[6], '1'))
 
-        #T0 = new_target(1, 0)
-        #T1 = new_target(1, 1)
-        #T2 = new_target(1, 2)
-
-        T = new_targets(1)
-
-        indicate([M[1], M[7], M[13]])
-        self.play(*T)
-            #MoveToTarget(T[0]),
-            #MoveToTarget(T[1]),
-            #MoveToTarget(T[2]),
-            #FadeOut(Z[1]))
+        new_targets(1)
         self.play(
             replace(M[ 1], '0'),
             replace(M[ 7], '5h'),
             replace(M[13], 'a'))
 
-        T = new_targets(2)
-
-        indicate([M[2], M[8], M[14], M[20]])
-        self.play(*T)
-            #MoveToTarget(T[0]),
-            #MoveToTarget(T[1]),
-            #MoveToTarget(T[2]),
-            #MoveToTarget(T[3]),
-            #FadeOut(Z[2]))
+        new_targets(2)
         self.play(
             replace(M[ 2], 'p'),
             replace(M[ 8], '10h^2'),
             replace(M[14], '4ah'),
             replace(M[20], 'b'))
 
-        T = new_targets(3)
-
-        indicate([M[3], M[9], M[15], M[21], M[27]])
-        self.play(*T)
-            #MoveToTarget(T[0]),
-            #MoveToTarget(T[1]),
-            #MoveToTarget(T[2]),
-            #MoveToTarget(T[3]),
-            #MoveToTarget(T[4]),
-            #FadeOut(Z[3]))
+        new_targets(3)
         self.play(
             replace(M[ 3], 'q'),
             replace(M[ 9], '10h^3'),
@@ -256,17 +223,7 @@ class Quintic01(Scene):
             replace(M[21], '3bh'),
             replace(M[27], 'c'))
         
-        T = new_targets(4)
-
-        indicate([M[4], M[10], M[16], M[22], M[28], M[34]])
-        self.play(*T)
-            #MoveToTarget(T[0]),
-            #MoveToTarget(T[1]),
-            #MoveToTarget(T[2]),
-            #MoveToTarget(T[3]),
-            #MoveToTarget(T[4]),
-            #MoveToTarget(T[5]),
-            #FadeOut(Z[4]))
+        new_targets(4)
         self.play(
             replace(M[ 4], 'r'),
             replace(M[10], '5h^4'),
