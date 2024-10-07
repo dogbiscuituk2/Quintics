@@ -22,6 +22,9 @@ class Quintic01(Scene):
         def pause():
             self.wait(0)
 
+        def replace(S, t):
+            return TransformMatchingShapes(S, MathTex(t).move_to(S.get_center()))
+
         Y1 = make_tex(r'y^1\ =')
         hide_chars(Y1[0][2])
         Y2 = make_tex(r'x^5\ =', r'ax^4\ =', r'bx^3\ =', r'cx^2\ =', r'dx\ =', r'e\ =').arrange(DOWN, aligned_edge = RIGHT)
@@ -36,7 +39,7 @@ class Quintic01(Scene):
             'd(z + h)',
             'e')
         E6 = VGroup(
-            make_tex('z^5+', '5hz^4+', '10h^2z^3+', '10h^3z^2+', '5h^4z+', 'sh^5'),
+            make_tex('z^5+', '5hz^4+', '10h^2z^3+', '10h^3z^2+', '5h^4z+', 'h^5'),
             make_tex('az^4+', '4ahz^3+', '6ah^2z^2+', '4ah^3z+', 'ah^4'),
             make_tex('bz^3+', '3bhz^2+', '3bh^2z+', 'bh^3'),
             make_tex('cz^2+', '2chz+', 'ch^2'),
@@ -73,7 +76,7 @@ class Quintic01(Scene):
             ['', '', '', '(cz^2', '(2chz', '(ch^2'],
             ['', '', '', '', '(dz', '(dh^1'],
             ['', '', '', '', '', '(eh^0']
-        ], bracket_h_buff = 0.1, h_buff = 1.8)
+        ], bracket_h_buff = 0.1, h_buff = 1.6)
 
         for i in range(6):
             hide_chars(M3[0][i][0][0])
@@ -177,61 +180,102 @@ class Quintic01(Scene):
         pause()
 
 # Move all powers of z out of M and into Z
-
-        def replace(S, t):
-            return Transform(S, MathTex(t).move_to(S.get_center()))
-            #return TransformMatchingShapes(S, MathTex(t).move_to(S.get_center()))
         
         M = M3[0]
         Z = Z1[0]
 
+        def new_target(i, j):
+            T = MathTex(f'z^{5 - i}' if i < 4 else 'z')
+            T.move_to(M[i + 6 * j], RIGHT)
+            T.generate_target()
+            T.target.move_to(Z[i], RIGHT)
+            return T
+        
+        def new_targets(i):
+            T = [MoveToTarget(new_target(i, j)) for j in range(i + 2)]
+            T.append(FadeOut(Z[i]))
+            return T
+
+        T = new_targets(0)
+
         indicate([M[0], M[6]])
+        self.play(*T)
+            #MoveToTarget(T[0]),
+            #MoveToTarget(T[1]),
+            #FadeOut(Z[0]))
         self.play(
             replace(M[0], '1'),
-            replace(M[6], '1'),
-            replace(Z[0], 'z^5'))
-        indicate([Z[0]])
+            replace(M[6], '1'))
+
+        #T0 = new_target(1, 0)
+        #T1 = new_target(1, 1)
+        #T2 = new_target(1, 2)
+
+        T = new_targets(1)
 
         indicate([M[1], M[7], M[13]])
+        self.play(*T)
+            #MoveToTarget(T[0]),
+            #MoveToTarget(T[1]),
+            #MoveToTarget(T[2]),
+            #FadeOut(Z[1]))
         self.play(
             replace(M[ 1], '0'),
             replace(M[ 7], '5h'),
-            replace(M[13], 'a'),
-            replace(Z[ 1], 'z^4'))
-        indicate([Z[1]])
+            replace(M[13], 'a'))
+
+        T = new_targets(2)
 
         indicate([M[2], M[8], M[14], M[20]])
+        self.play(*T)
+            #MoveToTarget(T[0]),
+            #MoveToTarget(T[1]),
+            #MoveToTarget(T[2]),
+            #MoveToTarget(T[3]),
+            #FadeOut(Z[2]))
         self.play(
             replace(M[ 2], 'p'),
             replace(M[ 8], '10h^2'),
             replace(M[14], '4ah'),
-            replace(M[20], 'b'),
-            replace(Z[ 2], 'z^3'))
-        indicate([Z[2]])
+            replace(M[20], 'b'))
+
+        T = new_targets(3)
 
         indicate([M[3], M[9], M[15], M[21], M[27]])
+        self.play(*T)
+            #MoveToTarget(T[0]),
+            #MoveToTarget(T[1]),
+            #MoveToTarget(T[2]),
+            #MoveToTarget(T[3]),
+            #MoveToTarget(T[4]),
+            #FadeOut(Z[3]))
         self.play(
             replace(M[ 3], 'q'),
             replace(M[ 9], '10h^3'),
             replace(M[15], '6ah^2'),
             replace(M[21], '3bh'),
-            replace(M[27], 'c'),
-            replace(Z[ 3], 'z^2'))
-        indicate([Z[3]])
+            replace(M[27], 'c'))
         
+        T = new_targets(4)
+
         indicate([M[4], M[10], M[16], M[22], M[28], M[34]])
+        self.play(*T)
+            #MoveToTarget(T[0]),
+            #MoveToTarget(T[1]),
+            #MoveToTarget(T[2]),
+            #MoveToTarget(T[3]),
+            #MoveToTarget(T[4]),
+            #MoveToTarget(T[5]),
+            #FadeOut(Z[4]))
         self.play(
             replace(M[ 4], 'r'),
             replace(M[10], '5h^4'),
             replace(M[16], '4ah^3'),
             replace(M[22], '3bh^2'),
             replace(M[28], '2ch'),
-            replace(M[34], 'd'),
-            replace(Z[ 4], 'z'))
-        indicate([Z[4]])
+            replace(M[34], 'd'))
 
         self.wait(10)
-
 
 class Quintic02(Scene):
     def construct(self):
