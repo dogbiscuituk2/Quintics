@@ -23,7 +23,12 @@ class Quintic01(Scene):
             self.wait(0)
 
         def replace(S, t):
-            return TransformMatchingShapes(S, MathTex(t).move_to(S.get_center()))
+            return TransformMatchingShapes(
+                S,
+                MathTex(t).move_to(S.get_center()),
+                transform_mismatches=False,
+                fade_transform_mismatches=True
+                )
 
         Y1 = make_tex(r'y^1\ =')
         hide_chars(Y1[0][2])
@@ -76,7 +81,7 @@ class Quintic01(Scene):
             ['', '', '', '(cz^2', '(2chz', '(ch^2'],
             ['', '', '', '', '(dz', '(dh^1'],
             ['', '', '', '', '', '(eh^0']
-        ], bracket_h_buff = 0.1, h_buff = 1.6)
+        ], bracket_h_buff = 0.2, h_buff = 1.75)
 
         for i in range(6):
             hide_chars(M3[0][i][0][0])
@@ -98,7 +103,7 @@ class Quintic01(Scene):
         E2 = E1.copy().arrange(DOWN, aligned_edge = LEFT)
         G1 = VGroup(E1, E2).arrange(DOWN, aligned_edge = LEFT)
         Y = VGroup(Y1, Y2).arrange(DOWN, aligned_edge = RIGHT)
-        G3 = VGroup(Y, G1).arrange(RIGHT, aligned_edge = UP).move_to(LEFT);
+        G3 = VGroup(Y, G1).arrange(RIGHT, aligned_edge = UP).move_to(1.2 * LEFT);
 
 # Start with the general quintic in x
 
