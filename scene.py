@@ -23,7 +23,8 @@ class Quintic01(Scene):
             self.wait(0)
 
         def replace(S, t):
-            return TransformMatchingShapes(S, MathTex(t).move_to(S.get_center()))
+            #return TransformMatchingShapes(S, MathTex(t).move_to(S.get_center()))
+            return ReplacementTransform(S, MathTex(t).move_to(S.get_center()))
 
         y1 = r'y^1\ ='
         y2 = [r'x^5\ =', r'ax^4\ =', r'bx^3\ =', r'cx^2\ =', r'dx\ =', r'e\ =']
