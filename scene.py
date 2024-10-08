@@ -13,11 +13,22 @@ class Quintic01(Scene):
 
         def make_tex(*args):
             s = [f'({arg}' for arg in args]
-            tex = MathTex(*s)
-            for t in tex:
-                #t[0].set_color(RED)
-                t[0].set_opacity(0)
-            return tex
+            S = MathTex(*s)
+            for i in range(len(s)):
+                t = s[i]
+                T = S[i]
+                T[0].set_opacity(0)
+                j = 1
+                super = False
+                for k in range(1, len(t)):
+                    c = t[k]
+                    if c == '^':
+                        super = True
+                    else:
+                        if (c == 'a'):
+                            T[j].set_color(RED)
+                        j += 1
+            return S
 
         def pause():
             self.wait(0)
