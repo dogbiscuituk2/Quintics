@@ -1,7 +1,28 @@
 from manim import *
+import re
 
 class Quintic01(Scene):
     def construct(self):
+
+        def get_colour(c):
+            _a = RED
+            _bp = ORANGE
+            _cq = YELLOW
+            _dr = GREEN
+            _es = TEAL
+            _h = PURPLE
+            match(c):
+                case 'a': return _a
+                case 'b': return _bp
+                case 'c': return _cq
+                case 'd': return _dr
+                case 'e': return _es
+                case 'h': return _h
+                case 'p': return _bp
+                case 'q': return _cq
+                case 'r': return _dr
+                case 's': return _es
+            return WHITE
 
         def hide_chars(*args):
             for arg in args:
@@ -15,20 +36,28 @@ class Quintic01(Scene):
             s = [f'({arg}' for arg in args]
             S = MathTex(*s)
             for i in range(len(s)):
-                t = s[i]
-                T = S[i]
-                T[0].set_opacity(0)
-                j = 1
-                super = False
-                for k in range(1, len(t)):
-                    c = t[k]
-                    if c == '^':
-                        super = True
-                    else:
-                        if (c == 'a'):
-                            T[j].set_color(RED)
-                        j += 1
+                paint_tex(S[i], s[i])
             return S
+
+            #    t = s[i]
+            #    T = S[i]
+            #    p = 0
+            #    for u in t.split('^'):
+            #        for v in u:
+            #            if (p == 0):
+            #                T[p].set_opacity(0)
+            #            else:
+            #                last_colour = get_colour(v)
+            #                T[p].set_color(last_colour)
+            #            p += 1
+
+        def paint_tex(tex, text):
+            p = 0
+            for u in text.split('^'):
+                for v in u:
+                    last_colour = get_colour(v)
+                    tex[p].set_color(last_colour)
+                    p += 1
 
         def pause():
             self.wait(0)
@@ -37,17 +66,17 @@ class Quintic01(Scene):
             #return TransformMatchingShapes(S, MathTex(t).move_to(S.get_center()))
             return ReplacementTransform(S, MathTex(t).move_to(S.get_center()))
 
-        y1 = r'y^1\ ='
-        y2 = [r'x^5\ =', r'ax^4\ =', r'bx^3\ =', r'cx^2\ =', r'dx\ =', r'e\ =']
+        y1 = 'y^1='
+        y2 = ['x^5=', 'ax^4=', 'bx^3=', 'cx^2=', 'dx=', 'e=']
         e1 = ['x^5+', 'ax^4+', 'bx^3+', 'cx^2+', 'dx+', 'e']
         e2 = ['z^5+', '0z^4+', 'pz^3+', 'qz^2+', 'rz+', 's']
         e3 = ['(z+h)^5', 'a(z+h)^4', 'b(z+h)^3', 'c(z+h)^2', 'd(z+h)', 'e']
         e4 = [
-                'a(z^5 + 5hz^4 + 10h^2z^3 + 10h^3z^2 + 5h^4z + h^5)',
-                'a(z^4 + 4hz^3 + 6h^2z^2 + 4h^3z + h^4)',
-                'b(z^3 + 3hz^2 + 3h^2z + h^3)',
-                'c(z^2 + 2hz + h^2)',
-                'd(z + h)',
+                'a(z^5+5hz^4+10h^2z^3+10h^3z^2+5h^4z+h^5)',
+                'a(z^4+4hz^3+6h^2z^2+4h^3z+h^4)',
+                'b(z^3+3hz^2+3h^2z+h^3)',
+                'c(z^2+2hz+h^2)',
+                'd(z+h)',
                 'e']
         e5 = [
                 ['z^5+', '5hz^4+', '10h^2z^3+', '10h^3z^2+', '5h^4z+', 'h^5'],
