@@ -14,20 +14,20 @@ class Quintic01(Scene):
             _es = TEAL
             _h = PURPLE
             match(c):
-                case 'a': return RED
+                case 'a': return PURE_RED
                 case 'b': return ORANGE
                 case 'c': return YELLOW
-                case 'd': return GREEN
+                case 'd': return PURE_GREEN
                 case 'e': return TEAL
                 case 'h': return PURPLE
                 case 'p': return ORANGE
                 case 'q': return YELLOW
-                case 'r': return GREEN
+                case 'r': return PURE_GREEN
                 case 's': return TEAL
                 case 'x': return BLUE
                 case 'y': return BLUE
                 case 'z': return BLUE
-            return WHITE
+            return LIGHT_GREY
 
         def hide_chars(*args):
             for arg in args:
