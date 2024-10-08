@@ -14,16 +14,19 @@ class Quintic01(Scene):
             _es = TEAL
             _h = PURPLE
             match(c):
-                case 'a': return _a
-                case 'b': return _bp
-                case 'c': return _cq
-                case 'd': return _dr
-                case 'e': return _es
-                case 'h': return _h
-                case 'p': return _bp
-                case 'q': return _cq
-                case 'r': return _dr
-                case 's': return _es
+                case 'a': return RED
+                case 'b': return ORANGE
+                case 'c': return YELLOW
+                case 'd': return GREEN
+                case 'e': return TEAL
+                case 'h': return PURPLE
+                case 'p': return ORANGE
+                case 'q': return YELLOW
+                case 'r': return GREEN
+                case 's': return TEAL
+                case 'x': return BLUE
+                case 'y': return BLUE
+                case 'z': return BLUE
             return WHITE
 
         def hide_chars(*args):
@@ -39,6 +42,7 @@ class Quintic01(Scene):
             S = MathTex(*s)
             for i in range(len(s)):
                 paint_tex(S[i], s[i])
+                S[i][0].set_opacity(0)
             return S
 
         def paint_tex(tex, text):
@@ -50,6 +54,7 @@ class Quintic01(Scene):
                     if not super:
                         colour = get_colour(v)
                     tex[p].set_color(colour)
+                    super = False
                     p += 1
                 super = True
 
