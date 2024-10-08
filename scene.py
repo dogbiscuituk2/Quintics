@@ -5,6 +5,8 @@ class Quintic01(Scene):
     def construct(self):
 
         def get_colour(c):
+            if c.isnumeric():
+                return PINK
             _a = RED
             _bp = ORANGE
             _cq = YELLOW
@@ -39,25 +41,17 @@ class Quintic01(Scene):
                 paint_tex(S[i], s[i])
             return S
 
-            #    t = s[i]
-            #    T = S[i]
-            #    p = 0
-            #    for u in t.split('^'):
-            #        for v in u:
-            #            if (p == 0):
-            #                T[p].set_opacity(0)
-            #            else:
-            #                last_colour = get_colour(v)
-            #                T[p].set_color(last_colour)
-            #            p += 1
-
         def paint_tex(tex, text):
+            colour = BLACK
+            super = False
             p = 0
             for u in text.split('^'):
                 for v in u:
-                    last_colour = get_colour(v)
-                    tex[p].set_color(last_colour)
+                    if not super:
+                        colour = get_colour(v)
+                    tex[p].set_color(colour)
                     p += 1
+                super = True
 
         def pause():
             self.wait(0)
