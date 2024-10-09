@@ -32,11 +32,7 @@ class Quintic01(Scene):
             M = Matrix(s)
             for row in range(rows):
                 for column in range(columns):
-                    print(f'row: {row}')
-                    print(f'column: {column}')
-                    print(M[0][row * columns + column])
-                    print(f's[row][column]: {s[row][column]}')
-                    paint_tex(M[0][row * columns + column], s[row][column])
+                    paint_tex(M[0][row * columns + column][0], s[row][column])
             return M
 
         def make_tex(*args):
@@ -47,19 +43,18 @@ class Quintic01(Scene):
             return S
 
         def paint_tex(tex, text):
-            tex[0].set_opacity(0)
             colour = BLACK
             super = False
             p = 0
-            print(f'tex: {tex}')
-            print(f'text: {text}')
             for u in text.split('^'):
                 for c in u:
-                    print(f'p: {p}')
                     t = tex[p]
-                    if not super:
-                        colour = get_colour(c)
-                    t.set_color(colour)
+                    if c == '|':
+                        t.set_opacity(0)
+                    else:
+                        if not super:
+                            colour = get_colour(c)
+                        t.set_color(colour)
                     super = False
                     p += 1
                 super = True
@@ -98,7 +93,7 @@ class Quintic01(Scene):
                 ['cx^2'],
                 ['dx'],
                 ['e']]
-        m3 = [
+        m1 = [
                 ['z^5', '0z^4', 'pz^3', 'qz^2', 'rz', 's'],
                 ['z^5', '5hz^4', '10h^2z^3', '10h^3z^2', '5h^4z', 'h^5'],
                 ['', 'az^4', '4ahz^3', '6ah^2z^2', '4ah^3z', 'ah^4'],
@@ -138,17 +133,14 @@ class Quintic01(Scene):
         E4 = make_tex(*e4)
         E5 = VGroup(*[make_tex(*e) for e in e5])
 
-        Y3 = Matrix(y3, bracket_h_buff = 0)
-
-        #M3 = Matrix(m3, bracket_h_buff = 0.2, h_buff = 1.75)
-        M3 = make_matrix(m3)
-
-        Z1 = Matrix(z1, bracket_h_buff = 0)
+        Y3 = make_matrix(y3) #, bracket_h_buff = 0)
+        M1 = make_matrix(m1) #, bracket_h_buff = 0.2, h_buff = 1.75)
+        Z1 = make_matrix(z1) #, bracket_h_buff = 0)
 
         E1V = E1.copy().arrange(DOWN, aligned_edge = LEFT)
         G1 = VGroup(E1, E1V).arrange(DOWN, aligned_edge = LEFT)
         Y = VGroup(Y1, Y2).arrange(DOWN, aligned_edge = RIGHT)
-        G3 = VGroup(Y, G1).arrange(RIGHT, aligned_edge = UP).move_to(1.2 * LEFT);
+        G3 = VGroup(Y, G1).arrange(RIGHT, aligned_edge = UP).move_to(1.2 * LEFT)
 
 # Start with the general quintic in x
 
@@ -215,18 +207,18 @@ class Quintic01(Scene):
 # Convert to matrix equation Y=MZ
 
         EQ = MathTex('=')
-        VGroup(Y3, EQ, M3, Z1).arrange(RIGHT, aligned_edge = UP)
+        VGroup(Y3, EQ, M1, Z1).arrange(RIGHT, aligned_edge = UP)
         EQ.move_to(EQ.get_center() + 2.9 * DOWN)
         Z1.move_to(Z1.get_center() + 0.5 * DOWN)
         self.play(TransformMatchingShapes(Y, Y3))
         self.play(FadeIn(EQ))
-        self.play(TransformMatchingShapes(M, M3))
+        self.play(TransformMatchingShapes(M, M1))
         self.play(FadeIn(Z1))
         pause()
 
 # Move all powers of z out of M and into Z
         
-        M = M3[0]
+        M = M1[0]
         Z = Z1[0]
 
         def get_element(row, column):
