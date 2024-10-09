@@ -3,27 +3,39 @@ from manim import *
 class Quintic01(Scene):
     def construct(self):
 
+        jRED = PURE_RED
+        jORANGE = ORANGE
+        jYELLOW = YELLOW
+        jGREEN = PURE_GREEN
+        jCYAN = TEAL
+        jBLUE = BLUE
+        jMAGENTA = PURPLE
+        jPURPLE = PURPLE
+        jPINK = LIGHT_PINK
+        jGREY = LIGHT_GREY
+        jWHITE = WHITE
+
         def get_colour(c: str):
             if c.isnumeric():
-                return PINK
+                return jPINK
             match(c):
-                case 'a': return PURE_RED
-                case 'b': return ORANGE
-                case 'c': return YELLOW
-                case 'd': return PURE_GREEN
-                case 'e': return TEAL
-                case 'h': return PURPLE
-                case 'p': return ORANGE
-                case 'q': return YELLOW
-                case 'r': return PURE_GREEN
-                case 's': return TEAL
-                case 'x': return BLUE
-                case 'y': return BLUE
-                case 'z': return BLUE
-            return LIGHT_GREY
+                case 'a': return jRED
+                case 'b': return jORANGE
+                case 'c': return jYELLOW
+                case 'd': return jGREEN
+                case 'e': return jCYAN
+                case 'h': return jPURPLE
+                case 'p': return jORANGE
+                case 'q': return jYELLOW
+                case 'r': return jGREEN
+                case 's': return jCYAN
+                case 'x': return jBLUE
+                case 'y': return jBLUE
+                case 'z': return jBLUE
+            return jGREY
         
         def indicate(args):
-            self.play(Indicate(VGroup(*args), color = WHITE))
+            self.play(Indicate(VGroup(*args), color = jWHITE))
 
         def make_matrix(matrix, hb: float = 1.3, bhb: float = MED_SMALL_BUFF):
             rows = len(matrix)
@@ -136,7 +148,7 @@ class Quintic01(Scene):
 
         Y3 = make_matrix(y3, bhb = 0)
         M1 = make_matrix(m1, hb = 1.75) #, bhb = 0.2)
-        Z1 = make_matrix(z1, bhb = 0.2)
+        Z1 = make_matrix(z1, bhb = 0)
 
         E1V = E1.copy().arrange(DOWN, aligned_edge = LEFT)
         G1 = VGroup(E1, E1V).arrange(DOWN, aligned_edge = LEFT)
