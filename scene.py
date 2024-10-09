@@ -23,26 +23,26 @@ class Quintic01(Scene):
             return LIGHT_GREY
         
         def indicate(args):
-            self.play(Indicate(VGroup(*args)))
+            self.play(Indicate(VGroup(*args), color = WHITE))
 
-        def make_matrix(args):
-            rows = len(args)
-            columns = len(args[0])
-            s = [[f'|{t}' for t in row] for row in args]
-            M = Matrix(s)
+        def make_matrix(data, hb: float = 1.3, bhb: float = MED_SMALL_BUFF):
+            rows = len(data)
+            cols = len(data[0])
+            s = [[f'|{t}' for t in row] for row in data]
+            M = Matrix(s, h_buff = hb, bracket_h_buff = bhb)
             for row in range(rows):
-                for column in range(columns):
-                    paint_tex(M[0][row * columns + column][0], s[row][column])
+                for col in range(cols):
+                    paint_tex(M[0][row * cols + col][0], s[row][col])
             return M
 
         def make_tex(*args):
             s = [f'|{arg}' for arg in args]
-            S = MathTex(*s)
+            T = MathTex(*s)
             for i in range(len(s)):
-                paint_tex(S[i], s[i])
-            return S
+                paint_tex(T[i], s[i])
+            return T
 
-        def paint_tex(tex, text):
+        def paint_tex(tex: MathTex, text: str):
             colour = BLACK
             super = False
             p = 0
@@ -62,9 +62,8 @@ class Quintic01(Scene):
         def pause():
             self.wait(0)
 
-        def replace(S, t):
-            #return TransformMatchingShapes(S, MathTex(t).move_to(S.get_center()))
-            return ReplacementTransform(S, MathTex(t).move_to(S.get_center()))
+        def replace(S: MathTex, t: str):
+            return ReplacementTransform(S, make_tex(t).move_to(S.get_center()))
 
         y1 = 'y='
         y2 = ['x^5=', 'ax^4=', 'bx^3=', 'cx^2=', 'dx=', 'e=']
@@ -133,9 +132,9 @@ class Quintic01(Scene):
         E4 = make_tex(*e4)
         E5 = VGroup(*[make_tex(*e) for e in e5])
 
-        Y3 = make_matrix(y3) #, bracket_h_buff = 0)
-        M1 = make_matrix(m1) #, bracket_h_buff = 0.2, h_buff = 1.75)
-        Z1 = make_matrix(z1) #, bracket_h_buff = 0)
+        Y3 = make_matrix(y3, bhb = 0)
+        M1 = make_matrix(m1, hb = 1.75) #, bhb = 0.2)
+        Z1 = make_matrix(z1, bhb = 0.2)
 
         E1V = E1.copy().arrange(DOWN, aligned_edge = LEFT)
         G1 = VGroup(E1, E1V).arrange(DOWN, aligned_edge = LEFT)
@@ -225,7 +224,7 @@ class Quintic01(Scene):
             return M[6 * row + column]
 
         def new_target(row, column):
-            T = MathTex(f'z^{5 - column}' if column < 4 else 'z')
+            T = make_tex(f'z^{5 - column}' if column < 4 else 'z')
             T.move_to(get_element(row, column), RIGHT)
             T.generate_target()
             T.target.move_to(Z[column], DOWN)
@@ -235,16 +234,8 @@ class Quintic01(Scene):
             rows = range(column + 2)
             T = [MoveToTarget(new_target(row, column)) for row in rows]
             T.append(FadeOut(Z[column]))
+            T.append([replace(get_element(row, column), z[row][column]) for row in rows])
             indicate([get_element(row, column) for row in rows])
             self.play(*T)
-            self.play([replace(get_element(row, column), z[row][column]) for row in rows])
-
-# Highlight the second column of M
-
-        def get_column(column):
-            return VGroup(*[get_element(row, column) for row in range(column + 2)])
-
-        for column in range(6):
-            self.play(Indicate(get_column(column)))
 
         self.wait(3)
