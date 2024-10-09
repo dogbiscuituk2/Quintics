@@ -1,5 +1,4 @@
 from manim import *
-import re
 
 class Quintic01(Scene):
     def construct(self):
@@ -7,12 +6,6 @@ class Quintic01(Scene):
         def get_colour(c):
             if c.isnumeric():
                 return PINK
-            _a = RED
-            _bp = ORANGE
-            _cq = YELLOW
-            _dr = GREEN
-            _es = TEAL
-            _h = PURPLE
             match(c):
                 case 'a': return PURE_RED
                 case 'b': return ORANGE
@@ -28,32 +21,45 @@ class Quintic01(Scene):
                 case 'y': return BLUE
                 case 'z': return BLUE
             return LIGHT_GREY
-
-        def hide_chars(*args):
-            for arg in args:
-                #arg.set_color(RED)
-                arg.set_opacity(0)
         
         def indicate(args):
             self.play(Indicate(VGroup(*args)))
 
+        def make_matrix(args):
+            rows = len(args)
+            columns = len(args[0])
+            s = [[f'|{t}' for t in row] for row in args]
+            M = Matrix(s)
+            for row in range(rows):
+                for column in range(columns):
+                    print(f'row: {row}')
+                    print(f'column: {column}')
+                    print(M[0][row * columns + column])
+                    print(f's[row][column]: {s[row][column]}')
+                    paint_tex(M[0][row * columns + column], s[row][column])
+            return M
+
         def make_tex(*args):
-            s = [f'({arg}' for arg in args]
+            s = [f'|{arg}' for arg in args]
             S = MathTex(*s)
             for i in range(len(s)):
                 paint_tex(S[i], s[i])
-                S[i][0].set_opacity(0)
             return S
 
         def paint_tex(tex, text):
+            tex[0].set_opacity(0)
             colour = BLACK
             super = False
             p = 0
+            print(f'tex: {tex}')
+            print(f'text: {text}')
             for u in text.split('^'):
-                for v in u:
+                for c in u:
+                    print(f'p: {p}')
+                    t = tex[p]
                     if not super:
-                        colour = get_colour(v)
-                    tex[p].set_color(colour)
+                        colour = get_colour(c)
+                    t.set_color(colour)
                     super = False
                     p += 1
                 super = True
@@ -65,13 +71,13 @@ class Quintic01(Scene):
             #return TransformMatchingShapes(S, MathTex(t).move_to(S.get_center()))
             return ReplacementTransform(S, MathTex(t).move_to(S.get_center()))
 
-        y1 = 'y^1='
+        y1 = 'y='
         y2 = ['x^5=', 'ax^4=', 'bx^3=', 'cx^2=', 'dx=', 'e=']
         e1 = ['x^5+', 'ax^4+', 'bx^3+', 'cx^2+', 'dx+', 'e']
         e2 = ['z^5+', '0z^4+', 'pz^3+', 'qz^2+', 'rz+', 's']
         e3 = ['(z+h)^5', 'a(z+h)^4', 'b(z+h)^3', 'c(z+h)^2', 'd(z+h)', 'e']
         e4 = [
-                'a(z^5+5hz^4+10h^2z^3+10h^3z^2+5h^4z+h^5)',
+                '(z^5+5hz^4+10h^2z^3+10h^3z^2+5h^4z+h^5)',
                 'a(z^4+4hz^3+6h^2z^2+4h^3z+h^4)',
                 'b(z^3+3hz^2+3h^2z+h^3)',
                 'c(z^2+2hz+h^2)',
@@ -85,22 +91,22 @@ class Quintic01(Scene):
                 ['dz+', 'dh'],
                 ['e']]
         y3 = [
-                ['(ay^1)'],
-                ['(ax^5)'],
-                ['(ax^4)'],
-                ['(bx^3)'],
-                ['(cx^2)'],
-                ['(dx^1)'],
-                ['(ex^0)']]
+                ['y'],
+                ['x^5'],
+                ['ax^4'],
+                ['bx^3'],
+                ['cx^2'],
+                ['dx'],
+                ['e']]
         m3 = [
-                ['(z^5', '(0z^4', '(pz^3', '(qz^2', '(^1rz', '(s^1'],
-                ['(z^5', '(5hz^4', '(10h^2z^3', '(10h^3z^2', '(5h^4z', '(h^5'],
-                ['', '(az^4', '(4ahz^3', '(6ah^2z^2', '(4ah^3z', '(ah^4'],
-                ['', '', '(bz^3', '(3bhz^2', '(3bh^2z', '(bh^3'],
-                ['', '', '', '(cz^2', '(2chz', '(ch^2'],
-                ['', '', '', '', '(dz', '(dh^1'],
-                ['', '', '', '', '', '(eh^0']]
-        z0 = ['(1^0']
+                ['z^5', '0z^4', 'pz^3', 'qz^2', 'rz', 's'],
+                ['z^5', '5hz^4', '10h^2z^3', '10h^3z^2', '5h^4z', 'h^5'],
+                ['', 'az^4', '4ahz^3', '6ah^2z^2', '4ah^3z', 'ah^4'],
+                ['', '', 'bz^3', '3bhz^2', '3bh^2z', 'bh^3'],
+                ['', '', '', 'cz^2', '2chz', 'ch^2'],
+                ['', '', '', '', 'dz', 'dh'],
+                ['', '', '', '', '', 'e']]
+        z0 = ['1']
         z1 = [z0, z0, z0, z0, z0, z0]
         z = [
                 ['1', '0', 'p', 'q', 'r', 's'],
@@ -125,44 +131,19 @@ class Quintic01(Scene):
         h4 = [['h^5'], ['h^4'], ['h^3'], ['h^2'], ['h'], ['1']]
 
         Y1 = make_tex(y1)
-        hide_chars(Y1[0][2])
         Y2 = make_tex(*y2).arrange(DOWN, aligned_edge = RIGHT)
         E1 = make_tex(*e1)
         E2 = make_tex(*e2)
         E3 = make_tex(*e3).arrange(DOWN, aligned_edge = LEFT)
         E4 = make_tex(*e4)
         E5 = VGroup(*[make_tex(*e) for e in e5])
+
         Y3 = Matrix(y3, bracket_h_buff = 0)
-        
-        for i in range(7):
-            hide_chars(Y3[0][i][0][0], Y3[0][i][0][4])
 
-        hide_chars(
-            Y3[0][0][0][1], Y3[0][0][0][3],
-            Y3[0][1][0][1],
-            Y3[0][2][0][4],
-            Y3[0][3][0][4],
-            Y3[0][4][0][4],
-            Y3[0][5][0][3],
-            Y3[0][6][0][2], Y3[0][6][0][3])
-
-        M3 = Matrix(m3, bracket_h_buff = 0.2, h_buff = 1.75)
-
-        for i in range(6):
-            hide_chars(M3[0][i][0][0])
-            for j in range(i, 6):
-                hide_chars(M3[0][6 * (i + 1) + j][0][0])
-
-        hide_chars(
-            M3[0][4][0][1],
-            M3[0][5][0][2],
-            M3[0][35][0][3],
-            M3[0][41][0][2], M3[0][41][0][3])
+        #M3 = Matrix(m3, bracket_h_buff = 0.2, h_buff = 1.75)
+        M3 = make_matrix(m3)
 
         Z1 = Matrix(z1, bracket_h_buff = 0)
-
-        for i in range(6):
-            hide_chars(Z1[0][i][0][0], Z1[0][i][0][2])
 
         E1V = E1.copy().arrange(DOWN, aligned_edge = LEFT)
         G1 = VGroup(E1, E1V).arrange(DOWN, aligned_edge = LEFT)
