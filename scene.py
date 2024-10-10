@@ -26,24 +26,23 @@ class Test(Scene):
 class Quintic01(Scene):
     def construct(self):
 
-        cRed     = rgb_to_color([1.0, 0.3, 0.3])
+        cRed     = rgb_to_color([1.0, 0.1, 0.2])
         cOrange  = rgb_to_color([1.0, 0.5, 0.3])
         cYellow  = rgb_to_color([0.8, 0.8, 0.0])
         cGreen   = rgb_to_color([0.2, 1.0, 0.2])
         cCyan    = rgb_to_color([0.0, 1.0, 1.0])
         cMagenta = rgb_to_color([1.0, 0.0, 1.0])
-        cPink    = rgb_to_color([1.0, 0.5, 0.5])
         cGrey    = rgb_to_color([0.7, 0.7, 0.7])
         cWhite   = rgb_to_color([1.0, 1.0, 1.0])
 
         def get_colour(c: str):
             match(c):
-                case c if c.isnumeric(): return cRed;
+                case c if c.isnumeric(): return cMagenta;
                 case c if c in 'abcde': return cGreen;
                 case c if c in 'pqrs': return cYellow;
                 case 'h': return cOrange
-                case 'x': return cPink
-                case 'y': return cMagenta
+                case 'x': return cRed
+                case 'y': return cGrey
                 case 'z': return cCyan
             return cGrey
         
@@ -138,11 +137,17 @@ class Quintic01(Scene):
                 ['', '', '', '', 'd^|', 'dh^|'],
                 ['', '', '', '', '', 'e^|']]
         e6 = [
-                ['0=5h+a^|', 'a^|=-5h'],
-                ['p=10h^2-20h^2+b', 'p=b-10h^2'],
-                ['q=10h^3-30h^3+3bh+c', 'q=3bh+c-20h^3'],
-                ['r=5h^4-20h^4+3bh^2+2ch+d', 'r=3bh^2+2ch+d-15h^4'],
-                ['s=h^5-5h^5+bh^3+ch^2+dh+e', 's=bh^3+ch^2+dh+e-4h^5']]
+                '0=5h+a^|',
+                'p=10h^2-20h^2+b',
+                'q=10h^3-30h^3+3bh+c',
+                'r=5h^4-20h^4+3bh^2+2ch+d',
+                's=h^5-5h^5+bh^3+ch^2+dh+e']
+        e7 = [
+                'a^|=-5h',
+                'p=b-10h^2',
+                'q=3bh+c-20h^3',
+                'r=3bh^2+2ch+d-15h^4',
+                's=bh^3+ch^2+dh+e-4h^5']
         y4 = [['p'], ['q'], ['r'], ['s']]
         m4 = [
                 [ '0',   '0',   '0', '-10',  '0', 'b'],
@@ -167,6 +172,9 @@ class Quintic01(Scene):
         G1 = VGroup(E1, E1V).arrange(DOWN, aligned_edge = LEFT)
         Y = VGroup(Y1, Y2).arrange(DOWN, aligned_edge = RIGHT)
         G3 = VGroup(Y, G1).arrange(RIGHT, aligned_edge = UP).move_to(1.2 * LEFT)
+
+        E6 = make_tex(*e6).arrange(DOWN, aligned_edge = LEFT)
+        E7 = make_tex(*e7).arrange(DOWN, aligned_edge = LEFT)
 
 # Start with the general quintic in x
 
@@ -246,6 +254,7 @@ class Quintic01(Scene):
 # Move all powers of z out of M and into Z
         
         M = M1[0]
+        N = []
         Z = Z1[0]
 
         def get_element(row: int, col: int):
@@ -256,6 +265,7 @@ class Quintic01(Scene):
             T.move_to(get_element(row, col), RIGHT)
             T.generate_target()
             T.target.move_to(Z[col], DOWN)
+            N.append(T)
             return T
 
         for col in range(5):
@@ -267,6 +277,13 @@ class Quintic01(Scene):
             self.play(*T)
         pause()
 
-# Transpose the 
+# Hide everything except the relevant submatrix
+
+        self.play(FadeOut(
+            Y3, EQ, M1[0][0], M1[0][6], M1[1], M1[2], Z1[1], Z1[2], *N))
+
+# Transpose the matrix
+
+        self.play(TransformMatchingShapes(M1, E6))
 
         self.wait(3)
