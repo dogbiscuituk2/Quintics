@@ -1,41 +1,54 @@
 from manim import *
 
+class Test(Scene):
+    def construct(self):
+
+        n = '1234'
+        r = [n,n,n,n,n,n,n,n]
+        m = Matrix([r,r,r,r,r,r,r,r])
+        row = 0
+        col = 0
+        for r in range(4):
+            red = 85 * r / 255
+            for g in range(4):
+                green = 85 * g / 255
+                for b in range(4):
+                    blue = 85 * b / 255
+                    colour = rgb_to_color([red, green, blue])
+                    m[0][8 * row + col].set_color(colour)
+                    col += 1
+                    if col == 8:
+                        col = 0
+                        row += 1
+        self.play(Create(m))
+        self.wait(10)
+
 class Quintic01(Scene):
     def construct(self):
 
-        jRED = PURE_RED
-        jORANGE = ORANGE
-        jYELLOW = YELLOW
-        jGREEN = PURE_GREEN
-        jCYAN = TEAL
-        jBLUE = BLUE
-        jMAGENTA = PURPLE
-        jPURPLE = PURPLE
-        jPINK = LIGHT_PINK
-        jGREY = LIGHT_GREY
-        jWHITE = WHITE
+        cRed     = rgb_to_color([1.0, 0.3, 0.3])
+        cOrange  = rgb_to_color([1.0, 0.5, 0.3])
+        cYellow  = rgb_to_color([0.8, 0.8, 0.0])
+        cGreen   = rgb_to_color([0.2, 1.0, 0.2])
+        cCyan    = rgb_to_color([0.0, 1.0, 1.0])
+        cMagenta = rgb_to_color([1.0, 0.0, 1.0])
+        cPink    = rgb_to_color([1.0, 0.5, 0.5])
+        cGrey    = rgb_to_color([0.7, 0.7, 0.7])
+        cWhite   = rgb_to_color([1.0, 1.0, 1.0])
 
         def get_colour(c: str):
-            if c.isnumeric():
-                return jPINK
             match(c):
-                case 'a': return jRED
-                case 'b': return jORANGE
-                case 'c': return jYELLOW
-                case 'd': return jGREEN
-                case 'e': return jCYAN
-                case 'h': return jPURPLE
-                case 'p': return jORANGE
-                case 'q': return jYELLOW
-                case 'r': return jGREEN
-                case 's': return jCYAN
-                case 'x': return jBLUE
-                case 'y': return jBLUE
-                case 'z': return jBLUE
-            return jGREY
+                case c if c.isnumeric(): return cRed;
+                case c if c in 'abcde': return cGreen;
+                case c if c in 'pqrs': return cYellow;
+                case 'h': return cOrange
+                case 'x': return cPink
+                case 'y': return cMagenta
+                case 'z': return cCyan
+            return cGrey
         
         def indicate(args):
-            self.play(Indicate(VGroup(*args), color = jWHITE))
+            self.play(Indicate(VGroup(*args), color = cWhite))
 
         def make_matrix(matrix, hb: float = 1.3, bhb: float = MED_SMALL_BUFF):
             rows = len(matrix)
@@ -45,8 +58,8 @@ class Quintic01(Scene):
             for row in range(rows):
                 for col in range(cols):
                     paint_tex(M[0][row * cols + col][0], s[row][col])
-            M[1].set_color(LIGHT_GREY)
-            M[2].set_color(LIGHT_GREY)
+            M[1].set_color(cGrey)
+            M[2].set_color(cGrey)
             return M
 
         def make_tex(*args):
@@ -57,7 +70,7 @@ class Quintic01(Scene):
             return t
 
         def paint_tex(tex: MathTex, text: str):
-            colour = BLACK
+            colour = cWhite
             super = False
             p = 0
             for u in text.split('^'):
@@ -220,7 +233,7 @@ class Quintic01(Scene):
 # Convert to matrix equation Y=MZ
 
         EQ = MathTex('=')
-        EQ.set_color(LIGHT_GREY)
+        EQ.set_color(cGrey)
         VGroup(Y3, EQ, M1, Z1).arrange(RIGHT, aligned_edge = UP)
         EQ.move_to(EQ.get_center() + 2.9 * DOWN)
         Z1.move_to(Z1.get_center() + 0.5 * DOWN)
