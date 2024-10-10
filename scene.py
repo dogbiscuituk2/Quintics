@@ -52,7 +52,7 @@ class Quintic01(Scene):
         def make_matrix(matrix, hb: float = 1.3, bhb: float = MED_SMALL_BUFF):
             rows = len(matrix)
             cols = len(matrix[0])
-            s = [[f'|{t}' for t in row] for row in matrix]
+            s = [[prepare_str(t) for t in row] for row in matrix]
             M = Matrix(s, h_buff = hb, bracket_h_buff = bhb)
             for row in range(rows):
                 for col in range(cols):
@@ -61,8 +61,12 @@ class Quintic01(Scene):
             M[2].set_color(cGrey)
             return M
 
+        def make_new(row: int, col: int):
+            N = make_tex(m2[row][col])
+            return N
+
         def make_tex(*args):
-            s = [f'|{arg}' for arg in args]
+            s = [prepare_str(arg) for arg in args]
             t = MathTex(*s)
             for i in range(len(s)):
                 paint_tex(t[i], s[i])
@@ -88,62 +92,70 @@ class Quintic01(Scene):
         def pause():
             self.wait(0)
 
-        def replace(S: MathTex, t: str):
-            return ReplacementTransform(S, make_tex(t).move_to(S.get_center()))
+        def prepare_str(s: str):
+            s = f'|{s}'
+            if not '^' in s:
+                s += '^|'
+            return s
 
-        y1 = 'y^|='
-        y2 = ['x^5=', 'ax^4=', 'bx^3=', 'cx^2=', 'dx^|=', 'e^|=']
-        e1 = ['x^5+', 'ax^4+', 'bx^3+', 'cx^2+', 'dx^|+', 'e^|']
-        e2 = ['z^5+', '0z^4+', 'pz^3+', 'qz^2+', 'rz^|+', 's^|']
-        e3 = ['(z+h)^5', 'a(z+h)^4', 'b(z+h)^3', 'c(z+h)^2', 'd(z+h)^|', 'e^|']
+        def replace(S: MathTex, T: MathTex):
+            N.append(T)
+            return ReplacementTransform(S, T.move_to(S.get_center()))
+
+        y1 = 'y='
+        y2 = ['x^5=', 'ax^4=', 'bx^3=', 'cx^2=', 'dx=', 'e=']
+        e1 = ['x^5+', 'ax^4+', 'bx^3+', 'cx^2+', 'dx+', 'e']
+        e2 = ['z^5+', '0z^4+', 'pz^3+', 'qz^2+', 'rz+', 's']
+        e3 = ['(z+h)^5', 'a(z+h)^4', 'b(z+h)^3', 'c(z+h)^2', 'd(z+h)', 'e']
         e4 = [
                 '(z^5+5hz^4+10h^2z^3+10h^3z^2+5h^4z+h^5)',
                 'a(z^4+4hz^3+6h^2z^2+4h^3z+h^4)',
                 'b(z^3+3hz^2+3h^2z+h^3)',
                 'c(z^2+2hz+h^2)',
-                'd(z+h)^|',
-                'e^|']
+                'd(z+h)',
+                'e']
         e5 = [
                 ['z^5+', '5hz^4+', '10h^2z^3+', '10h^3z^2+', '5h^4z+', 'h^5'],
                 ['az^4+', '4ahz^3+', '6ah^2z^2+', '4ah^3z+', 'ah^4'],
                 ['bz^3+', '3bhz^2+', '3bh^2z+', 'bh^3'],
                 ['cz^2+', '2chz+', 'ch^2'],
-                ['dz^|+', 'dh^|'],
-                ['e^|']]
+                ['dz+', 'dh'],
+                ['e']]
         y3 = [
-                ['y^|'],
+                ['y'],
                 ['x^5'],
                 ['ax^4'],
                 ['bx^3'],
                 ['cx^2'],
-                ['dx^|'],
-                ['e^|']]
+                ['dx'],
+                ['e']]
         m1 = [
-                ['z^5', '0z^4', 'pz^3', 'qz^2', 'rz^|', 's^|'],
+                ['z^5', '0z^4', 'pz^3', 'qz^2', 'rz', 's'],
                 ['z^5', '5hz^4', '10h^2z^3', '10h^3z^2', '5h^4z', 'h^5'],
                 ['', 'az^4', '4ahz^3', '6ah^2z^2', '4ah^3z', 'ah^4'],
                 ['', '', 'bz^3', '3bhz^2', '3bh^2z', 'bh^3'],
                 ['', '', '', 'cz^2', '2chz', 'ch^2'],
-                ['', '', '', '', 'dz^|', 'dh^|'],
-                ['', '', '', '', '', 'e^|']]
-        z0 = ['|1|']
+                ['', '', '', '', 'dz', 'dh'],
+                ['', '', '', '', '', 'e']]
+        z0 = ['1']
         z1 = [z0, z0, z0, z0, z0, z0]
-        z = [
-                ['1^|', '0^|', 'p^|', 'q^|', 'r^|', 's^|'],
-                ['1^|', '5h^|', '10h^2', '10h^3', '5h^4', 'h^5'],
-                ['', 'a^|', '4ah^|', '6ah^2', '4ah^3', 'ah^4'],
-                ['', '', 'b^|', '3bh^|', '3bh^2', 'bh^3'],
-                ['', '', '', 'c^|', '2ch^|', 'ch^2'],
-                ['', '', '', '', 'd^|', 'dh^|'],
-                ['', '', '', '', '', 'e^|']]
+        z2 = ['z^5', 'z^4', 'z^3', 'z^2', 'z', '1']
+        m2 = [
+                ['1', '0', 'p', 'q', 'r', 's'],
+                ['1', '5h', '10h^2', '10h^3', '5h^4', 'h^5'],
+                ['', 'a', '4ah', '6ah^2', '4ah^3', 'ah^4'],
+                ['', '', 'b', '3bh', '3bh^2', 'bh^3'],
+                ['', '', '', 'c', '2ch', 'ch^2'],
+                ['', '', '', '', 'd', 'dh'],
+                ['', '', '', '', '', 'e']]
         e6 = [
-                '0=5h+a^|',
+                '0=5h+a',
                 'p=10h^2-20h^2+b',
                 'q=10h^3-30h^3+3bh+c',
                 'r=5h^4-20h^4+3bh^2+2ch+d',
                 's=h^5-5h^5+bh^3+ch^2+dh+e']
         e7 = [
-                'a^|=-5h',
+                'a=-5h',
                 'p=b-10h^2',
                 'q=3bh+c-20h^3',
                 'r=3bh^2+2ch+d-15h^4',
@@ -154,7 +166,7 @@ class Quintic01(Scene):
                 [ '0',   '0', '-20',   '0', '3b', 'c'],
                 [ '0', '-15',   '0',  '3b', '2c', 'd'],
                 ['-4',   '0',   'b',   'c',  'd', 'e']]
-        h4 = [['h^5'], ['h^4'], ['h^3'], ['h^2'], ['h^|'], ['1^|']]
+        h4 = [['h^5'], ['h^4'], ['h^3'], ['h^2'], ['h'], ['1']]
 
         Y1 = make_tex(y1)
         Y2 = make_tex(*y2).arrange(DOWN, aligned_edge = RIGHT)
@@ -167,6 +179,7 @@ class Quintic01(Scene):
         Y3 = make_matrix(y3, bhb = 0)
         M1 = make_matrix(m1, hb = 1.75) #, bhb = 0.2)
         Z1 = make_matrix(z1, bhb = 0)
+        Z2 = [] # Will hold the powers of z which fly into column vector Z1
 
         E1V = E1.copy().arrange(DOWN, aligned_edge = LEFT)
         G1 = VGroup(E1, E1V).arrange(DOWN, aligned_edge = LEFT)
@@ -254,36 +267,38 @@ class Quintic01(Scene):
 # Move all powers of z out of M and into Z
         
         M = M1[0]
-        N = []
         Z = Z1[0]
 
         def get_element(row: int, col: int):
             return M[6 * row + col]
 
         def new_target(row: int, col: int):
-            T = make_tex(f'z^{5 - col}' if col < 4 else 'z')
+            T = make_tex(z2[col])
             T.move_to(get_element(row, col), RIGHT)
+            Z2.append(T)
             T.generate_target()
             T.target.move_to(Z[col], DOWN)
-            N.append(T)
             return T
 
         for col in range(5):
             rows = range(col + 2)
             T = [MoveToTarget(new_target(row, col)) for row in rows]
             T.append(FadeOut(Z[col]))
-            T.append([replace(get_element(row, col), z[row][col]) for row in rows])
+            for row in rows:
+                N = make_tex(m2[row][col])
+                T.append(replace(get_element(row, col), N))
             indicate([get_element(row, col) for row in rows])
             self.play(*T)
+        for row in rows:
+            self.play([replace(get_element(row, 5), make_new(row, 5)) for row in rows])
         pause()
+
+        self.wait(3)
 
 # Hide everything except the relevant submatrix
 
-        self.play(FadeOut(
-            Y3, EQ, M1[0][0], M1[0][6], M1[1], M1[2], Z1[1], Z1[2], *N))
+        self.play(FadeOut(Y3, EQ, M1, N[0], N[1], Z1[0][5], Z1[1], Z1[2], *Z2))
 
 # Transpose the matrix
-
-        self.play(TransformMatchingShapes(M1, E6))
 
         self.wait(3)
