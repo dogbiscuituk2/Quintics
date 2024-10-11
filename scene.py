@@ -212,6 +212,7 @@ class Quintic01(Scene):
         F6 = make_tex(*f6).arrange(DOWN, aligned_edge = LEFT).move_to(2 * LEFT + DOWN)
         F7 = make_tex(*f7).arrange(DOWN, aligned_edge = LEFT).move_to(2 * LEFT + DOWN)
         F8 = make_tex(*f8).arrange(DOWN, aligned_edge = LEFT).move_to(2 * LEFT + DOWN)
+        F9 = make_tex(*f9).arrange(DOWN, aligned_edge = LEFT).move_to(2 * LEFT + DOWN)
 
 #endregion (Formulae)
 #region Main Code
@@ -353,6 +354,7 @@ class Quintic01(Scene):
             indicate(F6[i][[9, 9, 8, 6][i - 1]], size = 2)
             self.play(TransformMatchingShapes(F6[i], F7[i]))
             self.play(TransformMatchingShapes(F7[i], F8[i]))
+            self.play(TransformMatchingShapes(F8[i], F9[i]))
         indicate(F7[0])
         self.play(TransformMatchingShapes(F7[0], F8[0]))
         indicate(F8[0])
