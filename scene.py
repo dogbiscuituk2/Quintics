@@ -26,7 +26,7 @@ class Test(Scene):
 class Quintic01(Scene):
     def construct(self):
 
-#region Colour Palette
+#region Colour Palette (Bright / Pastel)
 
         cRed     = rgb_to_color([1.0, 0.1, 0.2])
         cOrange  = rgb_to_color([1.0, 0.5, 0.3])
