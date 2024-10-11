@@ -105,7 +105,7 @@ class Quintic01(Scene):
                 'r=-15h^4+3bh^2+2ch+d',
                 's=-4h^5+bh^3+ch^2+dh+e']
         f9 = [
-                'h=a/5',
+                'h=-a/5',
                 'p=b-10h^2',
                 'q=3bh+c-20h^3',
                 'r=3bh^2+2ch+d-15h^4',
@@ -331,7 +331,7 @@ class Quintic01(Scene):
 
         E1 = make_tex('y=x^5+ax^4+bx^3+cx^2+dx+e')
         E2 = make_tex('y=z^5+0z^4+pz^3+qz^2+rz+s')
-        E3 = make_tex('z=x+h')
+        E3 = make_tex('z=x-h=x+a/5')
         VGroup(E1, E2, E3, F6).arrange(DOWN, aligned_edge = LEFT)
         VGroup(E1, E2, E3, F7).arrange(DOWN, aligned_edge = LEFT)
         VGroup(E1, E2, E3, F8).arrange(DOWN, aligned_edge = LEFT)
