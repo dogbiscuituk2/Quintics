@@ -26,6 +26,8 @@ class Test(Scene):
 class Quintic01(Scene):
     def construct(self):
 
+#region Colour Palette
+
         cRed     = rgb_to_color([1.0, 0.1, 0.2])
         cOrange  = rgb_to_color([1.0, 0.5, 0.3])
         cYellow  = rgb_to_color([0.8, 0.8, 0.0])
@@ -35,72 +37,8 @@ class Quintic01(Scene):
         cGrey    = rgb_to_color([0.7, 0.7, 0.7])
         cWhite   = rgb_to_color([1.0, 1.0, 1.0])
 
-        def get_colour(c: str):
-            match(c):
-                case c if c.isnumeric(): return cMagenta;
-                case c if c in 'abcde': return cGreen;
-                case c if c in 'pqrs': return cYellow;
-                case 'h': return cOrange
-                case 'x': return cRed
-                case 'y': return cGrey
-                case 'z': return cCyan
-            return cGrey
-        
-        def indicate(args):
-            self.play(Indicate(VGroup(*args), color = cWhite))
-
-        def make_matrix(matrix, hb: float = 1.3, bhb: float = MED_SMALL_BUFF):
-            rows = len(matrix)
-            cols = len(matrix[0])
-            s = [[prepare_str(t) for t in row] for row in matrix]
-            M = Matrix(s, h_buff = hb, bracket_h_buff = bhb)
-            for row in range(rows):
-                for col in range(cols):
-                    paint_tex(M[0][row * cols + col][0], s[row][col])
-            M[1].set_color(cGrey)
-            M[2].set_color(cGrey)
-            return M
-
-        def make_new(row: int, col: int):
-            N = make_tex(m2[row][col])
-            return N
-
-        def make_tex(*args):
-            s = [prepare_str(arg) for arg in args]
-            t = MathTex(*s)
-            for i in range(len(s)):
-                paint_tex(t[i], s[i])
-            return t
-
-        def paint_tex(tex: MathTex, text: str):
-            colour = cWhite
-            super = False
-            p = 0
-            for u in text.split('^'):
-                for c in u:
-                    t = tex[p]
-                    if c == '|':
-                        t.set_opacity(0)
-                    else:
-                        if not super:
-                            colour = get_colour(c)
-                        t.set_color(colour)
-                    super = False
-                    p += 1
-                super = True
-
-        def pause():
-            self.wait(0)
-
-        def prepare_str(s: str):
-            s = f'|{s}'
-            if not '^' in s:
-                s += '^|'
-            return s
-
-        def replace(S: MathTex, T: MathTex):
-            N.append(T)
-            return ReplacementTransform(S, T.move_to(S.get_center()))
+#endregion (Colour Palette)
+#region Terms
 
         y1 = 'y='
         y2 = ['x^5=', 'ax^4=', 'bx^3=', 'cx^2=', 'dx=', 'e=']
@@ -148,18 +86,31 @@ class Quintic01(Scene):
                 ['', '', '', 'c', '2ch', 'ch^2'],
                 ['', '', '', '', 'd', 'dh'],
                 ['', '', '', '', '', 'e']]
-        e6 = [
+        f6 = [
                 '0=5h+a',
+                'p=10h^2+4ah+b',
+                'q=10h^3+6ah^2+3bh+c',
+                'r=5h^4+4ah^3+3bh^2+2ch+d',
+                's=h^5+a^4+bh^3+ch^2+dh+e']
+        f7 = [
+                'a=-5h',
                 'p=10h^2-20h^2+b',
                 'q=10h^3-30h^3+3bh+c',
                 'r=5h^4-20h^4+3bh^2+2ch+d',
                 's=h^5-5h^5+bh^3+ch^2+dh+e']
-        e7 = [
-                'a=-5h',
+        f8 = [
+                'h=-a/5',
+                'p=-10h^2+b',
+                'q=-20h^3+3bh+c',
+                'r=-15h^4+3bh^2+2ch+d',
+                's=-4h^5+bh^3+ch^2+dh+e']
+        f9 = [
+                'h=a/5',
                 'p=b-10h^2',
                 'q=3bh+c-20h^3',
                 'r=3bh^2+2ch+d-15h^4',
                 's=bh^3+ch^2+dh+e-4h^5']
+        
         y4 = [['p'], ['q'], ['r'], ['s']]
         m4 = [
                 [ '0',   '0',   '0', '-10',  '0', 'b'],
@@ -167,6 +118,77 @@ class Quintic01(Scene):
                 [ '0', '-15',   '0',  '3b', '2c', 'd'],
                 ['-4',   '0',   'b',   'c',  'd', 'e']]
         h4 = [['h^5'], ['h^4'], ['h^3'], ['h^2'], ['h'], ['1']]
+
+#endregion (Terms)
+#region Functions
+
+        def get_colour(char: str):
+            match(char):
+                case c if c.isnumeric(): return cMagenta;
+                case c if c in 'abcde': return cGreen;
+                case c if c in 'pqrs': return cYellow;
+                case 'h': return cOrange
+                case 'x': return cRed
+                case 'y': return cGrey
+                case 'z': return cCyan
+            return cGrey
+        
+        def indicate(items: List[VMobject], size: float = 1.2):
+            self.play(Indicate(VGroup(*items), color = cWhite, scale_factor = size))
+
+        def make_matrix(matrix: List[List[str]], margin: float = MED_SMALL_BUFF, padding: float = 1.3):
+            rows: int = len(matrix)
+            cols: int = len(matrix[0])
+            strings: List[str] = [[prepare_string(t) for t in row] for row in matrix]
+            matrix: Matrix = Matrix(strings, bracket_h_buff = margin, h_buff = padding)
+            for row in range(rows):
+                for col in range(cols):
+                    paint_tex(matrix[0][row * cols + col][0], strings[row][col])
+            matrix[1].set_color(cGrey)
+            matrix[2].set_color(cGrey)
+            return matrix
+
+        def make_tex(*items: str):
+            string: str = [prepare_string(item) for item in items]
+            mathTex: MathTex = MathTex(*string)
+            for i in range(len(string)):
+                paint_tex(mathTex[i], string[i])
+            return mathTex
+
+        def paint_tex(mathTex: MathTex, string: str):
+            colour = cWhite
+            super = False
+            p: int = 0
+            for substring in string.split('^'):
+                for char in substring:
+                    symbol = mathTex[p]
+                    if char == '|':
+                        symbol.set_opacity(0)
+                    else:
+                        if not super:
+                            colour = get_colour(char)
+                        symbol.set_color(colour)
+                    super = False
+                    p += 1
+                super = True
+
+        def pause():
+            self.wait(0)
+
+        def prepare_string(string: str):
+
+            if not '|' in string:
+                string = f'|{string}'
+            if not '^' in string:
+                string = f'{string}^|'
+            return string
+
+        def replace(sourceTex: MathTex, targetTex: MathTex):
+            M2.append(targetTex)
+            return ReplacementTransform(sourceTex, targetTex.move_to(sourceTex.get_center()))
+
+#endregion (Functions)
+#region Formulae
 
         Y1 = make_tex(y1)
         Y2 = make_tex(*y2).arrange(DOWN, aligned_edge = RIGHT)
@@ -176,18 +198,23 @@ class Quintic01(Scene):
         E4 = make_tex(*e4)
         E5 = VGroup(*[make_tex(*e) for e in e5])
 
-        Y3 = make_matrix(y3, bhb = 0)
-        M1 = make_matrix(m1, hb = 1.75) #, bhb = 0.2)
-        Z1 = make_matrix(z1, bhb = 0)
+        Y3 = make_matrix(y3, margin = 0)
+        M1 = make_matrix(m1, padding = 1.75)
+        Z1 = make_matrix(z1, margin = 0)
         Z2 = [] # Will hold the powers of z which fly into column vector Z1
+        M2 = [] # Will hold the replacement terms for the main matrix
 
         E1V = E1.copy().arrange(DOWN, aligned_edge = LEFT)
         G1 = VGroup(E1, E1V).arrange(DOWN, aligned_edge = LEFT)
         Y = VGroup(Y1, Y2).arrange(DOWN, aligned_edge = RIGHT)
         G3 = VGroup(Y, G1).arrange(RIGHT, aligned_edge = UP).move_to(1.2 * LEFT)
 
-        E6 = make_tex(*e6).arrange(DOWN, aligned_edge = LEFT)
-        E7 = make_tex(*e7).arrange(DOWN, aligned_edge = LEFT)
+        F6 = make_tex(*f6).arrange(DOWN, aligned_edge = LEFT).move_to(2 * LEFT + DOWN)
+        F7 = make_tex(*f7).arrange(DOWN, aligned_edge = LEFT).move_to(2 * LEFT + DOWN)
+        F8 = make_tex(*f8).arrange(DOWN, aligned_edge = LEFT).move_to(2 * LEFT + DOWN)
+
+#endregion (Formulae)
+#region Main Code
 
 # Start with the general quintic in x
 
@@ -270,35 +297,72 @@ class Quintic01(Scene):
         Z = Z1[0]
 
         def get_element(row: int, col: int):
-            return M[6 * row + col]
+            return M[row * 6 + col]
 
         def new_target(row: int, col: int):
-            T = make_tex(z2[col])
-            T.move_to(get_element(row, col), RIGHT)
-            Z2.append(T)
-            T.generate_target()
-            T.target.move_to(Z[col], DOWN)
-            return T
+            mathTex: MathTex = make_tex(z2[col])
+            mathTex.move_to(get_element(row, col), RIGHT)
+            Z2.append(mathTex)
+            mathTex.generate_target()
+            mathTex.target.move_to(Z[col], DOWN)
+            return mathTex
 
-        for col in range(5):
+        for col in range(6):
+            transforms: List[Transform] = []
             rows = range(col + 2)
-            T = [MoveToTarget(new_target(row, col)) for row in rows]
-            T.append(FadeOut(Z[col]))
+            if col < 5:
+                transforms = [MoveToTarget(new_target(row, col)) for row in rows]
+                transforms.append(FadeOut(Z[col]))
             for row in rows:
-                N = make_tex(m2[row][col])
-                T.append(replace(get_element(row, col), N))
-            indicate([get_element(row, col) for row in rows])
-            self.play(*T)
-        for row in rows:
-            self.play([replace(get_element(row, 5), make_new(row, 5)) for row in rows])
+                transforms.append(replace(get_element(row, col), make_tex(m2[row][col])))
+            if col < 5:
+                indicate([get_element(row, col) for row in rows])
+            self.play(*transforms)
         pause()
 
         self.wait(3)
 
 # Hide everything except the relevant submatrix
 
-        self.play(FadeOut(Y3, EQ, M1, N[0], N[1], Z1[0][5], Z1[1], Z1[2], *Z2))
+        self.play(FadeOut(Y3, EQ, M1, M2[0], M2[1], Z1[0][5], Z1[1], Z1[2] , *Z2))
 
 # Transpose the matrix
 
-        self.wait(3)
+        E1 = make_tex('y=x^5+ax^4+bx^3+cx^2+dx+e')
+        E2 = make_tex('y=z^5+0z^4+pz^3+qz^2+rz+s')
+        E3 = make_tex('z=x+h')
+        VGroup(E1, E2, E3, F6).arrange(DOWN, aligned_edge = LEFT)
+        VGroup(E1, E2, E3, F7).arrange(DOWN, aligned_edge = LEFT)
+        VGroup(E1, E2, E3, F8).arrange(DOWN, aligned_edge = LEFT)
+
+        M6 = [
+            VGroup(*[M2[i] for i in range(2, 5)]),
+            VGroup(*[M2[i] for i in range(5, 9)]),
+            VGroup(*[M2[i] for i in range(9, 14)]),
+            VGroup(*[M2[i] for i in range(14, 20)]),
+            VGroup(*[M2[i] for i in range(20, 27)])]
+        for i in range(5):
+            self.play(TransformMatchingShapes(M6[i], F6[i]))
+
+# Substitute '5h' for 'a'
+
+        indicate(F6[0])
+        self.play(TransformMatchingShapes(F6[0], F7[0]))
+        indicate(F7[0])
+        for i in range(1, 5):
+            indicate(F6[i][[9, 9, 8, 6][i - 1]], size = 2)
+            self.play(TransformMatchingShapes(F6[i], F7[i]))
+            self.play(TransformMatchingShapes(F7[i], F8[i]))
+        indicate(F7[0])
+        self.play(TransformMatchingShapes(F7[0], F8[0]))
+        indicate(F8[0])
+
+# Redisplay 'y' as a polynomial in 'x' and also in 'z'
+
+        self.play(FadeIn(E1))
+        self.play(FadeIn(E2))
+        self.play(FadeIn(E3))
+
+        self.wait(10)
+
+#endregion (Main Code)
