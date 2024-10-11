@@ -37,6 +37,6 @@ Note how the elimination of original coefficient _a_ in favour of _h_ yields exp
 
 ***References***
 
-Video: 
+Video: please refer to the "results" folder for any mp3 file(s) mentioned above.
 
 Polynomial Transformations of Tschirnhaus, Bring and Jerrard: https://www.uwo.ca/apmaths/faculty/jeffrey/pdfs/Adamchik.pdf
