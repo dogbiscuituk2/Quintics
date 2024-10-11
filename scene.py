@@ -335,6 +335,7 @@ class Quintic01(Scene):
         VGroup(E1, E2, E3, F6).arrange(DOWN, aligned_edge = LEFT)
         VGroup(E1, E2, E3, F7).arrange(DOWN, aligned_edge = LEFT)
         VGroup(E1, E2, E3, F8).arrange(DOWN, aligned_edge = LEFT)
+        VGroup(E1, E2, E3, F9).arrange(DOWN, aligned_edge = LEFT)
 
         M6 = [
             VGroup(*[M2[i] for i in range(2, 5)]),
