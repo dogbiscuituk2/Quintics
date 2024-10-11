@@ -40,3 +40,7 @@ Note how the elimination of original coefficient _a_ in favour of _h_ yields exp
 Video: please refer to the "results" folder for any mp3 file(s) mentioned above.
 
 Polynomial Transformations of Tschirnhaus, Bring and Jerrard: https://www.uwo.ca/apmaths/faculty/jeffrey/pdfs/Adamchik.pdf
+
+This work is an extension of an original Google Slides deck:
+
+https://docs.google.com/presentation/d/e/2PACX-1vTCx2Jhy_jxQD6LojP5uzsGuUnKFAMoMzgx-CM_BAVFJe_g3qNnz-YLOSz7S7xDEHUlu3_GBvADZB9v/pub?start=true&loop=false&delayms=1000
