@@ -2,18 +2,19 @@ from manim import *
 
 #region Constants
 
-title = [
+title = (
     'Solving the General Quintic Equation',
-    'An ultraradical animation by John Michael Kerr']
-sections = [
-    ['Part One', 'Remove the Quartic (x^4) Term'],
-    ['First Checkpoint', 'Verify Removal of the Quartic Term'],
-    ['Part Two', 'Remove the Cubic (x^3) Term'],
-    ['Second Checkpoint', 'Verify Removal of the Cubic Term'],
-    ['Part Three', 'Remove the Quadratic (x^2) Term'],
-    ['Third Checkpoint', 'Verify Removal of the Quadratic Term'],
-    ['Part Four', 'The Ultraradical'],
-    ['Fourth Checkpoint', 'Final Verification']]
+    'An ultraradical animation by John Michael Kerr')
+
+sections = (
+    ('Part One', 'Remove the Quartic (x^4) Term'),
+    ('First Checkpoint', 'Verify Removal of the Quartic Term'),
+    ('Part Two', 'Remove the Cubic (x^3) Term'),
+    ('Second Checkpoint', 'Verify Removal of the Cubic Term'),
+    ('Part Three', 'Remove the Quadratic (x^2) Term'),
+    ('Third Checkpoint', 'Verify Removal of the Quadratic Term'),
+    ('Part Four', 'The Ultraradical'),
+    ('Fourth Checkpoint', 'Final Verification'))
 
 #endregion (Constants)
 
@@ -59,31 +60,29 @@ def paint_tex(mathTex: MathTex, string: str):
             p += 1
         super = True
 
-BRIGHT = 0
-PASTEL = 1
+PALETTE_BRIGHT = 0
+PALETTE_PASTEL = 1
 
-colours: List[List[ManimColor]] = [[rgb_to_color(rgb) for rgb in colour] for colour in [
-    [(0.0, 0.0, 0.0), (0.2, 0.2, 0.2)], # Black
-    [(0.5, 0.2, 0.1), (0.5, 0.2, 0.1)], # Brown
-    [(1.0, 0.1, 0.2), (1.0, 0.1, 0.2)], # Red
-    [(1.0, 0.5, 0.3), (1.0, 0.5, 0.3)], # Orange
-    [(0.8, 0.8, 0.0), (0.8, 0.8, 0.0)], # Yellow
-    [(0.2, 1.0, 0.2), (0.2, 1.0, 0.2)], # Green
-    [(0.0, 1.0, 1.0), (0.0, 1.0, 1.0)], # Blue
-    [(0.0, 1.0, 1.0), (0.0, 1.0, 1.0)], # Cyan
-    [(1.0, 0.0, 1.0), (1.0, 0.0, 1.0)], # Magenta
-    [(1.0, 0.0, 1.0), (1.0, 0.0, 1.0)], # Violet
-    [(0.7, 0.7, 0.7), (0.7, 0.7, 0.7)], # Grey
-    [(1.0, 1.0, 1.0), (1.0, 1.0, 1.0)]] # White
+colours: list[tuple[ManimColor]] = [[rgb_to_color(rgb) for rgb in colour] for colour in [
+    ((0.0, 0.0, 0.0), (0.2, 0.2, 0.2)), # Black
+    ((0.5, 0.2, 0.1), (0.5, 0.2, 0.1)), # Brown
+    ((1.0, 0.1, 0.2), (1.0, 0.1, 0.2)), # Red
+    ((1.0, 0.5, 0.3), (1.0, 0.5, 0.3)), # Orange
+    ((0.8, 0.8, 0.0), (0.8, 0.8, 0.0)), # Yellow
+    ((0.2, 1.0, 0.2), (0.2, 1.0, 0.2)), # Green
+    ((0.0, 1.0, 1.0), (0.0, 1.0, 1.0)), # Blue
+    ((0.0, 1.0, 1.0), (0.0, 1.0, 1.0)), # Cyan
+    ((1.0, 0.0, 1.0), (1.0, 0.0, 1.0)), # Magenta
+    ((1.0, 0.0, 1.0), (1.0, 0.0, 1.0)), # Violet
+    ((0.7, 0.7, 0.7), (0.7, 0.7, 0.7)), # Grey
+    ((1.0, 1.0, 1.0), (1.0, 1.0, 1.0))] # White
 ]
 
-
-
-def set_palette(palette: int):
+def set_palette(palette_index: int):
 
     global Black, Brown, Red, Orange, Yellow, Green, Blue, Cyan, Magenta, Violet, Grey, White
 
-    def read_colour(colour_index: int): return colours[colour_index][palette]
+    def read_colour(colour_index: int): return colours[colour_index][palette_index]
 
     Black   = read_colour( 0)
     Brown   = read_colour( 1)
@@ -98,16 +97,16 @@ def set_palette(palette: int):
     Grey    = read_colour(10)
     White   = read_colour(11)
 
-set_palette(BRIGHT)
+set_palette(PALETTE_BRIGHT)
 
-colour_map = [
+colour_map = (
     ('0123456789', Magenta),
     ('abcde', Green),
     ('h', Orange),
     ('pqrs', Yellow),
     ('x', Red),
     ('y', Grey),
-    ('z', Cyan)]
+    ('z', Cyan))
 
 #endregion (Colour Palette)
 
@@ -118,25 +117,25 @@ class Quintic01(Scene):
 #region Terms
 
         y1 = 'y='
-        y2 = ['x^5=', 'ax^4=', 'bx^3=', 'cx^2=', 'dx=', 'e=']
-        e1 = ['x^5+', 'ax^4+', 'bx^3+', 'cx^2+', 'dx+', 'e']
-        e2 = ['z^5+', '0z^4+', 'pz^3+', 'qz^2+', 'rz+', 's']
-        e3 = ['(z+h)^5', 'a(z+h)^4', 'b(z+h)^3', 'c(z+h)^2', 'd(z+h)', 'e']
+        y2 = ('x^5=', 'ax^4=', 'bx^3=', 'cx^2=', 'dx=', 'e=')
+        e1 = ('x^5+', 'ax^4+', 'bx^3+', 'cx^2+', 'dx+', 'e')
+        e2 = ('z^5+', '0z^4+', 'pz^3+', 'qz^2+', 'rz+', 's')
+        e3 = ('(z+h)^5', 'a(z+h)^4', 'b(z+h)^3', 'c(z+h)^2', 'd(z+h)', 'e')
 
-        e4 = [
+        e4 = (
                 '(z^5+5hz^4+10h^2z^3+10h^3z^2+5h^4z+h^5)',
                 'a(z^4+4hz^3+6h^2z^2+4h^3z+h^4)',
                 'b(z^3+3hz^2+3h^2z+h^3)',
                 'c(z^2+2hz+h^2)',
                 'd(z+h)',
-                'e']
-        e5 = [
-                ['z^5+', '5hz^4+', '10h^2z^3+', '10h^3z^2+', '5h^4z+', 'h^5'],
-                ['az^4+', '4ahz^3+', '6ah^2z^2+', '4ah^3z+', 'ah^4'],
-                ['bz^3+', '3bhz^2+', '3bh^2z+', 'bh^3'],
-                ['cz^2+', '2chz+', 'ch^2'],
-                ['dz+', 'dh'],
-                ['e']]
+                'e')
+        e5 = (
+                ('z^5+', '5hz^4+', '10h^2z^3+', '10h^3z^2+', '5h^4z+', 'h^5'),
+                ('az^4+', '4ahz^3+', '6ah^2z^2+', '4ah^3z+', 'ah^4'),
+                ('bz^3+', '3bhz^2+', '3bh^2z+', 'bh^3'),
+                ('cz^2+', '2chz+', 'ch^2'),
+                ('dz+', 'dh'),
+                ('e'))
         y3 = [
                 ['y'],
                 ['x^5'],
@@ -153,49 +152,49 @@ class Quintic01(Scene):
                 ['', '', '', 'cz^2', '2chz', 'ch^2'],
                 ['', '', '', '', 'dz', 'dh'],
                 ['', '', '', '', '', 'e']]
-        z0 = ['1']
-        z1 = [z0, z0, z0, z0, z0, z0]
-        z2 = ['z^5', 'z^4', 'z^3', 'z^2', 'z', '1']
-        m2 = [
-                ['1', '0', 'p', 'q', 'r', 's'],
-                ['1', '5h', '10h^2', '10h^3', '5h^4', 'h^5'],
-                ['', 'a', '4ah', '6ah^2', '4ah^3', 'ah^4'],
-                ['', '', 'b', '3bh', '3bh^2', 'bh^3'],
-                ['', '', '', 'c', '2ch', 'ch^2'],
-                ['', '', '', '', 'd', 'dh'],
-                ['', '', '', '', '', 'e']]
-        f6 = [
+        z0 = ('1')
+        z1 = (z0, z0, z0, z0, z0, z0)
+        z2 = ('z^5', 'z^4', 'z^3', 'z^2', 'z', '1')
+        m2 = (
+                ('1', '0', 'p', 'q', 'r', 's'),
+                ('1', '5h', '10h^2', '10h^3', '5h^4', 'h^5'),
+                ('', 'a', '4ah', '6ah^2', '4ah^3', 'ah^4'),
+                ('', '', 'b', '3bh', '3bh^2', 'bh^3'),
+                ('', '', '', 'c', '2ch', 'ch^2'),
+                ('', '', '', '', 'd', 'dh'),
+                ('', '', '', '', '', 'e'))
+        f6 = (
                 '0=5h+a',
                 'p=10h^2+4ah+b',
                 'q=10h^3+6ah^2+3bh+c',
                 'r=5h^4+4ah^3+3bh^2+2ch+d',
-                's=h^5+a^4+bh^3+ch^2+dh+e']
-        f7 = [
+                's=h^5+a^4+bh^3+ch^2+dh+e')
+        f7 = (
                 'a=-5h',
                 'p=10h^2-20h^2+b',
                 'q=10h^3-30h^3+3bh+c',
                 'r=5h^4-20h^4+3bh^2+2ch+d',
-                's=h^5-5h^5+bh^3+ch^2+dh+e']
-        f8 = [
+                's=h^5-5h^5+bh^3+ch^2+dh+e')
+        f8 = (
                 'h=-a/5',
                 'p=-10h^2+b',
                 'q=-20h^3+3bh+c',
                 'r=-15h^4+3bh^2+2ch+d',
-                's=-4h^5+bh^3+ch^2+dh+e']
-        f9 = [
+                's=-4h^5+bh^3+ch^2+dh+e')
+        f9 = (
                 'h=-a/5',
                 'p=b-10h^2',
                 'q=3bh+c-20h^3',
                 'r=3bh^2+2ch+d-15h^4',
-                's=bh^3+ch^2+dh+e-4h^5']
+                's=bh^3+ch^2+dh+e-4h^5')
         
-        y4 = [['p'], ['q'], ['r'], ['s']]
-        m4 = [
-                [ '0',   '0',   '0', '-10',  '0', 'b'],
-                [ '0',   '0', '-20',   '0', '3b', 'c'],
-                [ '0', '-15',   '0',  '3b', '2c', 'd'],
-                ['-4',   '0',   'b',   'c',  'd', 'e']]
-        h4 = [['h^5'], ['h^4'], ['h^3'], ['h^2'], ['h'], ['1']]
+        y4 = (('p'), ('q'), ('r'), ('s'))
+        m4 = (
+                ( '0',   '0',   '0', '-10',  '0', 'b'),
+                ( '0',   '0', '-20',   '0', '3b', 'c'),
+                ( '0', '-15',   '0',  '3b', '2c', 'd'),
+                ('-4',   '0',   'b',   'c',  'd', 'e'))
+        h4 = (('h^5'), ('h^4'), ('h^3'), ('h^2'), ('h'), ('1'))
 
 #endregion (Terms)
 #region Functions
