@@ -136,22 +136,22 @@ class Quintic01(Scene):
                 ('cz^2+', '2chz+', 'ch^2'),
                 ('dz+', 'dh'),
                 ('e'))
-        y3 = [
+        y3 = (
                 ['y'],
                 ['x^5'],
                 ['ax^4'],
                 ['bx^3'],
                 ['cx^2'],
                 ['dx'],
-                ['e']]
-        m1 = [
-                ['z^5', '0z^4', 'pz^3', 'qz^2', 'rz', 's'],
-                ['z^5', '5hz^4', '10h^2z^3', '10h^3z^2', '5h^4z', 'h^5'],
-                ['', 'az^4', '4ahz^3', '6ah^2z^2', '4ah^3z', 'ah^4'],
-                ['', '', 'bz^3', '3bhz^2', '3bh^2z', 'bh^3'],
-                ['', '', '', 'cz^2', '2chz', 'ch^2'],
-                ['', '', '', '', 'dz', 'dh'],
-                ['', '', '', '', '', 'e']]
+                ['e'])
+        m1 = (
+                ('z^5', '0z^4', 'pz^3', 'qz^2', 'rz', 's'),
+                ('z^5', '5hz^4', '10h^2z^3', '10h^3z^2', '5h^4z', 'h^5'),
+                ('', 'az^4', '4ahz^3', '6ah^2z^2', '4ah^3z', 'ah^4'),
+                ('', '', 'bz^3', '3bhz^2', '3bh^2z', 'bh^3'),
+                ('', '', '', 'cz^2', '2chz', 'ch^2'),
+                ('', '', '', '', 'dz', 'dh'),
+                ('', '', '', '', '', 'e'))
         z0 = ('1')
         z1 = (z0, z0, z0, z0, z0, z0)
         z2 = ('z^5', 'z^4', 'z^3', 'z^2', 'z', '1')
@@ -163,6 +163,11 @@ class Quintic01(Scene):
                 ('', '', '', 'c', '2ch', 'ch^2'),
                 ('', '', '', '', 'd', 'dh'),
                 ('', '', '', '', '', 'e'))
+
+        f1 = 'y=x^5+ax^4+bx^3+cx^2+dx+e'
+        f2 = 'y=z^5+0z^4+pz^3+qz^2+rz+s'
+        f3 = 'z=x-h=x+a/5'
+
         f6 = (
                 '0=5h+a',
                 'p=10h^2+4ah+b',
@@ -250,6 +255,9 @@ class Quintic01(Scene):
         Y = VGroup(Y1, Y2).arrange(DOWN, aligned_edge = RIGHT)
         G3 = VGroup(Y, G1).arrange(RIGHT, aligned_edge = UP).move_to(1.2 * LEFT)
 
+        F1 = make_tex(f1)
+        F2 = make_tex(f2)
+        F3 = make_tex(f3)
         F6 = make_tex(*f6).arrange(DOWN, aligned_edge = LEFT).move_to(2 * LEFT + DOWN)
         F7 = make_tex(*f7).arrange(DOWN, aligned_edge = LEFT).move_to(2 * LEFT + DOWN)
         F8 = make_tex(*f8).arrange(DOWN, aligned_edge = LEFT).move_to(2 * LEFT + DOWN)
@@ -370,13 +378,10 @@ class Quintic01(Scene):
 
 # Transpose the matrix
 
-        E1 = make_tex('y=x^5+ax^4+bx^3+cx^2+dx+e')
-        E2 = make_tex('y=z^5+0z^4+pz^3+qz^2+rz+s')
-        E3 = make_tex('z=x-h=x+a/5')
-        VGroup(E1, E2, E3, F6).arrange(DOWN, aligned_edge = LEFT)
-        VGroup(E1, E2, E3, F7).arrange(DOWN, aligned_edge = LEFT)
-        VGroup(E1, E2, E3, F8).arrange(DOWN, aligned_edge = LEFT)
-        VGroup(E1, E2, E3, F9).arrange(DOWN, aligned_edge = LEFT)
+        VGroup(F1, F2, F3, F6).arrange(DOWN, aligned_edge = LEFT)
+        VGroup(F1, F2, F3, F7).arrange(DOWN, aligned_edge = LEFT)
+        VGroup(F1, F2, F3, F8).arrange(DOWN, aligned_edge = LEFT)
+        VGroup(F1, F2, F3, F9).arrange(DOWN, aligned_edge = LEFT)
 
         M6 = [
             VGroup(*[M2[i] for i in range(2, 5)]),
@@ -403,9 +408,9 @@ class Quintic01(Scene):
 
 # Redisplay 'y' as a polynomial in 'x' and also in 'z'
 
-        self.play(FadeIn(E1))
-        self.play(FadeIn(E2))
-        self.play(FadeIn(E3))
+        self.play(FadeIn(F1))
+        self.play(FadeIn(F2))
+        self.play(FadeIn(F3))
 
         self.wait(10)
 
