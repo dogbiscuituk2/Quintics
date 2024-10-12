@@ -1,43 +1,71 @@
 from manim import *
 
-class Test(Scene):
-    def construct(self):
+#region Constants
 
-        n = '1234'
-        r = [n,n,n,n,n,n,n,n]
-        m = Matrix([r,r,r,r,r,r,r,r])
-        row = 0
-        col = 0
-        for r in range(4):
-            red = 85 * r / 255
-            for g in range(4):
-                green = 85 * g / 255
-                for b in range(4):
-                    blue = 85 * b / 255
-                    colour = rgb_to_color([red, green, blue])
-                    m[0][8 * row + col].set_color(colour)
-                    col += 1
-                    if col == 8:
-                        col = 0
-                        row += 1
-        self.play(Create(m))
-        self.wait(10)
+title = [
+    'Solving the General Quintic Equation',
+    'An ultraradical animation by John Michael Kerr']
+sections = [
+    ['Part One', 'Remove the Quartic (x^4) Term'],
+    ['First Checkpoint', 'Verify Removal of the Quartic Term'],
+    ['Part Two', 'Remove the Cubic (x^3) Term'],
+    ['Second Checkpoint', 'Verify Removal of the Cubic Term'],
+    ['Part Three', 'Remove the Quadratic (x^2) Term'],
+    ['Third Checkpoint', 'Verify Removal of the Quadratic Term'],
+    ['Part Four', 'The Ultraradical'],
+    ['Fourth Checkpoint', 'Final Verification']]
 
-class Quintic01(Scene):
-    def construct(self):
+#endregion (Constants)
 
-#region Colour Palette (Bright / Pastel)
+#region Colour Palette
 
-        cRed     = rgb_to_color([1.0, 0.1, 0.2])
-        cOrange  = rgb_to_color([1.0, 0.5, 0.3])
-        cYellow  = rgb_to_color([0.8, 0.8, 0.0])
-        cGreen   = rgb_to_color([0.2, 1.0, 0.2])
-        cCyan    = rgb_to_color([0.0, 1.0, 1.0])
-        cMagenta = rgb_to_color([1.0, 0.0, 1.0])
-        cGrey    = rgb_to_color([0.7, 0.7, 0.7])
-        cWhite   = rgb_to_color([1.0, 1.0, 1.0])
+BRIGHT = 0
+PASTEL = 1
+
+palette = BRIGHT
+
+colours: List[List[ManimColor]] = [[rgb_to_color(rgb) for rgb in colour] for colour in [
+    [(0.0, 0.0, 0.0), (0.2, 0.2, 0.2)], # Black
+    [(0.5, 0.2, 0.1), (0.5, 0.2, 0.1)], # Brown
+    [(1.0, 0.1, 0.2), (1.0, 0.1, 0.2)], # Red
+    [(1.0, 0.5, 0.3), (1.0, 0.5, 0.3)], # Orange
+    [(0.8, 0.8, 0.0), (0.8, 0.8, 0.0)], # Yellow
+    [(0.2, 1.0, 0.2), (0.2, 1.0, 0.2)], # Green
+    [(0.0, 1.0, 1.0), (0.0, 1.0, 1.0)], # Blue
+    [(0.0, 1.0, 1.0), (0.0, 1.0, 1.0)], # Cyan
+    [(1.0, 0.0, 1.0), (1.0, 0.0, 1.0)], # Magenta
+    [(1.0, 0.0, 1.0), (1.0, 0.0, 1.0)], # Violet
+    [(0.7, 0.7, 0.7), (0.7, 0.7, 0.7)], # Grey
+    [(1.0, 1.0, 1.0), (1.0, 1.0, 1.0)]] # White
+]
+
+def set_palette(palette: int):
+
+    global Black, Brown, Red, Orange, Yellow, Green, Blue, Cyan, Magenta, Violet, Grey, White
+
+    def get_colour(colour_index: int): return colours[colour_index][palette]
+
+    Black   = get_colour( 0)
+    Brown   = get_colour( 1)
+    Red     = get_colour( 2)
+    Orange  = get_colour( 3)
+    Yellow  = get_colour( 4)
+    Green   = get_colour( 5)
+    Blue    = get_colour( 6)
+    Cyan    = get_colour( 7)
+    Magenta = get_colour( 8)
+    Violet  = get_colour( 9)
+    Grey    = get_colour(10)
+    White   = get_colour(11)
+
+set_palette(BRIGHT)
 
 #endregion (Colour Palette)
+
+class Quintic01(Scene):
+
+    def construct(self):
+
 #region Terms
 
         y1 = 'y='
@@ -45,6 +73,7 @@ class Quintic01(Scene):
         e1 = ['x^5+', 'ax^4+', 'bx^3+', 'cx^2+', 'dx+', 'e']
         e2 = ['z^5+', '0z^4+', 'pz^3+', 'qz^2+', 'rz+', 's']
         e3 = ['(z+h)^5', 'a(z+h)^4', 'b(z+h)^3', 'c(z+h)^2', 'd(z+h)', 'e']
+
         e4 = [
                 '(z^5+5hz^4+10h^2z^3+10h^3z^2+5h^4z+h^5)',
                 'a(z^4+4hz^3+6h^2z^2+4h^3z+h^4)',
@@ -124,17 +153,17 @@ class Quintic01(Scene):
 
         def get_colour(char: str):
             match(char):
-                case c if c.isnumeric(): return cMagenta;
-                case c if c in 'abcde': return cGreen;
-                case c if c in 'pqrs': return cYellow;
-                case 'h': return cOrange
-                case 'x': return cRed
-                case 'y': return cGrey
-                case 'z': return cCyan
-            return cGrey
+                case c if c.isnumeric(): return Magenta;
+                case c if c in 'abcde': return Green;
+                case c if c in 'pqrs': return Yellow;
+                case 'h': return Orange
+                case 'x': return Red
+                case 'y': return Grey
+                case 'z': return Cyan
+            return Grey
         
         def indicate(items: List[VMobject], size: float = 1.2):
-            self.play(Indicate(VGroup(*items), color = cWhite, scale_factor = size))
+            self.play(Indicate(VGroup(*items), color = White, scale_factor = size))
 
         def make_matrix(matrix: List[List[str]], margin: float = MED_SMALL_BUFF, padding: float = 1.3):
             rows: int = len(matrix)
@@ -144,8 +173,8 @@ class Quintic01(Scene):
             for row in range(rows):
                 for col in range(cols):
                     paint_tex(matrix[0][row * cols + col][0], strings[row][col])
-            matrix[1].set_color(cGrey)
-            matrix[2].set_color(cGrey)
+            matrix[1].set_color(Grey)
+            matrix[2].set_color(Grey)
             return matrix
 
         def make_tex(*items: str):
@@ -156,7 +185,7 @@ class Quintic01(Scene):
             return mathTex
 
         def paint_tex(mathTex: MathTex, string: str):
-            colour = cWhite
+            colour = Black
             super = False
             p: int = 0
             for substring in string.split('^'):
@@ -282,7 +311,7 @@ class Quintic01(Scene):
 # Convert to matrix equation Y=MZ
 
         EQ = MathTex('=')
-        EQ.set_color(cGrey)
+        EQ.set_color(Grey)
         VGroup(Y3, EQ, M1, Z1).arrange(RIGHT, aligned_edge = UP)
         EQ.move_to(EQ.get_center() + 2.9 * DOWN)
         Z1.move_to(Z1.get_center() + 0.5 * DOWN)
