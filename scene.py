@@ -21,12 +21,14 @@ sections = (
 #region Colour Palette
 
 def get_colour(char: str):
+    #return rgb_to_color(hex_to_rgb('#ff0000'))
     for map in colour_map:
         if (char in map[0]):
             return map[1]
     return Grey
 
 def set_colour_map(map):
+    global colour_map
     colour_map = map
 
 def make_tex(*items: str):
@@ -62,6 +64,8 @@ def paint_tex(mathTex: MathTex, string: str):
 
 PALETTE_BRIGHT = 0
 PALETTE_PASTEL = 1
+
+foo = (0x000000, 0x000000)
 
 colours: list[tuple[ManimColor]] = [[rgb_to_color(rgb) for rgb in colour] for colour in [
     ((0.0, 0.0, 0.0), (0.2, 0.2, 0.2)), # Black
@@ -99,20 +103,20 @@ def set_palette(palette_index: int):
 
 set_palette(PALETTE_BRIGHT)
 
-colour_map = (
-    ('0123456789', Magenta),
-    ('abcde', Green),
-    ('h', Orange),
-    ('pqrs', Yellow),
-    ('x', Red),
-    ('y', Grey),
-    ('z', Cyan))
-
 #endregion (Colour Palette)
 
 class Quintic01(Scene):
 
     def construct(self):
+
+        set_colour_map([
+            ('0123456789', Magenta),
+            ('abcde', Green),
+            ('h', Orange),
+            ('pqrs', Yellow),
+            ('x', Red),
+            ('y', Grey),
+            ('z', Cyan)])
 
 #region Terms
 
@@ -136,14 +140,7 @@ class Quintic01(Scene):
                 ('cz^2+', '2chz+', 'ch^2'),
                 ('dz+', 'dh'),
                 ('e'))
-        y3 = (
-                ['y'],
-                ['x^5'],
-                ['ax^4'],
-                ['bx^3'],
-                ['cx^2'],
-                ['dx'],
-                ['e'])
+        y3 = (['y'], ['x^5'], ['ax^4'], ['bx^3'], ['cx^2'], ['dx'], ['e'])
         m1 = (
                 ('z^5', '0z^4', 'pz^3', 'qz^2', 'rz', 's'),
                 ('z^5', '5hz^4', '10h^2z^3', '10h^3z^2', '5h^4z', 'h^5'),
