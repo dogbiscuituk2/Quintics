@@ -19,6 +19,55 @@ sections = [
 
 #region Colour Palette
 
+def get_colour(char: str):
+    for map in colour_map:
+        if (char in map[0]):
+            return map[1]
+    return Grey
+
+def set_colour_map(map: List[(str, ManimColor)]):
+    colour_map = map
+
+colour_map: List[(str, ManimColor)] = [
+    ('0123456789', Magenta),
+    ('abcde', Green),
+    ('h', Orange)
+    ('pqrs', Yellow),
+    ('x', Red),
+    ('y', Grey),
+    ('z', Cyan)]
+
+def make_tex(*items: str):
+    string: str = [prepare_string(item) for item in items]
+    mathTex: MathTex = MathTex(*string)
+    for i in range(len(string)):
+        paint_tex(mathTex[i], string[i])
+    return mathTex
+
+def prepare_string(string: str):
+    if not '|' in string:
+        string = f'|{string}'
+    if not '^' in string:
+        string = f'{string}^|'
+    return string
+
+def paint_tex(mathTex: MathTex, string: str):
+    colour = Black
+    super = False
+    p: int = 0
+    for substring in string.split('^'):
+        for char in substring:
+            symbol = mathTex[p]
+            if char == '|':
+                symbol.set_opacity(0)
+            else:
+                if not super:
+                    colour = get_colour(char)
+                symbol.set_color(colour)
+            super = False
+            p += 1
+        super = True
+
 BRIGHT = 0
 PASTEL = 1
 
@@ -43,20 +92,20 @@ def set_palette(palette: int):
 
     global Black, Brown, Red, Orange, Yellow, Green, Blue, Cyan, Magenta, Violet, Grey, White
 
-    def get_colour(colour_index: int): return colours[colour_index][palette]
+    def read_colour(colour_index: int): return colours[colour_index][palette]
 
-    Black   = get_colour( 0)
-    Brown   = get_colour( 1)
-    Red     = get_colour( 2)
-    Orange  = get_colour( 3)
-    Yellow  = get_colour( 4)
-    Green   = get_colour( 5)
-    Blue    = get_colour( 6)
-    Cyan    = get_colour( 7)
-    Magenta = get_colour( 8)
-    Violet  = get_colour( 9)
-    Grey    = get_colour(10)
-    White   = get_colour(11)
+    Black   = read_colour( 0)
+    Brown   = read_colour( 1)
+    Red     = read_colour( 2)
+    Orange  = read_colour( 3)
+    Yellow  = read_colour( 4)
+    Green   = read_colour( 5)
+    Blue    = read_colour( 6)
+    Cyan    = read_colour( 7)
+    Magenta = read_colour( 8)
+    Violet  = read_colour( 9)
+    Grey    = read_colour(10)
+    White   = read_colour(11)
 
 set_palette(BRIGHT)
 
@@ -150,17 +199,6 @@ class Quintic01(Scene):
 
 #endregion (Terms)
 #region Functions
-
-        def get_colour(char: str):
-            match(char):
-                case c if c.isnumeric(): return Magenta;
-                case c if c in 'abcde': return Green;
-                case c if c in 'pqrs': return Yellow;
-                case 'h': return Orange
-                case 'x': return Red
-                case 'y': return Grey
-                case 'z': return Cyan
-            return Grey
         
         def indicate(items: List[VMobject], size: float = 1.2):
             self.play(Indicate(VGroup(*items), color = White, scale_factor = size))
@@ -184,33 +222,8 @@ class Quintic01(Scene):
                 paint_tex(mathTex[i], string[i])
             return mathTex
 
-        def paint_tex(mathTex: MathTex, string: str):
-            colour = Black
-            super = False
-            p: int = 0
-            for substring in string.split('^'):
-                for char in substring:
-                    symbol = mathTex[p]
-                    if char == '|':
-                        symbol.set_opacity(0)
-                    else:
-                        if not super:
-                            colour = get_colour(char)
-                        symbol.set_color(colour)
-                    super = False
-                    p += 1
-                super = True
-
         def pause():
             self.wait(0)
-
-        def prepare_string(string: str):
-
-            if not '|' in string:
-                string = f'|{string}'
-            if not '^' in string:
-                string = f'{string}^|'
-            return string
 
         def replace(sourceTex: MathTex, targetTex: MathTex):
             M2.append(targetTex)
