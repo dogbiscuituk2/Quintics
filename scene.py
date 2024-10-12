@@ -25,17 +25,8 @@ def get_colour(char: str):
             return map[1]
     return Grey
 
-def set_colour_map(map: List[(str, ManimColor)]):
+def set_colour_map(map):
     colour_map = map
-
-colour_map: List[(str, ManimColor)] = [
-    ('0123456789', Magenta),
-    ('abcde', Green),
-    ('h', Orange)
-    ('pqrs', Yellow),
-    ('x', Red),
-    ('y', Grey),
-    ('z', Cyan)]
 
 def make_tex(*items: str):
     string: str = [prepare_string(item) for item in items]
@@ -71,8 +62,6 @@ def paint_tex(mathTex: MathTex, string: str):
 BRIGHT = 0
 PASTEL = 1
 
-palette = BRIGHT
-
 colours: List[List[ManimColor]] = [[rgb_to_color(rgb) for rgb in colour] for colour in [
     [(0.0, 0.0, 0.0), (0.2, 0.2, 0.2)], # Black
     [(0.5, 0.2, 0.1), (0.5, 0.2, 0.1)], # Brown
@@ -87,6 +76,8 @@ colours: List[List[ManimColor]] = [[rgb_to_color(rgb) for rgb in colour] for col
     [(0.7, 0.7, 0.7), (0.7, 0.7, 0.7)], # Grey
     [(1.0, 1.0, 1.0), (1.0, 1.0, 1.0)]] # White
 ]
+
+
 
 def set_palette(palette: int):
 
@@ -108,6 +99,15 @@ def set_palette(palette: int):
     White   = read_colour(11)
 
 set_palette(BRIGHT)
+
+colour_map = [
+    ('0123456789', Magenta),
+    ('abcde', Green),
+    ('h', Orange),
+    ('pqrs', Yellow),
+    ('x', Red),
+    ('y', Grey),
+    ('z', Cyan)]
 
 #endregion (Colour Palette)
 
