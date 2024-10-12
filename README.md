@@ -37,7 +37,8 @@ https://docs.google.com/presentation/d/e/2PACX-1vTCx2Jhy_jxQD6LojP5uzsGuUnKFAMoM
 - Create similar videos covering
     - reduction to _Principal_ form (no cubic term),
     - reduction to _Bring-Jerrard_ form (no quadratic term),
-    - the final five solutions, expressed using _ultraradical_ notation.
+    - the final five solutions, expressed using _ultraradical_ notation,
+    - test cases ("Checkpoint" videos) for all of these steps,
 - Design a LaTeX symbol for the _Bring Radical_ (aka the _ultraradical_).
 - Record voiceovers, and adjust video pauses to sync with these explanations.
 
