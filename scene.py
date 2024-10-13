@@ -10,16 +10,15 @@ class Quintic00(Scene):
 
 #region Constants
 
-title = (
-    'Solving the General Quintic Equation',
-    'An ultraradical animation by John Michael Kerr')
-
 sections = (
-    ('Part One', 'Remove the Quartic (x^4) Term'),
+    (
+        'Solving the General Quintic Equation',
+        'An ultraradical animation by John Michael Kerr'),
+    ('Part One', 'Remove the Quartic Term'),
     ('First Checkpoint', 'Verify Removal of the Quartic Term'),
-    ('Part Two', 'Remove the Cubic (x^3) Term'),
+    ('Part Two', 'Remove the Cubic Term'),
     ('Second Checkpoint', 'Verify Removal of the Cubic Term'),
-    ('Part Three', 'Remove the Quadratic (x^2) Term'),
+    ('Part Three', 'Remove the Quadratic Term'),
     ('Third Checkpoint', 'Verify Removal of the Quadratic Term'),
     ('Part Four', 'The Ultraradical'),
     ('Fourth Checkpoint', 'Final Verification'))
@@ -210,6 +209,16 @@ class Quintic01(Scene):
         def indicate(items: List[VMobject], size: float = 1.2):
             self.play(Indicate(VGroup(*items), color = White, scale_factor = size))
 
+        def intro(section: int) -> None:
+            T1 = Tex(sections[section][0]).scale(1.5)
+            T2 = Tex(sections[section][1]).scale(1.0)
+            G = VGroup(T1, T2).arrange(DOWN)
+            self.play(FadeIn(T1))
+            self.wait(1)
+            self.play(FadeIn(T2))
+            self.wait(3)
+            self.play(FadeOut(G))
+
         def make_matrix(matrix: List[List[str]], margin: float = MED_SMALL_BUFF, padding: float = 1.3):
             rows: int = len(matrix)
             cols: int = len(matrix[0])
@@ -272,14 +281,8 @@ class Quintic01(Scene):
 # Draw background
 
         self.add(Rectangle(Background, height = 10, width = 15).set_fill(Background, opacity = 1))
-        T1 = Tex(title[0])
-        T2 = Tex(title[1])
-        G = VGroup(T1, T2).arrange(DOWN)
-        self.play(FadeIn(T1))
-        self.wait(1)
-        self.play(FadeIn(T2))
-        self.wait(3)
-        self.play(FadeOut(G))
+        intro(0)
+        intro(1)
 
 # Start with the general quintic in x
 
