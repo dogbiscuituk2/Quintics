@@ -271,9 +271,15 @@ class Quintic01(Scene):
 
 # Draw background
 
-        BG = Rectangle(Background, height = 10, width = 15)
-        BG.set_fill(Background, opacity = 1)
-        self.add(BG)
+        self.add(Rectangle(Background, height = 10, width = 15).set_fill(Background, opacity = 1))
+        T1 = Tex(title[0])
+        T2 = Tex(title[1])
+        G = VGroup(T1, T2).arrange(DOWN)
+        self.play(FadeIn(T1))
+        self.wait(1)
+        self.play(FadeIn(T2))
+        self.wait(3)
+        self.play(FadeOut(G))
 
 # Start with the general quintic in x
 
