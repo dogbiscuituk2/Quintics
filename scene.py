@@ -1,5 +1,13 @@
 from manim import *
 
+class Quintic00(Scene):
+
+    def construct(self):
+
+        BG = Rectangle(YELLOW, height = 10, width = 15)
+        BG.set_fill(WHITE, opacity = 1)
+        self.add(BG)
+
 #region Constants
 
 title = (
@@ -21,15 +29,10 @@ sections = (
 #region Colour Palette
 
 def get_colour(char: str):
-    #return rgb_to_color(hex_to_rgb('#ff0000'))
-    for map in colour_map:
+    for map in ColourMap:
         if (char in map[0]):
             return map[1]
     return Grey
-
-def set_colour_map(map):
-    global colour_map
-    colour_map = map
 
 def make_tex(*items: str):
     string: str = [prepare_string(item) for item in items]
@@ -62,44 +65,47 @@ def paint_tex(mathTex: MathTex, string: str):
             p += 1
         super = True
 
-PALETTE_BRIGHT = 0
-PALETTE_PASTEL = 1
+def set_colour_map(map):
+    global ColourMap
+    ColourMap = map
 
-foo = (0x000000, 0x000000)
+PALETTE_DEFAULT = 0
+PALETTE_BRIGHT = 1
+PALETTE_PASTEL = 2
+PALETTE_BLACK_ON_WHITE = 3
+PALETTE_WHITE_ON_BLACK = 4
 
-colours: list[tuple[ManimColor]] = [[rgb_to_color(rgb) for rgb in colour] for colour in [
-    ((0.0, 0.0, 0.0), (0.2, 0.2, 0.2)), # Black
-    ((0.5, 0.2, 0.1), (0.5, 0.2, 0.1)), # Brown
-    ((1.0, 0.1, 0.2), (1.0, 0.1, 0.2)), # Red
-    ((1.0, 0.5, 0.3), (1.0, 0.5, 0.3)), # Orange
-    ((0.8, 0.8, 0.0), (0.8, 0.8, 0.0)), # Yellow
-    ((0.2, 1.0, 0.2), (0.2, 1.0, 0.2)), # Green
-    ((0.0, 1.0, 1.0), (0.0, 1.0, 1.0)), # Blue
-    ((0.0, 1.0, 1.0), (0.0, 1.0, 1.0)), # Cyan
-    ((1.0, 0.0, 1.0), (1.0, 0.0, 1.0)), # Magenta
-    ((1.0, 0.0, 1.0), (1.0, 0.0, 1.0)), # Violet
-    ((0.7, 0.7, 0.7), (0.7, 0.7, 0.7)), # Grey
-    ((1.0, 1.0, 1.0), (1.0, 1.0, 1.0))] # White
-]
+CYAN = TEAL
+MAGENTA = ManimColor(0xFF00FF)
+VIOLET = PURPLE
 
-def set_palette(palette_index: int):
+colours = (
+    (BLACK, BLACK, LIGHT_BROWN, PURE_RED, ORANGE, YELLOW, PURE_GREEN, PURE_BLUE, CYAN, MAGENTA, VIOLET, GREY_B, WHITE),
+    (BLACK, BLACK, 0x7F3319, 0xFF1933, 0xFF7F4C, 0xCCCC00, 0x33FF33, 0x0000FF, 0x00FFFF, 0xFF00FF, 0x9A72AC, 0xB2B2B2, 0xFFFFFF),
+    (BLACK, BLACK, 0xCD853F, 0xFF0000, 0xFF7F3F, 0xCCCC00, 0x33FF33, 0x0000FF, 0x00FFFF, 0xFF00FF, 0x9A72AC, 0xBBBBBB, 0xFFFFFF),
+    (WHITE, *[BLACK for _ in range(12)]),
+    (BLACK, *[WHITE for _ in range(12)]))
 
-    global Black, Brown, Red, Orange, Yellow, Green, Blue, Cyan, Magenta, Violet, Grey, White
+def set_palette(palette_index: int) -> None:
 
-    def read_colour(colour_index: int): return colours[colour_index][palette_index]
+    def read_colour(colour_index: int) -> ManimColor:
+        return colours[palette_index][colour_index]
 
-    Black   = read_colour( 0)
-    Brown   = read_colour( 1)
-    Red     = read_colour( 2)
-    Orange  = read_colour( 3)
-    Yellow  = read_colour( 4)
-    Green   = read_colour( 5)
-    Blue    = read_colour( 6)
-    Cyan    = read_colour( 7)
-    Magenta = read_colour( 8)
-    Violet  = read_colour( 9)
-    Grey    = read_colour(10)
-    White   = read_colour(11)
+    global Background, Black, Brown, Red, Orange, Yellow, Green, Blue, Cyan, Magenta, Violet, Grey, White
+    
+    Background  = read_colour( 0)
+    Black       = read_colour( 1)
+    Brown       = read_colour( 2)
+    Red         = read_colour( 3)
+    Orange      = read_colour( 4)
+    Yellow      = read_colour( 5)
+    Green       = read_colour( 6)
+    Blue        = read_colour( 7)
+    Cyan        = read_colour( 8)
+    Magenta     = read_colour( 9)
+    Violet      = read_colour(10)
+    Grey        = read_colour(11)
+    White       = read_colour(12)
 
 set_palette(PALETTE_BRIGHT)
 
@@ -262,6 +268,12 @@ class Quintic01(Scene):
 
 #endregion (Formulae)
 #region Main Code
+
+# Draw background
+
+        BG = Rectangle(Background, height = 10, width = 15)
+        BG.set_fill(Background, opacity = 1)
+        self.add(BG)
 
 # Start with the general quintic in x
 
