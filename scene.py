@@ -256,7 +256,7 @@ class Quintic02(Quintic):
             self.play(MoveToTarget(title[0]), MoveToTarget(title[1]))
             return title
 
-    #endregion (Functions)
+#endregion (Functions)
 #region Formulae
 
         Y1 = make_tex(y1)
