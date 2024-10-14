@@ -1,72 +1,64 @@
 from manim import *
 
-class Quintic00(Scene):
+#region Titles
 
-    def construct(self):
-
-        BG = Rectangle(YELLOW, height = 10, width = 15)
-        BG.set_fill(WHITE, opacity = 1)
-        self.add(BG)
-
-#region Constants
-
-sections = (
+TITLES: tuple[tuple[str]] = (
     (
         'Solving the General Quintic Equation',
-        'An ultraradical animation by John Michael Kerr'),
-    ('Part One', 'Remove the Quartic Term'),
-    ('First Checkpoint', 'Verify Removal of the Quartic Term'),
-    ('Part Two', 'Remove the Cubic Term'),
-    ('Second Checkpoint', 'Verify Removal of the Cubic Term'),
-    ('Part Three', 'Remove the Quadratic Term'),
-    ('Third Checkpoint', 'Verify Removal of the Quadratic Term'),
+        'An Ultraradical Animation ©2024 by John Michael Kerr'
+    ),
+    ('Introduction', 'Why is the Quintic called "Unsolvable"?'),
+    ('Part One', 'Removing the Quartic (x<sup>4</sup>) Term'),
+    ('First Checkpoint', 'Verifying Removal of the Quartic Term'),
+    ('Part Two', 'Removing the Cubic (x<sup>3</sup>) Term'),
+    ('Second Checkpoint', 'Verifying Removal of the Cubic Term'),
+    ('Part Three', 'Removing the Quadratic (x<sup>2</sup>) Term'),
+    ('Third Checkpoint', 'Verifying Removal of the Quadratic Term'),
     ('Part Four', 'The Ultraradical'),
     ('Fourth Checkpoint', 'Final Verification'))
 
-#endregion (Constants)
+#endregion (Titles)
 
-#region Colour Palette
+#region Colours
 
-def get_colour(char: str):
+def get_colour(char: str) -> ManimColor:
     for map in ColourMap:
         if (char in map[0]):
             return map[1]
     return Grey
 
-def make_tex(*items: str):
-    string: str = [prepare_string(item) for item in items]
-    mathTex: MathTex = MathTex(*string)
-    for i in range(len(string)):
-        paint_tex(mathTex[i], string[i])
+def make_tex(*items: str) -> MathTex:
+    s: str = [prepare_string(item) for item in items]
+    mathTex: MathTex = MathTex(*s)
+    for i in range(len(s)):
+        paint_tex(mathTex[i], s[i])
     return mathTex
 
-def prepare_string(string: str):
-    if not '|' in string:
-        string = f'|{string}'
-    if not '^' in string:
-        string = f'{string}^|'
-    return string
+def prepare_string(s: str) -> str:
+    if not '|' in s: s = f'|{s}'
+    if not '^' in s: s = f'{s}^|'
+    return s
 
-def paint_tex(mathTex: MathTex, string: str):
+def paint_tex(mathTex: MathTex, s: str) -> None:
     colour = Black
+    p = 0
     super = False
-    p: int = 0
-    for substring in string.split('^'):
-        for char in substring:
-            symbol = mathTex[p]
-            if char == '|':
-                symbol.set_opacity(0)
+    for t in s.split('^'):
+        for c in t:
+            m = mathTex[p]
+            if c == '|':
+                m.set_opacity(0)
             else:
                 if not super:
-                    colour = get_colour(char)
-                symbol.set_color(colour)
+                    colour = get_colour(c)
+                m.set_color(colour)
             super = False
             p += 1
         super = True
 
-def set_colour_map(map):
+def set_colour_map(colour_map: tuple[tuple[str, ManimColor]]) -> None:
     global ColourMap
-    ColourMap = map
+    ColourMap = colour_map
 
 PALETTE_DEFAULT = 0
 PALETTE_BRIGHT = 1
@@ -108,20 +100,27 @@ def set_palette(palette_index: int) -> None:
 
 set_palette(PALETTE_BRIGHT)
 
-#endregion (Colour Palette)
+#endregion (Colours)
 
-class Quintic01(Scene):
+class Quintic(Scene):
+    def construct(self):
+        pass
 
+class Quintic02(Quintic):
+    def construct(self):
+        pass
+
+class Quintic02(Quintic):
     def construct(self):
 
-        set_colour_map([
+        set_colour_map((
             ('0123456789', Magenta),
             ('abcde', Green),
             ('h', Orange),
             ('pqrs', Yellow),
             ('x', Red),
             ('y', Grey),
-            ('z', Cyan)])
+            ('z', Cyan)))
 
 #region Terms
 
@@ -168,7 +167,8 @@ class Quintic01(Scene):
 
         f1 = 'y=x^5+ax^4+bx^3+cx^2+dx+e'
         f2 = 'y=z^5+0z^4+pz^3+qz^2+rz+s'
-        f3 = 'z=x-h=x+a/5'
+        f3 = 'z=x-h'
+        f4 = 'z=x+a/5'
 
         f6 = (
                 '0=5h+a',
@@ -191,9 +191,9 @@ class Quintic01(Scene):
         f9 = (
                 'h=-a/5',
                 'p=b-10h^2',
-                'q=3bh+c-20h^3',
-                'r=3bh^2+2ch+d-15h^4',
-                's=bh^3+ch^2+dh+e-4h^5')
+                'q=c+3bh-20h^3',
+                'r=d+2ch+3bh^2-15h^4',
+                's=e+dh+ch^2+bh^3-4h^5')
         
         y4 = (('p'), ('q'), ('r'), ('s'))
         m4 = (
@@ -206,20 +206,10 @@ class Quintic01(Scene):
 #endregion (Terms)
 #region Functions
         
-        def indicate(items: List[VMobject], size: float = 1.2):
+        def indicate(items: List[VMobject], size: float = 1.2) -> None:
             self.play(Indicate(VGroup(*items), color = White, scale_factor = size))
 
-        def intro(section: int) -> None:
-            T1 = Tex(sections[section][0]).scale(1.5)
-            T2 = Tex(sections[section][1]).scale(1.0)
-            G = VGroup(T1, T2).arrange(DOWN)
-            self.play(FadeIn(T1))
-            self.wait(1)
-            self.play(FadeIn(T2))
-            self.wait(3)
-            self.play(FadeOut(G))
-
-        def make_matrix(matrix: List[List[str]], margin: float = MED_SMALL_BUFF, padding: float = 1.3):
+        def make_matrix(matrix: List[List[str]], margin: float = MED_SMALL_BUFF, padding: float = 1.3) -> Matrix:
             rows: int = len(matrix)
             cols: int = len(matrix[0])
             strings: List[str] = [[prepare_string(t) for t in row] for row in matrix]
@@ -231,21 +221,42 @@ class Quintic01(Scene):
             matrix[2].set_color(Grey)
             return matrix
 
-        def make_tex(*items: str):
+        def make_tex(*items: str) -> MathTex:
             string: str = [prepare_string(item) for item in items]
             mathTex: MathTex = MathTex(*string)
             for i in range(len(string)):
                 paint_tex(mathTex[i], string[i])
             return mathTex
 
-        def pause():
+        def pause() -> None:
             self.wait(0)
 
-        def replace(sourceTex: MathTex, targetTex: MathTex):
+        def replace(sourceTex: MathTex, targetTex: MathTex) -> Transform:
             M2.append(targetTex)
             return ReplacementTransform(sourceTex, targetTex.move_to(sourceTex.get_center()))
 
-#endregion (Functions)
+        def titles_hide(titles: List[MarkupText]) -> None:
+            self.play(FadeOut(*titles))
+
+        def titles_show(section: int) -> List[MarkupText]:
+            scales = (1.0, 0.6)
+            title = [MarkupText(TITLES[section][i], color = (Cyan, Green)[i]).scale(scales[i]) for i in range(2)]
+            VGroup(*title).arrange(DOWN, buff=0.5)
+            self.play(GrowFromCenter(title[0]))
+            self.wait(1)
+            self.play(FadeIn(title[1]))
+            self.wait(2)
+            corners = ((DL, DR), (UL, UR))
+            _ = [title[i] \
+                .generate_target() \
+                .scale(0.4/scales[i]) \
+                .set_color(Grey) \
+                .to_corner(corners[0 if section == 0 else 1][i], buff=0.1) \
+                for i in range(2)]
+            self.play(MoveToTarget(title[0]), MoveToTarget(title[1]))
+            return title
+
+    #endregion (Functions)
 #region Formulae
 
         Y1 = make_tex(y1)
@@ -270,6 +281,7 @@ class Quintic01(Scene):
         F1 = make_tex(f1)
         F2 = make_tex(f2)
         F3 = make_tex(f3)
+        F4 = make_tex(f4)
         F6 = make_tex(*f6).arrange(DOWN, aligned_edge = LEFT).move_to(2 * LEFT + DOWN)
         F7 = make_tex(*f7).arrange(DOWN, aligned_edge = LEFT).move_to(2 * LEFT + DOWN)
         F8 = make_tex(*f8).arrange(DOWN, aligned_edge = LEFT).move_to(2 * LEFT + DOWN)
@@ -281,8 +293,8 @@ class Quintic01(Scene):
 # Draw background
 
         self.add(Rectangle(Background, height = 10, width = 15).set_fill(Background, opacity = 1))
-        intro(0)
-        intro(1)
+        titles_show(0)
+        titles = titles_show(1)
 
 # Start with the general quintic in x
 
@@ -400,6 +412,7 @@ class Quintic01(Scene):
         VGroup(F1, F2, F3, F7).arrange(DOWN, aligned_edge = LEFT)
         VGroup(F1, F2, F3, F8).arrange(DOWN, aligned_edge = LEFT)
         VGroup(F1, F2, F3, F9).arrange(DOWN, aligned_edge = LEFT)
+        VGroup(F1, F2, F4, F9).arrange(DOWN, aligned_edge = LEFT)
 
         M6 = [
             VGroup(*[M2[i] for i in range(2, 5)]),
@@ -408,7 +421,7 @@ class Quintic01(Scene):
             VGroup(*[M2[i] for i in range(14, 20)]),
             VGroup(*[M2[i] for i in range(20, 27)])]
         for i in range(5):
-            self.play(TransformMatchingShapes(M6[i], F6[i]))
+            self.play(TransformMatchingShapes(M6[i], F6[i], path_arc=PI/2))
 
 # Substitute '5h' for 'a'
 
@@ -419,7 +432,7 @@ class Quintic01(Scene):
             indicate(F6[i][[9, 9, 8, 6][i - 1]], size = 2)
             self.play(TransformMatchingShapes(F6[i], F7[i]))
             self.play(TransformMatchingShapes(F7[i], F8[i]))
-            self.play(TransformMatchingShapes(F8[i], F9[i]))
+            self.play(TransformMatchingShapes(F8[i], F9[i], path_arc=PI/2))
         indicate(F7[0])
         self.play(TransformMatchingShapes(F7[0], F8[0]))
         indicate(F8[0])
@@ -429,7 +442,12 @@ class Quintic01(Scene):
         self.play(FadeIn(F1))
         self.play(FadeIn(F2))
         self.play(FadeIn(F3))
+        indicate([F3])
+        self.play(TransformMatchingShapes(F3, F4))
+        indicate([F4])
 
+        self.wait(10)
+        titles_hide(titles)
         self.wait(10)
 
 #endregion (Main Code)
