@@ -1,5 +1,7 @@
 from manim import *
 
+config.max_files_cached = 999
+
 #region Titles
 
 TITLES: tuple[tuple[str]] = (
@@ -7,7 +9,7 @@ TITLES: tuple[tuple[str]] = (
         'Solving the General Quintic Equation',
         'An Ultraradical Animation ©2024 by John Michael Kerr'
     ),
-    ('Introduction', 'Why is the Quintic called "Unsolvable"?'),
+    ('Introduction', 'The "Impossible" Polynomial'),
     ('Part One', 'Removing the Quartic (x<sup>4</sup>) Term'),
     ('First Checkpoint', 'Verifying Removal of the Quartic Term'),
     ('Part Two', 'Removing the Cubic (x<sup>3</sup>) Term'),
@@ -124,77 +126,6 @@ class Quintic02(Quintic):
 
 #region Terms
 
-        y1 = 'y='
-        y2 = ('x^5=', 'ax^4=', 'bx^3=', 'cx^2=', 'dx=', 'e=')
-        e1 = ('x^5+', 'ax^4+', 'bx^3+', 'cx^2+', 'dx+', 'e')
-        e2 = ('z^5+', '0z^4+', 'pz^3+', 'qz^2+', 'rz+', 's')
-        e3 = ('(z+h)^5', 'a(z+h)^4', 'b(z+h)^3', 'c(z+h)^2', 'd(z+h)', 'e')
-
-        e4 = (
-                '(z^5+5hz^4+10h^2z^3+10h^3z^2+5h^4z+h^5)',
-                'a(z^4+4hz^3+6h^2z^2+4h^3z+h^4)',
-                'b(z^3+3hz^2+3h^2z+h^3)',
-                'c(z^2+2hz+h^2)',
-                'd(z+h)',
-                'e')
-        e5 = (
-                ('z^5+', '5hz^4+', '10h^2z^3+', '10h^3z^2+', '5h^4z+', 'h^5'),
-                ('az^4+', '4ahz^3+', '6ah^2z^2+', '4ah^3z+', 'ah^4'),
-                ('bz^3+', '3bhz^2+', '3bh^2z+', 'bh^3'),
-                ('cz^2+', '2chz+', 'ch^2'),
-                ('dz+', 'dh'),
-                ('e'))
-        y3 = (['y'], ['x^5'], ['ax^4'], ['bx^3'], ['cx^2'], ['dx'], ['e'])
-        m1 = (
-                ('z^5', '0z^4', 'pz^3', 'qz^2', 'rz', 's'),
-                ('z^5', '5hz^4', '10h^2z^3', '10h^3z^2', '5h^4z', 'h^5'),
-                ('', 'az^4', '4ahz^3', '6ah^2z^2', '4ah^3z', 'ah^4'),
-                ('', '', 'bz^3', '3bhz^2', '3bh^2z', 'bh^3'),
-                ('', '', '', 'cz^2', '2chz', 'ch^2'),
-                ('', '', '', '', 'dz', 'dh'),
-                ('', '', '', '', '', 'e'))
-        z0 = ('1')
-        z1 = (z0, z0, z0, z0, z0, z0)
-        z2 = ('z^5', 'z^4', 'z^3', 'z^2', 'z', '1')
-        m2 = (
-                ('1', '0', 'p', 'q', 'r', 's'),
-                ('1', '5h', '10h^2', '10h^3', '5h^4', 'h^5'),
-                ('', 'a', '4ah', '6ah^2', '4ah^3', 'ah^4'),
-                ('', '', 'b', '3bh', '3bh^2', 'bh^3'),
-                ('', '', '', 'c', '2ch', 'ch^2'),
-                ('', '', '', '', 'd', 'dh'),
-                ('', '', '', '', '', 'e'))
-
-        f1 = 'y=x^5+ax^4+bx^3+cx^2+dx+e'
-        f2 = 'y=z^5+0z^4+pz^3+qz^2+rz+s'
-        f3 = 'z=x-h'
-        f4 = 'z=x+a/5'
-
-        f6 = (
-                '0=5h+a',
-                'p=10h^2+4ah+b',
-                'q=10h^3+6ah^2+3bh+c',
-                'r=5h^4+4ah^3+3bh^2+2ch+d',
-                's=h^5+a^4+bh^3+ch^2+dh+e')
-        f7 = (
-                'a=-5h',
-                'p=10h^2-20h^2+b',
-                'q=10h^3-30h^3+3bh+c',
-                'r=5h^4-20h^4+3bh^2+2ch+d',
-                's=h^5-5h^5+bh^3+ch^2+dh+e')
-        f8 = (
-                'h=-a/5',
-                'p=-10h^2+b',
-                'q=-20h^3+3bh+c',
-                'r=-15h^4+3bh^2+2ch+d',
-                's=-4h^5+bh^3+ch^2+dh+e')
-        f9 = (
-                'h=-a/5',
-                'p=b-10h^2',
-                'q=c+3bh-20h^3',
-                'r=d+2ch+3bh^2-15h^4',
-                's=e+dh+ch^2+bh^3-4h^5')
-        
         y4 = (('p'), ('q'), ('r'), ('s'))
         m4 = (
                 ( '0',   '0',   '0', '-10',  '0', 'b'),
@@ -247,7 +178,7 @@ class Quintic02(Quintic):
             self.play(FadeIn(title[1]))
             self.wait(2)
             corners = ((DL, DR), (UL, UR))
-            _ = [title[i] \
+            [title[i] \
                 .generate_target() \
                 .scale(0.4/scales[i]) \
                 .set_color(Grey) \
@@ -259,33 +190,45 @@ class Quintic02(Quintic):
 #endregion (Functions)
 #region Formulae
 
-        Y1 = make_tex(y1)
-        Y2 = make_tex(*y2).arrange(DOWN, aligned_edge = RIGHT)
-        E1 = make_tex(*e1)
-        E2 = make_tex(*e2)
-        E3 = make_tex(*e3).arrange(DOWN, aligned_edge = LEFT)
-        E4 = make_tex(*e4)
-        E5 = VGroup(*[make_tex(*e) for e in e5])
+        Y1 = make_tex('y=')
+        Y2 = make_tex('x^5=', 'ax^4=', 'bx^3=', 'cx^2=', 'dx=', 'e=').arrange(DOWN, aligned_edge = RIGHT)
+        E1 = make_tex('x^5+', 'ax^4+', 'bx^3+', 'cx^2+', 'dx+', 'e')
+        E2 = make_tex('z^5+', '0z^4+', 'pz^3+', 'qz^2+', 'rz+', 's')
+        E3 = make_tex('(z+h)^5', 'a(z+h)^4', 'b(z+h)^3', 'c(z+h)^2', 'd(z+h)', 'e').arrange(DOWN, aligned_edge = LEFT)
+        E4 = make_tex(
+            '(z^5+5hz^4+10h^2z^3+10h^3z^2+5h^4z+h^5)',
+            'a(z^4+4hz^3+6h^2z^2+4h^3z+h^4)',
+            'b(z^3+3hz^2+3h^2z+h^3)',
+            'c(z^2+2hz+h^2)',
+            'd(z+h)',
+            'e')
+        E5 = VGroup(*[make_tex(*e) for e in (
+            ('z^5+', '5hz^4+', '10h^2z^3+', '10h^3z^2+', '5h^4z+', 'h^5'),
+            ('az^4+', '4ahz^3+', '6ah^2z^2+', '4ah^3z+', 'ah^4'),
+            ('bz^3+', '3bhz^2+', '3bh^2z+', 'bh^3'),
+            ('cz^2+', '2chz+', 'ch^2'),
+            ('dz+', 'dh'),
+            ('e'))])
+        Y3 = make_matrix((['y'], ['x^5'], ['ax^4'], ['bx^3'], ['cx^2'], ['dx'], ['e']), margin = 0)
 
-        Y3 = make_matrix(y3, margin = 0)
-        M1 = make_matrix(m1, padding = 1.75)
-        Z1 = make_matrix(z1, margin = 0)
+        M1 = make_matrix((
+            ('z^5', '0z^4', 'pz^3', 'qz^2', 'rz', 's'),
+            ('z^5', '5hz^4', '10h^2z^3', '10h^3z^2', '5h^4z', 'h^5'),
+            ('', 'az^4', '4ahz^3', '6ah^2z^2', '4ah^3z', 'ah^4'),
+            ('', '', 'bz^3', '3bhz^2', '3bh^2z', 'bh^3'),
+            ('', '', '', 'cz^2', '2chz', 'ch^2'),
+            ('', '', '', '', 'dz', 'dh'),
+            ('', '', '', '', '', 'e')),
+            padding = 1.75)
+
+        Z1 = make_matrix((('1'), ('1'), ('1'), ('1'), ('1'), ('1')), margin = 0)
         Z2 = [] # Will hold the powers of z which fly into column vector Z1
         M2 = [] # Will hold the replacement terms for the main matrix
 
         E1V = E1.copy().arrange(DOWN, aligned_edge = LEFT)
         G1 = VGroup(E1, E1V).arrange(DOWN, aligned_edge = LEFT)
         Y = VGroup(Y1, Y2).arrange(DOWN, aligned_edge = RIGHT)
-        G3 = VGroup(Y, G1).arrange(RIGHT, aligned_edge = UP).move_to(1.2 * LEFT)
-
-        F1 = make_tex(f1)
-        F2 = make_tex(f2)
-        F3 = make_tex(f3)
-        F4 = make_tex(f4)
-        F6 = make_tex(*f6).arrange(DOWN, aligned_edge = LEFT).move_to(2 * LEFT + DOWN)
-        F7 = make_tex(*f7).arrange(DOWN, aligned_edge = LEFT).move_to(2 * LEFT + DOWN)
-        F8 = make_tex(*f8).arrange(DOWN, aligned_edge = LEFT).move_to(2 * LEFT + DOWN)
-        F9 = make_tex(*f9).arrange(DOWN, aligned_edge = LEFT).move_to(2 * LEFT + DOWN)
+        VGroup(Y, G1).arrange(RIGHT, aligned_edge = UP).move_to(1.2 * LEFT)
 
 #endregion (Formulae)
 #region Main Code
@@ -380,12 +323,22 @@ class Quintic02(Quintic):
             return M[row * 6 + col]
 
         def new_target(row: int, col: int):
-            mathTex: MathTex = make_tex(z2[col])
+            z = ('z^5', 'z^4', 'z^3', 'z^2', 'z', '1')
+            mathTex: MathTex = make_tex(z[col])
             mathTex.move_to(get_element(row, col), RIGHT)
             Z2.append(mathTex)
             mathTex.generate_target()
             mathTex.target.move_to(Z[col], DOWN)
             return mathTex
+
+        m2 = (
+            ('1', '0', 'p', 'q', 'r', 's'),
+            ('1', '5h', '10h^2', '10h^3', '5h^4', 'h^5'),
+            ('', 'a', '4ah', '6ah^2', '4ah^3', 'ah^4'),
+            ('', '', 'b', '3bh', '3bh^2', 'bh^3'),
+            ('', '', '', 'c', '2ch', 'ch^2'),
+            ('', '', '', '', 'd', 'dh'),
+            ('', '', '', '', '', 'e'))
 
         for col in range(6):
             transforms: List[Transform] = []
@@ -407,6 +360,19 @@ class Quintic02(Quintic):
         self.play(FadeOut(Y3, EQ, M1, M2[0], M2[1], Z1[0][5], Z1[1], Z1[2] , *Z2))
 
 # Transpose the matrix
+
+        F1 = make_tex('y=x^5+ax^4+bx^3+cx^2+dx+e')
+        F2 = make_tex('y=z^5+0z^4+pz^3+qz^2+rz+s')
+        F3 = make_tex('z=x-h')
+        F4 = make_tex('z=x+a/5')
+
+        def setup(*args: str) -> MathTex:
+            return make_tex(*args).arrange(DOWN, aligned_edge = LEFT).move_to(2 * LEFT + DOWN)
+
+        F6 = setup('0=5h+a', 'p=10h^2+4ah+b'  , 'q=10h^3+6ah^2+3bh+c', 'r=5h^4+4ah^3+3bh^2+2ch+d', 's=h^5+a^4+bh^3+ch^2+dh+e' )
+        F7 = setup('a=-5h' , 'p=10h^2-20h^2+b', 'q=10h^3-30h^3+3bh+c', 'r=5h^4-20h^4+3bh^2+2ch+d', 's=h^5-5h^5+bh^3+ch^2+dh+e')
+        F8 = setup('h=-a/5', 'p=-10h^2+b'     , 'q=-20h^3+3bh+c'     , 'r=-15h^4+3bh^2+2ch+d'    , 's=-4h^5+bh^3+ch^2+dh+e'   )
+        F9 = setup('h=-a/5', 'p=b-10h^2'      , 'q=c+3bh-20h^3'      , 'r=d+2ch+3bh^2-15h^4'     , 's=e+dh+ch^2+bh^3-4h^5'    )
 
         VGroup(F1, F2, F3, F6).arrange(DOWN, aligned_edge = LEFT)
         VGroup(F1, F2, F3, F7).arrange(DOWN, aligned_edge = LEFT)
