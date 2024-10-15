@@ -398,4 +398,6 @@ class Quintic02(Quintic):
         titles_hide(titles)
         self.wait(10)
 
+
+
 #endregion (Main Code)
