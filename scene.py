@@ -1,108 +1,7 @@
 from manim import *
+from utils import *
 
 config.max_files_cached = 999
-
-#region Titles
-
-TITLES: tuple[tuple[str]] = (
-    (
-        'Solving the General Quintic Equation',
-        'An Ultraradical Animation ©2024 by John Michael Kerr'
-    ),
-    ('Introduction', 'The "Impossible" Polynomial'),
-    ('Part One', 'Removing the Quartic (x<sup>4</sup>) Term'),
-    ('First Checkpoint', 'Verifying Removal of the Quartic Term'),
-    ('Part Two', 'Removing the Cubic (x<sup>3</sup>) Term'),
-    ('Second Checkpoint', 'Verifying Removal of the Cubic Term'),
-    ('Part Three', 'Removing the Quadratic (x<sup>2</sup>) Term'),
-    ('Third Checkpoint', 'Verifying Removal of the Quadratic Term'),
-    ('Part Four', 'The Ultraradical'),
-    ('Fourth Checkpoint', 'Final Verification'))
-
-#endregion (Titles)
-
-#region Colours
-
-def get_colour(char: str) -> ManimColor:
-    for map in ColourMap:
-        if (char in map[0]):
-            return map[1]
-    return Grey
-
-def make_tex(*items: str) -> MathTex:
-    s: str = [prepare_string(item) for item in items]
-    mathTex: MathTex = MathTex(*s)
-    for i in range(len(s)):
-        paint_tex(mathTex[i], s[i])
-    return mathTex
-
-def prepare_string(s: str) -> str:
-    if not '|' in s: s = f'|{s}'
-    if not '^' in s: s = f'{s}^|'
-    return s
-
-def paint_tex(mathTex: MathTex, s: str) -> None:
-    colour = Black
-    p = 0
-    super = False
-    for t in s.split('^'):
-        for c in t:
-            m = mathTex[p]
-            if c == '|':
-                m.set_opacity(0)
-            else:
-                if not super:
-                    colour = get_colour(c)
-                m.set_color(colour)
-            super = False
-            p += 1
-        super = True
-
-def set_colour_map(colour_map: tuple[tuple[str, ManimColor]]) -> None:
-    global ColourMap
-    ColourMap = colour_map
-
-PALETTE_DEFAULT = 0
-PALETTE_BRIGHT = 1
-PALETTE_PASTEL = 2
-PALETTE_BLACK_ON_WHITE = 3
-PALETTE_WHITE_ON_BLACK = 4
-
-CYAN = TEAL
-MAGENTA = ManimColor(0xFF00FF)
-VIOLET = PURPLE
-
-colours = (
-    (BLACK, BLACK, LIGHT_BROWN, PURE_RED, ORANGE, YELLOW, PURE_GREEN, PURE_BLUE, CYAN, MAGENTA, VIOLET, GREY_B, WHITE),
-    (BLACK, BLACK, 0x7F3319, 0xFF1933, 0xFF7F4C, 0xCCCC00, 0x33FF33, 0x0000FF, 0x00FFFF, 0xFF00FF, 0x9A72AC, 0xB2B2B2, 0xFFFFFF),
-    (BLACK, BLACK, 0xCD853F, 0xFF0000, 0xFF7F3F, 0xCCCC00, 0x33FF33, 0x0000FF, 0x00FFFF, 0xFF00FF, 0x9A72AC, 0xBBBBBB, 0xFFFFFF),
-    (WHITE, *[BLACK for _ in range(12)]),
-    (BLACK, *[WHITE for _ in range(12)]))
-
-def set_palette(palette_index: int) -> None:
-
-    def read_colour(colour_index: int) -> ManimColor:
-        return colours[palette_index][colour_index]
-
-    global Background, Black, Brown, Red, Orange, Yellow, Green, Blue, Cyan, Magenta, Violet, Grey, White
-    
-    Background  = read_colour( 0)
-    Black       = read_colour( 1)
-    Brown       = read_colour( 2)
-    Red         = read_colour( 3)
-    Orange      = read_colour( 4)
-    Yellow      = read_colour( 5)
-    Green       = read_colour( 6)
-    Blue        = read_colour( 7)
-    Cyan        = read_colour( 8)
-    Magenta     = read_colour( 9)
-    Violet      = read_colour(10)
-    Grey        = read_colour(11)
-    White       = read_colour(12)
-
-set_palette(PALETTE_BRIGHT)
-
-#endregion (Colours)
 
 class Quintic(Scene):
     def construct(self):
@@ -113,28 +12,19 @@ class Quintic02(Quintic):
         pass
 
 class Quintic02(Quintic):
+
     def construct(self):
 
+        set_palette(PALETTE_BRIGHT)
         set_colour_map((
-            ('0123456789', Magenta),
+            ('0123456789', Grey),
             ('abcde', Green),
             ('h', Orange),
             ('pqrs', Yellow),
             ('x', Red),
-            ('y', Grey),
+            ('y', Magenta),
             ('z', Cyan)))
 
-#region Terms
-
-        y4 = (('p'), ('q'), ('r'), ('s'))
-        m4 = (
-                ( '0',   '0',   '0', '-10',  '0', 'b'),
-                ( '0',   '0', '-20',   '0', '3b', 'c'),
-                ( '0', '-15',   '0',  '3b', '2c', 'd'),
-                ('-4',   '0',   'b',   'c',  'd', 'e'))
-        h4 = (('h^5'), ('h^4'), ('h^3'), ('h^2'), ('h'), ('1'))
-
-#endregion (Terms)
 #region Functions
         
         def indicate(items: List[VMobject], size: float = 1.2) -> None:
@@ -151,13 +41,6 @@ class Quintic02(Quintic):
             matrix[1].set_color(Grey)
             matrix[2].set_color(Grey)
             return matrix
-
-        def make_tex(*items: str) -> MathTex:
-            string: str = [prepare_string(item) for item in items]
-            mathTex: MathTex = MathTex(*string)
-            for i in range(len(string)):
-                paint_tex(mathTex[i], string[i])
-            return mathTex
 
         def pause() -> None:
             self.wait(0)
@@ -411,6 +294,16 @@ class Quintic02(Quintic):
         indicate([F3])
         self.play(TransformMatchingShapes(F3, F4))
         indicate([F4])
+
+# Redisplay p,q,r,s as a matrix
+
+        #Y4 = make_matrix((('p'), ('q'), ('r'), ('s')))
+        #M4 = make_matrix((
+        #        ( '0',   '0',   '0', '-10',  '0', 'b'),
+        #        ( '0',   '0', '-20',   '0', '3b', 'c'),
+        #        ( '0', '-15',   '0',  '3b', '2c', 'd'),
+        #        ('-4',   '0',   'b',   'c',  'd', 'e')))
+        #H4 = make_matrix((('h^5'), ('h^4'), ('h^3'), ('h^2'), ('h'), ('1')))
 
         self.wait(10)
         titles_hide(titles)
