@@ -131,9 +131,6 @@ class Quintic02(Quintic):
             matrix[2].set_color(Grey)
             return matrix
 
-        def pause() -> None:
-            self.wait(0)
-
         def replace(sourceTex: MathTex, targetTex: MathTex) -> Transform:
             M2.append(targetTex)
             return ReplacementTransform(sourceTex, targetTex.move_to(sourceTex.get_center()))
@@ -203,30 +200,25 @@ class Quintic02(Quintic):
 
         self.play(FadeIn(Y1))
         self.play(Create(E1))
-        pause()
 
 # Make a vertical copy
 
         self.play(TransformFromCopy(E1, E1V, path_arc = 2))
-        pause()
 
 # Show the reduced quintic in z
 
         E2.move_to(E1, aligned_edge = LEFT)
         indicate([E1])
         self.play(ReplacementTransform(E1, E2))
-        pause()
 
 # Convert each x-term into an LHS
 
         self.play(TransformMatchingShapes(E1V, Y2))
-        pause()
 
 # Add each binomial x-term as an RHS
 
         E3.move_to(E1V, aligned_edge = LEFT)
         self.play(Create(E3))
-        pause()
 
 # Expand each binomial x-term and distribute the coefficients
 
@@ -248,7 +240,6 @@ class Quintic02(Quintic):
             #else:
                 #E5[i].move_to(E4[i])
                 #E4[i].set_opacity(0)
-        pause()
 
 # Right align the fully expanded binomials
 
@@ -259,7 +250,6 @@ class Quintic02(Quintic):
         self.play(
             Transform(E2, E8[0]),
             [Transform(E5[i], E7[i]) for i in range(6)])
-        pause()
 
 # Convert to matrix equation Y=MZ
 
@@ -284,7 +274,6 @@ class Quintic02(Quintic):
         self.play(FadeIn(EQ))
         self.play(TransformMatchingShapes(M, M1))
         self.play(FadeIn(Z1))
-        pause()
 
 # Move all powers of z out of M and into Z
         
@@ -323,7 +312,6 @@ class Quintic02(Quintic):
             if col < 5:
                 indicate([get_element(row, col) for row in rows])
             self.play(*transforms)
-        pause()
 
         self.wait(3)
 
@@ -383,6 +371,7 @@ class Quintic02(Quintic):
         indicate([F3])
         self.play(TransformMatchingShapes(F3, F4))
         indicate([F4])
+        self.wait(3)
 
 # Redisplay p,q,r,s as a matrix
 
