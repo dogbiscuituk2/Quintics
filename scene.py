@@ -2,6 +2,8 @@ from manim import *
 
 config.max_files_cached = 999
 
+SEC_PER_LETTER = 0.1 # Number of seconds taken to "say" one letter of an English caption.
+
 PALETTE_DEFAULT = 0
 PALETTE_BRIGHT = 1
 PALETTE_PASTEL = 2
@@ -102,6 +104,8 @@ class Quintic01(Quintic):
 
 class Quintic02(Quintic):
 
+    interval = 0.0
+
     def construct(self):
 
         set_palette(PALETTE_BRIGHT)
@@ -134,6 +138,13 @@ class Quintic02(Quintic):
         def replace(sourceTex: MathTex, targetTex: MathTex) -> Transform:
             M2.append(targetTex)
             return ReplacementTransform(sourceTex, targetTex.move_to(sourceTex.get_center()))
+
+        def say(caption: str) -> None:
+            print(f'Waiting for {self.interval} seconds')
+            print(f'Displaying subcaption "{caption}"')
+            self.wait(self.interval)
+            self.interval = len(caption) * SEC_PER_LETTER
+            self.add_subcaption(caption, offset = -5)
 
         def titles_hide(titles: List[MarkupText]) -> None:
             self.play(FadeOut(*titles))
@@ -198,15 +209,18 @@ class Quintic02(Quintic):
 
 # Start with the general quintic in x
 
+        say("This is the General Form of the (monic, univariate) Quintic Polynomial.")
         self.play(FadeIn(Y1))
         self.play(Create(E1))
 
 # Make a vertical copy
 
+        say("Let's make a vertical copy of this equation.")
         self.play(TransformFromCopy(E1, E1V, path_arc = 2))
 
 # Show the reduced quintic in z
 
+        say("This is what we want to transform it to - another quintic without a fourth power term.")
         E2.move_to(E1, aligned_edge = LEFT)
         indicate([E1])
         self.play(ReplacementTransform(E1, E2))
@@ -375,18 +389,8 @@ class Quintic02(Quintic):
 
 # Redisplay p,q,r,s as a matrix
 
-        Y4 = make_matrix((['p'], ['q'], ['r'], ['s']))
-        M4 = make_matrix((
-                [ '0',   '0',   '0', '-10',  '0', 'b'],
-                [ '0',   '0', '-20',   '0', '3b', 'c'],
-                [ '0', '-15',   '0',  '3b', '2c', 'd'],
-                ['-4',   '0',   'b',   'c',  'd', 'e']))
-        H4 = make_matrix((['h^5'], ['h^4'], ['h^3'], ['h^2'], ['h'], ['1']))
-
-        self.wait(10)
+        self.play(FadeOut(F1, F2, F4, F8[0], F9))
         titles_hide(titles)
-        self.wait(10)
-
-
+        self.wait(5)
 
 #endregion (Main Code)
