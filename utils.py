@@ -1,4 +1,20 @@
+from enum import Enum
 from manim import ManimColor, MathTex
+
+class Colour(Enum):
+    Background = 0
+    Black = 1
+    Brown = 2
+    Red = 3
+    Orange = 4
+    Yellow = 5
+    Green = 6
+    Blue = 7
+    Cyan = 8
+    Magenta = 9
+    Violet = 10
+    Grey = 11
+    White = 12
 
 PALETTE_DEFAULT = 0
 PALETTE_BRIGHT = 1
@@ -24,7 +40,7 @@ TITLES: tuple[tuple[str]] = (
 def get_colour(char: str) -> ManimColor:
     for map in ColourMap:
         if (char in map[0]):
-            return map[1]
+            return colours[map[1]]
     return Grey
 
 def make_tex(*items: str) -> MathTex:
@@ -51,16 +67,12 @@ def paint_tex(mathTex: MathTex, s: str) -> None:
             else:
                 if not super:
                     colour = get_colour(c)
-
-                    if c == 'h':
-                        print(f'Fetching colour for "h": {colour}')
-
                 m.set_color(colour)
             super = False
             p += 1
         super = True
 
-def set_colour_map(colour_map: tuple[tuple[str, ManimColor]]) -> None:
+def set_colour_map(colour_map: tuple[tuple[str, Colour]]) -> None:
     global ColourMap
     ColourMap = colour_map
 
@@ -72,6 +84,8 @@ colours = (
     (0x000000, *[0xFFFFFF for _ in range(12)]))
 
 def set_palette(palette_index: int) -> None:
+
+    print(f'Setting palette to {palette_index}')
 
     global Background, Black, Brown, Red, Orange, Yellow, Green, Blue, Cyan, Magenta, Violet, Grey, White
 
@@ -91,5 +105,3 @@ def set_palette(palette_index: int) -> None:
     Violet      = read_colour(10)
     Grey        = read_colour(11)
     White       = read_colour(12)
-
-set_palette(0)

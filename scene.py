@@ -17,13 +17,13 @@ class Quintic02(Quintic):
 
         set_palette(PALETTE_BRIGHT)
         set_colour_map((
-            ('0123456789', Grey),
-            ('abcde', Green),
-            ('h', Orange),
-            ('pqrs', Yellow),
-            ('x', Red),
-            ('y', Magenta),
-            ('z', Cyan)))
+            ('0123456789', Colour.Grey),
+            ('abcde', Colour.Green),
+            ('h', Colour.Orange),
+            ('pqrs', Colour.Yellow),
+            ('x', Colour.Red),
+            ('y', Colour.Magenta),
+            ('z', Colour.Cyan)))
 
 #region Functions
         
@@ -92,19 +92,7 @@ class Quintic02(Quintic):
             ('cz^2+', '2chz+', 'ch^2'),
             ('dz+', 'dh'),
             ('e'))])
-        Y3 = make_matrix((['y'], ['x^5'], ['ax^4'], ['bx^3'], ['cx^2'], ['dx'], ['e']), margin = 0)
 
-        M1 = make_matrix((
-            ('z^5', '0z^4', 'pz^3', 'qz^2', 'rz', 's'),
-            ('z^5', '5hz^4', '10h^2z^3', '10h^3z^2', '5h^4z', 'h^5'),
-            ('', 'az^4', '4ahz^3', '6ah^2z^2', '4ah^3z', 'ah^4'),
-            ('', '', 'bz^3', '3bhz^2', '3bh^2z', 'bh^3'),
-            ('', '', '', 'cz^2', '2chz', 'ch^2'),
-            ('', '', '', '', 'dz', 'dh'),
-            ('', '', '', '', '', 'e')),
-            padding = 1.75)
-
-        Z1 = make_matrix((('1'), ('1'), ('1'), ('1'), ('1'), ('1')), margin = 0)
         Z2 = [] # Will hold the powers of z which fly into column vector Z1
         M2 = [] # Will hold the replacement terms for the main matrix
 
@@ -185,6 +173,18 @@ class Quintic02(Quintic):
         pause()
 
 # Convert to matrix equation Y=MZ
+
+        Y3 = make_matrix((['y'], ['x^5'], ['ax^4'], ['bx^3'], ['cx^2'], ['dx'], ['e']), margin = 0)
+        M1 = make_matrix((
+            ('z^5', '0z^4', 'pz^3', 'qz^2', 'rz', 's'),
+            ('z^5', '5hz^4', '10h^2z^3', '10h^3z^2', '5h^4z', 'h^5'),
+            ('', 'az^4', '4ahz^3', '6ah^2z^2', '4ah^3z', 'ah^4'),
+            ('', '', 'bz^3', '3bhz^2', '3bh^2z', 'bh^3'),
+            ('', '', '', 'cz^2', '2chz', 'ch^2'),
+            ('', '', '', '', 'dz', 'dh'),
+            ('', '', '', '', '', 'e')),
+            padding = 1.75)
+        Z1 = make_matrix((('1'), ('1'), ('1'), ('1'), ('1'), ('1')), margin = 0)
 
         EQ = MathTex('=')
         EQ.set_color(Grey)
