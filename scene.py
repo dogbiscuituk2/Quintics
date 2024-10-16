@@ -156,94 +156,42 @@ class Quintic02(VoiceoverScene):
 #endregion (Functions)
 #region Formulae
 
+        Y1 = make_tex('y=')
+        Y2 = make_tex('x^5=', 'ax^4=', 'bx^3=', 'cx^2=', 'dx=', 'e=').arrange(DOWN, aligned_edge = RIGHT)
+        Y = VGroup(Y1, Y2).arrange(DOWN, aligned_edge = RIGHT)
+        E1 = make_tex('x^5+', 'ax^4+', 'bx^3+', 'cx^2+', 'dx+', 'e')
+        E1V = E1.copy().arrange(DOWN, aligned_edge = LEFT)
+        G1 = VGroup(E1, E1V).arrange(DOWN, aligned_edge = LEFT)
+        VGroup(Y, G1).arrange(RIGHT, aligned_edge = UP).move_to(1.2 * LEFT)
+        E2 = make_tex('z^5+', '0z^4+', 'pz^3+', 'qz^2+', 'rz+', 's')
+        E2.move_to(E1, aligned_edge = LEFT)
 
-        Z2 = [] # Will hold the powers of z which fly into column vector Z1
+        E3 = make_tex('(z+h)^5', 'a(z+h)^4', 'b(z+h)^3', 'c(z+h)^2', 'd(z+h)', 'e').arrange(DOWN, aligned_edge = LEFT)
+        E3.move_to(E1V, aligned_edge = LEFT)
+
+        E4 = make_tex(
+            '(z^5+5hz^4+10h^2z^3+10h^3z^2+5h^4z+h^5)',
+            'a(z^4+4hz^3+6h^2z^2+4h^3z+h^4)',
+            'b(z^3+3hz^2+3h^2z+h^3)',
+            'c(z^2+2hz+h^2)',
+            'd(z+h)',
+            'e')
+        
+        E5 = VGroup(*[make_tex(*e) for e in (
+            ('z^5+', '5hz^4+', '10h^2z^3+', '10h^3z^2+', '5h^4z+', 'h^5'),
+            ('az^4+', '4ahz^3+', '6ah^2z^2+', '4ah^3z+', 'ah^4'),
+            ('bz^3+', '3bhz^2+', '3bh^2z+', 'bh^3'),
+            ('cz^2+', '2chz+', 'ch^2'),
+            ('dz+', 'dh'),
+            ('e'))])
+
         M2 = [] # Will hold the replacement terms for the main matrix
-
-#endregion (Formulae)
-#region Main Code
-
-# Draw background
-
-        self.add(Rectangle(Background, height = 10, width = 15).set_fill(Background, opacity = 1))
-
-        with self.voiceover(text=f'{TITLES[0][0]}. {TITLES[0][1]}') as tracker:
-            titles_show(0)
-
-        with self.voiceover(text=f'{TITLES[1][0]}. {TITLES[1][1]}') as tracker:
-            titles = titles_show(1)
-
-        with self.voiceover(text="This is the General Form of a monic, univariate, Quintic Polynomial.") as tracker:
-            Y1 = make_tex('y=')
-            Y2 = make_tex('x^5=', 'ax^4=', 'bx^3=', 'cx^2=', 'dx=', 'e=').arrange(DOWN, aligned_edge = RIGHT)
-            E1 = make_tex('x^5+', 'ax^4+', 'bx^3+', 'cx^2+', 'dx+', 'e')
-            E1V = E1.copy().arrange(DOWN, aligned_edge = LEFT)
-            G1 = VGroup(E1, E1V).arrange(DOWN, aligned_edge = LEFT)
-            Y = VGroup(Y1, Y2).arrange(DOWN, aligned_edge = RIGHT)
-            VGroup(Y, G1).arrange(RIGHT, aligned_edge = UP).move_to(1.2 * LEFT)
-            self.play(FadeIn(Y1))
-            self.play(Create(E1))
-
-        with self.voiceover(text="Let's make a vertical copy of this equation.") as tracker:
-            self.play(TransformFromCopy(E1, E1V, path_arc = 2))
-
-        with self.voiceover(text="We would like to transform it from General to Reduced Form.") as tracker:
-            E2 = make_tex('z^5+', '0z^4+', 'pz^3+', 'qz^2+', 'rz+', 's')
-            E2.move_to(E1, aligned_edge = LEFT)
-            indicate([E1])
-            self.play(ReplacementTransform(E1, E2))
-
-        with self.voiceover(text="That is, without a quartic, or fourth power, term.") as tracker:
-            indicate(E2[1][0], size=2)
-
-        with self.voiceover(text="Let's expand all these x powers as z terms.") as tracker:
-            self.play(TransformMatchingShapes(E1V, Y2))
-            E3 = make_tex('(z+h)^5', 'a(z+h)^4', 'b(z+h)^3', 'c(z+h)^2', 'd(z+h)', 'e').arrange(DOWN, aligned_edge = LEFT)
-            E3.move_to(E1V, aligned_edge = LEFT)
-            self.play(Create(E3))
-
-        with self.voiceover(text="Expand each binomial x-term and distribute the coefficients.") as tracker:
-            E4 = make_tex(
-                '(z^5+5hz^4+10h^2z^3+10h^3z^2+5h^4z+h^5)',
-                'a(z^4+4hz^3+6h^2z^2+4h^3z+h^4)',
-                'b(z^3+3hz^2+3h^2z+h^3)',
-                'c(z^2+2hz+h^2)',
-                'd(z+h)',
-                'e')
-            for i in range(6):
-                E4[i].move_to(E3[i], aligned_edge = LEFT)
-# Flash
-                if i < 5:
-                    indicate([E3[i]])
-# Expand
-                if i < 4:
-                    self.play(TransformMatchingShapes(E3[i], E4[i]))
-                else:
-                    E4[i].move_to(E3[i])
-                    E3[i].set_opacity(0)
-# Distribute
-                E5 = VGroup(*[make_tex(*e) for e in (
-                    ('z^5+', '5hz^4+', '10h^2z^3+', '10h^3z^2+', '5h^4z+', 'h^5'),
-                    ('az^4+', '4ahz^3+', '6ah^2z^2+', '4ah^3z+', 'ah^4'),
-                    ('bz^3+', '3bhz^2+', '3bh^2z+', 'bh^3'),
-                    ('cz^2+', '2chz+', 'ch^2'),
-                    ('dz+', 'dh'),
-                    ('e'))])
-                E5[i].move_to(E4[i], aligned_edge = LEFT)
-                self.play(TransformMatchingShapes(E4[i], E5[i]))
-
-# Right align the fully expanded binomials
 
         M = VGroup(E2, E5)
         E7 = E5.copy().arrange(DOWN, aligned_edge = RIGHT)
         E8 = VGroup(E2.copy(), E7).arrange(DOWN, aligned_edge = RIGHT)
         E8.move_to(M)
-        self.play(
-            Transform(E2, E8[0]),
-            [Transform(E5[i], E7[i]) for i in range(6)])
-
-# Convert to matrix equation Y=MZ
-
+        
         Y3 = make_matrix((['y'], ['x^5'], ['ax^4'], ['bx^3'], ['cx^2'], ['dx'], ['e']), margin = 0)
         M1 = make_matrix((
             ('z^5', '0z^4', 'pz^3', 'qz^2', 'rz', 's'),
@@ -261,6 +209,62 @@ class Quintic02(VoiceoverScene):
         VGroup(Y3, EQ, M1, Z1).arrange(RIGHT, aligned_edge = UP)
         EQ.move_to(EQ.get_center() + 2.9 * DOWN)
         Z1.move_to(Z1.get_center() + 0.5 * DOWN)
+
+#endregion (Formulae)
+#region Main Code
+
+# Draw background
+
+        self.add(Rectangle(Background, height = 10, width = 15).set_fill(Background, opacity = 1))
+
+        with self.voiceover(text=f'{TITLES[0][0]}. {TITLES[0][1]}') as tracker:
+            titles_show(0)
+
+        with self.voiceover(text=f'{TITLES[1][0]}. {TITLES[1][1]}') as tracker:
+            titles = titles_show(1)
+
+        with self.voiceover(text="This is the General Form of a monic, univariate, Quintic Polynomial.") as tracker:
+            self.play(FadeIn(Y1))
+            self.play(Create(E1))
+
+        with self.voiceover(text="Let's make a vertical copy of this equation.") as tracker:
+            self.play(TransformFromCopy(E1, E1V, path_arc = 2))
+
+        with self.voiceover(text="We would like to transform it from General to Reduced Form.") as tracker:
+            indicate([E1])
+            self.play(ReplacementTransform(E1, E2))
+
+        with self.voiceover(text="That is, without a quartic, or fourth power, term.") as tracker:
+            indicate(E2[1][0], size=2)
+
+        with self.voiceover(text="Let's expand all these x powers as z terms.") as tracker:
+            self.play(TransformMatchingShapes(E1V, Y2))
+            self.play(Create(E3))
+
+        with self.voiceover(text="Expand each binomial x-term and distribute the coefficients.") as tracker:
+            for i in range(6):
+                E4[i].move_to(E3[i], aligned_edge = LEFT)
+# Flash
+                if i < 5:
+                    indicate([E3[i]])
+# Expand
+                if i < 4:
+                    self.play(TransformMatchingShapes(E3[i], E4[i]))
+                else:
+                    E4[i].move_to(E3[i])
+                E3[i].set_opacity(0)
+# Distribute
+                E5[i].move_to(E4[i], aligned_edge = LEFT)
+                self.play(TransformMatchingShapes(E4[i], E5[i]))
+
+# Right align the fully expanded binomials
+
+        self.play(
+            Transform(E2, E8[0]),
+            [Transform(E5[i], E7[i]) for i in range(6)])
+
+# Convert to matrix equation Y=MZ
+
         self.play(TransformMatchingShapes(Y, Y3))
         self.play(FadeIn(EQ))
         self.play(TransformMatchingShapes(M, M1))
@@ -291,6 +295,8 @@ class Quintic02(VoiceoverScene):
             ('', '', '', 'c', '2ch', 'ch^2'),
             ('', '', '', '', 'd', 'dh'),
             ('', '', '', '', '', 'e'))
+
+        Z2 = [] # Will hold the powers of z which fly into column vector Z1
 
         for col in range(6):
             transforms: List[Transform] = []
