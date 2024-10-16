@@ -1,4 +1,6 @@
 from manim import *
+from manim_voiceover import VoiceoverScene
+from manim_voiceover.services.gtts import GTTSService
 
 config.max_files_cached = 999
 
@@ -94,19 +96,10 @@ def set_palette(palette_index: int) -> None:
     Grey        = read_colour(11)
     White       = read_colour(12)
 
-class Quintic(Scene):
+class Quintic02(VoiceoverScene):
     def construct(self):
-        pass
 
-class Quintic01(Quintic):
-    def construct(self):
-        pass
-
-class Quintic02(Quintic):
-
-    interval = 0.0
-
-    def construct(self):
+        self.set_speech_service(GTTSService())
 
         set_palette(PALETTE_BRIGHT)
         set_colour_map((
@@ -139,13 +132,6 @@ class Quintic02(Quintic):
             M2.append(targetTex)
             return ReplacementTransform(sourceTex, targetTex.move_to(sourceTex.get_center()))
 
-        def say(caption: str) -> None:
-            print(f'Waiting for {self.interval} seconds')
-            print(f'Displaying subcaption "{caption}"')
-            self.wait(self.interval)
-            self.interval = len(caption) * SEC_PER_LETTER
-            self.add_subcaption(caption, offset = -5)
-
         def titles_hide(titles: List[MarkupText]) -> None:
             self.play(FadeOut(*titles))
 
@@ -170,33 +156,9 @@ class Quintic02(Quintic):
 #endregion (Functions)
 #region Formulae
 
-        Y1 = make_tex('y=')
-        Y2 = make_tex('x^5=', 'ax^4=', 'bx^3=', 'cx^2=', 'dx=', 'e=').arrange(DOWN, aligned_edge = RIGHT)
-        E1 = make_tex('x^5+', 'ax^4+', 'bx^3+', 'cx^2+', 'dx+', 'e')
-        E2 = make_tex('z^5+', '0z^4+', 'pz^3+', 'qz^2+', 'rz+', 's')
-        E3 = make_tex('(z+h)^5', 'a(z+h)^4', 'b(z+h)^3', 'c(z+h)^2', 'd(z+h)', 'e').arrange(DOWN, aligned_edge = LEFT)
-        E4 = make_tex(
-            '(z^5+5hz^4+10h^2z^3+10h^3z^2+5h^4z+h^5)',
-            'a(z^4+4hz^3+6h^2z^2+4h^3z+h^4)',
-            'b(z^3+3hz^2+3h^2z+h^3)',
-            'c(z^2+2hz+h^2)',
-            'd(z+h)',
-            'e')
-        E5 = VGroup(*[make_tex(*e) for e in (
-            ('z^5+', '5hz^4+', '10h^2z^3+', '10h^3z^2+', '5h^4z+', 'h^5'),
-            ('az^4+', '4ahz^3+', '6ah^2z^2+', '4ah^3z+', 'ah^4'),
-            ('bz^3+', '3bhz^2+', '3bh^2z+', 'bh^3'),
-            ('cz^2+', '2chz+', 'ch^2'),
-            ('dz+', 'dh'),
-            ('e'))])
 
         Z2 = [] # Will hold the powers of z which fly into column vector Z1
         M2 = [] # Will hold the replacement terms for the main matrix
-
-        E1V = E1.copy().arrange(DOWN, aligned_edge = LEFT)
-        G1 = VGroup(E1, E1V).arrange(DOWN, aligned_edge = LEFT)
-        Y = VGroup(Y1, Y2).arrange(DOWN, aligned_edge = RIGHT)
-        VGroup(Y, G1).arrange(RIGHT, aligned_edge = UP).move_to(1.2 * LEFT)
 
 #endregion (Formulae)
 #region Main Code
@@ -204,56 +166,71 @@ class Quintic02(Quintic):
 # Draw background
 
         self.add(Rectangle(Background, height = 10, width = 15).set_fill(Background, opacity = 1))
-        titles_show(0)
-        titles = titles_show(1)
 
-# Start with the general quintic in x
+        with self.voiceover(text=f'{TITLES[0][0]}. {TITLES[0][1]}') as tracker:
+            titles_show(0)
 
-        say("This is the General Form of the (monic, univariate) Quintic Polynomial.")
-        self.play(FadeIn(Y1))
-        self.play(Create(E1))
+        with self.voiceover(text=f'{TITLES[1][0]}. {TITLES[1][1]}') as tracker:
+            titles = titles_show(1)
 
-# Make a vertical copy
+        with self.voiceover(text="This is the General Form of a monic, univariate, Quintic Polynomial.") as tracker:
+            Y1 = make_tex('y=')
+            Y2 = make_tex('x^5=', 'ax^4=', 'bx^3=', 'cx^2=', 'dx=', 'e=').arrange(DOWN, aligned_edge = RIGHT)
+            E1 = make_tex('x^5+', 'ax^4+', 'bx^3+', 'cx^2+', 'dx+', 'e')
+            E1V = E1.copy().arrange(DOWN, aligned_edge = LEFT)
+            G1 = VGroup(E1, E1V).arrange(DOWN, aligned_edge = LEFT)
+            Y = VGroup(Y1, Y2).arrange(DOWN, aligned_edge = RIGHT)
+            VGroup(Y, G1).arrange(RIGHT, aligned_edge = UP).move_to(1.2 * LEFT)
+            self.play(FadeIn(Y1))
+            self.play(Create(E1))
 
-        say("Let's make a vertical copy of this equation.")
-        self.play(TransformFromCopy(E1, E1V, path_arc = 2))
+        with self.voiceover(text="Let's make a vertical copy of this equation.") as tracker:
+            self.play(TransformFromCopy(E1, E1V, path_arc = 2))
 
-# Show the reduced quintic in z
+        with self.voiceover(text="We would like to transform it from General to Reduced Form.") as tracker:
+            E2 = make_tex('z^5+', '0z^4+', 'pz^3+', 'qz^2+', 'rz+', 's')
+            E2.move_to(E1, aligned_edge = LEFT)
+            indicate([E1])
+            self.play(ReplacementTransform(E1, E2))
 
-        say("This is what we want to transform it to - another quintic without a fourth power term.")
-        E2.move_to(E1, aligned_edge = LEFT)
-        indicate([E1])
-        self.play(ReplacementTransform(E1, E2))
+        with self.voiceover(text="That is, without a quartic, or fourth power, term.") as tracker:
+            indicate(E2[1][0], size=2)
 
-# Convert each x-term into an LHS
+        with self.voiceover(text="Let's expand all these x powers as z terms.") as tracker:
+            self.play(TransformMatchingShapes(E1V, Y2))
+            E3 = make_tex('(z+h)^5', 'a(z+h)^4', 'b(z+h)^3', 'c(z+h)^2', 'd(z+h)', 'e').arrange(DOWN, aligned_edge = LEFT)
+            E3.move_to(E1V, aligned_edge = LEFT)
+            self.play(Create(E3))
 
-        self.play(TransformMatchingShapes(E1V, Y2))
-
-# Add each binomial x-term as an RHS
-
-        E3.move_to(E1V, aligned_edge = LEFT)
-        self.play(Create(E3))
-
-# Expand each binomial x-term and distribute the coefficients
-
-        for i in range(6):
-            E4[i].move_to(E3[i], aligned_edge = LEFT)
+        with self.voiceover(text="Expand each binomial x-term and distribute the coefficients.") as tracker:
+            E4 = make_tex(
+                '(z^5+5hz^4+10h^2z^3+10h^3z^2+5h^4z+h^5)',
+                'a(z^4+4hz^3+6h^2z^2+4h^3z+h^4)',
+                'b(z^3+3hz^2+3h^2z+h^3)',
+                'c(z^2+2hz+h^2)',
+                'd(z+h)',
+                'e')
+            for i in range(6):
+                E4[i].move_to(E3[i], aligned_edge = LEFT)
 # Flash
-            if i < 5:
-                indicate([E3[i]])
+                if i < 5:
+                    indicate([E3[i]])
 # Expand
-            if i < 4:
-                self.play(TransformMatchingShapes(E3[i], E4[i]))
-            else:
-                E4[i].move_to(E3[i])
-                E3[i].set_opacity(0)
+                if i < 4:
+                    self.play(TransformMatchingShapes(E3[i], E4[i]))
+                else:
+                    E4[i].move_to(E3[i])
+                    E3[i].set_opacity(0)
 # Distribute
-            E5[i].move_to(E4[i], aligned_edge = LEFT)
-            #if i < 5:
-            self.play(TransformMatchingShapes(E4[i], E5[i]))
-            #else:
-                #E5[i].move_to(E4[i])
-                #E4[i].set_opacity(0)
+                E5 = VGroup(*[make_tex(*e) for e in (
+                    ('z^5+', '5hz^4+', '10h^2z^3+', '10h^3z^2+', '5h^4z+', 'h^5'),
+                    ('az^4+', '4ahz^3+', '6ah^2z^2+', '4ah^3z+', 'ah^4'),
+                    ('bz^3+', '3bhz^2+', '3bh^2z+', 'bh^3'),
+                    ('cz^2+', '2chz+', 'ch^2'),
+                    ('dz+', 'dh'),
+                    ('e'))])
+                E5[i].move_to(E4[i], aligned_edge = LEFT)
+                self.play(TransformMatchingShapes(E4[i], E5[i]))
 
 # Right align the fully expanded binomials
 
