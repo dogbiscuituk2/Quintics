@@ -158,16 +158,9 @@ class Quintic02(VoiceoverScene):
 
         Y1 = make_tex('y=')
         Y2 = make_tex('x^5=', 'ax^4=', 'bx^3=', 'cx^2=', 'dx=', 'e=').arrange(DOWN, aligned_edge = RIGHT)
-        Y = VGroup(Y1, Y2).arrange(DOWN, aligned_edge = RIGHT)
         E1 = make_tex('x^5+', 'ax^4+', 'bx^3+', 'cx^2+', 'dx+', 'e')
-        E1V = E1.copy().arrange(DOWN, aligned_edge = LEFT)
-        G1 = VGroup(E1, E1V).arrange(DOWN, aligned_edge = LEFT)
-        VGroup(Y, G1).arrange(RIGHT, aligned_edge = UP).move_to(1.2 * LEFT)
         E2 = make_tex('z^5+', '0z^4+', 'pz^3+', 'qz^2+', 'rz+', 's')
-        E2.move_to(E1, aligned_edge = LEFT)
-
         E3 = make_tex('(z+h)^5', 'a(z+h)^4', 'b(z+h)^3', 'c(z+h)^2', 'd(z+h)', 'e').arrange(DOWN, aligned_edge = LEFT)
-        E3.move_to(E1V, aligned_edge = LEFT)
 
         E4 = make_tex(
             '(z^5+5hz^4+10h^2z^3+10h^3z^2+5h^4z+h^5)',
@@ -184,13 +177,6 @@ class Quintic02(VoiceoverScene):
             ('cz^2+', '2chz+', 'ch^2'),
             ('dz+', 'dh'),
             ('e'))])
-
-        M2 = [] # Will hold the replacement terms for the main matrix
-
-        M = VGroup(E2, E5)
-        E7 = E5.copy().arrange(DOWN, aligned_edge = RIGHT)
-        E8 = VGroup(E2.copy(), E7).arrange(DOWN, aligned_edge = RIGHT)
-        E8.move_to(M)
         
         Y3 = make_matrix((['y'], ['x^5'], ['ax^4'], ['bx^3'], ['cx^2'], ['dx'], ['e']), margin = 0)
         M1 = make_matrix((
@@ -203,12 +189,26 @@ class Quintic02(VoiceoverScene):
             ('', '', '', '', '', 'e')),
             padding = 1.75)
         Z1 = make_matrix((('1'), ('1'), ('1'), ('1'), ('1'), ('1')), margin = 0)
+        Z2 = [] # Will hold the powers of z which fly into column vector Z1
+        M2 = [] # Will hold the replacement terms for the main matrix
 
-        EQ = MathTex('=')
-        EQ.set_color(Grey)
-        VGroup(Y3, EQ, M1, Z1).arrange(RIGHT, aligned_edge = UP)
-        EQ.move_to(EQ.get_center() + 2.9 * DOWN)
-        Z1.move_to(Z1.get_center() + 0.5 * DOWN)
+        E1V = E1.copy().arrange(DOWN, aligned_edge = LEFT)
+        G1 = VGroup(E1, E1V).arrange(DOWN, aligned_edge = LEFT)
+        Y = VGroup(Y1, Y2).arrange(DOWN, aligned_edge = RIGHT)
+        G3 = VGroup(Y, G1).arrange(RIGHT, aligned_edge = UP).move_to(1.2 * LEFT)
+
+        F1 = make_tex('y=x^5+ax^4+bx^3+cx^2+dx+e')
+        F2 = make_tex('y=z^5+0z^4+pz^3+qz^2+rz+s')
+        F3 = make_tex('z=x-h')
+        F4 = make_tex('z=x+a/5')
+
+        def setup(*args: str) -> MathTex:
+            return make_tex(*args).arrange(DOWN, aligned_edge = LEFT).move_to(2 * LEFT + DOWN)
+
+        F6 = setup('0=5h+a', 'p=10h^2+4ah+b'  , 'q=10h^3+6ah^2+3bh+c', 'r=5h^4+4ah^3+3bh^2+2ch+d', 's=h^5+a^4+bh^3+ch^2+dh+e' )
+        F7 = setup('a=-5h' , 'p=10h^2-20h^2+b', 'q=10h^3-30h^3+3bh+c', 'r=5h^4-20h^4+3bh^2+2ch+d', 's=h^5-5h^5+bh^3+ch^2+dh+e')
+        F8 = setup('h=-a/5', 'p=-10h^2+b'     , 'q=-20h^3+3bh+c'     , 'r=-15h^4+3bh^2+2ch+d'    , 's=-4h^5+bh^3+ch^2+dh+e'   )
+        F9 = setup('h=-a/5', 'p=b-10h^2'      , 'q=c+3bh-20h^3'      , 'r=d+2ch+3bh^2-15h^4'     , 's=e+dh+ch^2+bh^3-4h^5'    )
 
 #endregion (Formulae)
 #region Main Code
@@ -231,6 +231,7 @@ class Quintic02(VoiceoverScene):
             self.play(TransformFromCopy(E1, E1V, path_arc = 2))
 
         with self.voiceover(text="We would like to transform it from General to Reduced Form.") as tracker:
+            E2.move_to(E1, aligned_edge = LEFT)
             indicate([E1])
             self.play(ReplacementTransform(E1, E2))
 
@@ -238,7 +239,8 @@ class Quintic02(VoiceoverScene):
             indicate(E2[1][0], size=2)
 
         with self.voiceover(text="Let's expand all these x powers as z terms.") as tracker:
-            self.play(TransformMatchingShapes(E1V, Y2))
+            self.play(TransformMatchingShapes(E1V, Y2)) # WTF????????????????????????????????????????????
+            E3.move_to(E1V, aligned_edge = LEFT)
             self.play(Create(E3))
 
         with self.voiceover(text="Expand each binomial x-term and distribute the coefficients.") as tracker:
@@ -252,19 +254,28 @@ class Quintic02(VoiceoverScene):
                     self.play(TransformMatchingShapes(E3[i], E4[i]))
                 else:
                     E4[i].move_to(E3[i])
-                E3[i].set_opacity(0)
+                    E3[i].set_opacity(0)
 # Distribute
                 E5[i].move_to(E4[i], aligned_edge = LEFT)
                 self.play(TransformMatchingShapes(E4[i], E5[i]))
 
 # Right align the fully expanded binomials
 
+        M = VGroup(E2, E5)
+        E7 = E5.copy().arrange(DOWN, aligned_edge = RIGHT)
+        E8 = VGroup(E2.copy(), E7).arrange(DOWN, aligned_edge = RIGHT)
+        E8.move_to(M)
         self.play(
             Transform(E2, E8[0]),
             [Transform(E5[i], E7[i]) for i in range(6)])
 
 # Convert to matrix equation Y=MZ
 
+        EQ = MathTex('=')
+        EQ.set_color(Grey)
+        VGroup(Y3, EQ, M1, Z1).arrange(RIGHT, aligned_edge = UP)
+        EQ.move_to(EQ.get_center() + 2.9 * DOWN)
+        Z1.move_to(Z1.get_center() + 0.5 * DOWN)
         self.play(TransformMatchingShapes(Y, Y3))
         self.play(FadeIn(EQ))
         self.play(TransformMatchingShapes(M, M1))
@@ -296,8 +307,6 @@ class Quintic02(VoiceoverScene):
             ('', '', '', '', 'd', 'dh'),
             ('', '', '', '', '', 'e'))
 
-        Z2 = [] # Will hold the powers of z which fly into column vector Z1
-
         for col in range(6):
             transforms: List[Transform] = []
             rows = range(col + 2)
@@ -317,19 +326,6 @@ class Quintic02(VoiceoverScene):
         self.play(FadeOut(Y3, EQ, M1, M2[0], M2[1], Z1[0][5], Z1[1], Z1[2] , *Z2))
 
 # Transpose the matrix
-
-        F1 = make_tex('y=x^5+ax^4+bx^3+cx^2+dx+e')
-        F2 = make_tex('y=z^5+0z^4+pz^3+qz^2+rz+s')
-        F3 = make_tex('z=x-h')
-        F4 = make_tex('z=x+a/5')
-
-        def setup(*args: str) -> MathTex:
-            return make_tex(*args).arrange(DOWN, aligned_edge = LEFT).move_to(2 * LEFT + DOWN)
-
-        F6 = setup('0=5h+a', 'p=10h^2+4ah+b'  , 'q=10h^3+6ah^2+3bh+c', 'r=5h^4+4ah^3+3bh^2+2ch+d', 's=h^5+a^4+bh^3+ch^2+dh+e' )
-        F7 = setup('a=-5h' , 'p=10h^2-20h^2+b', 'q=10h^3-30h^3+3bh+c', 'r=5h^4-20h^4+3bh^2+2ch+d', 's=h^5-5h^5+bh^3+ch^2+dh+e')
-        F8 = setup('h=-a/5', 'p=-10h^2+b'     , 'q=-20h^3+3bh+c'     , 'r=-15h^4+3bh^2+2ch+d'    , 's=-4h^5+bh^3+ch^2+dh+e'   )
-        F9 = setup('h=-a/5', 'p=b-10h^2'      , 'q=c+3bh-20h^3'      , 'r=d+2ch+3bh^2-15h^4'     , 's=e+dh+ch^2+bh^3-4h^5'    )
 
         VGroup(F1, F2, F3, F6).arrange(DOWN, aligned_edge = LEFT)
         VGroup(F1, F2, F3, F7).arrange(DOWN, aligned_edge = LEFT)
