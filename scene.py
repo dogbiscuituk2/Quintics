@@ -4,8 +4,6 @@ from manim_voiceover.services.gtts import GTTSService
 
 config.max_files_cached = 999
 
-SEC_PER_LETTER = 0.1 # Number of seconds taken to "say" one letter of an English caption.
-
 PALETTE_DEFAULT = 0
 PALETTE_BRIGHT = 1
 PALETTE_PASTEL = 2
@@ -15,7 +13,7 @@ PALETTE_WHITE_ON_BLACK = 4
 TITLES: tuple[tuple[str]] = (
     (
         'Solving the General Quintic Equation',
-        'An Ultraradical Animation ©2024 by John Michael Kerr'
+        'An Ultraradical Animation. ©2024 by John Michael Kerr'
     ),
     ('Introduction', 'The "Impossible" Polynomial'),
     ('Part One', 'Removing the Quartic (x<sup>4</sup>) Term'),
