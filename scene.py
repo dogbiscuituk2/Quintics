@@ -31,6 +31,10 @@ def get_colour(char: str) -> ManimColor:
             return map[1]
     return Grey
 
+def init(self):
+    set_palette(PALETTE_BRIGHT)
+    self.set_speech_service(GTTSService())
+
 def make_tex(*items: str) -> MathTex:
     s: str = [prepare_string(item) for item in items]
     mathTex: MathTex = MathTex(*s)
@@ -94,12 +98,24 @@ def set_palette(palette_index: int) -> None:
     Grey        = read_colour(11)
     White       = read_colour(12)
 
+class Quintic01(VoiceoverScene):
+    def construct(self):
+
+        init(self)
+
+        set_colour_map((
+            ('abcde', Green),
+            ('h', Orange),
+            ('pqrs', Yellow),
+            ('x', Red),
+            ('y', Magenta),
+            ('z', Cyan)))
+
 class Quintic02(VoiceoverScene):
     def construct(self):
 
-        self.set_speech_service(GTTSService())
+        init(self)
 
-        set_palette(PALETTE_BRIGHT)
         set_colour_map((
             ('0123456789', Grey),
             ('abcde', Green),
@@ -209,7 +225,6 @@ class Quintic02(VoiceoverScene):
         F9 = setup('h=-a/5', 'p=b-10h^2'      , 'q=c+3bh-20h^3'      , 'r=d+2ch+3bh^2-15h^4'     , 's=e+dh+ch^2+bh^3-4h^5'    )
 
 #endregion (Formulae)
-#region Main Code
 
 # Draw background
 
@@ -236,8 +251,8 @@ class Quintic02(VoiceoverScene):
         with self.voiceover(text="That is, without a quartic, or fourth power, term.") as tracker:
             indicate(E2[1][0], size=2)
 
-        with self.voiceover(text="Let's expand all these x powers as z terms.") as tracker:
-            self.play(TransformMatchingShapes(E1V, Y2)) # WTF????????????????????????????????????????????
+        with self.voiceover(text="Let's expand all these x powers in terms of z.") as tracker:
+            self.play(TransformMatchingShapes(E1V, Y2))
             E3.move_to(E1V, aligned_edge = LEFT)
             self.play(Create(E3))
 
@@ -369,5 +384,3 @@ class Quintic02(VoiceoverScene):
         self.play(FadeOut(F1, F2, F4, F8[0], F9))
         titles_hide(titles)
         self.wait(5)
-
-#endregion (Main Code)
