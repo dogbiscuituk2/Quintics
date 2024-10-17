@@ -1,6 +1,6 @@
 from manim import *
-from manim_voiceover import VoiceoverScene
-from manim_voiceover.services.gtts import GTTSService
+#from manim_voiceover import VoiceoverScene
+#from manim_voiceover.services.gtts import GTTSService
 
 config.max_files_cached = 999
 
@@ -24,7 +24,7 @@ def get_colour(char: str) -> ManimColor:
     return Grey
 
 def init(self):
-    self.set_speech_service(GTTSService())
+    pass # self.set_speech_service(GTTSService())
 
 def make_tex(*items: str) -> MathTex:
     s: str = [prepare_string(item) for item in items]

@@ -1,12 +1,12 @@
 from common import *
 
 from manim import *
-from manim_voiceover import VoiceoverScene
-from manim_voiceover.services.gtts import GTTSService
+#from manim_voiceover import VoiceoverScene
+#from manim_voiceover.services.gtts import GTTSService
 
 config.max_files_cached = 999
 
-class Quintic02(VoiceoverScene):
+class Quintic02(Scene):
     def construct(self):
 
         init(self)
@@ -17,6 +17,36 @@ class Quintic02(VoiceoverScene):
             ('x', Red),
             ('y', Magenta),
             ('z', Cyan)))
+        
+        z = '(z+h)'
+        z2 = f'{z}{z}'
+        z3 = f'{z2}{z}'
+        z4 = f'{z3}{z}'
+        z5 = f'{z4}{z}'
+        z6 = '(z^2+2hz+h^2)'
+        z7 = '(z^3+3hz^2+3h^2z+h^3)'
+        z8 = '(z^4+4hz^3+6h^2z^2+4h^3z+h^4)'
+        z9 = '(z^5+5hz^4+10h^2z^3+10h^3z^2+5h^4z+h^5)'
+
+        RHS = [[make_tex(s) for s in t] for t in [
+            [f'{z}^5', f'a{z}^4', f'b{z}^3', f'c{z}^2', f'd{z}', 'e'],
+            [f'{z2}^4', f'a{z2}^3', f'b{z2}^2', f'c{z2}'],
+            [f'{z3}^3', f'a{z3}^2', f'b{z3}'],
+            [f'{z4}^2', f'a{z4}'],
+            [f'{z5}'],
+            [f'{z6}{z3}', f'a{z6}{z2}', f'b{z6}{z}', f'c{z6}'],
+            [f'{z7}{z2}', f'a{z7}{z}', f'b{z7}'],
+            [f'{z8}{z}', f'a{z8}'],
+            [f'{z9}'],
+            [f'{z9}', 'az^4+4ahz^3+6ah^2z^2+4ah^3z+ah^4', 'bz^3+3bhz^2+3bh^2z+bh^3', 'cz^2+2chz+ch^2', 'dz+dh']]]
+
+        for i in RHS:
+            for j in i:
+                print(j)
+            print('-')
+       
+        
+
         
         L = ('y', 'z', 'y', 'x^5', 'ax^4', 'bx^3', 'cx^2', 'dx', 'e')
         Z = (
