@@ -117,7 +117,6 @@ class Quintic02(VoiceoverScene):
         init(self)
 
         set_colour_map((
-            ('0123456789', Grey),
             ('abcde', Green),
             ('h', Orange),
             ('pqrs', Yellow),
@@ -384,3 +383,30 @@ class Quintic02(VoiceoverScene):
         self.play(FadeOut(F1, F2, F4, F8[0], F9))
         titles_hide(titles)
         self.wait(5)
+
+class Quintic03(VoiceoverScene):
+    def construct(self):
+
+        init(self)
+
+        set_colour_map((
+            ('h', Orange),
+            ('pqrs', Green),
+            ('uvw', Yellow),
+            ('x', Red),
+            ('y', Magenta),
+            ('z', Cyan)))
+
+        Y1 = make_tex('y=')
+        Y2 = make_tex('x^5=', 'px^3=', 'qx^2=', 'rx=', 's=').arrange(DOWN, aligned_edge = RIGHT)
+        E1 = make_tex('x^5+', 'px^3+', 'qx^2+', 'rx+', 's')
+        E2 = make_tex('z^5+', '0z^3+', 'uqz^2+', 'vz+', 'w')
+        E3 = make_tex('(z+h)^5', 'a(z+h)^4', 'b(z+h)^3', 'c(z+h)^2', 'd(z+h)', 'e').arrange(DOWN, aligned_edge = LEFT)
+
+        E4 = make_tex(
+            '(z^5+5hz^4+10h^2z^3+10h^3z^2+5h^4z+h^5)',
+            'a(z^4+4hz^3+6h^2z^2+4h^3z+h^4)',
+            'b(z^3+3hz^2+3h^2z+h^3)',
+            'c(z^2+2hz+h^2)',
+            'd(z+h)',
+            'e')
