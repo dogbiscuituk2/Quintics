@@ -17,33 +17,60 @@ colours = (
     (0xFFFFFF, *[0x000000 for _ in range(12)]),
     (0x000000, *[0xFFFFFF for _ in range(12)]))
 
+def get_colour(char: str) -> ManimColor:
+    for map in ColourMap:
+        if (char in map[0]):
+            return map[1]
+    return Grey
+
 def init(self):
-    set_palette(PALETTE_BRIGHT)
     self.set_speech_service(GTTSService())
+
+def make_tex(*items: str) -> MathTex:
+    s: str = [prepare_string(item) for item in items]
+    mathTex: MathTex = MathTex(*s)
+    for i in range(len(s)):
+        paint_tex(mathTex[i], s[i])
+    return mathTex
+
+def paint_tex(mathTex: MathTex, s: str) -> None:
+    colour = Black
+    p = 0
+    super = False
+    for t in s.split('^'):
+        for c in t:
+            m = mathTex[p]
+            if c == '|':
+                m.set_opacity(0)
+            else:
+                if not super:
+                    colour = get_colour(c)
+                m.set_color(colour)
+            super = False
+            p += 1
+        super = True
+
+def prepare_string(s: str) -> str:
+    if not '|' in s: s = f'|{s}'
+    if not '^' in s: s = f'{s}^|'
+    return s
 
 def set_colour_map(colour_map: tuple[tuple[str, ManimColor]]) -> None:
     global ColourMap
     ColourMap = colour_map
 
-def set_palette(palette_index: int) -> None:
+palette = PALETTE_BRIGHT
 
-    print(f'Setting palette to {palette_index}')
-
-    global Background, Black, Brown, Red, Orange, Yellow, Green, Blue, Cyan, Magenta, Violet, Grey, White
-
-    def read_colour(colour_index: int) -> ManimColor:
-        return colours[palette_index][colour_index]
-    
-    Background  = read_colour( 0)
-    Black       = read_colour( 1)
-    Brown       = read_colour( 2)
-    Red         = read_colour( 3)
-    Orange      = read_colour( 4)
-    Yellow      = read_colour( 5)
-    Green       = read_colour( 6)
-    Blue        = read_colour( 7)
-    Cyan        = read_colour( 8)
-    Magenta     = read_colour( 9)
-    Violet      = read_colour(10)
-    Grey        = read_colour(11)
-    White       = read_colour(12)
+Background  = colours[palette][0]
+Black       = colours[palette][1]
+Brown       = colours[palette][2]
+Red         = colours[palette][3]
+Orange      = colours[palette][4]
+Yellow      = colours[palette][5]
+Green       = colours[palette][6]
+Blue        = colours[palette][7]
+Cyan        = colours[palette][8]
+Magenta     = colours[palette][9]
+Violet      = colours[palette][10]
+Grey        = colours[palette][11]
+White       = colours[palette][12]
