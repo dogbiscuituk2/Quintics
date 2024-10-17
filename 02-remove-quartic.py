@@ -26,9 +26,9 @@ class Quintic02(Scene):
         z6 = '(z^2+2hz+h^2)'
         z7 = '(z^3+3hz^2+3h^2z+h^3)'
         z8 = '(z^4+4hz^3+6h^2z^2+4h^3z+h^4)'
-        z9 = '(z^5+5hz^4+10h^2z^3+10h^3z^2+5h^4z+h^5)'
+        z9 = 'z^5+5hz^4+10h^2z^3+10h^3z^2+5h^4z+h^5'
 
-        RHS = [[make_tex(s) for s in t] for t in [
+        Fz = [[make_tex(s) for s in t] for t in [
             [f'{z}^5', f'a{z}^4', f'b{z}^3', f'c{z}^2', f'd{z}', 'e'],
             [f'{z2}^4', f'a{z2}^3', f'b{z2}^2', f'c{z2}'],
             [f'{z3}^3', f'a{z3}^2', f'b{z3}'],
@@ -38,16 +38,41 @@ class Quintic02(Scene):
             [f'{z7}{z2}', f'a{z7}{z}', f'b{z7}'],
             [f'{z8}{z}', f'a{z8}'],
             [f'{z9}'],
-            [f'{z9}', 'az^4+4ahz^3+6ah^2z^2+4ah^3z+ah^4', 'bz^3+3bhz^2+3bh^2z+bh^3', 'cz^2+2chz+ch^2', 'dz+dh']]]
+            [f'{z9}', 'az^4+4ahz^3+6ah^2z^2+4ah^3z+ah^4', 'bz^3+3bhz^2+3bh^2z+bh^3', 'cz^2+2chz+ch^2', 'dz+dh', 'e']]]
 
-        for i in RHS:
-            for j in i:
-                print(j)
-            print('-')
-       
+        #for i in Fz:
+        #    for j in i:
+        #        print(j)
+        #    print('-')
+
+        LHS = VGroup(*[make_tex(f'{s}=') \
+            for s in ['y', 'z', 'y', 'x^5', 'ax^4', 'bx^3', 'cx^2', 'dx', 'e']]) \
+            .arrange(DOWN, aligned_edge=RIGHT)
+        RHS = VGroup(*[make_tex(s) \
+            for s in ['x^5+ax^4+bx^3+cx^2+dx+e=0', 'x+h', 'z^5+0z^4+pz^3+qz^2+rz+s=0']], *Fz[9]) \
+            .arrange(DOWN, aligned_edge = LEFT)
+        EQU = VGroup(LHS, RHS) \
+            .arrange(RIGHT, aligned_edge = DOWN)
+
+        self.play(Create(EQU))
+        self.wait(5)
+
+        for i in range(0, 10):
+            fz = Fz[i]
+            X = []
+            for j in range(len(fz)):
+                S = RHS[j+3]
+                T = fz[j]
+                T.move_to(S, aligned_edge=LEFT)
+                X.append(TransformMatchingShapes(S, T))
+                RHS[j+3] = T
+            self.play(X)
+            #self.wait(2)
+
+        self.wait(10)
         
 
-        
+"""        
         L = ('y', 'z', 'y', 'x^5', 'ax^4', 'bx^3', 'cx^2', 'dx', 'e')
         Z = (
             '1',
@@ -56,25 +81,6 @@ class Quintic02(Scene):
             '(z^3+3hz^2+3h^2z+h^3)',
             '(z^4+4hz^3+6h^2z^2+4h^3z+h^4)',
             '(z^5+5hz^4+10h^2z^3+10h^3z^2+5h^4z+h^5)')
-        R0 = (            f'{Z[1]}^5',             f'a{Z[1]}^4', f'b{Z[1]}^3', f'c{Z[1]}^2', f'd{Z[1]}', 'e')
-        R1 = (      f'{Z[1]}{Z[1]}^4',       f'a{Z[1]}{Z[1]}^3', f'b{Z[1]}{Z[1]}^2', f'c{Z[1]}{Z[1]}', f'd{Z[1]}', 'e')
-        R2 = (f'{Z[1]}{Z[1]}{Z[1]}^3', f'a{Z[1]}{Z[1]}{Z[1]}^2', f'b{Z[1]}{Z[1]}{Z[1]}', f'c{Z[1]}{Z[1]}', f'd{Z[1]}', 'e')
-        R3 = (      f'{Z[2]}{Z[1]}^3',       f'a{Z[2]}{Z[1]}^2', f'b{Z[2]}{Z[1]}', f'c{Z[2]}', f'd{Z[1]}', 'e')
-        R4 = (f'{Z[2]}{Z[1]}{Z[1]}^2',   f'a{Z[2]}{Z[1]}{Z[1]}', f'b{Z[2]}{Z[1]}', f'c{Z[2]}', f'd{Z[1]}', 'e')
-        R5 = (      f'{Z[3]}{Z[1]}^2',         f'a{Z[3]}{Z[1]}', f'b{Z[3]}', f'c{Z[2]}', f'd{Z[1]}', 'e')
-        R6 = (  f'{Z[3]}{Z[1]}{Z[1]}',         f'a{Z[3]}{Z[1]}', f'b{Z[3]}', f'c{Z[2]}', f'd{Z[1]}', 'e')
-        R7 = (        f'{Z[4]}{Z[1]}',               f'a{Z[4]}', f'b{Z[3]}', f'c{Z[2]}', f'd{Z[1]}', 'e')
-        R8 = (              f'{Z[5]}',               f'a{Z[4]}', f'b{Z[3]}', f'c{Z[2]}', f'd{Z[1]}', 'e')
-
-        print(R0)
-        print(R1)
-        print(R2)
-        print(R3)
-        print(R4)
-        print(R5)
-        print(R6)
-        print(R7)
-        print(R8)
 
         R7 = (
             'x^5+ax^4+bx^3+cx^2+dx+e',
@@ -117,7 +123,6 @@ class Quintic02(Scene):
         RHS = VGroup(*[make_tex(s) for s in (
         )])
 
-"""        
 
         RHS = VGroup(*[make_tex(s) for s in (e01, e02, e03a, )])
             make_tex(e01),
