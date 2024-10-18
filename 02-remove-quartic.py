@@ -1,12 +1,12 @@
 from common import *
 
 from manim import *
-#from manim_voiceover import VoiceoverScene
-#from manim_voiceover.services.gtts import GTTSService
+from manim_voiceover import VoiceoverScene
+from manim_voiceover.services.gtts import GTTSService
 
 config.max_files_cached = 999
 
-class Quintic02(Scene):
+class Quintic02(VoiceoverScene):
     def construct(self):
 
         init(self)
@@ -40,23 +40,42 @@ class Quintic02(Scene):
             [f'{z9}'],
             [f'{z9}', 'az^4+4ahz^3+6ah^2z^2+4ah^3z+ah^4', 'bz^3+3bhz^2+3bh^2z+bh^3', 'cz^2+2chz+ch^2', 'dz+dh', 'e']]]
 
-        #for i in Fz:
-        #    for j in i:
-        #        print(j)
-        #    print('-')
+        LHS = VGroup(*[make_tex(f'{s}=') for s in ['y', 'z', 'y', 'x^5', 'ax^4', 'bx^3', 'cx^2', 'dx', 'e']])
+        RHS = VGroup(*[make_tex(s) for s in ['x^5+ax^4+bx^3+cx^2+dx+e=0', 'x+h', 'z^5+0z^4+pz^3+qz^2+rz+s=0']], *Fz[9])
+        ALL = VGroup(LHS, RHS)
 
-        LHS = VGroup(*[make_tex(f'{s}=') \
-            for s in ['y', 'z', 'y', 'x^5', 'ax^4', 'bx^3', 'cx^2', 'dx', 'e']]) \
-            .arrange(DOWN, aligned_edge=RIGHT)
-        RHS = VGroup(*[make_tex(s) \
-            for s in ['x^5+ax^4+bx^3+cx^2+dx+e=0', 'x+h', 'z^5+0z^4+pz^3+qz^2+rz+s=0']], *Fz[9]) \
-            .arrange(DOWN, aligned_edge = LEFT)
-        EQU = VGroup(LHS, RHS) \
-            .arrange(RIGHT, aligned_edge = DOWN)
+        LHS.arrange(DOWN, aligned_edge=RIGHT)
+        RHS.arrange(DOWN, aligned_edge = LEFT)
+        ALL.arrange(RIGHT, aligned_edge = DOWN)
+        EQU = [VGroup(LHS[i], RHS[i]) for i in range(9)]
 
-        self.play(Create(EQU))
-        self.wait(5)
+        with self.voiceover(
+            text="This is the General Form of a quintic polynomial equation in one variable, x.") as t:
+            self.play(Create(EQU[0]))
 
+        with self.voiceover(text="To solve it, we might first try to get rid of the quartic, or fourth power, term.") as t:
+            term = VGroup(*[EQU[0][1][0][i] for i in range(4,7)])
+            box = SurroundingRectangle(term, Yellow)
+            self.play(Create(box))
+
+        with self.voiceover(text="In other words, transform it into a reduced form, where the coefficient of this term is zero.") as t:
+            self.remove(box)
+            self.play(Create(EQU[2]))
+            term = VGroup(*[EQU[2][1][0][i] for i in range(4,7)])
+            box = SurroundingRectangle(term, Yellow)
+            self.play(Create(box))
+
+        with self.voiceover(text="This operation is technically known as a Tschirnhaus Transform,") as t:
+            self.remove(box)
+
+        with self.voiceover(text="the simplest example of which is a linear substitution, such as z = x + some constant h.") as t:
+            term = EQU[1]
+            self.play(Create(term))
+            box = SurroundingRectangle(term, Yellow)
+            self.play(Create(box))
+
+
+"""
         for i in range(0, 10):
             fz = Fz[i]
             X = []
@@ -72,7 +91,7 @@ class Quintic02(Scene):
         self.wait(10)
         
 
-"""        
+        
         L = ('y', 'z', 'y', 'x^5', 'ax^4', 'bx^3', 'cx^2', 'dx', 'e')
         Z = (
             '1',
@@ -133,21 +152,6 @@ class Quintic02(Scene):
         
         G01 = VGroup(LHS, RHS).arrange(RIGHT, aligned_edge=DOWN)
 
-        with self.voiceover(
-            text="This is the General Form of a quintic polynomial equation in one variable.") as t:
-            self.play(Create(E01))
-
-        with self.voiceover(text="To solve it, we might first try to get rid of the quartic, or fourth power, term.") as t:
-            term = VGroup(*[E01[1][0][i] for i in range(4,7)])
-            box = SurroundingRectangle(term, Yellow)
-            self.play(Create(box))
-
-        with self.voiceover(text="In other words, transform it into a reduced form, where the coefficient of the quartic term is zero.") as t:
-            self.remove(box)
-            self.play(Create(E03))
-            term = VGroup(*[E03[1][0][i] for i in range(4,7)])
-            box = SurroundingRectangle(term, Yellow)
-            self.play(Create(box))
 
         with self.voiceover(text="This operation is called a Tschirnhaus Transform,") as t:
             self.play(Indicate(E03[1][0][4]))
