@@ -40,25 +40,25 @@ class Quintic02(VoiceoverScene):
             [f'{z9}'],
             [f'{z9}', 'az^4+4ahz^3+6ah^2z^2+4ah^3z+ah^4', 'bz^3+3bhz^2+3bh^2z+bh^3', 'cz^2+2chz+ch^2', 'dz+dh', 'e']]]
 
-        LHS = VGroup(*[make_tex(f'{s}=') for s in ['y', 'z', 'y', 'x^5', 'ax^4', 'bx^3', 'cx^2', 'dx', 'e']])
-        RHS = VGroup(*[make_tex(s) for s in ['x^5+ax^4+bx^3+cx^2+dx+e=0', 'x+h', 'z^5+0z^4+pz^3+qz^2+rz+s=0']], *Fz[9])
+        LHS = VGroup(*[make_tex(f'{s}=') for s in ['y', 'x', 'y', 'x^5', 'ax^4', 'bx^3', 'cx^2', 'dx', 'e']])
+        RHS = VGroup(*[make_tex(s) for s in ['x^5+ax^4+bx^3+cx^2+dx+e=0', 'z+h', 'z^5+0z^4+pz^3+qz^2+rz+s=0']], *Fz[9])
         ALL = VGroup(LHS, RHS)
 
         LHS.arrange(DOWN, aligned_edge=RIGHT)
-        RHS.arrange(DOWN, aligned_edge = LEFT)
-        ALL.arrange(RIGHT, aligned_edge = DOWN)
+        RHS.arrange(DOWN, aligned_edge=LEFT)
+        ALL.arrange(RIGHT, aligned_edge=DOWN)
         EQU = [VGroup(LHS[i], RHS[i]) for i in range(9)]
 
         with self.voiceover(
-            text="This is the General Form of a quintic polynomial equation in one variable, x.") as t:
+            text="This is the General Form of a quintic polynomial equation in one variable, x.") as tracker:
             self.play(Create(EQU[0]))
 
-        with self.voiceover(text="To solve it, we might first try to get rid of the quartic, or fourth power, term.") as t:
+        with self.voiceover(text="To solve it, we might first try to get rid of the quartic, or fourth power, term.") as tracker:
             term = VGroup(*[EQU[0][1][0][i] for i in range(4,7)])
             box = SurroundingRectangle(term, Yellow)
             self.play(Create(box))
 
-        with self.voiceover(text="In other words, transform it into a reduced form, where the coefficient of this term is zero.") as t:
+        with self.voiceover(text="In other words, transform it into a reduced form, where the coefficient of this term is zero.") as tracker:
             self.remove(box)
             self.play(Create(EQU[2]))
             term = VGroup(*[EQU[2][1][0][i] for i in range(4,7)])
@@ -68,14 +68,23 @@ class Quintic02(VoiceoverScene):
         with self.voiceover(text="This operation is technically known as a Tschirnhaus Transform,") as t:
             self.remove(box)
 
-        with self.voiceover(text="the simplest example of which is a linear substitution, such as z = x + some constant h.") as t:
+        with self.voiceover(text="the simplest example of which is a linear substitution, such as x = z + some constant h.") as tracker:
             term = EQU[1]
             self.play(Create(term))
             box = SurroundingRectangle(term, Yellow)
             self.play(Create(box))
 
+        with self.voiceover(text="Let's use this to expand all these x powers in terms of z.") as tracker:
+            E = EQU[0][1][0]
+            S = [E[1:3], E[4:7], E[8:11], E[12:15], E[16:18], E[19:20]]
+            T = LHS[3:9]
+            self.play([TransformMatchingShapes(S[i].copy(), T[i], path_arc=-PI/2) for i in range(6)])
+
+
+        self.wait(5)
 
 """
+
         for i in range(0, 10):
             fz = Fz[i]
             X = []
