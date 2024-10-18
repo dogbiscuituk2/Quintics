@@ -79,6 +79,12 @@ class Quintic02(VoiceoverScene):
             S = [E[1:3], E[4:7], E[8:11], E[12:15], E[16:18], E[19:20]]
             T = LHS[3:9]
             self.play([TransformMatchingShapes(S[i].copy(), T[i], path_arc=-PI/2) for i in range(6)])
+            for i in range(5):
+                S = Fz[0][i].copy().move_to(EQU[i+3][1], LEFT)
+                EQU[i+3][1] = S
+                #print(EQU[i+3][1])
+                self.play(TransformMatchingShapes(EQU[1][1].copy(), S))
+                #self.play(Create(EQU[i+3][1]))
 
 
         self.wait(5)
