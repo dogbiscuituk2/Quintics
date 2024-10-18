@@ -29,16 +29,19 @@ class Quintic02(VoiceoverScene):
         z9 = 'z^5+5hz^4+10h^2z^3+10h^3z^2+5h^4z+h^5'
 
         Fz = [[make_tex(s) for s in t] for t in [
-            [f'{z}^5', f'a{z}^4', f'b{z}^3', f'c{z}^2', f'd{z}', 'e'],
-            [f'{z2}^4', f'a{z2}^3', f'b{z2}^2', f'c{z2}'],
-            [f'{z3}^3', f'a{z3}^2', f'b{z3}'],
-            [f'{z4}^2', f'a{z4}'],
-            [f'{z5}'],
-            [f'{z6}{z3}', f'a{z6}{z2}', f'b{z6}{z}', f'c{z6}'],
-            [f'{z7}{z2}', f'a{z7}{z}', f'b{z7}'],
-            [f'{z8}{z}', f'a{z8}'],
-            [f'{z9}'],
-            [f'{z9}', 'az^4+4ahz^3+6ah^2z^2+4ah^3z+ah^4', 'bz^3+3bhz^2+3bh^2z+bh^3', 'cz^2+2chz+ch^2', 'dz+dh', 'e']]]
+            [f'o{z}^5', f'a{z}^4', f'b{z}^3', f'c{z}^2', f'd{z}', 'e'],
+            [f'o{z2}^4', f'a{z2}^3', f'b{z2}^2', f'c{z2}'],
+            [f'o{z3}^3', f'a{z3}^2', f'b{z3}'],
+            [f'o{z4}^2', f'a{z4}'],
+            [f'o{z5}'],
+            [f'o{z6}{z3}', f'a{z6}{z2}', f'b{z6}{z}', f'c{z6}'],
+            [f'o{z7}{z2}', f'a{z7}{z}', f'b{z7}'],
+            [f'o{z8}{z}', f'a{z8}'],
+            [f'o{z9}'],
+            [f'o{z9}', 'az^4+4ahz^3+6ah^2z^2+4ah^3z+ah^4', 'bz^3+3bhz^2+3bh^2z+bh^3', 'cz^2+2chz+ch^2', 'dz+dh', 'e']]]
+
+        for i in range(0, 9):
+            Fz[i][0][0][1].set_opacity(0)
 
         LHS = VGroup(*[make_tex(f'{s}=') for s in ['y', 'x', 'y', 'x^5', 'ax^4', 'bx^3', 'cx^2', 'dx', 'e']])
         RHS = VGroup(*[make_tex(s) for s in ['x^5+ax^4+bx^3+cx^2+dx+e=0', 'z+h', 'z^5+0z^4+pz^3+qz^2+rz+s=0']], *Fz[9])
@@ -53,19 +56,21 @@ class Quintic02(VoiceoverScene):
             text="This is the General Form of a quintic polynomial equation in one variable, x.") as tracker:
             self.play(Create(EQU[0]))
 
-        with self.voiceover(text="To solve it, we might first try to get rid of the quartic, or fourth power, term.") as tracker:
-            term = VGroup(*[EQU[0][1][0][i] for i in range(4,7)])
+        with self.voiceover(text="To solve it, we might first try to get rid of the quartic, or x to the power four, term.") as tracker:
+            #term = VGroup(*[EQU[0][1][0][i] for i in range(4,7)])
+            term = VGroup(EQU[0][1][0][4:7])
             box = SurroundingRectangle(term, Yellow)
             self.play(Create(box))
 
         with self.voiceover(text="In other words, transform it into a reduced form, where the coefficient of this term is zero.") as tracker:
             self.remove(box)
             self.play(Create(EQU[2]))
-            term = VGroup(*[EQU[2][1][0][i] for i in range(4,7)])
+            #term = VGroup(*[EQU[2][1][0][i] for i in range(4,7)])
+            term = VGroup(EQU[2][1][0][4:7])
             box = SurroundingRectangle(term, Yellow)
             self.play(Create(box))
 
-        with self.voiceover(text="This operation is technically known as a Tschirnhaus Transform,") as t:
+        with self.voiceover(text="This operation is technically known as a Tschirnhaus Transformation,") as t:
             self.remove(box)
 
         with self.voiceover(text="the simplest example of which is a linear substitution, such as x = z + some constant h.") as tracker:
@@ -74,33 +79,49 @@ class Quintic02(VoiceoverScene):
             box = SurroundingRectangle(term, Yellow)
             self.play(Create(box))
 
-        with self.voiceover(text="Let's use this to expand all these x powers in terms of z.") as tracker:
+        with self.voiceover(text="Let's use this to express all these x powers in terms of z.") as tracker:
             E = EQU[0][1][0]
             S = [E[1:3], E[4:7], E[8:11], E[12:15], E[16:18], E[19:20]]
             T = LHS[3:9]
-            self.play([TransformMatchingShapes(S[i].copy(), T[i], path_arc=-PI/2) for i in range(6)])
+            self.play([TransformMatchingShapes(S[i].copy(), T[i], path_arc=-PI/2) for i in range(6)], run_time=2)
             for i in range(5):
-                S = Fz[0][i].copy().move_to(EQU[i+3][1], LEFT)
-                EQU[i+3][1] = S
-                #print(EQU[i+3][1])
-                self.play(TransformMatchingShapes(EQU[1][1].copy(), S))
-                #self.play(Create(EQU[i+3][1]))
+                T = Fz[0][i].copy().move_to(EQU[i+3][1], LEFT)
+                EQU[i+3][1] = T
+                self.play(TransformMatchingShapes(EQU[1][1].copy(), T))
+            self.play(FadeIn(EQU[8][1]))
+
+        def expand(i: int, immediate: bool) -> None:
+            fz = Fz[i]
+            op_list = []
+            for j in range(len(fz)):
+                S = EQU[j+3][1]
+                T = fz[j]
+                T.move_to(S, aligned_edge=LEFT)
+                op = TransformMatchingShapes(S, T)
+                if immediate:
+                    self.play(op)
+                else:
+                    op_list.append(op)
+                EQU[j+3][1] = T
+            if not immediate:
+                self.play(op_list)
+
+        with self.voiceover(text="Expand these powers.") as tracker:
+            for i in range(1, 5):
+                expand(i, False)
+
+        with self.voiceover(text="Multiply out the binomials.") as tracker:
+            for i in range(5, 9):
+                expand(i, False)
+
+        with self.voiceover(text="Then distribute the original coefficients.") as tracker:
+            expand(9, True)
 
 
         self.wait(5)
 
 """
 
-        for i in range(0, 10):
-            fz = Fz[i]
-            X = []
-            for j in range(len(fz)):
-                S = RHS[j+3]
-                T = fz[j]
-                T.move_to(S, aligned_edge=LEFT)
-                X.append(TransformMatchingShapes(S, T))
-                RHS[j+3] = T
-            self.play(X)
             #self.wait(2)
 
         self.wait(10)

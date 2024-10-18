@@ -40,7 +40,7 @@ def paint_tex(mathTex: MathTex, s: str) -> None:
     for t in s.split('^'):
         for c in t:
             m = mathTex[p]
-            if c == '|':
+            if c in '|o':
                 m.set_opacity(0)
             else:
                 if not super:
