@@ -56,7 +56,7 @@ class Quintic02(VoiceoverScene):
             text="This is the General Form of a quintic polynomial equation in one variable, x.") as tracker:
             self.play(Create(EQU[0]))
 
-        with self.voiceover(text="To solve it, we might first try to get rid of the quartic, or x to the power four, term.") as tracker:
+        with self.voiceover(text="To solve it, we might first try to get rid of the x to the power four term.") as tracker:
             #term = VGroup(*[EQU[0][1][0][i] for i in range(4,7)])
             term = VGroup(EQU[0][1][0][4:7])
             box = SurroundingRectangle(term, Yellow)
