@@ -35,7 +35,7 @@ class Quintic02(VoiceoverScene):
             [f'o{z7}{z2}', f'a{z7}{z}', f'b{z7}'],
             [f'o{z8}{z}', f'a{z8}'],
             [f'o{z9}'],
-            [f'UGH', 'az^4+4ahz^3+6ah^2z^2+4ah^3z+ah^4', 'bz^3+3bhz^2+3bh^2z+bh^3', 'cz^2+2chz+ch^2', 'dz+dh', 'e']]]
+            [f'o{z9}', 'az^4+4ahz^3+6ah^2z^2+4ah^3z+ah^4', 'bz^3+3bhz^2+3bh^2z+bh^3', 'cz^2+2chz+ch^2', 'dz+dh', 'e']]]
 
         for i in range(0, 9):
             Fz[i][0][0][1].set_opacity(0)
@@ -62,9 +62,8 @@ class Quintic02(VoiceoverScene):
             say(tracker)
             box(self, *EQU[1][1][0][4:8])
 
-        with self.voiceover(text="In other words, transform it into a reduced form, where the coefficient of this term is zero.") as tracker:
+        with self.voiceover(text="In other words, transform it into so-called reduced form, where the coefficient of this term is zero.") as tracker:
             say(tracker)
-            #unbox(self)
             EQU[2][0][0][1].set_opacity(0)
             self.play(Create(EQU[2]))
             box(self, *EQU[2][1][0][4:8])
@@ -72,6 +71,9 @@ class Quintic02(VoiceoverScene):
 
         with self.voiceover(text="This operation is technically known as a Tschirnhaus Transformation,") as tracker:
             say(tracker)
+            Tschirnhaus = ImageMobject("resources/Tschirnhaus.jpg")
+            Tschirnhaus.to_corner(DR, buff=0)
+            self.play(FadeIn(Tschirnhaus))
             unbox(self)
 
         with self.voiceover(text="the simplest example of which is a linear substitution, such as x = z + some constant h.") as tracker:
@@ -94,10 +96,10 @@ class Quintic02(VoiceoverScene):
             unbox(self)
             dump(*EQU)
 
-        def expand(i: int, immediate: bool) -> None:
+        def expand(i: int, immediate: bool = False) -> None:
             fz = Fz[i]
             op_list = []
-            for j in range(0 if immediate else 1, len(fz)):
+            for j in range(1 if immediate else 0, len(fz)):
                 S = EQU[j+3][1]
                 T = fz[j]
                 T.move_to(S, aligned_edge=LEFT)
@@ -113,18 +115,18 @@ class Quintic02(VoiceoverScene):
         with self.voiceover(text="Expand these powers.") as tracker:
             say(tracker)
             for i in range(1, 5):
-                expand(i, False)
+                expand(i)
                 dump(*EQU)
 
         with self.voiceover(text="Now multiply out the binomials.") as tracker:
             say(tracker)
             for i in range(5, 9):
-                expand(i, False)
+                expand(i)
                 dump(*EQU)
 
         with self.voiceover(text="Then distribute the original coefficients.") as tracker:
             say(tracker)
-            expand(9, True)
+            expand(9, immediate=True)
             dump(*EQU)
 
         with self.voiceover(text="This set of expressions.") as tracker:
