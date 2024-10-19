@@ -23,10 +23,7 @@ colours = (
 def box(self, *args):
     global _box
     b = SurroundingRectangle(VGroup(*args), Yellow) 
-    if _box == None:
-        self.play(Create(b))
-    else:
-        _box.move_to(b)
+    self.play(Create(b) if _box == None else ReplacementTransform(_box, b))
     _box = b
 
 def unbox(self):

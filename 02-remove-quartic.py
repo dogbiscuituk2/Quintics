@@ -54,16 +54,20 @@ class Quintic02(VoiceoverScene):
             self.play(Create(EQU[1]))
             dump(*EQU)
 
-        with self.voiceover(text="To solve it, we might first try to get rid of the quartic, or x to the fourth, term.") as tracker:
+        with self.voiceover(text="We could solve it if we could remove all these pesky intermediate x powers.") as tracker:
             say(tracker)
-            box(self, *EQU[1][1][0][5:8])
+            box(self, *EQU[1][1][0][4:19])
+
+        with self.voiceover(text="To make a start, we might first try to get rid of the quartic, or x to the fourth, term.") as tracker:
+            say(tracker)
+            box(self, *EQU[1][1][0][4:8])
 
         with self.voiceover(text="In other words, transform it into a reduced form, where the coefficient of this term is zero.") as tracker:
             say(tracker)
             #unbox(self)
             EQU[2][0][0][1].set_opacity(0)
             self.play(Create(EQU[2]))
-            box(self, *EQU[2][1][0][5:8])
+            box(self, *EQU[2][1][0][4:8])
             dump(*EQU)
 
         with self.voiceover(text="This operation is technically known as a Tschirnhaus Transformation,") as tracker:
@@ -85,6 +89,7 @@ class Quintic02(VoiceoverScene):
                 T = Fz[0][i].copy().move_to(EQU[i+3][1], LEFT)
                 EQU[i+3][1] = T
                 self.play(TransformMatchingShapes(EQU[0][1].copy(), T))
+            self.play(FadeIn(EQU[8][1]))
             unbox(self)
             dump(*EQU)
 
