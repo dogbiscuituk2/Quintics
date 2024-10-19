@@ -3,6 +3,7 @@ from manim_voiceover import VoiceoverScene
 from manim_voiceover.services.gtts import GTTSService
 
 config.max_files_cached = 999
+config.verbosity = 'WARNING'
 
 PALETTE_DEFAULT = 0
 PALETTE_BRIGHT = 1
@@ -16,6 +17,25 @@ colours = (
     (0x000000, 0x000000, 0xCD853F, 0xFF0000, 0xFF7F3F, 0xCCCC00, 0x33FF33, 0x0000FF, 0x00FFFF, 0xFF00FF, 0x9A72AC, 0xBBBBBB, 0xFFFFFF),
     (0xFFFFFF, *[0x000000 for _ in range(12)]),
     (0x000000, *[0xFFFFFF for _ in range(12)]))
+
+#region box
+
+def box(self, *args):
+    global _box
+    b = SurroundingRectangle(VGroup(*args), Yellow) 
+    if _box == None:
+        self.play(Create(b))
+    else:
+        _box.move_to(b)
+    _box = b
+
+def unbox(self):
+    global _box
+    if _box != None:
+        self.play(Uncreate(_box))
+        _box = None
+
+#endregion
 
 def get_colour(char: str) -> ManimColor:
     for map in ColourMap:
@@ -74,3 +94,5 @@ Magenta     = colours[palette][9]
 Violet      = colours[palette][10]
 Grey        = colours[palette][11]
 White       = colours[palette][12]
+
+_box = None

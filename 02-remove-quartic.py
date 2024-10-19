@@ -5,9 +5,6 @@ from manim_voiceover.tracker import VoiceoverTracker
 
 from common import *
 
-config.max_files_cached = 999
-config.verbosity = 'WARNING'
-
 class Quintic02(VoiceoverScene):
     def construct(self):
 
@@ -70,30 +67,24 @@ class Quintic02(VoiceoverScene):
 
         with self.voiceover(text="To solve it, we might first try to get rid of the quartic, or x to the fourth, term.") as tracker:
             say(tracker)
-            term = VGroup(EQU[1][1][0][5:8])
-            box = SurroundingRectangle(term, Yellow)
-            self.play(Create(box))
+            box(self, *EQU[1][1][0][5:8])
 
         with self.voiceover(text="In other words, transform it into a reduced form, where the coefficient of this term is zero.") as tracker:
             say(tracker)
-            self.play(Uncreate(box))
+            unbox(self)
             EQU[2][0][0][1].set_opacity(0)
             self.play(Create(EQU[2]))
-            term = VGroup(EQU[2][1][0][5:8])
-            box = SurroundingRectangle(term, Yellow)
-            self.play(Create(box))
+            box(self, *EQU[2][1][0][5:8])
             dump()
 
         with self.voiceover(text="This operation is technically known as a Tschirnhaus Transformation,") as tracker:
             say(tracker)
-            self.play(Uncreate(box))
+            unbox(self)
 
         with self.voiceover(text="the simplest example of which is a linear substitution, such as x = z + some constant h.") as tracker:
             say(tracker)
-            term = EQU[0]
-            self.play(Create(term))
-            box = SurroundingRectangle(term, Yellow)
-            self.play(Create(box))
+            self.play(Create(EQU[0]))
+            box(self, EQU[0])
 
         with self.voiceover(text="Let's use this to express all these x powers in terms of z.") as tracker:
             say(tracker)
@@ -105,7 +96,7 @@ class Quintic02(VoiceoverScene):
                 T = Fz[0][i].copy().move_to(EQU[i+3][1], LEFT)
                 EQU[i+3][1] = T
                 self.play(TransformMatchingShapes(EQU[0][1].copy(), T))
-            self.play(FadeIn(EQU[8][1]), Uncreate(box))
+            unbox(self)
             dump()
 
         def expand(i: int, immediate: bool) -> None:
@@ -143,9 +134,7 @@ class Quintic02(VoiceoverScene):
 
         with self.voiceover(text="This set of expressions.") as tracker:
             say(tracker)
-            EXP = VGroup(*[EQU[row][1] for row in range(2, 9)])
-            box = SurroundingRectangle(EXP, Yellow)
-            self.play(Create(box))
+            box(self, *[EQU[row][1] for row in range(2, 9)])
 
         self.wait(5)
 
