@@ -35,7 +35,7 @@ class Quintic02(VoiceoverScene):
             [f'o{z7}{z2}', f'a{z7}{z}', f'b{z7}'],
             [f'o{z8}{z}', f'a{z8}'],
             [f'o{z9}'],
-            [f'o{z9}', 'az^4+4ahz^3+6ah^2z^2+4ah^3z+ah^4', 'bz^3+3bhz^2+3bh^2z+bh^3', 'cz^2+2chz+ch^2', 'dz+dh', 'e']]]
+            [f'UGH', 'az^4+4ahz^3+6ah^2z^2+4ah^3z+ah^4', 'bz^3+3bhz^2+3bh^2z+bh^3', 'cz^2+2chz+ch^2', 'dz+dh', 'e']]]
 
         for i in range(0, 9):
             Fz[i][0][0][1].set_opacity(0)
@@ -76,8 +76,8 @@ class Quintic02(VoiceoverScene):
 
         with self.voiceover(text="the simplest example of which is a linear substitution, such as x = z + some constant h.") as tracker:
             say(tracker)
-            self.play(Create(EQU[0]))
             box(self, EQU[0])
+            self.play(Create(EQU[0]))
 
         with self.voiceover(text="Let's use this to express all these x powers in terms of z.") as tracker:
             say(tracker)
@@ -85,6 +85,7 @@ class Quintic02(VoiceoverScene):
             S = [E[2:4], E[5:8], E[9:12], E[13:16], E[17:19], E[20:21]]
             T = LHS[3:9]
             self.play([TransformMatchingShapes(S[i].copy(), T[i], path_arc=-PI/2) for i in range(6)], run_time=2)
+            box(self, EQU[0][1][0][2:5])
             for i in range(5):
                 T = Fz[0][i].copy().move_to(EQU[i+3][1], LEFT)
                 EQU[i+3][1] = T
@@ -96,7 +97,7 @@ class Quintic02(VoiceoverScene):
         def expand(i: int, immediate: bool) -> None:
             fz = Fz[i]
             op_list = []
-            for j in range(len(fz)):
+            for j in range(0 if immediate else 1, len(fz)):
                 S = EQU[j+3][1]
                 T = fz[j]
                 T.move_to(S, aligned_edge=LEFT)
