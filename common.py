@@ -1,6 +1,6 @@
 from manim import *
-from manim_voiceover import VoiceoverScene
 from manim_voiceover.services.gtts import GTTSService
+from manim_voiceover.tracker import VoiceoverTracker
 
 config.max_files_cached = 999
 config.verbosity = 'WARNING'
@@ -36,6 +36,11 @@ def unbox(self):
         _box = None
 
 #endregion
+
+def dump(*args) -> None:
+    for arg in args:
+        print([s.tex_string for s in arg])
+    print()
 
 def get_colour(char: str) -> ManimColor:
     for map in ColourMap:
@@ -74,6 +79,10 @@ def prepare_string(s: str) -> str:
     if not '|' in s: s = f'|{s}'
     if not '^' in s: s = f'{s}^|'
     return s
+
+def say(tracker: VoiceoverTracker) -> None:
+    print(tracker.data['input_text'])
+    print()
 
 def set_colour_map(colour_map: tuple[tuple[str, ManimColor]]) -> None:
     global ColourMap

@@ -1,7 +1,5 @@
 from manim import *
 from manim_voiceover import VoiceoverScene
-from manim_voiceover.services.gtts import GTTSService
-from manim_voiceover.tracker import VoiceoverTracker
 
 from common import *
 
@@ -51,19 +49,10 @@ class Quintic02(VoiceoverScene):
         ALL.arrange(RIGHT, aligned_edge=DOWN)
         EQU = [VGroup(LHS[i], RHS[i]) for i in range(9)]
 
-        def say(tracker: VoiceoverTracker) -> None:
-            print(tracker.data['input_text'])
-            print()
-
-        def dump() -> None:
-            for equ in EQU:
-                print([s.tex_string for s in equ])
-            print()
-
         with self.voiceover(text="This is the General Form of a quintic polynomial equation in one variable, x.") as tracker:
             say(tracker)
             self.play(Create(EQU[1]))
-            dump()
+            dump(*EQU)
 
         with self.voiceover(text="To solve it, we might first try to get rid of the quartic, or x to the fourth, term.") as tracker:
             say(tracker)
@@ -71,11 +60,11 @@ class Quintic02(VoiceoverScene):
 
         with self.voiceover(text="In other words, transform it into a reduced form, where the coefficient of this term is zero.") as tracker:
             say(tracker)
-            unbox(self)
+            #unbox(self)
             EQU[2][0][0][1].set_opacity(0)
             self.play(Create(EQU[2]))
             box(self, *EQU[2][1][0][5:8])
-            dump()
+            dump(*EQU)
 
         with self.voiceover(text="This operation is technically known as a Tschirnhaus Transformation,") as tracker:
             say(tracker)
@@ -97,7 +86,7 @@ class Quintic02(VoiceoverScene):
                 EQU[i+3][1] = T
                 self.play(TransformMatchingShapes(EQU[0][1].copy(), T))
             unbox(self)
-            dump()
+            dump(*EQU)
 
         def expand(i: int, immediate: bool) -> None:
             fz = Fz[i]
@@ -119,18 +108,18 @@ class Quintic02(VoiceoverScene):
             say(tracker)
             for i in range(1, 5):
                 expand(i, False)
-                dump()
+                dump(*EQU)
 
         with self.voiceover(text="Now multiply out the binomials.") as tracker:
             say(tracker)
             for i in range(5, 9):
                 expand(i, False)
-                dump()
+                dump(*EQU)
 
         with self.voiceover(text="Then distribute the original coefficients.") as tracker:
             say(tracker)
             expand(9, True)
-            dump()
+            dump(*EQU)
 
         with self.voiceover(text="This set of expressions.") as tracker:
             say(tracker)
