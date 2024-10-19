@@ -43,8 +43,8 @@ class Quintic02(VoiceoverScene):
         for i in range(0, 9):
             Fz[i][0][0][1].set_opacity(0)
 
-        LHS = VGroup(*[make_tex(f'{s}=') for s in ['y', 'x', 'y', 'x^5', 'ax^4', 'bx^3', 'cx^2', 'dx', 'e']])
-        RHS = VGroup(*[make_tex(s) for s in ['x^5+ax^4+bx^3+cx^2+dx+e=0', 'z+h', 'z^5+0z^4+pz^3+qz^2+rz+s=0']], *Fz[9])
+        LHS = VGroup(*[make_tex(f'{s}o=') for s in ['y', 'x', 'y', 'x^5', 'ax^4', 'bx^3', 'cx^2', 'dx', 'e']])
+        RHS = VGroup(*[make_tex(s) for s in ['ox^5+ax^4+bx^3+cx^2+dx+e=0', 'oz+h', 'oz^5+0z^4+pz^3+qz^2+rz+s=0']], *Fz[9])
         ALL = VGroup(LHS, RHS)
 
         LHS.arrange(DOWN, aligned_edge=RIGHT)
@@ -56,22 +56,22 @@ class Quintic02(VoiceoverScene):
             text="This is the General Form of a quintic polynomial equation in one variable, x.") as tracker:
             self.play(Create(EQU[0]))
 
-        with self.voiceover(text="To solve it, we might first try to get rid of the x to the power four term.") as tracker:
-            #term = VGroup(*[EQU[0][1][0][i] for i in range(4,7)])
-            term = VGroup(EQU[0][1][0][4:7])
+        with self.voiceover(text="To solve it, we might first try to get rid of the quartic, or x to the fourth, term.") as tracker:
+            term = VGroup(EQU[0][1][0][5:8])
             box = SurroundingRectangle(term, Yellow)
             self.play(Create(box))
 
         with self.voiceover(text="In other words, transform it into a reduced form, where the coefficient of this term is zero.") as tracker:
-            self.remove(box)
+            self.play(Uncreate(box))
+            #self.remove(box)
             self.play(Create(EQU[2]))
-            #term = VGroup(*[EQU[2][1][0][i] for i in range(4,7)])
-            term = VGroup(EQU[2][1][0][4:7])
+            term = VGroup(EQU[2][1][0][5:8])
             box = SurroundingRectangle(term, Yellow)
             self.play(Create(box))
 
-        with self.voiceover(text="This operation is technically known as a Tschirnhaus Transformation,") as t:
-            self.remove(box)
+        with self.voiceover(text="This operation is technically known as a Tschirnhaus Transformation,") as tracker:
+            self.play(Uncreate(box))
+            #self.remove(box)
 
         with self.voiceover(text="the simplest example of which is a linear substitution, such as x = z + some constant h.") as tracker:
             term = EQU[1]
@@ -81,14 +81,14 @@ class Quintic02(VoiceoverScene):
 
         with self.voiceover(text="Let's use this to express all these x powers in terms of z.") as tracker:
             E = EQU[0][1][0]
-            S = [E[1:3], E[4:7], E[8:11], E[12:15], E[16:18], E[19:20]]
+            S = [E[2:4], E[5:8], E[9:12], E[13:16], E[17:19], E[20:21]]
             T = LHS[3:9]
             self.play([TransformMatchingShapes(S[i].copy(), T[i], path_arc=-PI/2) for i in range(6)], run_time=2)
             for i in range(5):
                 T = Fz[0][i].copy().move_to(EQU[i+3][1], LEFT)
                 EQU[i+3][1] = T
                 self.play(TransformMatchingShapes(EQU[1][1].copy(), T))
-            self.play(FadeIn(EQU[8][1]))
+            self.play(FadeIn(EQU[8][1]), Uncreate(box))
 
         def expand(i: int, immediate: bool) -> None:
             fz = Fz[i]
@@ -110,7 +110,7 @@ class Quintic02(VoiceoverScene):
             for i in range(1, 5):
                 expand(i, False)
 
-        with self.voiceover(text="Multiply out the binomials.") as tracker:
+        with self.voiceover(text="Now multiply out the binomials.") as tracker:
             for i in range(5, 9):
                 expand(i, False)
 
@@ -189,7 +189,7 @@ class Quintic02(VoiceoverScene):
         G01 = VGroup(LHS, RHS).arrange(RIGHT, aligned_edge=DOWN)
 
 
-        with self.voiceover(text="This operation is called a Tschirnhaus Transform,") as t:
+        with self.voiceover(text="This operation is called a Tschirnhaus Transform,") as tracker:
             self.play(Indicate(E03[1][0][4]))
             self.remove(box)
             self.play(TransformMatchingShapes(E03[1], make_tex(e03b)))
