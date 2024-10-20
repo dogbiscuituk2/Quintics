@@ -1,0 +1,104 @@
+1
+00:00:00,000 --> 00:00:02,500
+This is the General Form of a
+
+2
+00:00:02,600 --> 00:00:06,716
+quintic polynomial equation in one variable, x.
+
+3
+00:00:06,816 --> 00:00:08,963
+We could solve it easily if we
+
+4
+00:00:09,063 --> 00:00:12,260
+didn't have all these intermediate x powers.
+
+5
+00:00:12,360 --> 00:00:15,735
+To make a start, we might first try to get
+
+6
+00:00:15,835 --> 00:00:19,460
+rid of the quartic, or x to the fourth, term.
+
+7
+00:00:19,560 --> 00:00:24,140
+In other words, transform it into so-called reduced form,
+
+8
+00:00:24,240 --> 00:00:27,476
+where the coefficient of this term is zero.
+
+9
+00:00:27,576 --> 00:00:32,324
+This operation is technically known as a Tschirnhaus Transformation,
+
+10
+00:00:32,424 --> 00:00:37,755
+the simplest example of which is a linear substitution,
+
+11
+00:00:37,855 --> 00:00:40,916
+such as x = z + some constant h.
+
+12
+00:00:41,016 --> 00:00:46,052
+Let's use this to express all these x powers in terms of z.
+
+13
+00:00:51,016 --> 00:00:52,932
+Expand these powers.
+
+14
+00:00:56,016 --> 00:00:58,508
+Multiply out the binomials.
+
+15
+00:01:05,016 --> 00:01:07,868
+Distribute the original coefficients.
+
+16
+00:01:10,016 --> 00:01:13,098
+Now recall that this first z equation is
+
+17
+00:01:13,198 --> 00:01:15,724
+just the sum of the six below it.
+
+18
+00:01:17,016 --> 00:01:20,986
+All seven of these equations are identities, true
+
+19
+00:01:21,086 --> 00:01:24,476
+for every choice of x and corresponding z.
+
+20
+00:01:24,576 --> 00:01:28,363
+If we now consider the case z equals one, then
+
+21
+00:01:28,463 --> 00:01:32,420
+all of these z powers disappear from the matrix.
+
+22
+00:01:35,576 --> 00:01:39,407
+Now we can read the matrix column by column, to get
+
+23
+00:01:39,507 --> 00:01:44,572
+expressions for the new coefficients in terms of the original ones.
+
+24
+00:01:44,672 --> 00:01:48,514
+This H substitution avoids a lot of ugly fractions
+
+25
+00:01:48,614 --> 00:01:52,300
+with powers of five denominators in the results.
+
+26
+00:02:06,672 --> 00:02:10,940
+Finally we have succeeded in eliminating the quartic term.
+
