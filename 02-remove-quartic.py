@@ -158,20 +158,110 @@ class Quintic02(VoiceoverScene):
             expand(9, immediate=True)
             dump(*EQU)
 
-        with say(self, "Since this equation"):
-            self.play(Indicate(EQU[0]))
-            self.wait(3)
-            #box(self, *EQU[2])
+        with say(self, "Now recall that this first z equation is just the sum of the six below it."):
+            box(self, EQU[2])
+            self.wait(2)
+            box(self, *[EQU[i] for i in range(3, 9)])
+            self.wait(2)
+            unbox(self)
 
-        with say(self, "is just the sum of these six,"):
-            self.play(Indicate(EQU[1]))
-            self.wait(3)
-            #box(self, *[EQU[i] for i in range(3, 9)])
+        with say(self, "All seven of these equations are identities, true for every choice of x and corresponding z."):
+            self.play(FadeOut(*EQU[0], *EQU[1], brace))
+            self.play(TransformMatchingShapes(VGroup(*[EQU[i][0] for i in range(2, 9)]), Y), Create(EQ))
+            self.play(TransformMatchingShapes(VGroup(*[EQU[i][1] for i in range(2, 9)]), M), Create(Z))
 
-        self.wait(5)
+        Z2 = [] # Will hold the powers of z which fly into column vector Z1
+        M2 = [] # Will hold the replacement terms for the main matrix
 
-        self.play(FadeOut(*EQU[0], *EQU[1], brace))
-        self.play(TransformMatchingShapes(VGroup(*[EQU[i][0] for i in range(2, 9)]), Y), Create(EQ))
-        self.play(TransformMatchingShapes(VGroup(*[EQU[i][1] for i in range(2, 9)]), M), Create(Z))
-            
-        self.wait(5)
+        def get_element(row: int, col: int):
+            return M[0][row * 6 + col]
+        
+        def indicate(items: List[VMobject], size: float = 1.2) -> None:
+            self.play(Indicate(VGroup(*items), color = White, scale_factor = size))
+
+        def new_target(row: int, col: int):
+            z = ('z^5', 'z^4', 'z^3', 'z^2', 'z', '1')
+            mathTex: MathTex = make_tex(z[col])
+            mathTex.move_to(get_element(row, col), RIGHT)
+            Z2.append(mathTex)
+            mathTex.generate_target()
+            mathTex.target.move_to(Z[0][col], DOWN)
+            return mathTex
+
+        def replace(sourceTex: MathTex, targetTex: MathTex) -> Transform:
+            M2.append(targetTex)
+            return ReplacementTransform(sourceTex, targetTex.move_to(sourceTex.get_center()))
+        
+        m2 = (
+            ('1', '0', 'p', 'q', 'r', 's'),
+            ('1', '5h', '10h^2', '10h^3', '5h^4', 'h^5'),
+            ('', 'a', '4ah', '6ah^2', '4ah^3', 'ah^4'),
+            ('', '', 'b', '3bh', '3bh^2', 'bh^3'),
+            ('', '', '', 'c', '2ch', 'ch^2'),
+            ('', '', '', '', 'd', 'dh'),
+            ('', '', '', '', '', 'e'))
+
+        with say(self, "If we now consider the case z equals one, then all of these z powers disappear from the matrix."):
+            for col in range(6):
+                transforms: List[Transform] = []
+                rows = range(col + 2)
+                if col < 5:
+                    transforms = [MoveToTarget(new_target(row, col)) for row in rows]
+                    transforms.append(FadeOut(Z[0][col]))
+                for row in rows:
+                    transforms.append(replace(get_element(row, col), make_tex(m2[row][col])))
+                if col < 5:
+                    indicate([get_element(row, col) for row in rows])
+                self.play(*transforms)
+
+        F1 = make_tex('y=x^5+ax^4+bx^3+cx^2+dx+e')
+        F2 = make_tex('y=z^5+0z^4+pz^3+qz^2+rz+s')
+        F3 = make_tex('z=x-h')
+        F4 = make_tex('z=x+a/5')
+
+        def setup(*args: str) -> MathTex:
+            return make_tex(*args).arrange(DOWN, aligned_edge = LEFT).move_to(2 * LEFT + DOWN)
+
+        F6 = setup('0=5h+a', 'p=10h^2+4ah+b'  , 'q=10h^3+6ah^2+3bh+c', 'r=5h^4+4ah^3+3bh^2+2ch+d', 's=h^5+a^4+bh^3+ch^2+dh+e' )
+        F7 = setup('a=-5h' , 'p=10h^2-20h^2+b', 'q=10h^3-30h^3+3bh+c', 'r=5h^4-20h^4+3bh^2+2ch+d', 's=h^5-5h^5+bh^3+ch^2+dh+e')
+        F8 = setup('h=-a/5', 'p=-10h^2+b'     , 'q=-20h^3+3bh+c'     , 'r=-15h^4+3bh^2+2ch+d'    , 's=-4h^5+bh^3+ch^2+dh+e'   )
+        F9 = setup('h=-a/5', 'p=b-10h^2'      , 'q=c+3bh-20h^3'      , 'r=d+2ch+3bh^2-15h^4'     , 's=e+dh+ch^2+bh^3-4h^5'    )
+
+        with say(self, "Now we can read the matrix column by column, to get expressions for the new coefficients in terms of the original ones."):
+            self.play(FadeOut(Y, EQ, M, M2[0], M2[1], Z[0][5], Z[1], Z[2], *Z2))
+            VGroup(F1, F2, F3, F6).arrange(DOWN, aligned_edge = LEFT)
+            VGroup(F1, F2, F3, F7).arrange(DOWN, aligned_edge = LEFT)
+            VGroup(F1, F2, F3, F8).arrange(DOWN, aligned_edge = LEFT)
+            VGroup(F1, F2, F3, F9).arrange(DOWN, aligned_edge = LEFT)
+            VGroup(F1, F2, F4, F9).arrange(DOWN, aligned_edge = LEFT)
+            M6 = [
+                VGroup(*[M2[i] for i in range(2, 5)]),
+                VGroup(*[M2[i] for i in range(5, 9)]),
+                VGroup(*[M2[i] for i in range(9, 14)]),
+                VGroup(*[M2[i] for i in range(14, 20)]),
+                VGroup(*[M2[i] for i in range(20, 27)])]
+            for i in range(5):
+                self.play(TransformMatchingShapes(M6[i], F6[i], path_arc=PI/2))
+
+        with say(self, "This H substitution avoids a lot of ugly fractions with powers of five denominators in the results."):
+            indicate(F6[0])
+            self.play(TransformMatchingShapes(F6[0], F7[0]))
+            indicate(F7[0])
+            for i in range(1, 5):
+                indicate(F6[i][[9, 9, 8, 6][i - 1]], size = 2)
+                self.play(TransformMatchingShapes(F6[i], F7[i]))
+                self.play(TransformMatchingShapes(F7[i], F8[i]))
+                self.play(TransformMatchingShapes(F8[i], F9[i], path_arc=PI/2))
+            indicate(F7[0])
+            self.play(TransformMatchingShapes(F7[0], F8[0]))
+            indicate(F8[0])
+
+        with say(self, "Finally we have succeeded in eliminating the quartic term."):
+            self.play(FadeIn(F1))
+            self.play(FadeIn(F2))
+            self.play(FadeIn(F3))
+            indicate([F3])
+            self.play(TransformMatchingShapes(F3, F4))
+            indicate([F4])
+            self.wait(10)
+

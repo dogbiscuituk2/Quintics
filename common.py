@@ -10,8 +10,7 @@ from manim_voiceover.tracker import VoiceoverTracker
 from manim import *
 
 config.max_files_cached = 999
-config.verbosity = 'INFO'
-#config.verbosity = 'WARNING'
+config.verbosity = 'WARNING' # 'INFO'
 
 #region Box
 
@@ -118,9 +117,9 @@ speech_services: List[SpeechService] = [
     AzureService(voice="en-US-AriaNeural", style="newscast-casual", global_speed=1.15),
     GTTSService(())]
 
-def say(self, text: str): # -> Generator[VoiceoverTracker, None, None]:
-    tracker = self.voiceover(text)
-    #print(tracker.data['input_text'])
+def say(self, text: str) -> Generator[VoiceoverTracker, None, None]:
+    # Specify language & disable language check to avoid GTTS bugs.
+    tracker = self.voiceover(text, lang='en', lang_check=False)
     print(text)
     print()
     return tracker
