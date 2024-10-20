@@ -10,7 +10,8 @@ from manim_voiceover.tracker import VoiceoverTracker
 from manim import *
 
 config.max_files_cached = 999
-config.verbosity = 'WARNING'
+config.verbosity = 'INFO'
+#config.verbosity = 'WARNING'
 
 #region Box
 
