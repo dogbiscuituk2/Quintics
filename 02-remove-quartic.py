@@ -84,7 +84,8 @@ class Quintic02(VoiceoverScene):
             self.play(Uncreate(s1))
 
         with say(self, "In other words, transform it into so-called reduced form,"):
-            self.play(Create(EQU[2]))
+            brace = Brace(Group(EQU[1], EQU[2]), LEFT, color=GREY)
+            self.play(FadeIn(brace), Create(EQU[2]))
             box(self, *EQU[2][1][0][4:8])
             dump(*EQU)
 
@@ -157,9 +158,19 @@ class Quintic02(VoiceoverScene):
             expand(9, immediate=True)
             dump(*EQU)
 
+        with say(self, "Since this equation"):
+            self.play(Indicate(EQU[0]))
+            self.wait(3)
+            #box(self, *EQU[2])
+
+        with say(self, "is just the sum of these six,"):
+            self.play(Indicate(EQU[1]))
+            self.wait(3)
+            #box(self, *[EQU[i] for i in range(3, 9)])
+
         self.wait(5)
 
-        self.play(FadeOut(EQU[0]), FadeOut(EQU[1]))
+        self.play(FadeOut(*EQU[0], *EQU[1], brace))
         self.play(TransformMatchingShapes(VGroup(*[EQU[i][0] for i in range(2, 9)]), Y), Create(EQ))
         self.play(TransformMatchingShapes(VGroup(*[EQU[i][1] for i in range(2, 9)]), M), Create(Z))
             
