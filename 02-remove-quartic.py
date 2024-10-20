@@ -59,8 +59,8 @@ class Quintic02(VoiceoverScene):
             padding = 1.75)
         Z = make_matrix((('1'), ('1'), ('1'), ('1'), ('1'), ('1')), margin = 0)
         MEQ = VGroup(Y, EQ, M, Z).arrange(RIGHT, aligned_edge=DOWN)
-        EQ.move_to(EQ.get_center() + 2.50 * UP)
-        Z.move_to(Z.get_center() + 0.25 * UP)
+        EQ.move_to(EQ.get_center() + 2.8 * UP)
+        Z.move_to(Z.get_center() + 0.4 * UP)
 
         with say(self, "This is the General Form of a quintic polynomial equation in one variable, x."):
             self.play(Create(EQU[1]))
