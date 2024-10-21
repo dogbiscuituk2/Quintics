@@ -222,16 +222,17 @@ class Quintic02(VoiceoverScene):
         def setup(*args: str) -> MathTex:
             return make_tex(*args).arrange(DOWN, aligned_edge = LEFT).move_to(2 * LEFT + DOWN)
 
-        F6 = setup('0=5h+a', 'p=10h^2+4ah+b'  , 'q=10h^3+6ah^2+3bh+c', 'r=5h^4+4ah^3+3bh^2+2ch+d', 's=h^5+a^4+bh^3+ch^2+dh+e' )
-        F7 = setup('a=-5h' , 'p=10h^2-20h^2+b', 'q=10h^3-30h^3+3bh+c', 'r=5h^4-20h^4+3bh^2+2ch+d', 's=h^5-5h^5+bh^3+ch^2+dh+e')
-        F8 = setup('h=-a/5', 'p=-10h^2+b'     , 'q=-20h^3+3bh+c'     , 'r=-15h^4+3bh^2+2ch+d'    , 's=-4h^5+bh^3+ch^2+dh+e'   )
-        F9 = setup('h=-a/5', 'p=b-10h^2'      , 'q=c+3bh-20h^3'      , 'r=d+2ch+3bh^2-15h^4'     , 's=e+dh+ch^2+bh^3-4h^5'    )
+        F5 = setup('0=5h+a', 'p=10h^2+4ah+b'  , 'q=10h^3+6ah^2+3bh+c', 'r=5h^4+4ah^3+3bh^2+2ch+d'   , 's=h^5+a^4+bh^3+ch^2+dh+e')
+        F6 = setup('a=-5h' , 'p=10h^2-20h^2+b', 'q=10h^3-30h^3+3bh+c', 'r=5h^4-20h^4+3bh^2+2ch+d'   , 's=h^5-5h^5+bh^3+ch^2+dh+e')
+        F7 = setup('h=-a/5', 'p=-10h^2+b'     , 'q=-20h^3+3bh+c'     , 'r=-15h^4+3bh^2+2ch+d'       , 's=-4h^5+bh^3+ch^2+dh+e')
+        F8 = setup('h=-a/5', 'p=b-10h^2'      , 'q=c+3bh-20h^3'      , 'r=d+2ch+3bh^2-15h^4'        , 's=e+dh+ch^2+bh^3-4h^5')
+        F9 = setup('h=-a/5', 'p=b-2a^2/5'     , 'q=c-3ab/5+4a^3/25'  , 'r=d-2ac/5+3a^2b/25-3a^4/125', 's=e-ad/5+a^2c/25-a^3b/125-4a^5/3125')
 
         with say(self, "Now we can read the matrix column by column, to get expressions for the new coefficients in terms of the old."):
             self.play(FadeOut(Y, EQ, M, M2[0], M2[1], Z[0][5], Z[1], Z[2], *Z2))
-            for f in (F6, F7, F8, F9):
+            for f in (F5, F6, F7, F8, F9):
                 Group(F1, F2, F3, f).arrange(DOWN, aligned_edge = LEFT)
-            Group(F1, F2, F4, F9).arrange(DOWN, aligned_edge = LEFT)
+            Group(F1, F2, F4, F8).arrange(DOWN, aligned_edge = LEFT)
             M6 = [
                 VGroup(*[M2[i] for i in range(2, 5)]),
                 VGroup(*[M2[i] for i in range(5, 9)]),
@@ -239,24 +240,24 @@ class Quintic02(VoiceoverScene):
                 VGroup(*[M2[i] for i in range(14, 20)]),
                 VGroup(*[M2[i] for i in range(20, 27)])]
             for i in range(5):
-                self.play(TransformMatchingShapes(M6[i], F6[i], path_arc=PI/2))
+                self.play(TransformMatchingShapes(M6[i], F5[i], path_arc=PI/2))
 
         with say(self,
             """
             This h substitution avoids a lot of ugly fractions with powers of five denominators in the results. 
             Apply the substitution, collect like powers of h, and reorder for clarity. 
             """):
+            indicate(F5[0])
+            self.play(TransformMatchingShapes(F5[0], F6[0]))
+            indicate(F6[0])
+            for i in range(1, 5):
+                indicate(F5[i][[9, 9, 8, 6][i - 1]], size = 2)
+                self.play(TransformMatchingShapes(F5[i], F6[i]))
+                self.play(TransformMatchingShapes(F6[i], F7[i]))
+                self.play(TransformMatchingShapes(F7[i], F8[i], path_arc=PI/2))
             indicate(F6[0])
             self.play(TransformMatchingShapes(F6[0], F7[0]))
             indicate(F7[0])
-            for i in range(1, 5):
-                indicate(F6[i][[9, 9, 8, 6][i - 1]], size = 2)
-                self.play(TransformMatchingShapes(F6[i], F7[i]))
-                self.play(TransformMatchingShapes(F7[i], F8[i]))
-                self.play(TransformMatchingShapes(F8[i], F9[i], path_arc=PI/2))
-            indicate(F7[0])
-            self.play(TransformMatchingShapes(F7[0], F8[0]))
-            indicate(F8[0])
 
         with say(self, "Finally we have succeeded in eliminating the quartic term."):
             self.play(FadeIn(F1))
@@ -265,5 +266,10 @@ class Quintic02(VoiceoverScene):
             indicate([F3])
             self.play(TransformMatchingShapes(F3, F4))
             indicate([F4])
+
+        with say(self, "Here are those ugly power of five denominators:"):
+            for i in range(1, 5):
+                self.play(TransformMatchingShapes(F8[i], F9[i]))
+
             self.wait(10)
 
