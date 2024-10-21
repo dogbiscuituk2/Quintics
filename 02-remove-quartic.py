@@ -58,7 +58,7 @@ class Quintic02(VoiceoverScene):
             ('', '', '', '', '', 'e')),
             padding = 1.75)
         Z = make_matrix((('1'), ('1'), ('1'), ('1'), ('1'), ('1')), margin = 0)
-        MEQ = VGroup(Y, EQ, M, Z).arrange(RIGHT, aligned_edge=DOWN)
+        VGroup(Y, EQ, M, Z).arrange(RIGHT, aligned_edge=DOWN)
         EQ.move_to(EQ.get_center() + 2.8 * UP)
         Z.move_to(Z.get_center() + 0.4 * UP)
 
@@ -229,11 +229,9 @@ class Quintic02(VoiceoverScene):
 
         with say(self, "Now we can read the matrix column by column, to get expressions for the new coefficients in terms of the old."):
             self.play(FadeOut(Y, EQ, M, M2[0], M2[1], Z[0][5], Z[1], Z[2], *Z2))
-            VGroup(F1, F2, F3, F6).arrange(DOWN, aligned_edge = LEFT)
-            VGroup(F1, F2, F3, F7).arrange(DOWN, aligned_edge = LEFT)
-            VGroup(F1, F2, F3, F8).arrange(DOWN, aligned_edge = LEFT)
-            VGroup(F1, F2, F3, F9).arrange(DOWN, aligned_edge = LEFT)
-            VGroup(F1, F2, F4, F9).arrange(DOWN, aligned_edge = LEFT)
+            for f in (F6, F7, F8, F9):
+                Group(F1, F2, F3, f).arrange(DOWN, aligned_edge = LEFT)
+            Group(F1, F2, F4, F9).arrange(DOWN, aligned_edge = LEFT)
             M6 = [
                 VGroup(*[M2[i] for i in range(2, 5)]),
                 VGroup(*[M2[i] for i in range(5, 9)]),

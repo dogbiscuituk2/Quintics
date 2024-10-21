@@ -55,12 +55,11 @@ def get_colour(char: str) -> ManimColor:
             return map[1]
     return Grey
 
-def paint_tex(mathTex: MathTex, s: str) -> None:
+def paint_tex(mathTex: MathTex) -> None:
     colour = Black
     p = 0
     escape = False
-    #for t in s.split('^'):
-    for t in re.split('[_^]', s):
+    for t in re.split('[_^]', mathTex.tex_string):
         for c in t:
             m = mathTex[p]
             if c in '|o':
@@ -135,7 +134,7 @@ def make_matrix(matrix: List[List[str]], margin: float = MED_SMALL_BUFF, padding
     matrix: Matrix = Matrix(strings, bracket_h_buff = margin, h_buff = padding)
     for row in range(rows):
         for col in range(cols):
-            paint_tex(matrix[0][row * cols + col][0], strings[row][col])
+            paint_tex(matrix[0][row * cols + col][0])
     matrix[1].set_color(Grey)
     matrix[2].set_color(Grey)
     return matrix
@@ -144,7 +143,7 @@ def make_tex(*items: str) -> MathTex:
     s: str = [prepare_string(item) for item in items]
     mathTex: MathTex = MathTex(*s)
     for i in range(len(s)):
-        paint_tex(mathTex[i], s[i])
+        paint_tex(mathTex[i])
     return mathTex
 
 def prepare_string(s: str) -> str:
