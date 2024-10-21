@@ -94,9 +94,9 @@ class Quintic02(VoiceoverScene):
 
         with say(self, "This operation is technically known as a Tschirnhaus Transformation,"):
             image = ImageMobject("resources/Tschirnhaus.jpg")
-            caption = MarkupText('Ehrenfried Walther von Tschirnhaus 1651-1708', color=Yellow).scale(0.25)
-            picture = Group(image, caption).arrange(DOWN)
-            picture.to_edge(RIGHT)
+            caption = MarkupText('Ehrenfried Walther von Tschirnhaus (1651-1708)', color=Grey).scale(0.25).rotate(-PI/2)
+            picture = Group(image, caption).arrange(RIGHT, buff=0.1)
+            picture.to_corner(DR, buff=0)
             self.play(FadeIn(picture))
             unbox(self)
 
