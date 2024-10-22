@@ -98,7 +98,7 @@ class Quintic02(VoiceoverScene):
             picture = Group(image, caption).arrange(RIGHT, buff=0.1)
             picture.to_corner(DR, buff=0)
             self.play(FadeIn(picture))
-            unbox(self)
+            box_off(self)
 
         with say(self, "the simplest example of which is a linear substitution, such as x = z + some constant h."):
             box(self, EQU[0])
@@ -115,7 +115,7 @@ class Quintic02(VoiceoverScene):
                 EQU[i+3][1] = T
                 self.play(TransformMatchingShapes(EQU[0][1].copy(), T))
             self.play(FadeIn(EQU[8][1]))
-            unbox(self)
+            box_off(self)
             dump(*EQU)
 
         def expand(i: int, immediate: bool = False) -> None:
@@ -152,7 +152,7 @@ class Quintic02(VoiceoverScene):
             for i in range(5, 9):
                 expand(i)
                 dump(*EQU)
-            unbox(self)
+            box_off(self)
 
         with say(self, "Distribute the original coefficients."):
             expand(9, immediate=True)
@@ -163,7 +163,7 @@ class Quintic02(VoiceoverScene):
             self.wait(2)
             box(self, *[EQU[i] for i in range(3, 9)])
             self.wait(2)
-            unbox(self)
+            box_off(self)
 
         with say(self, "All seven of these equations are identities, true for every choice of x and corresponding z."):
             self.play(FadeOut(*EQU[0], *EQU[1], brace))

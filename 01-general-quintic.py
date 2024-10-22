@@ -3,7 +3,7 @@ from manim_voiceover import VoiceoverScene
 
 from common import *
 
-class Quintic02(VoiceoverScene):
+class Quintic01(VoiceoverScene):
     def construct(self):
 
         init(self)
@@ -14,8 +14,11 @@ class Quintic02(VoiceoverScene):
             ('x', Red),
             ('y', Magenta),
             ('z', Cyan)))
+        
+        g1 = make_sum("x_0^i")
+        g2 = make_sum("x_0^i", "i=0")
+        g3 = make_sum("x_0^i", "i=0", "j+1")
+        g = VGroup(g1, g2, g3).arrange(RIGHT, aligned_edge= LEFT, buff=1)
 
-        with self.voiceover(text="This is the General Form of a quintic polynomial equation in one variable, x.") as tracker:
-            say(tracker)
-            self.play(Create(EQU[1]))
-            dump()
+        self.play(Create(g))
+        self.wait(5)
