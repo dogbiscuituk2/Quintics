@@ -201,7 +201,7 @@ class Quintic02(VoiceoverScene):
             ('', '', '', '', 'd', 'dh'),
             ('', '', '', '', '', 'e'))
 
-        with say(self, "If we now consider the case z equals one, then all of these z powers disappear from the matrix."):
+        with say(self, "If we now consider the case z equals one, then all of these z powers vanish from the matrix."):
             for col in range(6):
                 transforms: List[Transform] = []
                 rows = range(col + 2)

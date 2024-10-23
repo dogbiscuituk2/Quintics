@@ -90,16 +90,16 @@ def make_matrix(matrix: List[List[str]], margin: float = MED_SMALL_BUFF, padding
     #matrix[2].set_color(Grey)
     return matrix
 
-def make_prod(term: str, start: str=None, end: str=None) -> MathTex:
-    return make_sp('prod', term, start, end)
+def make_prod(lhs: str, term: str, start: str=None, end: str=None) -> MathTex:
+    return make_sp('prod', lhs, term, start, end)
 
-def make_sp(func: str, term: str, start: str=None, end: str=None) -> MathTex:
+def make_sp(func: str, lhs: str, term: str, start: str=None, end: str=None) -> MathTex:
     s = '\\' + func
     if start != None:
         s = s + '_{' + start + '}'
         if end != None:
             s = s + '^{' + end + '}'
-    group = VGroup(MathTex(s).set_color(Grey), make_tex(term));
+    group = VGroup(make_tex(lhs), MathTex(s).set_color(Grey), make_tex(term));
     if (start == None) == (end == None):
         group.arrange(RIGHT, buff = 0)
     else:
@@ -109,8 +109,8 @@ def make_sp(func: str, term: str, start: str=None, end: str=None) -> MathTex:
             group.arrange(RIGHT, aligned_edge = UP, buff = 0)
     return group
 
-def make_sum(term: str, start: str=None, end: str=None) -> MathTex:
-    return make_sp('sum', term, start, end)
+def make_sum(lhs: str, term: str, start: str=None, end: str=None) -> MathTex:
+    return make_sp('sum', lhs, term, start, end)
 
 def make_tex(*items: str) -> MathTex:
     s: str = [prepare_string(item) for item in items]
@@ -123,7 +123,9 @@ def paint_tex(mathTex: MathTex) -> None:
     colour = Black
     p = 0
     escape = False
-    for t in re.split('[_^]', mathTex.tex_string):
+    s = mathTex.tex_string
+    print(s)
+    for t in re.split('[_^]', s):
         for c in t:
             m = mathTex[p]
             if c in '|o':
