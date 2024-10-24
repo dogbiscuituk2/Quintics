@@ -1,5 +1,6 @@
 from manim import *
 from manim_voiceover import VoiceoverScene
+from MF_Tools import *
 
 from common import *
 
@@ -41,8 +42,8 @@ class Quintic02(VoiceoverScene):
         RHS = VGroup(*[make_tex(s) for s in ['oz+h', 'ox^5+ax^4+bx^3+cx^2+dx+e=0', 'oz^5+0z^4+pz^3+qz^2+rz+s']], *Fz[9])
         ALL = VGroup(LHS, RHS)
 
-        LHS.arrange(DOWN, aligned_edge=RIGHT)
-        RHS.arrange(DOWN, aligned_edge=LEFT)
+        LHS.arrange(DOWN, aligned_edge=RIGHT, buff=0.1)
+        RHS.arrange(DOWN, aligned_edge=LEFT, buff=0.1)
         ALL.arrange(RIGHT, aligned_edge=DOWN)
         EQU = [VGroup(LHS[i], RHS[i]) for i in range(9)]
 
@@ -62,11 +63,14 @@ class Quintic02(VoiceoverScene):
         EQ.move_to(EQ.get_center() + 2.8 * UP)
         Z.move_to(Z.get_center() + 0.4 * UP)
 
+        titles_show(self, 0)
+        titles_show(self, 2)
+
         with say(self, "This is the General Form of a quintic polynomial equation in one variable, x."):
             self.play(Create(EQU[1]))
             dump(*EQU)
 
-        with say(self, "We could solve it easily if we didn't have all these intermediate x powers."):
+        with say(self, "We could solve it easily if we didn't have these intermediate powers."):
             box(self, *EQU[1][1][0][4:19])
             s1 = make_tex('y=x^5+e=0')
             s2 = MathTex('x=\\sqrt[5]{-e}')
@@ -96,7 +100,7 @@ class Quintic02(VoiceoverScene):
             image = ImageMobject("resources/Tschirnhaus.jpg")
             caption = MarkupText('Ehrenfried Walther von Tschirnhaus (1651-1708)', color=Grey).scale(0.25).rotate(-PI/2)
             picture = Group(image, caption).arrange(RIGHT, buff=0.1)
-            picture.to_corner(DR, buff=0)
+            picture.to_corner(DR, buff=0.5)
             self.play(FadeIn(picture))
             box_off(self)
 

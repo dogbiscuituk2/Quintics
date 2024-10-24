@@ -16,6 +16,21 @@ speech_services: List[SpeechService] = [
     AzureService(voice="en-US-AriaNeural", style="newscast-casual", global_speed=1.15),
     GTTSService(())]
 
+TITLES: tuple[tuple[str]] = (
+    (
+        'Solving the General Quintic Equation',
+        'An Ultraradical Animation. ©2024 by John Michael Kerr'
+    ),
+    ('Introduction', 'The "Impossible" Polynomial'),
+    ('Part One', 'Removing the Quartic Term'),
+    ('First Checkpoint', 'Verifying Removal of the Quartic Term'),
+    ('Part Two', 'Removing the Cubic Term'),
+    ('Second Checkpoint', 'Verifying Removal of the Cubic Term'),
+    ('Part Three', 'Removing the Quadratic Term'),
+    ('Third Checkpoint', 'Verifying Removal of the Quadratic Term'),
+    ('Part Four', 'The Ultraradical'),
+    ('Fourth Checkpoint', 'Final Verification'))
+
 PALETTE_DEFAULT = 0
 PALETTE_BRIGHT = 1
 PALETTE_PASTEL = 2
@@ -124,7 +139,7 @@ def paint_tex(mathTex: MathTex) -> None:
     p = 0
     escape = False
     s = mathTex.tex_string
-    print(s)
+    #print(s)
     for t in re.split('[_^]', s):
         for c in t:
             m = mathTex[p]
@@ -153,3 +168,26 @@ def say(self, text: str) -> Generator[VoiceoverTracker, None, None]:
 def set_colour_map(colour_map: tuple[tuple[str, ManimColor]]) -> None:
     global ColourMap
     ColourMap = colour_map
+
+def titles_hide(self, titles: List[MarkupText]) -> None:
+    self.play(FadeOut(*titles))
+
+def titles_show(self, section: int) -> List[MarkupText]:
+    scales = (1.0, 0.6)
+    title = [MarkupText(TITLES[section][i], color = (Cyan, Green)[i]).scale(scales[i]) for i in range(2)]
+    VGroup(*title).arrange(DOWN, buff=0.5)
+    with say(self, TITLES[section][0]):
+        self.play(GrowFromCenter(title[0]))
+        #self.wait(1)
+    with say(self, TITLES[section][1]):
+        self.play(FadeIn(title[1]))
+        #self.wait(2)
+    corners = ((DL, DR), (UL, UR))
+    [title[i] \
+        .generate_target() \
+        .scale(0.3/scales[i]) \
+        .set_color(Grey) \
+        .to_corner(corners[0 if section == 0 else 1][i], buff=0.1) \
+        for i in range(2)]
+    self.play(MoveToTarget(title[0]), MoveToTarget(title[1]))
+    return title
