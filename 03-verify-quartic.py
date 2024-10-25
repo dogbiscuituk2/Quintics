@@ -1,5 +1,6 @@
 from manim import *
 from manim_voiceover import VoiceoverScene
+from MF_Tools import *
 
 from common import *
 
@@ -61,7 +62,8 @@ class Quintic03(VoiceoverScene):
 
         def sub(source, target) -> None:
             mov(target, E[0])
-            self.play(TransformMatchingShapes(source, target))
+            #self.play(TransformMatchingShapes(source, target))
+            self.play(TransformByGlyphMap(source, target))
 
         with say(self, "Specifically the five factors corresponding to those roots."):
             sub(EP, E[1])

@@ -128,6 +128,12 @@ def make_sum(lhs: str, term: str, start: str=None, end: str=None) -> MathTex:
     return make_sp('sum', lhs, term, start, end)
 
 def make_tex(*items: str) -> MathTex:
+    mathTex: MathTex = MathTex(*items)
+    for i in range(len(items)):
+        paint_tex(mathTex[i])
+    return mathTex
+
+def make_tex_old(*items: str) -> MathTex:
     s: str = [prepare_string(item) for item in items]
     mathTex: MathTex = MathTex(*s)
     for i in range(len(s)):
@@ -135,12 +141,50 @@ def make_tex(*items: str) -> MathTex:
     return mathTex
 
 def paint_tex(mathTex: MathTex) -> None:
-    colour = Black
+    colour = Grey
+    mathTex.set_color(colour)
+    s = mathTex.tex_string
+    print(s)
+    p = 0
+    q = 0
+    level = 0
+    escape = False
+    while p < len(s):
+        c = s[p]
+        match c:
+            case '{':
+                level += 1
+            case '}':
+                level -= 1
+                if level == 0:
+                    escape = False
+            case '_':
+                escape = True
+            case '^':
+                escape = True
+            case '\\':
+                while True:
+                    p += 1
+                    if p >= len(s) or not s[p].isalpha():
+                        break
+                q += 1
+            case _:
+                if not escape:
+                    colour = get_colour(c)
+                mathTex[q].set_color(colour)
+                q += 1
+                if level == 0:
+                    escape = False
+        p += 1
+
+
+def paint_tex_old(mathTex: MathTex) -> None:
+    colour = Grey
     p = 0
     escape = False
     s = mathTex.tex_string
-    #print(s)
-    for t in re.split('[_^]', s):
+    print(s)
+    for t in re.split('[_^{}]', s):
         for c in t:
             m = mathTex[p]
             if c in '|o':
