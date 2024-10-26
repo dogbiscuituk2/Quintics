@@ -14,7 +14,7 @@ config.verbosity = 'WARNING' # 'INFO'
 
 speech_services: List[SpeechService] = [
     AzureService(voice="en-US-AriaNeural", style="newscast-casual", global_speed=1.15),
-    GTTSService(())]
+    GTTSService()]
 
 TITLES: tuple[tuple[str]] = (
     (

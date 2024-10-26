@@ -8,7 +8,7 @@ class Scene(VoiceoverScene):
     def construct(self):
 
         def say(text: str):
-            self.next_section(text)
+            #self.next_section(text)
             # Specify language & disable language check to avoid GTTS bugs.
             return self.voiceover(text, lang='en', lang_check=False)
 
@@ -25,6 +25,8 @@ class Scene(VoiceoverScene):
             E1 = make_tex(r'y=\sum_{i=0}^{n}a_ix^i')
             self.play(Create(E1))
 
+        self.next_section()
+
         with say("It has degree n, where n is the highest power of x present."):
             self.play(Indicate(E1[0][9], color=White, run_time=2, scale_factor=2))
             E1a = MathTex(r'Degree = n').set_color(Grey)
@@ -32,7 +34,7 @@ class Scene(VoiceoverScene):
             self.play(Create(E1a))
             self.play(Indicate(E1[0][2]), color=White, run_time=2, scale_factor=2)
 
-        with say("Note that this means a n is not zero."):
+        with say("Note that this means a n is nonzero."):
             E1b = make_tex(r'a_n\neq{0}')
             E1b.next_to(E1a, DOWN)
             self.play(Create(E1b))
@@ -48,7 +50,7 @@ class Scene(VoiceoverScene):
                 ([10], [5,12,13,14,21,22,23], arc),
                 ([], [6,15,24,25,26,27,28,32], arc)), run_time=2)
             
-        with say("It has up to n distinct roots, values of x for which y is zero."):            
+        with say("It has up to n, distinct roots, values of x for which y is zero."):            
             E3 = make_tex(r'y=a_nx^n+a_{n-1}x^{n-1}+a_{n-2}x^{n-2}+...+a_1x+a_0=0')
             self.play(TransformByGlyphMap(E2, E3, ([], [35, 36])))
 
@@ -63,8 +65,8 @@ class Scene(VoiceoverScene):
             E4 = make_tex(r'x^n+b_{n-1}x^{n-1}+b_{n-2}x^{n-2}+...+b_1x+b_0=0')
             self.play(TransformMatchingShapes(E3, E4))
 
-        with say("This is called the monic form, where the coefficient of the highest x power is equal to one."):
-            self.play(Indicate(VGroup(E4[0:2])))
+        with say("This is called the monic form, where the coefficient of the highest power of x is equal to one."):
+            self.play(Indicate(VGroup(*E4[0][0:2])))
 
             #E4 = make_tex(r'y=b_nx^n+b_{n-1}x^{n-1}+b_{n-2}x^{n-2}+...+b_1x+b_0=0')
             #self.play(TransformMatchingShapes(E3, E4))
