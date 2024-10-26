@@ -8,7 +8,6 @@ class Scene(VoiceoverScene):
     def construct(self):
 
         def say(text: str):
-            #self.next_section(text)
             # Specify language & disable language check to avoid GTTS bugs.
             return self.voiceover(text, lang='en', lang_check=False)
 
