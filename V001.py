@@ -63,6 +63,9 @@ class Scene(VoiceoverScene):
             E4 = make_tex(r'x^n+b_{n-1}x^{n-1}+b_{n-2}x^{n-2}+...+b_1x+b_0=0')
             self.play(TransformMatchingShapes(E3, E4))
 
+        with say("This is called the monic form, where the coefficient of the highest x power is equal to one."):
+            self.play(Indicate(VGroup(E4[0:2])))
+
             #E4 = make_tex(r'y=b_nx^n+b_{n-1}x^{n-1}+b_{n-2}x^{n-2}+...+b_1x+b_0=0')
             #self.play(TransformMatchingShapes(E3, E4))
 
