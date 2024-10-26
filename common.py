@@ -202,13 +202,6 @@ def prepare_string(s: str) -> str:
     if not '^' in s: s = f'{s}^|'
     return s
 
-def say(self, text: str) -> Generator[VoiceoverTracker, None, None]:
-    # Specify language & disable language check to avoid GTTS bugs.
-    tracker = self.voiceover(text, lang='en', lang_check=False)
-    print(text)
-    print()
-    return tracker
-
 def set_colour_map(colour_map: tuple[tuple[str, ManimColor]]) -> None:
     global ColourMap
     ColourMap = colour_map
