@@ -9,18 +9,8 @@ from manim_voiceover.tracker import VoiceoverTracker
 
 from manim import *
 
-config.max_files_cached = 999
-config.verbosity = 'WARNING' # 'INFO'
-
-speech_services: List[SpeechService] = [
-    AzureService(voice="en-US-AriaNeural", style="newscast-casual", global_speed=1.15),
-    GTTSService()]
-
 TITLES: tuple[tuple[str]] = (
-    (
-        'Solving the General Quintic Equation',
-        'An Ultraradical Animation. ©2024 by John Michael Kerr'
-    ),
+    (TITLE, f'{SUBTITLE} {COPYRIGHT}'),
     ('Introduction', 'The "Impossible" Polynomial'),
     ('Part One', 'Removing the Quartic Term'),
     ('First Checkpoint', 'Verifying Removal of the Quartic Term'),
@@ -89,9 +79,6 @@ def get_colour(char: str) -> ManimColor:
             return map[1]
     return Grey
 
-def init(self):
-    self.set_speech_service(speech_services[1])
-
 def make_matrix(matrix: List[List[str]], margin: float = MED_SMALL_BUFF, padding: float = 1.3) -> Matrix:
     rows: int = len(matrix)
     cols: int = len(matrix[0])
@@ -139,6 +126,11 @@ def make_tex_old(*items: str) -> MathTex:
     for i in range(len(s)):
         paint_tex(mathTex[i])
     return mathTex
+
+def make_text(s: str, *args, **kwargs) -> Text:
+    text = Text(f'|{s}', font_size=24, color=Grey, *args, **kwargs)
+    text[0].set_opacity(0)
+    return text
 
 def paint_tex(mathTex: MathTex) -> None:
     colour = Grey
