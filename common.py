@@ -9,46 +9,46 @@ from manim_voiceover.tracker import VoiceoverTracker
 
 from manim import *
 
-TITLES: tuple[tuple[str]] = (
-    (TITLE, f'{SUBTITLE} {COPYRIGHT}'),
-    ('Introduction', 'The "Impossible" Polynomial'),
-    ('Part One', 'Removing the Quartic Term'),
-    ('First Checkpoint', 'Verifying Removal of the Quartic Term'),
-    ('Part Two', 'Removing the Cubic Term'),
-    ('Second Checkpoint', 'Verifying Removal of the Cubic Term'),
-    ('Part Three', 'Removing the Quadratic Term'),
-    ('Third Checkpoint', 'Verifying Removal of the Quadratic Term'),
-    ('Part Four', 'The Ultraradical'),
-    ('Fourth Checkpoint', 'Final Verification'))
+#TITLES: tuple[tuple[str]] = (
+#    (TITLE, f'{SUBTITLE} {COPYRIGHT}'),
+#    ('Introduction', 'The "Impossible" Polynomial'),
+#    ('Part One', 'Removing the Quartic Term'),
+#    ('First Checkpoint', 'Verifying Removal of the Quartic Term'),
+#    ('Part Two', 'Removing the Cubic Term'),
+#    ('Second Checkpoint', 'Verifying Removal of the Cubic Term'),
+#    ('Part Three', 'Removing the Quadratic Term'),
+#    ('Third Checkpoint', 'Verifying Removal of the Quadratic Term'),
+#    ('Part Four', 'The Ultraradical'),
+#    ('Fourth Checkpoint', 'Final Verification'))
 
-PALETTE_DEFAULT = 0
-PALETTE_BRIGHT = 1
-PALETTE_PASTEL = 2
-PALETTE_BLACK_ON_WHITE = 3
-PALETTE_WHITE_ON_BLACK = 4
+#PALETTE_DEFAULT = 0
+#PALETTE_BRIGHT = 1
+#PALETTE_PASTEL = 2
+#PALETTE_BLACK_ON_WHITE = 3
+#PALETTE_WHITE_ON_BLACK = 4
 
-palette = PALETTE_BRIGHT
+#palette = PALETTE_BRIGHT
     
-colours = (
-    (0x000000, 0x000000, 0x3F3F00, 0xFF0000, 0x7F7F00, 0xFFFF00, 0x00FF00, 0x0000FF, 0x00FFFF, 0xFF00FF, 0x7F007F, 0x7F7F7F, 0xFFFFFF),
-    (0x000000, 0x000000, 0x7F3319, 0xFF1933, 0xFF7F4C, 0xCCCC00, 0x33FF33, 0x0000FF, 0x00FFFF, 0xFF00FF, 0x9A72AC, 0xB2B2B2, 0xFFFFFF),
-    (0x000000, 0x000000, 0xCD853F, 0xFF0000, 0xFF7F3F, 0xCCCC00, 0x33FF33, 0x0000FF, 0x00FFFF, 0xFF00FF, 0x9A72AC, 0xBBBBBB, 0xFFFFFF),
-    (0xFFFFFF, *[0x000000 for _ in range(12)]),
-    (0x000000, *[0xFFFFFF for _ in range(12)]))
+#colours = (
+#    (0x000000, 0x000000, 0x3F3F00, 0xFF0000, 0x7F7F00, 0xFFFF00, 0x00FF00, 0x0000FF, 0x00FFFF, 0xFF00FF, 0x7F007F, 0x7F7F7F, 0xFFFFFF),
+#    (0x000000, 0x000000, 0x7F3319, 0xFF1933, 0xFF7F4C, 0xCCCC00, 0x33FF33, 0x0000FF, 0x00FFFF, 0xFF00FF, 0x9A72AC, 0xB2B2B2, 0xFFFFFF),
+#    (0x000000, 0x000000, 0xCD853F, 0xFF0000, 0xFF7F3F, 0xCCCC00, 0x33FF33, 0x0000FF, 0x00FFFF, 0xFF00FF, 0x9A72AC, 0xBBBBBB, 0xFFFFFF),
+#    (0xFFFFFF, *[0x000000 for _ in range(12)]),
+#    (0x000000, *[0xFFFFFF for _ in range(12)]))
 
-Background  = colours[palette][0]
-Black       = colours[palette][1]
-Brown       = colours[palette][2]
-Red         = colours[palette][3]
-Orange      = colours[palette][4]
-Yellow      = colours[palette][5]
-Green       = colours[palette][6]
-Blue        = colours[palette][7]
-Cyan        = colours[palette][8]
-Magenta     = colours[palette][9]
-Violet      = colours[palette][10]
-Grey        = colours[palette][11]
-White       = colours[palette][12]
+#Background  = colours[palette][0]
+#Black       = colours[palette][1]
+#Brown       = colours[palette][2]
+#Red         = colours[palette][3]
+#Orange      = colours[palette][4]
+#Yellow      = colours[palette][5]
+#Green       = colours[palette][6]
+#Blue        = colours[palette][7]
+#Cyan        = colours[palette][8]
+#Magenta     = colours[palette][9]
+#Violet      = colours[palette][10]
+#Grey        = colours[palette][11]
+#White       = colours[palette][12]
 
 _box = None
 
