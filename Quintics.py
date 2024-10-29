@@ -49,68 +49,70 @@ White       = colours[palette][12]
 
 #endregion
 
-tokens = []
+"""
+gtokens = []
 
-def accept(token):
-    tokens.pop(0)
+def gaccept(token):
+    gtokens.pop(0)
 
-def tokenize(expression):
+def gtokenize(expression):
     token_pattern = r"\\\w+|\{|\}|[^\\\{\}]"
-    tokens.clear()
+    gtokens.clear()
     for token in re.findall(token_pattern, expression):
-        tokens.append(token)
+        gtokens.append(token)
 
-def touch(token):
+def gtouch(token):
     # Process an element of the MathTex
     # Point to the next MathTex element
     pass
 
-def parse_string(s):
-    tokenize(s)
-    parse_expression()
+def gparse_string(s):
+    gtokenize(s)
+    gparse_expression()
 
-def parse_expression():
+def gparse_expression():
     print('begin expression')
-    while tokens:
-        token = tokens.pop(0)
+    while gtokens:
+        token = gtokens.pop(0)
         match token[0]:
             case '{':
-                parse_expression()
+                gparse_expression()
             case '}':
                 print('end expression')
                 return
             case '\\':
-                parse_function(token)
+                gparse_function(token)
             case _:
                 pass
     print('end expression')
 
-def parse_block():
+def gparse_block():
     print('begin block')
-    accept('{')
-    parse_expression()
+    gaccept('{')
+    gparse_expression()
     print('end block')
 
-def parse_function(token):
+def gparse_function(token):
     print('begin function')
     match(token):
         case '\\frac':
-            parse_block()
+            gparse_block()
             print('Intertext!!!')
-            parse_block()
+            gparse_block()
         case _:
             pass
     print('end function')
 
 s = r'x=\frac{-b\pm\sqrt{b^2-4ac}}{2a}'
-tokenize(s)
-print(tokens)
-parse_expression()
-
+gtokenize(s)
+print(gtokens)
+gparse_expression()
+"""
 
 class SceneBase(VoiceoverScene): 
 
     ColourMap = []
+    Tokens = []
 
     #print("0         1         2         3         4         5         6         7         8")
     #print("012345678901234567890123456789012345678901234567890123456789012345678901234567890")
@@ -188,6 +190,57 @@ class SceneBase(VoiceoverScene):
             p += 1
             if q >= len(mathTex):
                 return
+
+    def parse_block(self):
+        print('begin block')
+        self.parse_token('{')
+        self.parse_expression()
+        print('end block')
+
+    def parse_expression(self):
+        print('begin expression')
+        while self.Tokens:
+            token = self.Tokens.pop(0)
+            match token[0]:
+                case '{':
+                    self.parse_expression()
+                case '}':
+                    print('end expression')
+                    return
+                case '\\':
+                    self.parse_function(token)
+                case _:
+                    pass
+        print('end expression')
+
+    def parse_function(self, token):
+        print('begin function')
+        match(token):
+            case '\\frac':
+                self.parse_block()
+                print('Intertext!!!')
+                self.parse_block()
+            case _:
+                pass
+        print('end function')
+
+    def parse_string(self, s):
+        self.parse_tokens(s)
+        self.parse_expression()
+
+    def parse_token(self, token):
+        self.Tokens.pop(0)
+
+    def parse_tokens(self, expression):
+        token_pattern = r"\\\w+|\{|\}|[^\\\{\}]"
+        self.Tokens.clear()
+        for token in re.findall(token_pattern, expression):
+            self.Tokens.append(token)
+
+    def parse_touch(self, token):
+        # Process an element of the MathTex
+        # Point to the next MathTex element
+        pass
 
     def prepare_string(self, s: str) -> str:
         if not '|' in s: s = f'|{s}'
