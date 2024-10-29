@@ -7,6 +7,7 @@ from manim_voiceover.tracker import VoiceoverTracker
 from MF_Tools import *
 
 import platform
+import re
 
 #region Global 
 
@@ -48,9 +49,71 @@ White       = colours[palette][12]
 
 #endregion
 
+tokens = []
+
+def accept(token):
+    tokens.pop(0)
+
+def tokenize(expression):
+    token_pattern = r"\\\w+|\{|\}|[^\\\{\}]"
+    tokens.clear()
+    for token in re.findall(token_pattern, expression):
+        tokens.append(token)
+
+def touch(token):
+    # Process an element of the MathTex
+    # Point to the next MathTex element
+    pass
+
+def parse_string(s):
+    tokenize(s)
+    parse_expression()
+
+def parse_expression():
+    print('begin expression')
+    while tokens:
+        token = tokens.pop(0)
+        match token[0]:
+            case '{':
+                parse_expression()
+            case '}':
+                print('end expression')
+                return
+            case '\\':
+                parse_function(token)
+            case _:
+                pass
+    print('end expression')
+
+def parse_block():
+    print('begin block')
+    accept('{')
+    parse_expression()
+    print('end block')
+
+def parse_function(token):
+    print('begin function')
+    match(token):
+        case '\\frac':
+            parse_block()
+            print('Intertext!!!')
+            parse_block()
+        case _:
+            pass
+    print('end function')
+
+s = r'x=\frac{-b\pm\sqrt{b^2-4ac}}{2a}'
+tokenize(s)
+print(tokens)
+parse_expression()
+
+
 class SceneBase(VoiceoverScene): 
 
     ColourMap = []
+
+    #print("0         1         2         3         4         5         6         7         8")
+    #print("012345678901234567890123456789012345678901234567890123456789012345678901234567890")
 
     def box(self, *args: VMobject) -> Polygon:
         polygon = SurroundingRectangle(VGroup(*args), Yellow) 
@@ -158,9 +221,8 @@ class SceneBase(VoiceoverScene):
         n = len(s)
 
         def parse_atom(p: int) -> int:
-            print(f"parse_atom({p})")
+            print(f" --> atom, p={p}")
             q = p
-            level = 0
             while True:
                 q += 1
                 if q >= n:
@@ -174,45 +236,59 @@ class SceneBase(VoiceoverScene):
                         else:
                             break
             atom = s[p+1:q]
-            parse_string(p + 1)
-            print (f"Parsed atom: '{atom}'")
-            return q
+            parse_text(p + 1)
+            p = q
+            print(f"<--  atom, p={p}")
+            return p
 
         def parse_char(p: int) -> int:
-            print(f"parse_char({p})")
-            char = s[p]
-            print (f"Parsed char: '{char}'")
-            return p + 1
+            #print(f" --> char, p={p}")
+            c = s[p]
+            match c:
+                case '_':
+                    pass
+                case '^':
+                    pass
+            p += 1
+            #print(f"<--  char, p={p}")
+            return p
 
         def parse_word(p: int) -> int:
-            print(f"parse_word({p})")
+            print(f" --> word, p={p}")
             p += 1
             q = p
             while q < n and s[q].isalpha():
                 q += 1
             word = s[p:q]
-            print(f"Parsed word: '{word}'")
             p = q
             match word:
                 case 'frac':
                     p = parse_atom(p);
                     p = parse_atom(p);
+            print(f"<--  word, p={p}")
             return p
 
-        def parse_string(p: int) -> int:
-            print(f"parse_string({p})")
+        def parse_text(p: int) -> int:
+            print(f" --> text, p={p}")
             while p < len(s) and s[p] != '}':
                 c = s[p]
                 match c:
                     case '\\':
                         p = parse_word(p)
                     case '{':
-                        p = parse_atom(p)
+                        level += 1
+                    case '}':
+                        level -= 1
                     case _:
                         p = parse_char(p)
+            print(f"<--  string, p={p}")
             return p
 
-        parse_string(0)
+        #print("0         1         2         3         4         5         6         7         8")
+        #print("012345678901234567890123456789012345678901234567890123456789012345678901234567890")
+        #print(s)
+        #print()
+        #parse_text(level = 0, p = 0)
 
 class Scene01_Intro(SceneBase): 
 

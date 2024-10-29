@@ -169,7 +169,6 @@ def paint_tex(mathTex: MathTex) -> None:
                     escape = False
         p += 1
 
-
 def paint_tex_old(mathTex: MathTex) -> None:
     colour = Grey
     p = 0
