@@ -49,73 +49,14 @@ White       = colours[palette][12]
 
 #endregion
 
-"""
-gtokens = []
-
-def gaccept(token):
-    gtokens.pop(0)
-
-def gtokenize(expression):
-    token_pattern = r"\\\w+|\{|\}|[^\\\{\}]"
-    gtokens.clear()
-    for token in re.findall(token_pattern, expression):
-        gtokens.append(token)
-
-def gtouch(token):
-    # Process an element of the MathTex
-    # Point to the next MathTex element
-    pass
-
-def gparse_string(s):
-    gtokenize(s)
-    gparse_expression()
-
-def gparse_expression():
-    print('begin expression')
-    while gtokens:
-        token = gtokens.pop(0)
-        match token[0]:
-            case '{':
-                gparse_expression()
-            case '}':
-                print('end expression')
-                return
-            case '\\':
-                gparse_function(token)
-            case _:
-                pass
-    print('end expression')
-
-def gparse_block():
-    print('begin block')
-    gaccept('{')
-    gparse_expression()
-    print('end block')
-
-def gparse_function(token):
-    print('begin function')
-    match(token):
-        case '\\frac':
-            gparse_block()
-            print('Intertext!!!')
-            gparse_block()
-        case _:
-            pass
-    print('end function')
-
-s = r'x=\frac{-b\pm\sqrt{b^2-4ac}}{2a}'
-gtokenize(s)
-print(gtokens)
-gparse_expression()
-"""
-
 class SceneBase(VoiceoverScene): 
 
     ColourMap = []
-    Tokens = []
 
-    #print("0         1         2         3         4         5         6         7         8")
-    #print("012345678901234567890123456789012345678901234567890123456789012345678901234567890")
+    Level = 0
+    Tex = None
+    TexIndex = 0
+    Tokens = []
 
     def box(self, *args: VMobject) -> Polygon:
         polygon = SurroundingRectangle(VGroup(*args), Yellow) 
@@ -191,56 +132,75 @@ class SceneBase(VoiceoverScene):
             if q >= len(mathTex):
                 return
 
+    def parse_begin(self, what: str):
+        self.parse_debug(True, what)
+
+    def parse_end(self, what: str):
+        self.parse_debug(False, what)
+
+    def parse_debug(self, begin: bool, what: str) -> None:
+        if (not begin):
+            self.Level -= 1
+        print(f"{self.Level * ' '}{'begin' if begin else 'end'} {what}")
+        if (begin):
+            self.Level += 1
+
     def parse_block(self):
-        print('begin block')
+        self.parse_begin('block')
         self.parse_token('{')
         self.parse_expression()
-        print('end block')
+        self.parse_end('block')
 
     def parse_expression(self):
-        print('begin expression')
+        self.parse_begin('expression')
         while self.Tokens:
             token = self.Tokens.pop(0)
             match token[0]:
                 case '{':
                     self.parse_expression()
                 case '}':
-                    print('end expression')
-                    return
+                    #print('end expression')
+                    break
                 case '\\':
                     self.parse_function(token)
                 case _:
                     pass
-        print('end expression')
+        self.parse_end('expression')
 
     def parse_function(self, token):
-        print('begin function')
-        match(token):
-            case '\\frac':
-                self.parse_block()
-                print('Intertext!!!')
-                self.parse_block()
-            case _:
-                pass
-        print('end function')
 
-    def parse_string(self, s):
-        self.parse_tokens(s)
+        def parse_fn_type(f: str) -> int:
+            fn_types = {
+                '\\frac': 2 # Two blocks with one glyph between
+            }
+            return fn_types[f] if f in fn_types.keys() else 1
+
+        self.parse_begin('function')
+        match(parse_fn_type(token)):
+            case 2:
+                self.parse_block()
+                self.TexIndex += 1
+                self.parse_block()
+            case 1:
+                self.TexIndex += 1
+        self.parse_end('function')
+
+    def parse_tex(self, mathTex: MathTex):
+        self.Tex = mathTex
+        self.TexIndex = 0
+        token_pattern = r"\\\w+|\{|\}|[^\\\{\}]"
+        self.Tokens.clear()
+        for token in re.findall(token_pattern, self.Tex.tex_string):
+            self.Tokens.append(token)
         self.parse_expression()
 
     def parse_token(self, token):
         self.Tokens.pop(0)
 
-    def parse_tokens(self, expression):
-        token_pattern = r"\\\w+|\{|\}|[^\\\{\}]"
-        self.Tokens.clear()
-        for token in re.findall(token_pattern, expression):
-            self.Tokens.append(token)
-
     def parse_touch(self, token):
         # Process an element of the MathTex
         # Point to the next MathTex element
-        pass
+        print(f"parse_touch('{token}')")
 
     def prepare_string(self, s: str) -> str:
         if not '|' in s: s = f'|{s}'
@@ -268,81 +228,6 @@ class SceneBase(VoiceoverScene):
 
     """
 
-    def parse(self, mathTex: MathTex):
-
-        s = mathTex.tex_string
-        n = len(s)
-
-        def parse_atom(p: int) -> int:
-            print(f" --> atom, p={p}")
-            q = p
-            while True:
-                q += 1
-                if q >= n:
-                    break
-                match s[q]:
-                    case '{':
-                        level += 1
-                    case '}':
-                        if level > 0:
-                            level -= 1
-                        else:
-                            break
-            atom = s[p+1:q]
-            parse_text(p + 1)
-            p = q
-            print(f"<--  atom, p={p}")
-            return p
-
-        def parse_char(p: int) -> int:
-            #print(f" --> char, p={p}")
-            c = s[p]
-            match c:
-                case '_':
-                    pass
-                case '^':
-                    pass
-            p += 1
-            #print(f"<--  char, p={p}")
-            return p
-
-        def parse_word(p: int) -> int:
-            print(f" --> word, p={p}")
-            p += 1
-            q = p
-            while q < n and s[q].isalpha():
-                q += 1
-            word = s[p:q]
-            p = q
-            match word:
-                case 'frac':
-                    p = parse_atom(p);
-                    p = parse_atom(p);
-            print(f"<--  word, p={p}")
-            return p
-
-        def parse_text(p: int) -> int:
-            print(f" --> text, p={p}")
-            while p < len(s) and s[p] != '}':
-                c = s[p]
-                match c:
-                    case '\\':
-                        p = parse_word(p)
-                    case '{':
-                        level += 1
-                    case '}':
-                        level -= 1
-                    case _:
-                        p = parse_char(p)
-            print(f"<--  string, p={p}")
-            return p
-
-        #print("0         1         2         3         4         5         6         7         8")
-        #print("012345678901234567890123456789012345678901234567890123456789012345678901234567890")
-        #print(s)
-        #print()
-        #parse_text(level = 0, p = 0)
-
 class Scene01_Intro(SceneBase): 
 
     def __init__(self):
@@ -352,8 +237,14 @@ class Scene01_Intro(SceneBase):
 
         self.init()
 
-        s = MathTex(r'x=\frac{-b\pm\sqrt{b^2-4ac}}{2a}')
-        self.parse(s)
+        print(r"0         1         2         3         4         5         6         7         8         9        10")
+        print(r"01234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890")
+        print(r"x=\frac{-b\pm\sqrt{b^2-4ac}}{2a}")
+        print()
+
+        s = r'x=\frac{-b\pm\sqrt{b^2-4ac}}{2a}'
+        t = MathTex(s)
+        self.parse_tex(t)
 
         #with self.voiceover(text=f'{TITLES[0][0]}. {TITLES[0][1]}') as tracker:
         #    titles_show(self, 0)
