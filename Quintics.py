@@ -1,10 +1,12 @@
 from manim import *
 from manim_voiceover import VoiceoverScene
-from manim_voiceover.services.azure import AzureService
-from manim_voiceover.services.base import SpeechService
 from manim_voiceover.services.gtts import GTTSService
-from manim_voiceover.tracker import VoiceoverTracker
 from MF_Tools import *
+from texparse import TexParse
+
+#from manim_voiceover.services.azure import AzureService
+#from manim_voiceover.services.base import SpeechService
+#from manim_voiceover.tracker import VoiceoverTracker
 
 import platform
 import re
@@ -131,91 +133,7 @@ class SceneBase(VoiceoverScene):
             p += 1
             if q >= len(mathTex):
                 return
-
-    def parse_begin(self, what: str):
-        self.parse_debug(True, what)
-
-    def parse_end(self, what: str):
-        self.parse_debug(False, what)
-
-    def parse_debug(self, begin: bool, what: str) -> None:
-        if (not begin):
-            self.Level -= 1
-        print(f"{self.Level * ' '}{'begin' if begin else 'end'} {what}")
-        if (begin):
-            self.Level += 1
-
-    def parse_block(self):
-        self.parse_begin('block')
-        self.parse_token('{')
-        self.parse_expression()
-        self.parse_end('block')
-
-    def parse_expression(self):
-        self.parse_begin('expression')
-        while self.Tokens:
-            token = self.Tokens.pop(0)
-            match token[0]:
-                case '{':
-                    self.parse_expression()
-                case '}':
-                    #print('end expression')
-                    break
-                case '\\':
-                    self.parse_function(token)
-                case _:
-                    pass
-        self.parse_end('expression')
-
-    def parse_function(self, token):
-
-        def parse_fn_type(f: str) -> int:
-            fn_types = {
-                '\\frac': 2 # Two blocks with one glyph between
-            }
-            return fn_types[f] if f in fn_types.keys() else 1
-
-        self.parse_begin('function')
-        match(parse_fn_type(token)):
-            case 2:
-                self.parse_block()
-                self.TexIndex += 1
-                self.parse_block()
-            case 1:
-                self.TexIndex += 1
-        self.parse_end('function')
-
-    def parse_tex(self, mathTex: MathTex):
-        self.Tex = mathTex
-        self.TexIndex = 0
-        token_pattern = r"\\\w+|\{|\}|[^\\\{\}]"
-        self.Tokens.clear()
-        for token in re.findall(token_pattern, self.Tex.tex_string):
-            self.Tokens.append(token)
-        self.parse_expression()
-
-    def parse_token(self, token):
-        self.Tokens.pop(0)
-
-    def parse_touch(self, token):
-        # Process an element of the MathTex
-        # Point to the next MathTex element
-        print(f"parse_touch('{token}')")
-
-    def prepare_string(self, s: str) -> str:
-        if not '|' in s: s = f'|{s}'
-        #if not '^' in s: s = f'{s}^|'
-        return s
-
-    def say(self, text: str):
-        # Specify language & disable language check to avoid GTTS bugs.
-        return self.voiceover(text, lang='en', lang_check=False)
-
-    def set_colour_map(self, colour_map: tuple[tuple[str, ManimColor]]) -> None:
-        self.ColourMap.clear()
-        for item in colour_map:
-            self.ColourMap.append(item)
-
+            
     """
 
     An atom is:
@@ -244,7 +162,11 @@ class Scene01_Intro(SceneBase):
 
         s = r'x=\frac{-b\pm\sqrt{b^2-4ac}}{2a}'
         t = MathTex(s)
-        self.parse_tex(t)
+        parser = TexParse()
+        parser.parse(t)
+
+        self.play(Create(t))
+        self.wait(10)
 
         #with self.voiceover(text=f'{TITLES[0][0]}. {TITLES[0][1]}') as tracker:
         #    titles_show(self, 0)
@@ -294,13 +216,15 @@ class Scene02_General(SceneBase):
         with self.say("Let's unpack this sum."):
             F4 = self.make_tex(r'y=a_nx^n+a_{n-1}x^{n-1}+a_{n-2}x^{n-2}+...+a_1x+a_0')
             arc = {"path_arc": PI}
-            self.play(TransformByGlyphMap(F1, F4,
-                ([3,4,5,6,7], ShrinkToCenter),
-                ([8], [3,8,17,30,34], arc),
-                ([9], [4,9,10,11,18,19,20,31,35], arc),
-                ([10], [5,12,21,32], arc),
-                ([11], [6,13,14,15,22,23,24], arc),
-                (GrowFromCenter, [7,16,25,26,27,28,29,33])), run_time=2)
+            self.play(
+                TransformByGlyphMap(
+                    F1, F4,
+                    ([3,4,5,6,7], ShrinkToCenter),
+                    ([8], [3,8,17,30,34], arc),
+                    ([9], [4,9,10,11,18,19,20,31,35], arc),
+                    ([10], [5,12,21,32], arc),
+                    ([11], [6,13,14,15,22,23,24], arc),
+                    (GrowFromCenter, [7,16,25,26,27,28,29,33])), run_time=2)
             
         with self.say("It has n roots, or values of x, for which y is zero."):            
             F5 = self.make_tex(r'y=a_nx^n+a_{n-1}x^{n-1}+a_{n-2}x^{n-2}+...+a_1x+a_0=0')
@@ -333,15 +257,17 @@ class Scene02_General(SceneBase):
             F8 = self.make_tex(r'=(x-x_1)(x-x_2)(x-x_3)...(x-x_{n-1})(x-x_n)')
             F8.next_to(F6d, DOWN)
             arc = {"path_arc": PI}
-            self.play(TransformByGlyphMap(F7, F8,
-                ([2,3,4,5,6], ShrinkToCenter),
-                ([7], [2,8,14,23,31], arc),
-                ([8], [3,9,15,24,32], arc),
-                ([9], [4,10,16,22,33], arc),
-                ([10], [5,11,17,26,34], arc),
-                ([11], [6,12,18,27,28,29,35], arc),
-                ([12], [7,13,19,30,36], arc),
-                (GrowFromCenter, [20,21,25])), run_time=2)
+            self.play(
+                TransformByGlyphMap(
+                    F7, F8,
+                    ([2,3,4,5,6], ShrinkToCenter),
+                    ([7], [2,8,14,23,31], arc),
+                    ([8], [3,9,15,24,32], arc),
+                    ([9], [4,10,16,22,33], arc),
+                    ([10], [5,11,17,26,34], arc),
+                    ([11], [6,12,18,27,28,29,35], arc),
+                    ([12], [7,13,19,30,36], arc),
+                    (GrowFromCenter, [20,21,25])), run_time=2)
             
         with self.say("x 1, x 2, and so on, up to x n."):
             for g in ((5,7), (11,13), (17,19), (26,30), (34,36)):
@@ -421,14 +347,16 @@ class Scene04_Linear(SceneBase):
             self.play(Create(E1b))
             self.wait(1)
             arc = {"path_arc": PI}
-            self.play(TransformByGlyphMap(E1b, E1c,
+            self.play(TransformByGlyphMap(
+                E1b, E1c,
                 ([4], [5], arc),
                 ([5], [6], arc),
                 ([6], [7], arc),
                 ([7], [4], arc),
                 ([8], ShrinkToCenter)))
             self.wait(1)
-            self.play(TransformByGlyphMap(E1c, E1d,
+            self.play(TransformByGlyphMap(
+                E1c, E1d,
                 ([1], [7], arc),
                 ([2], [8], arc),
                 ([3], [1], arc),
