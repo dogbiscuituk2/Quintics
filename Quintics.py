@@ -38,11 +38,6 @@ class SceneBase(VoiceoverScene):
 
     def init(self):
         self.set_speech_service(GTTSService())
-        #self.set_speech_service(
-        # AzureService(
-        # voice="en-US-AriaNeural",
-        # style="newscast-casual",
-        # global_speed=1.15))
 
     def make_tex(self, s: str) -> MathTex:
         s = self.prepare_string(s)
@@ -302,7 +297,7 @@ class Scene05_Quadratic(SceneBase):
             self.play(Create(E1))
             self.play(Create(E1a))
 
-        with self.say("It's usually solved directly, without conversion to the monic form."):
+        with self.say("It's usually solved directly, using this formula, without conversion to the monic form."):
             self.play(Create(E1b))
             self.play(Create(E1c))
 

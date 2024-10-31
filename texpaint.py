@@ -33,25 +33,25 @@ colours = (
 
 class TexPaint():
 
-    Colour: ManimColor
-    Level: int = 0
-    Map: tuple[tuple[str, int]] = ()
-    Scheme: int = SchemeBright
-    Sticky: int = 0
-    Tex: MathTex = None
-    TexIndex: int = 0
-    Tokens: List[str] = []
+    colour: ManimColor
+    level: int = 0
+    map: tuple[tuple[str, int]] = ()
+    scheme: int = SchemeBright
+    sticky: int = 0
+    tex: MathTex = None
+    texIndex: int = 0
+    tokens: List[str] = []
 
     def __init__(
             self,
             scheme: int = SchemeBright,
             map: tuple[tuple[str, int]] = ()):
-        self.Scheme = scheme;
+        self.scheme = scheme;
         if map is not None:
-            self.Map = map
+            self.map = map
 
     def get_colour(self, colour_index: int) -> ManimColor:
-        return colours[self.Scheme][colour_index]
+        return colours[self.scheme][colour_index]
 
     def paint(self, mathTex: MathTex):
 
@@ -63,19 +63,19 @@ class TexPaint():
 
         def debug(stage_index: int, what: str) -> None:
             if (stage_index > 0):
-                self.Level -= 1
-            logging.info(f"{self.Level * ' '}{['begin', 'mid', 'end'][stage_index]} {what}")
+                self.level -= 1
+            logging.info(f"{self.level * ' '}{['begin', 'mid', 'end'][stage_index]} {what}")
             if (stage_index < 2):
-                self.Level += 1
+                self.level += 1
 
         def end(what: str):
             debug(2, what)
 
-        def get_colour(char: str) -> ManimColor:
-            for map in self.Map:
-                if (char in map[0]):
-                    return colours[self.Scheme][map[1]]
-            return colours[self.Scheme][Grey]
+        def get_token_colour(token: str) -> ManimColor:
+            for map in self.map:
+                if (token in map[0]):
+                    return colours[self.scheme][map[1]]
+            return colours[self.scheme][Grey]
 
         def mid(what: str):
             debug(1, what)
@@ -88,18 +88,18 @@ class TexPaint():
 
         def paint_expression():
             begin('expression')
-            while self.Tokens:
+            while self.tokens:
                 token = pop()
                 match token[0]:
                     case '{':
                         paint_expression()
                     case '}':
-                        self.Sticky = 0
+                        self.sticky = 0
                         break
                     case '\\':
                         paint_function(token)
                     case '_'|'^':
-                        self.Sticky = 2 if peek() == '{' else 1
+                        self.sticky = 2 if peek() == '{' else 1
                     case _:
                         paint_glyph(token, True)
             end('expression')
@@ -116,43 +116,43 @@ class TexPaint():
                     paint_block()
                 case 'sqrt':
                     paint_glyph(token, False)
-                    self.TexIndex += 1
+                    self.texIndex += 1
                 case _:
                     paint_glyph(token, False)
             end(fun)
 
         def paint_glyph(token: str, paint: bool) -> None:
-            logging.debug(f"Visiting character {token} at glyph position {self.TexIndex}")
+            logging.debug(f"Visiting character {token} at glyph position {self.texIndex}")
             if paint:
-                glyph = self.Tex[0][self.TexIndex]
+                glyph = self.tex[0][self.texIndex]
                 if token == '|':
                     glyph.set_opacity(0)
                 else:
-                    if self.Sticky == 0:
-                        self.Colour = get_colour(token)
-                    glyph.set_color(self.Colour)
-                    if self.Sticky == 1:
-                        self.Sticky = 0
-            self.TexIndex += 1
+                    if self.sticky == 0:
+                        self.colour = get_token_colour(token)
+                    glyph.set_color(self.colour)
+                    if self.sticky == 1:
+                        self.sticky = 0
+            self.texIndex += 1
 
         def peek() -> str:
-            return self.Tokens[0]
+            return self.tokens[0]
 
         def pop() -> str:
             token = peek()
-            self.Tokens.pop(0)
+            self.tokens.pop(0)
             return token
 
         logging.info(r"0         1         2         3         4         5         6         7         8         9        10")
         logging.info(r"01234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890")
         logging.info(mathTex.tex_string)
 
-        self.Level = 0
-        self.Tex = mathTex
-        self.TexIndex = 0
-        self.Tokens = re.findall(r"\\\w+|\{|\}|[^\\\{\}]", self.Tex.tex_string)
-        self.Tex.set_color(colours[self.Scheme][Grey])
+        self.level = 0
+        self.tex = mathTex
+        self.texIndex = 0
+        self.tokens = re.findall(r"\\\w+|\{|\}|[^\\\{\}]", self.tex.tex_string)
+        self.tex.set_color(self.get_colour(Grey))
         paint_expression()
 
     def set_colour_map(self, map: tuple[tuple[str, int]]):
-        self.Map = map;
+        self.map = map;
