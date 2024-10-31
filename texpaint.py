@@ -37,7 +37,7 @@ class TexPaint():
     Level: int = 0
     Map: tuple[tuple[str, int]] = ()
     Scheme: int = SchemeBright
-    Sticky: bool = False
+    Sticky: int = 0
     Tex: MathTex = None
     TexIndex: int = 0
     Tokens: List[str] = []
@@ -94,14 +94,14 @@ class TexPaint():
                     case '{':
                         paint_expression()
                     case '}':
+                        self.Sticky = 0
                         break
                     case '\\':
                         paint_function(token)
                     case '_'|'^':
-                        self.Sticky = True
+                        self.Sticky = 2 if peek() == '{' else 1
                     case _:
                         paint_glyph(token, True)
-                        #self.Sticky = False
             end('expression')
 
         def paint_function(token):
@@ -128,10 +128,11 @@ class TexPaint():
                 if token == '|':
                     glyph.set_opacity(0)
                 else:
-                    if not self.Sticky:
+                    if self.Sticky == 0:
                         self.Colour = get_colour(token)
                     glyph.set_color(self.Colour)
-                    self.Sticky = False
+                    if self.Sticky == 1:
+                        self.Sticky = 0
             self.TexIndex += 1
 
         def peek() -> str:
