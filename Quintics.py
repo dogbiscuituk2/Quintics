@@ -2,16 +2,8 @@ from manim import *
 from manim_voiceover import VoiceoverScene
 from manim_voiceover.services.gtts import GTTSService
 from MF_Tools import *
-from texparse import TexParse
-
-#from manim_voiceover.services.azure import AzureService
-#from manim_voiceover.services.base import SpeechService
-#from manim_voiceover.tracker import VoiceoverTracker
-
 import platform
-import re
-
-#region Global 
+from texpaint import *
 
 config.max_files_cached = 999
 config.verbosity = 'WARNING' # 'INFO'
@@ -20,132 +12,63 @@ TITLE = 'Solving the General Quintic Equation'
 SUBTITLE = 'An Ultraradical Animation'
 COPYRIGHT = '©2024 by John Michael Kerr'
 
-PALETTE_DEFAULT = 0
-PALETTE_BRIGHT = 1
-PALETTE_PASTEL = 2
-PALETTE_BLACK_ON_WHITE = 3
-PALETTE_WHITE_ON_BLACK = 4
-
-palette = PALETTE_BRIGHT
-    
-colours = (
-    (0x000000, 0x000000, 0x3F3F00, 0xFF0000, 0x7F7F00, 0xFFFF00, 0x00FF00, 0x0000FF, 0x00FFFF, 0xFF00FF, 0x7F007F, 0x7F7F7F, 0xFFFFFF),
-    (0x000000, 0x000000, 0x7F3319, 0xFF1933, 0xFF7F4C, 0xCCCC00, 0x33FF33, 0x0000FF, 0x00FFFF, 0xFF00FF, 0x9A72AC, 0xB2B2B2, 0xFFFFFF),
-    (0x000000, 0x000000, 0xCD853F, 0xFF0000, 0xFF7F3F, 0xCCCC00, 0x33FF33, 0x0000FF, 0x00FFFF, 0xFF00FF, 0x9A72AC, 0xBBBBBB, 0xFFFFFF),
-    (0xFFFFFF, *[0x000000 for _ in range(12)]),
-    (0x000000, *[0xFFFFFF for _ in range(12)]))
-
-Background  = colours[palette][0]
-Black       = colours[palette][1]
-Brown       = colours[palette][2]
-Red         = colours[palette][3]
-Orange      = colours[palette][4]
-Yellow      = colours[palette][5]
-Green       = colours[palette][6]
-Blue        = colours[palette][7]
-Cyan        = colours[palette][8]
-Magenta     = colours[palette][9]
-Violet      = colours[palette][10]
-Grey        = colours[palette][11]
-White       = colours[palette][12]
-
-#endregion
-
 class SceneBase(VoiceoverScene): 
 
-    ColourMap = []
-
-    Level = 0
-    Tex = None
-    TexIndex = 0
-    Tokens = []
-
+    Painter: TexPaint = TexPaint(
+        0,
+        (
+            ('abcde', Green),
+            ('h', Orange),
+            ('pqrs', Yellow),
+            ('x', Red),
+            ('y', Magenta),
+            ('z', Cyan)))
+    
     def box(self, *args: VMobject) -> Polygon:
-        polygon = SurroundingRectangle(VGroup(*args), Yellow) 
+        polygon = SurroundingRectangle(VGroup(*args), self.get_colour(Yellow))
         self.play(Create(polygon))
         return polygon
         
     def flash(self, mathTex: MathTex, run_time=2) -> None:
-        self.play(Indicate(mathTex, color=White, run_time=run_time, scale_factor=2))
+        white = self.get_colour(White)
+        self.play(Indicate(mathTex, color=white, run_time=run_time, scale_factor=2))
 
-    def get_colour(self, char: str) -> ManimColor:
-        for map in self.ColourMap:
-            if (char in map[0]):
-                return map[1]
-        return Grey
+    def get_colour(self, colour_index: int) -> ManimColor:
+        return self.Painter.get_colour(colour_index)
 
     def init(self):
-        #self.set_speech_service(AzureService(voice="en-US-AriaNeural", style="newscast-casual", global_speed=1.15))
         self.set_speech_service(GTTSService())
+        #self.set_speech_service(
+        # AzureService(
+        # voice="en-US-AriaNeural",
+        # style="newscast-casual",
+        # global_speed=1.15))
 
-    def make_tex(self, *items: str) -> MathTex:
-        s: str = [self.prepare_string(item) for item in items]
+    def make_tex(self, s: str) -> MathTex:
+        s = self.prepare_string(s)
         print(s)
-        mathTex: MathTex = MathTex(*s)
-        for i in range(len(items)):
-            self.paint_tex(mathTex[i])
+        mathTex: MathTex = MathTex(s)
+        self.paint_tex(mathTex)
         return mathTex
 
     def make_text(self, s: str, *args, **kwargs) -> Text:
-        text = Text(f'|{s}', font_size=24, color=Grey, *args, **kwargs)
-        text[0].set_opacity(0)
+        text = Text(f'|{s}', font_size=24, color=self.get_colour(Grey), *args, **kwargs)
+        #text[0].set_opacity(0)
         return text
-
+    
     def paint_tex(self, mathTex: MathTex) -> None:
-        colour = Grey
-        mathTex.set_color(colour)
-        s = mathTex.tex_string
-        p = 0
-        q = 0
-        level = 0
-        escape = False
-        while p < len(s):
-            c = s[p]
-            match c:
-                case '{':
-                    level += 1
-                case '}':
-                    level -= 1
-                    if level == 0:
-                        escape = False
-                case '_':
-                    escape = True
-                case '^':
-                    escape = True
-                case '\\':
-                    p1 = p
-                    while True:
-                        p += 1
-                        if p >= len(s) or not s[p].isalpha():
-                            break
-                        word = s[p1:p]
-                    q += 1
-                case '|':
-                    mathTex[q].set_opacity(0)
-                    q += 1
-                case _:
-                    if not escape:
-                        colour = self.get_colour(c)
-                    mathTex[q].set_color(colour)
-                    q += 1
-                    if level == 0:
-                        escape = False
-            p += 1
-            if q >= len(mathTex):
-                return
-            
-    """
+        self.Painter.paint(mathTex)
 
-    An atom is:
+    def prepare_string(self, s: str) -> str:
+        return s if '|' in s else f'|{s}'
 
-    1. any single character that is not one of '\', '{', '}';
-    2. a word - a backslash followed by one or more letters, for example '\frac', '\pm', '\sqrt';
-    3. a string beginning with a left brace '{' and ending at the matching right brace '}'.
-
-    Types 1 and 2 can be treated as tokens, but type 3 is a token collection.
-
-    """
-
+    def say(self, text: str):
+        # Specify language & disable language check to avoid GTTS bugs.
+        return self.voiceover(text, lang='en', lang_check=False)
+    
+    def set_colour_map(self, map: tuple[tuple[str, int]]):
+        self.Painter.set_colour_map(map)
+    
 class Scene01_Intro(SceneBase): 
 
     def __init__(self):
@@ -155,21 +78,12 @@ class Scene01_Intro(SceneBase):
 
         self.init()
 
-        print(r"0         1         2         3         4         5         6         7         8         9        10")
-        print(r"01234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890")
-        print(r"x=\frac{-b\pm\sqrt{b^2-4ac}}{2a}")
-        print()
-
         s = r'x=\frac{-b\pm\sqrt{b^2-4ac}}{2a}'
         t = MathTex(s)
-        parser = TexParse()
-        parser.parse(t)
+        self.Painter.paint(t)
 
         self.play(Create(t))
         self.wait(10)
-
-        #with self.voiceover(text=f'{TITLES[0][0]}. {TITLES[0][1]}') as tracker:
-        #    titles_show(self, 0)
 
 class Scene02_General(SceneBase): 
 
@@ -187,23 +101,13 @@ class Scene02_General(SceneBase):
             ('y', Magenta),
             ('z', Cyan)))
 
-        ##E = self.make_tex(r'\frac{-b\pm\sqrt{b^2-4ac}}{2a}') # OK
-        #E = self.make_tex(r'(-b\pm\sqrt{b^2-4ac)/2a})') # OK
-        #self.play(Create(E))
-        ##self.wait(10)
-
-        #for c in E[0]:
-        #    self.flash(c) # 
-
-        #return
-
         with self.say("This is a general polynomial equation in one variable, x."):
             F1 = self.make_tex(r'y=\sum_{i=0}^{n}a_ix^i')
             self.play(Create(F1))
 
         with self.say("It has degree n, where n is the highest power of x present."):
             self.flash(F1[0][10])
-            F2 = MathTex(r'Degree=n').set_color(Grey)
+            F2 = MathTex(r'Degree=n').set_color(self.get_colour(Grey))
             F2.next_to(F1, DOWN)
             self.play(Create(F2))
             self.flash(F1[0][3])
@@ -231,9 +135,8 @@ class Scene02_General(SceneBase):
             self.play(TransformByGlyphMap(F4, F5, ([], [36, 37])))
 
         with self.say("To find these values, start by dividing throughout by a n."):
-            self.flash(F5[0][36])
-            F6a = MathTex(r'\intertext{Let }')
-            F6a.set_color(Grey)
+            self.flash(F5[0][37])
+            F6a = MathTex(r'\intertext{Let }').set_color(self.get_colour(Grey))
             F6b = self.make_tex(r'b_i=a_i/a_n:')
             F6c = VGroup(F6a, F6b).arrange(RIGHT, aligned_edge=UP)
             F6c.next_to(F5, UP, aligned_edge=LEFT)
@@ -293,7 +196,7 @@ class Scene03_Constant(SceneBase):
             ('z', Cyan)))
 
         E1 = self.make_tex(r'y=\sum_{i=0}^{0}a_ix^i=a_0=0')
-        E1a = MathTex(r'Degree=n=0').set_color(Grey)
+        E1a = MathTex(r'Degree=n=0').set_color(self.get_colour(Grey))
         E1a.next_to(E1, DOWN)
         E1b = self.make_tex(r'a_n\neq{0}')
         E1b.next_to(E1a, DOWN)
@@ -328,7 +231,7 @@ class Scene04_Linear(SceneBase):
             ('z', Cyan)))
 
         E1 = self.make_tex(r'y=\sum_{i=0}^{1}a_ix^i=0')
-        E1a = MathTex(r'Degree=n=1').set_color(Grey)
+        E1a = MathTex(r'Degree=n=1').set_color(self.get_colour(Grey))
         E1a.next_to(E1, DOWN)
         E1b = self.make_tex(r'a_1x+a_0=0').next_to(E1a, DOWN)
         E1c = self.make_tex(r'a_1x=-a_0').next_to(E1a, DOWN)
@@ -388,7 +291,7 @@ class Scene05_Quadratic(SceneBase):
             ('z', Cyan)))
 
         E1 = self.make_tex(r'y=\sum_{i=0}^{2}a_ix^i=0')
-        E1a = MathTex(r'Degree=n=2').set_color(Grey)
+        E1a = MathTex(r'Degree=n=2').set_color(self.get_colour(Grey))
         #E1a.next_to(E1, DOWN)
         E1b = self.make_tex(r'y=ax^2+bx+c')
         E1c = self.make_tex(r'x=\frac{-b\pm\sqrt{b^2-4ac}}{2a}')
