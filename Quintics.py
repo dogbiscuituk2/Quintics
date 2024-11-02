@@ -6,7 +6,6 @@ import platform
 from texpaint import *
 
 config.max_files_cached = 999
-config.verbosity = 'WARNING' # 'INFO'
 
 TITLE = 'Solving the General Quintic Equation'
 SUBTITLE = 'An Ultraradical Animation'
@@ -73,6 +72,8 @@ class Scene01_Intro(SceneBase):
 
         self.init()
 
+        self.add(NumberPlane())
+
         s = r'x=\frac{-b\pm\sqrt{b^2-4ac}}{2a}'
         t = MathTex(s)
         self.Painter.paint(t)
@@ -95,7 +96,7 @@ class Scene02_General(SceneBase):
             ('x', Red),
             ('y', Magenta),
             ('z', Cyan)))
-
+        
         with self.say("This is a general polynomial equation in one variable, x."):
             F1 = self.make_tex(r'y=\sum_{i=0}^{n}a_ix^i')
             self.play(Create(F1))
@@ -136,8 +137,8 @@ class Scene02_General(SceneBase):
             F6c = VGroup(F6a, F6b).arrange(RIGHT, aligned_edge=UP)
             F6c.next_to(F5, UP, aligned_edge=LEFT)
             self.play(FadeOut(F2), FadeOut(F3), Create(F6c))
-            F6d = self.make_tex(r'x^n+b_{n-1}x^{n-1}+b_{n-2}x^{n-2}+...+b_1x+b_0=0')
-            self.play(TransformMatchingShapes(F5, F6d))
+            F6d = self.make_tex(r'y=x^n+b_{n-1}x^{n-1}+b_{n-2}x^{n-2}+...+b_1x+b_0=0')
+            self.play(TransformByGlyphMap(F5, F6d, ([3,4], ShrinkToCenter)))
 
         with self.say("This is called the monic form, where the coefficient of the highest power of x is equal to one."):
             self.flash(F6b[0][7:9])
@@ -196,7 +197,7 @@ class Scene03_Constant(SceneBase):
         E1b = self.make_tex(r'a_n\neq{0}')
         E1b.next_to(E1a, DOWN)
 
-        with self.say("The degree zero polynomial has no roots."):
+        with self.say("The constant, or degree zero polynomial, has no roots."):
             self.play(Create(E1))
 
         with self.say("Notice that the equation, y equals zero, can have no solutions."):
@@ -235,7 +236,7 @@ class Scene04_Linear(SceneBase):
 
         with self.say(
             """
-            The degree one polynomial has a single root because  
+            The linear, or degree one polynomial, has a single root because  
             the equation y equals zero has one solution.
             """):
             self.play(Create(E1))
@@ -287,13 +288,12 @@ class Scene05_Quadratic(SceneBase):
 
         E1 = self.make_tex(r'y=\sum_{i=0}^{2}a_ix^i=0')
         E1a = MathTex(r'Degree=n=2').set_color(self.get_colour(Grey))
-        #E1a.next_to(E1, DOWN)
         E1b = self.make_tex(r'y=ax^2+bx+c')
         E1c = self.make_tex(r'x=\frac{-b\pm\sqrt{b^2-4ac}}{2a}')
-        #E1c.next_to(E1a, DOWN)
+
         VGroup(E1, E1a, E1b, E1c).arrange(DOWN)
 
-        with self.say("The so-called quadratic, or degree two polynomial, has two roots."):
+        with self.say("The quadratic, or degree two polynomial, has two roots."):
             self.play(Create(E1))
             self.play(Create(E1a))
 
@@ -311,7 +311,27 @@ class Scene06_Cubic(SceneBase):
         super().__init__()
 
     def construct(self):
-        pass
+
+        self.init()
+        self.set_colour_map((
+            ('abcde', Green),
+            ('h', Orange),
+            ('pqrs', Yellow),
+            ('x', Red),
+            ('y', Magenta),
+            ('z', Cyan)))
+
+        E1 = self.make_tex(r'y=\sum_{i=0}^{3}a_ix^i=0')
+        E1a = MathTex(r'Degree=n=3').set_color(self.get_colour(Grey))
+        E1b = self.make_tex(r'y=x^3+ax^2+bx+c')
+
+        VGroup(E1, E1a, E1b).arrange(DOWN)
+
+        with self.say("The cubic, or degree three polynomial, has three roots."):
+            self.play(Create(E1))
+            self.play(Create(E1a))
+
+            self.wait(2)
 
 class Scene07_Quartic(SceneBase): 
 
@@ -319,7 +339,26 @@ class Scene07_Quartic(SceneBase):
         super().__init__()
 
     def construct(self):
-        pass
+        self.init()
+        self.set_colour_map((
+            ('abcde', Green),
+            ('h', Orange),
+            ('pqrs', Yellow),
+            ('x', Red),
+            ('y', Magenta),
+            ('z', Cyan)))
+
+        E1 = self.make_tex(r'y=\sum_{i=0}^{4}a_ix^i=0')
+        E1a = MathTex(r'Degree=n=4').set_color(self.get_colour(Grey))
+        E1b = self.make_tex(r'y=x^4+ax^3+bx^2+cx+d')
+
+        VGroup(E1, E1a, E1b).arrange(DOWN)
+
+        with self.say("The quartic, or degree four polynomial, has four roots."):
+            self.play(Create(E1))
+            self.play(Create(E1a))
+
+            self.wait(2)
 
 class Scene08_Quintic(SceneBase): 
 
@@ -327,7 +366,26 @@ class Scene08_Quintic(SceneBase):
         super().__init__()
 
     def construct(self):
-        pass
+        self.init()
+        self.set_colour_map((
+            ('abcde', Green),
+            ('h', Orange),
+            ('pqrs', Yellow),
+            ('x', Red),
+            ('y', Magenta),
+            ('z', Cyan)))
+
+        E1 = self.make_tex(r'y=\sum_{i=0}^{5}a_ix^i=0')
+        E1a = MathTex(r'Degree=n=5').set_color(self.get_colour(Grey))
+        E1b = self.make_tex(r'y=x^5+ax^4+bx^3+cx^2+dx+e')
+
+        VGroup(E1, E1a, E1b).arrange(DOWN)
+
+        with self.say("The quintic, or degree five polynomial, has five roots."):
+            self.play(Create(E1))
+            self.play(Create(E1a))
+
+            self.wait(2)
 
         return
 

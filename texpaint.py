@@ -2,7 +2,7 @@ import logging
 from manim import *
 import re
 
-logging.basicConfig(level=logging.INFO) # DEBUG/INFO/WARNG/ERROR/FATAL
+logging.basicConfig(level=logging.DEBUG) # DEBUG/INFO/WARNG/ERROR/FATAL
 
 Background   = 0
 Black        = 1
