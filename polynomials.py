@@ -6,6 +6,7 @@ import platform
 from texpaint import *
 
 config.max_files_cached = 999
+config.verbosity = "CRITICAL"
 
 TITLE = 'Solving the General Quintic Equation'
 SUBTITLE = 'An Ultraradical Animation'
@@ -42,7 +43,6 @@ class Polynomials(VoiceoverScene):
 
     def make_tex(self, text: str) -> MathTex:
         text = self.prepare_string(text)
-        print(text)
         mathTex: MathTex = MathTex(text)
         self.paint_tex(mathTex)
         return mathTex
@@ -245,16 +245,16 @@ class Polynomials(VoiceoverScene):
             arc = {"path_arc": PI}
             self.play(TransformByGlyphMap(
                 E1b, E1c,
-                ([4], [5], arc),
-                ([5], [6], arc),
-                ([6], [7], arc),
+                #([4], [5], arc),
+                #([5], [6], arc),
+                #([6], [7], arc),
                 ([7], [4], arc),
                 ([8], ShrinkToCenter)))
             self.wait(1)
             self.play(TransformByGlyphMap(
                 E1c, E1d,
-                ([1], [7], arc),
-                ([2], [8], arc),
+                #([1], [7], arc),
+                #([2], [8], arc),
                 ([3], [1], arc),
                 ([4], [2], arc),
                 ([5], [3], arc),
