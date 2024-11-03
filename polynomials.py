@@ -3,7 +3,6 @@ from manim_voiceover import VoiceoverScene
 from manim_voiceover.services.gtts import GTTSService
 from MF_Tools import *
 import platform
-from scene_00_base import Scene_00_Base
 from texpaint import *
 
 config.max_files_cached = 999
