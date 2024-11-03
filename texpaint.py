@@ -1,8 +1,8 @@
-import logging
+#import logging
 from manim import *
 import re
 
-logging.basicConfig(level=logging.DEBUG) # DEBUG/INFO/WARNG/ERROR/FATAL
+#logging.basicConfig(level=logging.DEBUG) # DEBUG/INFO/WARNG/ERROR/FATAL
 
 Background   = 0
 Black        = 1
@@ -24,14 +24,14 @@ SchemePastel        = 2
 SchemeBlackOnWhite  = 3
 SchemeWhiteOnBlack  = 4
 
-colours = (
-    (0x000000, 0x000000, 0x3F3F00, 0xFF0000, 0x7F7F00, 0xFFFF00, 0x00FF00, 0x0000FF, 0x00FFFF, 0xFF00FF, 0x7F007F, 0x7F7F7F, 0xFFFFFF),
-    (0x000000, 0x000000, 0x7F3319, 0xFF1933, 0xFF7F4C, 0xCCCC00, 0x33FF33, 0x0000FF, 0x00FFFF, 0xFF00FF, 0x9A72AC, 0xB2B2B2, 0xFFFFFF),
-    (0x000000, 0x000000, 0xCD853F, 0xFF0000, 0xFF7F3F, 0xCCCC00, 0x33FF33, 0x0000FF, 0x00FFFF, 0xFF00FF, 0x9A72AC, 0xBBBBBB, 0xFFFFFF),
-    (0xFFFFFF, *[0x000000 for _ in range(12)]),
-    (0x000000, *[0xFFFFFF for _ in range(12)]))
-
 class TexPaint():
+
+    colours = (
+        (0x000000, 0x000000, 0x3F3F00, 0xFF0000, 0x7F7F00, 0xFFFF00, 0x00FF00, 0x0000FF, 0x00FFFF, 0xFF00FF, 0x7F007F, 0x7F7F7F, 0xFFFFFF),
+        (0x000000, 0x000000, 0x7F3319, 0xFF1933, 0xFF7F4C, 0xCCCC00, 0x33FF33, 0x0000FF, 0x00FFFF, 0xFF00FF, 0x9A72AC, 0xB2B2B2, 0xFFFFFF),
+        (0x000000, 0x000000, 0xCD853F, 0xFF0000, 0xFF7F3F, 0xCCCC00, 0x33FF33, 0x0000FF, 0x00FFFF, 0xFF00FF, 0x9A72AC, 0xBBBBBB, 0xFFFFFF),
+        (0xFFFFFF, *[0x000000 for _ in range(12)]),
+        (0x000000, *[0xFFFFFF for _ in range(12)]))
 
     colour: ManimColor
     level: int = 0
@@ -51,7 +51,7 @@ class TexPaint():
             self.map = map
 
     def get_colour(self, colour_index: int) -> ManimColor:
-        return colours[self.scheme][colour_index]
+        return self.colours[self.scheme][colour_index]
 
     def paint(self, mathTex: MathTex):
 
@@ -64,7 +64,7 @@ class TexPaint():
         def debug(stage_index: int, what: str) -> None:
             if (stage_index > 0):
                 self.level -= 1
-            logging.info(f"{self.level * ' '}{['begin', 'mid', 'end'][stage_index]} {what}")
+            #logging.info(f"{self.level * ' '}{['begin', 'mid', 'end'][stage_index]} {what}")
             if (stage_index < 2):
                 self.level += 1
 
@@ -74,8 +74,8 @@ class TexPaint():
         def get_token_colour(token: str) -> ManimColor:
             for map in self.map:
                 if (token in map[0]):
-                    return colours[self.scheme][map[1]]
-            return colours[self.scheme][Grey]
+                    return self.colours[self.scheme][map[1]]
+            return self.colours[self.scheme][Grey]
 
         def mid(what: str):
             debug(1, what)
@@ -122,7 +122,7 @@ class TexPaint():
             end(fun)
 
         def paint_glyph(token: str, paint: bool) -> None:
-            logging.debug(f"Visiting character {token} at glyph position {self.texIndex}")
+            #logging.debug(f"Visiting character {token} at glyph position {self.texIndex}")
             if paint:
                 glyph = self.tex[0][self.texIndex]
                 if token == '|':
@@ -143,9 +143,9 @@ class TexPaint():
             self.tokens.pop(0)
             return token
 
-        logging.info(r"0         1         2         3         4         5         6         7         8         9        10")
-        logging.info(r"01234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890")
-        logging.info(mathTex.tex_string)
+        #logging.info(r"0         1         2         3         4         5         6         7         8         9        10")
+        #logging.info(r"01234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890")
+        #logging.info(mathTex.tex_string)
 
         self.level = 0
         self.tex = mathTex

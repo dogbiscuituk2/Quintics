@@ -8,7 +8,7 @@ TITLE = 'Solving the General Quintic Equation'
 SUBTITLE = 'An Ultraradical Animation'
 COPYRIGHT = '©2024 by John Michael Kerr'
 
-class Scene_99_Credits(Scene_00_Base): 
+class Scene_99_Credits(Scene_00_Base):
     
     def __init__(self):
         super().__init__()
@@ -26,9 +26,6 @@ class Scene_99_Credits(Scene_00_Base):
 
         rows = len(packages)
         cols = [[self.make_text(packages[row][col]) for row in range(rows)] for col in range(2)]
-        for row in range(rows):
-            for col in range(2):
-                cols[col][row][0].set_opacity(0)
         VersionTable = VGroup(
             VGroup(*cols[0]).arrange(DOWN, aligned_edge = LEFT),
             VGroup(*cols[1]).arrange(DOWN, aligned_edge = RIGHT)

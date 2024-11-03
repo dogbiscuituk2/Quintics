@@ -7,7 +7,7 @@ The first stage in solving the _General_ (monic, univariate) quintic equation,
     y = x^5 + ax^4 + bx^3 + cx^2 + dx + e = 0,
     
 is to eliminate the _quartic_ or _x^4_ term.
-The code in "scene.py" uses animated algebra _(see video)_ to illustrate how this is done using a linear Tschirnhaus Transformation 
+This code uses animated algebra _(see video)_ to illustrate how this is done using a linear Tschirnhaus Transformation 
 _(see Adamchik et al)_, specifically this one:
 
     x = z + h.

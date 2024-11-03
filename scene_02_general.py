@@ -3,7 +3,7 @@ from MF_Tools import *
 from scene_00_base import Scene_00_Base
 from texpaint import *
 
-class Scene_02_General(Scene_00_Base): 
+class Scene_02_General(Scene_00_Base):
 
     def __init__(self):
         super().__init__()
@@ -25,7 +25,7 @@ class Scene_02_General(Scene_00_Base):
 
         with self.say("It has degree n, where n is the highest power of x present."):
             self.flash(F1[0][10])
-            F2 = MathTex(r'Degree=n').set_color(self.get_colour(Grey))
+            F2 = MathTex(r'Degree=n').set_color(self.get_text_colour())
             F2.next_to(F1, DOWN)
             self.play(Create(F2))
             self.flash(F1[0][3])
@@ -54,7 +54,7 @@ class Scene_02_General(Scene_00_Base):
 
         with self.say("To find these values, start by dividing throughout by a n."):
             self.flash(F5[0][37])
-            F6a = MathTex(r'\intertext{Let }').set_color(self.get_colour(Grey))
+            F6a = MathTex(r'\intertext{Let }').set_color(self.get_text_colour())
             F6b = self.make_tex(r'b_i=a_i/a_n:')
             F6c = VGroup(F6a, F6b).arrange(RIGHT, aligned_edge=UP)
             F6c.next_to(F5, UP, aligned_edge=LEFT)

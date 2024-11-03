@@ -3,7 +3,7 @@ from MF_Tools import *
 from scene_00_base import Scene_00_Base
 from texpaint import *
 
-class Scene_05_Quadratic(Scene_00_Base): 
+class Scene_05_Quadratic(Scene_00_Base):
 
     def __init__(self):
         super().__init__()
@@ -20,7 +20,7 @@ class Scene_05_Quadratic(Scene_00_Base):
             ('z', Cyan)))
 
         E1 = self.make_tex(r'y=\sum_{i=0}^{2}a_ix^i=0')
-        E1a = MathTex(r'Degree=n=2').set_color(self.get_colour(Grey))
+        E1a = MathTex(r'Degree=n=2').set_color(self.get_text_colour())
         E1b = self.make_tex(r'y=ax^2+bx+c')
         E1c = self.make_tex(r'x=\frac{-b\pm\sqrt{b^2-4ac}}{2a}')
 

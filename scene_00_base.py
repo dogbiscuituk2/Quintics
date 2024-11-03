@@ -4,7 +4,7 @@ from texpaint import *
 
 config.max_files_cached = 999
 
-class Scene_00_Base(VoiceoverScene): 
+class Scene_00_Base(VoiceoverScene):
 
     Painter: TexPaint = TexPaint(
         0,
@@ -25,29 +25,32 @@ class Scene_00_Base(VoiceoverScene):
         white = self.get_colour(White)
         self.play(Indicate(mathTex, color=white, run_time=run_time, scale_factor=2))
 
+    def get_text_colour(self) -> ManimColor:
+        return self.get_colour(Grey)
+
     def get_colour(self, colour_index: int) -> ManimColor:
         return self.Painter.get_colour(colour_index)
 
     def init(self):
         self.set_speech_service(GTTSService())
 
-    def make_tex(self, s: str) -> MathTex:
-        s = self.prepare_string(s)
-        print(s)
-        mathTex: MathTex = MathTex(s)
+    def make_tex(self, text: str) -> MathTex:
+        text = self.prepare_string(text)
+        print(text)
+        mathTex: MathTex = MathTex(text)
         self.paint_tex(mathTex)
         return mathTex
 
     def make_text(self, s: str, *args, **kwargs) -> Text:
-        text = Text(f'|{s}', font_size=24, color=self.get_colour(Grey), *args, **kwargs)
-        #text[0].set_opacity(0)
-        return text
+        text = Text(self.prepare_string(s), font_size=24, color=self.get_text_colour(), *args, **kwargs)
+        text[0].set_opacity(0)
+        return text;
     
     def paint_tex(self, mathTex: MathTex) -> None:
         self.Painter.paint(mathTex)
 
-    def prepare_string(self, s: str) -> str:
-        return s if '|' in s else f'|{s}'
+    def prepare_string(self, text: str) -> str:
+        return text if '|' in text else f'|{text}'
 
     def say(self, text: str):
         # Specify language & disable language check to avoid GTTS bugs.

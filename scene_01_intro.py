@@ -1,7 +1,7 @@
 from manim import *
 from scene_00_base import Scene_00_Base
 
-class Scene_01_Intro(Scene_00_Base): 
+class Scene_01_Intro(Scene_00_Base):
 
     def __init__(self):
         super().__init__()
