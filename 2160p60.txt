@@ -1,9 +1,0 @@
-C:\Projects\Polynomials\media\videos\scene_01_intro\2160p60\Scene_01_Intro.mp4
-C:\Projects\Polynomials\media\videos\scene_02_general\2160p60\Scene_02_General.mp4
-C:\Projects\Polynomials\media\videos\scene_03_constant\2160p60\Scene_03_Constant.mp4
-C:\Projects\Polynomials\media\videos\scene_04_linear\2160p60\Scene_04_Linear.mp4
-C:\Projects\Polynomials\media\videos\scene_05_quadratic\2160p60\Scene_05_Quadratic.mp4
-C:\Projects\Polynomials\media\videos\scene_06_cubic\2160p60\Scene_06_Cubic.mp4
-C:\Projects\Polynomials\media\videos\scene_07_quartic\2160p60\Scene_07_Quartic.mp4
-C:\Projects\Polynomials\media\videos\scene_08_quintic\2160p60\Scene_08_Quintic.mp4
-C:\Projects\Polynomials\media\videos\scene_99_credits\2160p60\Scene_99_Credits.mp4

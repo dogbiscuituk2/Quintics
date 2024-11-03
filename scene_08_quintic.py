@@ -29,5 +29,3 @@ class Scene_08_Quintic(Scene_00_Base):
             self.play(Create(E1a))
 
             self.wait(2)
-
-        return
