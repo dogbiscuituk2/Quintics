@@ -115,6 +115,19 @@ class Polynomials(VoiceoverScene):
             ('y', Magenta),
             ('z', Cyan)))
         
+        #G = VGroup(
+        #    self.make_tex(r'y=\sqrt{b^2-4ac}'),
+        #    self.make_tex(r'y=\sqrt[2]{b^2-4ac}'),
+        #    self.make_tex(r'y=\sqrt[3]{b^2-4ac}'),
+        #    self.make_tex(r'y=\sqrt[4]{b^2-4ac}'),
+        #    self.make_tex(r'y=\sqrt[5]{b^2-4ac}'),
+        #    self.make_tex(r'y=\sqrt[10]{b^2-4ac}'),
+        #).arrange(DOWN, aligned_edge=RIGHT)
+        #self.play(Create(G))
+        #self.wait(10)
+        #
+        #return
+        
         with self.say("This is a general polynomial equation in one variable, x."):
             F1 = self.make_tex(r'y=\sum_{i=0}^{n}a_ix^i')
             self.play(Create(F1))
@@ -274,10 +287,7 @@ class Polynomials(VoiceoverScene):
         with self.say("We could solve it easily if we didn't have these intermediate powers."):
             self.box_on(*EQU[1][1][0][4:19])
             s1 = self.make_tex('y=x^5+e=0')
-            s2 = MathTex('x=\\sqrt[5]{-e}')
-            s2[0].color = Grey;
-            s2[0][0].color = Red;
-            s2[0][6].color = Green;
+            s2 = self.make_tex('x=\\sqrt[5]{-e}')
             VGroup(s1, s2).arrange(DOWN)
             self.play(
                 TransformMatchingShapes(EQU[1].copy(), s1),
@@ -289,7 +299,7 @@ class Polynomials(VoiceoverScene):
             self.play(Uncreate(s1))
 
         with self.say("In other words, transform it into so-called reduced form,"):
-            brace = Brace(Group(EQU[1], EQU[2]), LEFT, color=GREY)
+            brace = Brace(Group(EQU[1], EQU[2]), LEFT, color=self.get_colour(Grey))
             self.play(FadeIn(brace), Create(EQU[2]))
             self.box_on(*EQU[2][1][0][4:8])
 

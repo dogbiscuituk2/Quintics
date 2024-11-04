@@ -87,7 +87,11 @@ class Painter():
                     paint_glyph(token, False)
                     paint_block()
                 case r'\sqrt':
-                    paint_glyph(token, False)
+                    self.texIndex += 1
+                    if peek() == '[':
+                        pop()
+                        while pop() != ']':
+                            self.texIndex += 1
                     self.texIndex += 1
                 case _:
                     paint_glyph(token, False)
