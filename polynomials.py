@@ -27,14 +27,18 @@ class Polynomials(VoiceoverScene):
             ('z', Cyan)))
     
     def box(self, *args: VMobject) -> Polygon:
-        polygon = SurroundingRectangle(VGroup(*args), self.get_colour(Yellow))
+        polygon = self.box_make(*args)
         self.play(Create(polygon))
         return polygon
 
     _box = None
 
+    def box_make(self, *args: VMobject) -> Polygon:
+        return SurroundingRectangle(VGroup(*args), self.get_colour(Yellow)) 
+
     def box_move(self, *args: VMobject) -> Animation:
-        b = SurroundingRectangle(VGroup(*args), Yellow) 
+        #b = SurroundingRectangle(VGroup(*args), self.get_colour(Yellow)) 
+        b = self.box_make(*args)
         result = Create(b) if self._box == None else ReplacementTransform(self._box, b)
         self._box = b
         return result
@@ -63,17 +67,16 @@ class Polynomials(VoiceoverScene):
         strings: List[str] = [[self.prepare_string(t) for t in row] for row in matrix]
         matrix: Matrix = Matrix(strings, bracket_h_buff = margin, h_buff = padding)
         matrix.set_color(Grey)
-        #for row in range(rows):
-        #    for col in range(cols):
-        #        self.paint_tex(matrix[0][row * cols + col][0])
-        #matrix[1].set_color(Grey)
-        #matrix[2].set_color(Grey)
+        for row in range(rows):
+            for col in range(cols):
+                self.paint(matrix[0][row * cols + col])
+        matrix[1:3].set_color(self.get_colour(Grey))
         return matrix
 
     def make_tex(self, text: str) -> MathTex:
         text = self.prepare_string(text)
         mathTex: MathTex = MathTex(text)
-        self.paint_tex(mathTex)
+        self.paint(mathTex)
         return mathTex
 
     #def make_tex(self, *items: str) -> MathTex:
@@ -87,7 +90,7 @@ class Polynomials(VoiceoverScene):
         text[0].set_opacity(0)
         return text;
     
-    def paint_tex(self, mathTex: MathTex) -> None:
+    def paint(self, mathTex: MathTex) -> None:
         self.Painter.paint(mathTex)
 
     def prepare_string(self, text: str) -> str:
@@ -232,7 +235,7 @@ class Polynomials(VoiceoverScene):
         E1b = self.make_tex(r'a_n\neq{0}')
         E1b.next_to(E1a, DOWN)
 
-        with self.say("The constant, or degree zero polynomial, has no roots."):
+        with self.say("The degree zero polynomial has no roots."):
             self.play(Create(E1))
 
         with self.say("Notice that the equation, y equals zero, can have no solutions."):
@@ -268,7 +271,7 @@ class Polynomials(VoiceoverScene):
 
         with self.say(
             """
-            The linear, or degree one polynomial, has a single root because  
+            The degree one polynomial has a single root because  
             the equation y equals zero has one solution.
             """):
             self.play(Create(E1))
@@ -322,7 +325,7 @@ class Polynomials(VoiceoverScene):
 
         VGroup(E1, E1a, E1b, E1c).arrange(DOWN)
 
-        with self.say("The quadratic, or degree two polynomial, has two roots."):
+        with self.say("The degree two polynomial, the quadratic, has two roots."):
             self.play(Create(E1))
             self.play(Create(E1a))
 
@@ -353,7 +356,7 @@ class Polynomials(VoiceoverScene):
 
         G = VGroup(E1, E1a, E1b).arrange(DOWN)
 
-        with self.say("The cubic, or degree three polynomial, has three roots."):
+        with self.say("The degree three polynomial, the cubic, has three roots."):
             self.play(Create(E1))
             self.play(Create(E1a))
             self.play(Create(E1b))
@@ -380,7 +383,7 @@ class Polynomials(VoiceoverScene):
 
         G = VGroup(E1, E1a, E1b).arrange(DOWN)
 
-        with self.say("The quartic, or degree four polynomial, has four roots."):
+        with self.say("The degree four polynomial, the quartic, has four roots."):
             self.play(Create(E1))
             self.play(Create(E1a))
             self.play(Create(E1b))
@@ -407,7 +410,7 @@ class Polynomials(VoiceoverScene):
 
         G = VGroup(E1, E1a, E1b).arrange(DOWN)
 
-        with self.say("The quintic, or degree five polynomial, has five roots."):
+        with self.say("The degree five polynomial, the quintic, has five roots."):
             self.play(Create(E1))
             self.play(Create(E1a))
             self.play(Create(E1b))
@@ -449,7 +452,7 @@ class Polynomials(VoiceoverScene):
         EQU = [VGroup(LHS[i], RHS[i]) for i in range(9)]
 
         Y = self.make_matrix((['y'], ['x^5'], ['ax^4'], ['bx^3'], ['cx^2'], ['dx'], ['e']), margin = 0)
-        EQ = MathTex('=').set_color(Grey)
+        EQ = MathTex('=').set_color(self.get_colour(Grey))
         M = self.make_matrix((
             ('z^5', '0z^4', 'pz^3', 'qz^2', 'rz', 's'),
             ('z^5', '5hz^4', '10h^2z^3', '10h^3z^2', '5h^4z', 'h^5'),
@@ -469,10 +472,9 @@ class Polynomials(VoiceoverScene):
 
         with self.say("This is the General Form of a quintic polynomial equation in one variable, x."):
             self.play(Create(EQU[1]))
-            #dump(*EQU)
 
         with self.say("We could solve it easily if we didn't have these intermediate powers."):
-            self.box(*EQU[1][1][0][4:19])
+            self.box_on(*EQU[1][1][0][4:19])
             s1 = self.make_tex('y=x^5+e=0')
             s2 = MathTex('x=\\sqrt[5]{-e}')
             s2[0].color = Grey;
@@ -491,11 +493,10 @@ class Polynomials(VoiceoverScene):
         with self.say("In other words, transform it into so-called reduced form,"):
             brace = Brace(Group(EQU[1], EQU[2]), LEFT, color=GREY)
             self.play(FadeIn(brace), Create(EQU[2]))
-            self.box(*EQU[2][1][0][4:8])
-            #dump(*EQU)
+            self.box_on(*EQU[2][1][0][4:8])
 
         with self.say("where the coefficient of this term is zero."):
-            self.play(Indicate(EQU[2][1][0][5], color=WHITE, scale_factor=2, run_time=2))
+            self.play(Indicate(EQU[2][1][0][5], color=self.get_colour(White), scale_factor=2, run_time=2))
 
         with self.say("This operation is technically known as a Tschirnhaus Transformation,"):
             image = ImageMobject("resources/Tschirnhaus.jpg")
@@ -521,7 +522,6 @@ class Polynomials(VoiceoverScene):
                 self.play(TransformMatchingShapes(EQU[0][1].copy(), T))
             self.play(FadeIn(EQU[8][1]))
             self.box_off()
-            #dump(*EQU)
 
         def expand(i: int, immediate: bool = False) -> None:
 
@@ -551,17 +551,14 @@ class Polynomials(VoiceoverScene):
             self.play(FadeOut(picture))
             for i in range(1, 5):
                 expand(i)
-                #dump(*EQU)
 
         with self.say("Multiply out the binomials."):
             for i in range(5, 9):
                 expand(i)
-                #dump(*EQU)
             self.box_off()
 
         with self.say("Distribute the original coefficients."):
             expand(9, immediate=True)
-            #dump(*EQU)
 
         with self.say("Now recall that this first z equation is just the sum of the six below it."):
             self.box_on(EQU[2])
@@ -582,7 +579,7 @@ class Polynomials(VoiceoverScene):
             return M[0][row * 6 + col]
         
         def indicate(items: List[VMobject], size: float = 1.2) -> None:
-            self.play(Indicate(VGroup(*items), color = White, scale_factor = size))
+            self.play(Indicate(VGroup(*items), color = self.get_colour(White), scale_factor = size))
 
         def new_target(row: int, col: int):
             z = ('z^5', 'z^4', 'z^3', 'z^2', 'z', '1')

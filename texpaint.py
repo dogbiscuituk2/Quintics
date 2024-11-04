@@ -1,8 +1,5 @@
-#import logging
 from manim import *
 import re
-
-#logging.basicConfig(level=logging.DEBUG) # DEBUG/INFO/WARNG/ERROR/FATAL
 
 Background   = 0
 Black        = 1
@@ -34,7 +31,6 @@ class TexPaint():
         (0x000000, *[0xFFFFFF for _ in range(12)]))
 
     colour: ManimColor
-    level: int = 0
     map: tuple[tuple[str, int]] = ()
     scheme: int = SchemeBright
     sticky: int = 0
@@ -58,36 +54,17 @@ class TexPaint():
         def accept(token):
             pop()
 
-        def begin(what: str):
-            debug(0, what)
-
-        def debug(stage_index: int, what: str) -> None:
-            if (stage_index > 0):
-                self.level -= 1
-            #logging.info(f"{self.level * ' '}{['begin', 'mid', 'end'][stage_index]} {what}")
-            if (stage_index < 2):
-                self.level += 1
-
-        def end(what: str):
-            debug(2, what)
-
         def get_token_colour(token: str) -> ManimColor:
             for map in self.map:
                 if (token in map[0]):
                     return self.colours[self.scheme][map[1]]
             return self.colours[self.scheme][Grey]
 
-        def mid(what: str):
-            debug(1, what)
-
         def paint_block():
-            begin('block')
             accept('{')
             paint_expression()
-            end('block')
 
         def paint_expression():
-            begin('expression')
             while self.tokens:
                 token = pop()
                 match token[0]:
@@ -102,30 +79,23 @@ class TexPaint():
                         self.sticky = 2 if peek() == '{' else 1
                     case _:
                         paint_glyph(token, True)
-            end('expression')
 
         def paint_function(token):
-            name = token[1:]
-            fun = f"function {name}"
-            begin(fun)
-            match(name):
-                case 'frac':
+            match(token):
+                case r'\frac':
                     paint_block()
-                    mid(fun)
                     paint_glyph(token, False)
                     paint_block()
-                case 'sqrt':
+                case r'\sqrt':
                     paint_glyph(token, False)
                     self.texIndex += 1
                 case _:
                     paint_glyph(token, False)
-            end(fun)
 
         def paint_glyph(token: str, paint: bool) -> None:
-            #logging.debug(f"Visiting character {token} at glyph position {self.texIndex}")
             if paint:
                 glyph = self.tex[0][self.texIndex]
-                if token == '|':
+                if token in ['|', 'o']:
                     glyph.set_opacity(0)
                 else:
                     if self.sticky == 0:
@@ -142,10 +112,6 @@ class TexPaint():
             token = peek()
             self.tokens.pop(0)
             return token
-
-        #logging.info(r"0         1         2         3         4         5         6         7         8         9        10")
-        #logging.info(r"01234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890")
-        #logging.info(mathTex.tex_string)
 
         self.level = 0
         self.tex = mathTex
