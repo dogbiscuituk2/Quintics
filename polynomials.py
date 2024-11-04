@@ -57,8 +57,8 @@ class Polynomials(VoiceoverScene):
     def get_text_colour(self) -> ManimColor:
         return self.get_colour(Grey)
 
-    def get_colour(self, colour_index: int) -> ManimColor:
-        return self.painter.get_colour(colour_index)
+    def get_colour(self, index: int) -> ManimColor:
+        return self.painter.get_colour(index)
 
     def make_matrix(self, matrix: List[List[str]], margin: float = MED_SMALL_BUFF, padding: float = 1.3) -> Matrix:
         rows: int = len(matrix)
@@ -94,6 +94,7 @@ class Polynomials(VoiceoverScene):
         return text if '|' in text else f'|{text}'
 
     def say(self, text: str):
+        print(text)
         # Specify language & disable language check to avoid GTTS bugs.
         return self.voiceover(text, lang='en', lang_check=False)
     
@@ -104,28 +105,7 @@ class Polynomials(VoiceoverScene):
         self.set_speech_service(GTTSService())
 
 #endregion
-#region Scene 1 : Introduction 
-
-        self.set_colour_map((
-            ('abcde', Green),
-            ('h', Orange),
-            ('pqrs', Yellow),
-            ('x', Red),
-            ('y', Magenta),
-            ('z', Cyan)))
-
-        s = r'x=\frac{-b\pm\sqrt{b^2-4ac}}{2a}'
-        t = MathTex(s)
-        self.painter.paint(t)
-
-        self.play(Create(t))
-        self.wait(10)
-        self.play(Uncreate(t))
-
-#endregion
-#region Scene 2 : General 
-
-        self.next_section("General")
+#region Scene 1 : General 
 
         self.set_colour_map((
             ('abcde', Green),
@@ -214,184 +194,7 @@ class Polynomials(VoiceoverScene):
             self.wait(2)
 
 #endregion
-#region Scene 3 : Constant 
-
-        self.next_section("Constant")
-
-        self.set_colour_map((
-            ('abcde', Green),
-            ('h', Orange),
-            ('pqrs', Yellow),
-            ('x', Red),
-            ('y', Magenta),
-            ('z', Cyan)))
-
-        E1 = self.make_tex(r'y=\sum_{i=0}^{0}a_ix^i=a_0=0')
-        E1a = MathTex(r'Degree=n=0').set_color(self.get_text_colour())
-        E1a.next_to(E1, DOWN)
-        E1b = self.make_tex(r'a_n\neq{0}')
-        E1b.next_to(E1a, DOWN)
-
-        with self.say("The degree zero polynomial has no roots."):
-            self.play(Create(E1))
-
-        with self.say("Notice that the equation, y equals zero, can have no solutions."):
-            self.play(Create(E1a))
-
-        with self.say("This is because a n is constrained to be both zero and nonzero.") as tracker:
-            self.play(Create(E1b))
-            boxes = [self.box(E1b), self.box(E1a[0][7:10]), self.box(E1[0][13:17])]
-            self.wait(tracker.duration + 2)
-            self.play(FadeOut(E1, E1a, E1b, *boxes))
-            self.wait(2)
-
-#endregion
-#region Scene 4 : Linear 
-
-        self.next_section("Linear")
-
-        self.set_colour_map((
-            ('abcde', Green),
-            ('h', Orange),
-            ('pqrs', Yellow),
-            ('x', Red),
-            ('y', Magenta),
-            ('z', Cyan)))
-
-        E1 = self.make_tex(r'y=\sum_{i=0}^{1}a_ix^i=0')
-        E1a = MathTex(r'Degree=n=1').set_color(self.get_text_colour())
-        E1a.next_to(E1, DOWN)
-        E1b = self.make_tex(r'a_1x+a_0=0').next_to(E1a, DOWN)
-        E1c = self.make_tex(r'a_1x=-a_0').next_to(E1a, DOWN)
-        E1d = self.make_tex(r'x=-a_0/a_1').next_to(E1a, DOWN)
-        E1e = self.make_tex(r'x_1=-a_0/a_1').next_to(E1a, DOWN)
-
-        with self.say(
-            """
-            The degree one polynomial has a single root because  
-            the equation y equals zero has one solution.
-            """):
-            self.play(Create(E1))
-            self.play(Create(E1a))
-
-        with self.say("Solving it is easy."):
-            self.play(Create(E1b))
-            self.wait(1)
-            arc = {"path_arc": PI}
-            self.play(TransformByGlyphMap(
-                E1b, E1c,
-                #([4], [5], arc),
-                #([5], [6], arc),
-                #([6], [7], arc),
-                ([7], [4], arc),
-                ([8], ShrinkToCenter)))
-            self.wait(1)
-            self.play(TransformByGlyphMap(
-                E1c, E1d,
-                #([1], [7], arc),
-                #([2], [8], arc),
-                ([3], [1], arc),
-                ([4], [2], arc),
-                ([5], [3], arc),
-                ([6], [4], arc),
-                ([7], [5], arc),
-                (FadeIn, [6])))
-            self.wait(1)
-            self.play(TransformByGlyphMap(E1d, E1e, (GrowFromCenter, [2])))
-            self.wait(2)
-            self.play(FadeOut(E1, E1a, E1e))
-            self.wait(2)
-
-#endregion
-#region Scene 5 : Quadratic 
-
-        self.next_section("Quadratic")
-
-        self.set_colour_map((
-            ('abcde', Green),
-            ('h', Orange),
-            ('pqrs', Yellow),
-            ('x', Red),
-            ('y', Magenta),
-            ('z', Cyan)))
-
-        E1 = self.make_tex(r'y=\sum_{i=0}^{2}a_ix^i=0')
-        E1a = MathTex(r'Degree=n=2').set_color(self.get_text_colour())
-        E1b = self.make_tex(r'y=ax^2+bx+c')
-        E1c = self.make_tex(r'x=\frac{-b\pm\sqrt{b^2-4ac}}{2a}')
-
-        VGroup(E1, E1a, E1b, E1c).arrange(DOWN)
-
-        with self.say("The degree two polynomial, the quadratic, has two roots."):
-            self.play(Create(E1))
-            self.play(Create(E1a))
-
-        with self.say("It's usually solved directly, using this formula, without conversion to the monic form."):
-            self.play(Create(E1b))
-            self.play(Create(E1c))
-
-            self.wait(2)
-            self.play(FadeOut(E1, E1a, E1b, E1c))
-            self.wait(2)
-
-#endregion
-#region Scene 6 : Cubic 
-
-        self.next_section("Cubic")
-
-        self.set_colour_map((
-            ('abcde', Green),
-            ('h', Orange),
-            ('pqrs', Yellow),
-            ('x', Red),
-            ('y', Magenta),
-            ('z', Cyan)))
-
-        E1 = self.make_tex(r'y=\sum_{i=0}^{3}a_ix^i=0')
-        E1a = MathTex(r'Degree=n=3').set_color(self.get_text_colour())
-        E1b = self.make_tex(r'y=x^3+ax^2+bx+c')
-
-        G = VGroup(E1, E1a, E1b).arrange(DOWN)
-
-        with self.say("The degree three polynomial, the cubic, has three roots."):
-            self.play(Create(E1))
-            self.play(Create(E1a))
-            self.play(Create(E1b))
-
-            self.wait(2)
-            self.play(FadeOut(G))
-
-#endregion
-#region Scene 7 : Quartic 
-
-        self.next_section("Quartic")
-
-        self.set_colour_map((
-            ('abcde', Green),
-            ('h', Orange),
-            ('pqrs', Yellow),
-            ('x', Red),
-            ('y', Magenta),
-            ('z', Cyan)))
-
-        E1 = self.make_tex(r'y=\sum_{i=0}^{4}a_ix^i=0')
-        E1a = MathTex(r'Degree=n=4').set_color(self.get_text_colour())
-        E1b = self.make_tex(r'y=x^4+ax^3+bx^2+cx+d')
-
-        G = VGroup(E1, E1a, E1b).arrange(DOWN)
-
-        with self.say("The degree four polynomial, the quartic, has four roots."):
-            self.play(Create(E1))
-            self.play(Create(E1a))
-            self.play(Create(E1b))
-
-            self.wait(2)
-            self.play(FadeOut(G))
-
-#endregion
-#region Scene 8 : Quintic 
-
-        self.next_section("Quintic")
+#region Scene 2 : Quintic 
 
         self.set_colour_map((
             ('abcde', Green),
@@ -414,8 +217,6 @@ class Polynomials(VoiceoverScene):
 
             self.wait(2)
             self.play(FadeOut(G))
-
-
 
         z = '(z+h)'
         z2 = f'{z}{z}'
@@ -467,7 +268,7 @@ class Polynomials(VoiceoverScene):
         #titles_show(self, 0)
         #titles_show(self, 2)
 
-        with self.say("This is the General Form of a quintic polynomial equation in one variable, x."):
+        with self.say("Let's use letters 'a' through 'e' for the coefficients."):
             self.play(Create(EQU[1]))
 
         with self.say("We could solve it easily if we didn't have these intermediate powers."):
@@ -675,9 +476,7 @@ class Polynomials(VoiceoverScene):
             self.wait(10)
 
 #endregion
-#region Scene 9 : Credits 
-
-        self.next_section("Credits")
+#region Scene 3 : Credits 
 
         packages = [['python', platform.python_version()],
             *[[package, version(package)] for package in (
@@ -709,5 +508,192 @@ class Polynomials(VoiceoverScene):
         self.wait(3)
         self.play(FadeOut(Credits))
         self.wait(1)
+
+#endregion
+
+        return
+
+#region Scene 1 : Introduction 
+
+        self.set_colour_map((
+            ('abcde', Green),
+            ('h', Orange),
+            ('pqrs', Yellow),
+            ('x', Red),
+            ('y', Magenta),
+            ('z', Cyan)))
+
+        s = r'x=\frac{-b\pm\sqrt{b^2-4ac}}{2a}'
+        t = MathTex(s)
+        self.painter.paint(t)
+
+        self.play(Create(t))
+        self.wait(10)
+        self.play(Uncreate(t))
+
+#endregion
+#region Scene 3 : Constant 
+
+        self.set_colour_map((
+            ('abcde', Green),
+            ('h', Orange),
+            ('pqrs', Yellow),
+            ('x', Red),
+            ('y', Magenta),
+            ('z', Cyan)))
+
+        E1 = self.make_tex(r'y=\sum_{i=0}^{0}a_ix^i=a_0=0')
+        E1a = MathTex(r'Degree=n=0').set_color(self.get_text_colour())
+        E1a.next_to(E1, DOWN)
+        E1b = self.make_tex(r'a_n\neq{0}')
+        E1b.next_to(E1a, DOWN)
+
+        with self.say("The degree zero polynomial has no roots."):
+            self.play(Create(E1))
+
+        with self.say("Notice that the equation, y equals zero, can have no solutions."):
+            self.play(Create(E1a))
+
+        with self.say("This is because a n is constrained to be both zero and nonzero.") as tracker:
+            self.play(Create(E1b))
+            boxes = [self.box(E1b), self.box(E1a[0][7:10]), self.box(E1[0][13:17])]
+            self.wait(tracker.duration + 2)
+            self.play(FadeOut(E1, E1a, E1b, *boxes))
+            self.wait(2)
+
+#endregion
+#region Scene 4 : Linear 
+
+        self.set_colour_map((
+            ('abcde', Green),
+            ('h', Orange),
+            ('pqrs', Yellow),
+            ('x', Red),
+            ('y', Magenta),
+            ('z', Cyan)))
+
+        E1 = self.make_tex(r'y=\sum_{i=0}^{1}a_ix^i=0')
+        E1a = MathTex(r'Degree=n=1').set_color(self.get_text_colour())
+        E1a.next_to(E1, DOWN)
+        E1b = self.make_tex(r'a_1x+a_0=0').next_to(E1a, DOWN)
+        E1c = self.make_tex(r'a_1x=-a_0').next_to(E1a, DOWN)
+        E1d = self.make_tex(r'x=-a_0/a_1').next_to(E1a, DOWN)
+        E1e = self.make_tex(r'x_1=-a_0/a_1').next_to(E1a, DOWN)
+
+        with self.say(
+            """
+            The degree one polynomial has a single root because  
+            the equation y equals zero has one solution.
+            """):
+            self.play(Create(E1))
+            self.play(Create(E1a))
+
+        with self.say("Solving it is easy."):
+            self.play(Create(E1b))
+            self.wait(1)
+            arc = {"path_arc": PI}
+            self.play(TransformByGlyphMap(
+                E1b, E1c,
+                #([4], [5], arc),
+                #([5], [6], arc),
+                #([6], [7], arc),
+                ([7], [4], arc),
+                ([8], ShrinkToCenter)))
+            self.wait(1)
+            self.play(TransformByGlyphMap(
+                E1c, E1d,
+                #([1], [7], arc),
+                #([2], [8], arc),
+                ([3], [1], arc),
+                ([4], [2], arc),
+                ([5], [3], arc),
+                ([6], [4], arc),
+                ([7], [5], arc),
+                (FadeIn, [6])))
+            self.wait(1)
+            self.play(TransformByGlyphMap(E1d, E1e, (GrowFromCenter, [2])))
+            self.wait(2)
+            self.play(FadeOut(E1, E1a, E1e))
+            self.wait(2)
+
+#endregion
+#region Scene 5 : Quadratic 
+
+        self.set_colour_map((
+            ('abcde', Green),
+            ('h', Orange),
+            ('pqrs', Yellow),
+            ('x', Red),
+            ('y', Magenta),
+            ('z', Cyan)))
+
+        E1 = self.make_tex(r'y=\sum_{i=0}^{2}a_ix^i=0')
+        E1a = MathTex(r'Degree=n=2').set_color(self.get_text_colour())
+        E1b = self.make_tex(r'y=ax^2+bx+c')
+        E1c = self.make_tex(r'x=\frac{-b\pm\sqrt{b^2-4ac}}{2a}')
+
+        VGroup(E1, E1a, E1b, E1c).arrange(DOWN)
+
+        with self.say("The degree two polynomial, the quadratic, has two roots."):
+            self.play(Create(E1))
+            self.play(Create(E1a))
+
+        with self.say("It's usually solved directly, using this formula, without conversion to the monic form."):
+            self.play(Create(E1b))
+            self.play(Create(E1c))
+
+            self.wait(2)
+            self.play(FadeOut(E1, E1a, E1b, E1c))
+            self.wait(2)
+
+#endregion
+#region Scene 6 : Cubic 
+
+        self.set_colour_map((
+            ('abcde', Green),
+            ('h', Orange),
+            ('pqrs', Yellow),
+            ('x', Red),
+            ('y', Magenta),
+            ('z', Cyan)))
+
+        E1 = self.make_tex(r'y=\sum_{i=0}^{3}a_ix^i=0')
+        E1a = MathTex(r'Degree=n=3').set_color(self.get_text_colour())
+        E1b = self.make_tex(r'y=x^3+ax^2+bx+c')
+
+        G = VGroup(E1, E1a, E1b).arrange(DOWN)
+
+        with self.say("The degree three polynomial, the cubic, has three roots."):
+            self.play(Create(E1))
+            self.play(Create(E1a))
+            self.play(Create(E1b))
+
+            self.wait(2)
+            self.play(FadeOut(G))
+
+#endregion
+#region Scene 7 : Quartic 
+
+        self.set_colour_map((
+            ('abcde', Green),
+            ('h', Orange),
+            ('pqrs', Yellow),
+            ('x', Red),
+            ('y', Magenta),
+            ('z', Cyan)))
+
+        E1 = self.make_tex(r'y=\sum_{i=0}^{4}a_ix^i=0')
+        E1a = MathTex(r'Degree=n=4').set_color(self.get_text_colour())
+        E1b = self.make_tex(r'y=x^4+ax^3+bx^2+cx+d')
+
+        G = VGroup(E1, E1a, E1b).arrange(DOWN)
+
+        with self.say("The degree four polynomial, the quartic, has four roots."):
+            self.play(Create(E1))
+            self.play(Create(E1a))
+            self.play(Create(E1b))
+
+            self.wait(2)
+            self.play(FadeOut(G))
 
 #endregion
