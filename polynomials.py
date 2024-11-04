@@ -2,8 +2,8 @@ from manim import *
 from manim_voiceover import VoiceoverScene
 from manim_voiceover.services.gtts import GTTSService
 from MF_Tools import *
+from painter import *
 import platform
-from texpaint import *
 
 config.max_files_cached = 999
 config.verbosity = "CRITICAL"
@@ -16,7 +16,7 @@ class Polynomials(VoiceoverScene):
 
 #region Common 
 
-    Painter: TexPaint = TexPaint(
+    painter = Painter(
         0,
         (
             ('abcde', Green),
@@ -27,26 +27,25 @@ class Polynomials(VoiceoverScene):
             ('z', Cyan)))
     
     def box(self, *args: VMobject) -> Polygon:
-        polygon = self.box_make(*args)
-        self.play(Create(polygon))
-        return polygon
+        b = self.box_make(*args)
+        self.play(Create(b))
+        return b
 
-    _box = None
+    boxes = None
 
     def box_make(self, *args: VMobject) -> Polygon:
         return SurroundingRectangle(VGroup(*args), self.get_colour(Yellow)) 
 
     def box_move(self, *args: VMobject) -> Animation:
-        #b = SurroundingRectangle(VGroup(*args), self.get_colour(Yellow)) 
         b = self.box_make(*args)
-        result = Create(b) if self._box == None else ReplacementTransform(self._box, b)
-        self._box = b
+        result = Create(b) if self.boxes == None else ReplacementTransform(self.boxes, b)
+        self.boxes = b
         return result
 
-    def box_off(self: Scene) -> None:
-        if self._box != None:
-            self.play(Uncreate(self._box))
-            self._box = None
+    def box_off(self) -> None:
+        if self.boxes != None:
+            self.play(Uncreate(self.boxes))
+            self.boxes = None
 
     def box_on(self, *args: VMobject) -> None:
         self.play(self.box_move(*args))
@@ -59,18 +58,16 @@ class Polynomials(VoiceoverScene):
         return self.get_colour(Grey)
 
     def get_colour(self, colour_index: int) -> ManimColor:
-        return self.Painter.get_colour(colour_index)
+        return self.painter.get_colour(colour_index)
 
     def make_matrix(self, matrix: List[List[str]], margin: float = MED_SMALL_BUFF, padding: float = 1.3) -> Matrix:
         rows: int = len(matrix)
         cols: int = len(matrix[0])
         strings: List[str] = [[self.prepare_string(t) for t in row] for row in matrix]
-        matrix: Matrix = Matrix(strings, bracket_h_buff = margin, h_buff = padding)
-        matrix.set_color(Grey)
+        matrix: Matrix = Matrix(strings, bracket_h_buff = margin, h_buff = padding).set_color(self.get_colour(Grey))
         for row in range(rows):
             for col in range(cols):
                 self.paint(matrix[0][row * cols + col])
-        matrix[1:3].set_color(self.get_colour(Grey))
         return matrix
 
     def make_tex(self, text: str) -> MathTex:
@@ -91,7 +88,7 @@ class Polynomials(VoiceoverScene):
         return text;
     
     def paint(self, mathTex: MathTex) -> None:
-        self.Painter.paint(mathTex)
+        self.painter.paint(mathTex)
 
     def prepare_string(self, text: str) -> str:
         return text if '|' in text else f'|{text}'
@@ -101,7 +98,7 @@ class Polynomials(VoiceoverScene):
         return self.voiceover(text, lang='en', lang_check=False)
     
     def set_colour_map(self, map: tuple[tuple[str, int]]):
-        self.Painter.set_colour_map(map)
+        self.painter.set_colour_map(map)
 
     def construct(self):
         self.set_speech_service(GTTSService())
@@ -119,7 +116,7 @@ class Polynomials(VoiceoverScene):
 
         s = r'x=\frac{-b\pm\sqrt{b^2-4ac}}{2a}'
         t = MathTex(s)
-        self.Painter.paint(t)
+        self.painter.paint(t)
 
         self.play(Create(t))
         self.wait(10)
