@@ -1,3 +1,4 @@
+from contextlib import _GeneratorContextManager
 from manim import *
 from manim_voiceover import VoiceoverScene
 from manim_voiceover.services.gtts import GTTSService
@@ -19,12 +20,12 @@ class Polynomials(VoiceoverScene):
     painter = Painter(
         0,
         (
-            ('abcde', Green),
-            ('h', Orange),
-            ('pqrs', Yellow),
-            ('x', Red),
-            ('y', Magenta),
-            ('z', Cyan)))
+            ('abcde', green),
+            ('h', orange),
+            ('pqrs', yellow),
+            ('x', red),
+            ('y', magenta),
+            ('z', cyan)))
     
     def box(self, *args: VMobject) -> Polygon:
         b = self.box_make(*args)
@@ -34,7 +35,7 @@ class Polynomials(VoiceoverScene):
     boxes = None
 
     def box_make(self, *args: VMobject) -> Polygon:
-        return SurroundingRectangle(VGroup(*args), self.get_colour(Yellow)) 
+        return SurroundingRectangle(VGroup(*args), self.get_colour(yellow)) 
 
     def box_move(self, *args: VMobject) -> Animation:
         b = self.box_make(*args)
@@ -50,12 +51,11 @@ class Polynomials(VoiceoverScene):
     def box_on(self, *args: VMobject) -> None:
         self.play(self.box_move(*args))
 
-    def flash(self, mathTex: MathTex, run_time=2) -> None:
-        white = self.get_colour(White)
-        self.play(Indicate(mathTex, color=white, run_time=run_time, scale_factor=2))
+    def flash(self, tex: MathTex, run_time=2) -> None:
+        self.play(Indicate(tex, color=self.get_colour(white), run_time=run_time, scale_factor=2))
 
     def get_text_colour(self) -> ManimColor:
-        return self.get_colour(Grey)
+        return self.get_colour(grey)
 
     def get_colour(self, index: int) -> ManimColor:
         return self.painter.get_colour(index)
@@ -64,7 +64,7 @@ class Polynomials(VoiceoverScene):
         rows: int = len(matrix)
         cols: int = len(matrix[0])
         strings: List[str] = [[self.prepare_string(t) for t in row] for row in matrix]
-        matrix: Matrix = Matrix(strings, bracket_h_buff = margin, h_buff = padding).set_color(self.get_colour(Grey))
+        matrix: Matrix = Matrix(strings, bracket_h_buff = margin, h_buff = padding).set_color(self.get_colour(grey))
         for row in range(rows):
             for col in range(cols):
                 self.paint(matrix[0][row * cols + col])
@@ -72,9 +72,9 @@ class Polynomials(VoiceoverScene):
 
     def make_tex(self, text: str) -> MathTex:
         text = self.prepare_string(text)
-        mathTex: MathTex = MathTex(text)
-        self.paint(mathTex)
-        return mathTex
+        tex: MathTex = MathTex(text)
+        self.paint(tex)
+        return tex
 
     #def make_tex(self, *items: str) -> MathTex:
     #    mathTex: MathTex = MathTex(*items)
@@ -82,13 +82,13 @@ class Polynomials(VoiceoverScene):
     #        self.paint_tex(mathTex[i])
     #    return mathTex
 
-    def make_text(self, s: str, *args, **kwargs) -> Text:
-        text = Text(self.prepare_string(s), font_size=24, color=self.get_text_colour(), *args, **kwargs)
-        text[0].set_opacity(0)
-        return text;
+    def make_text(self, text: str, *args, **kwargs) -> Text:
+        result = Text(self.prepare_string(text), font_size=24, color=self.get_text_colour(), *args, **kwargs)
+        result[0].set_opacity(0)
+        return result;
     
-    def paint(self, mathTex: MathTex) -> None:
-        self.painter.paint(mathTex)
+    def paint(self, tex: MathTex) -> None:
+        self.painter.paint(tex)
 
     def prepare_string(self, text: str) -> str:
         return text if '|' in text else f'|{text}'
@@ -108,25 +108,12 @@ class Polynomials(VoiceoverScene):
 #region Scene 1 : General 
 
         self.set_colour_map((
-            ('abcde', Green),
-            ('h', Orange),
-            ('pqrs', Yellow),
-            ('x', Red),
-            ('y', Magenta),
-            ('z', Cyan)))
-        
-        #G = VGroup(
-        #    self.make_tex(r'y=\sqrt{b^2-4ac}'),
-        #    self.make_tex(r'y=\sqrt[2]{b^2-4ac}'),
-        #    self.make_tex(r'y=\sqrt[3]{b^2-4ac}'),
-        #    self.make_tex(r'y=\sqrt[4]{b^2-4ac}'),
-        #    self.make_tex(r'y=\sqrt[5]{b^2-4ac}'),
-        #    self.make_tex(r'y=\sqrt[10]{b^2-4ac}'),
-        #).arrange(DOWN, aligned_edge=RIGHT)
-        #self.play(Create(G))
-        #self.wait(10)
-        #
-        #return
+            ('abcde', green),
+            ('h', orange),
+            ('pqrs', yellow),
+            ('x', red),
+            ('y', magenta),
+            ('z', cyan)))
         
         with self.say("This is a general polynomial equation in one variable, x."):
             F1 = self.make_tex(r'y=\sum_{i=0}^{n}a_ix^i')
@@ -210,12 +197,12 @@ class Polynomials(VoiceoverScene):
 #region Scene 2 : Quintic 
 
         self.set_colour_map((
-            ('abcde', Green),
-            ('h', Orange),
-            ('pqrs', Yellow),
-            ('x', Red),
-            ('y', Magenta),
-            ('z', Cyan)))
+            ('abcde', green),
+            ('h', orange),
+            ('pqrs', yellow),
+            ('x', red),
+            ('y', magenta),
+            ('z', cyan)))
 
         E1 = self.make_tex(r'y=\sum_{i=0}^{5}a_ix^i=0')
         E1a = MathTex(r'Degree=n=5').set_color(self.get_text_colour())
@@ -241,17 +228,18 @@ class Polynomials(VoiceoverScene):
         z8 = '(z^4+4hz^3+6h^2z^2+4h^3z+h^4)'
         z9 = 'z^5+5hz^4+10h^2z^3+10h^3z^2+5h^4z+h^5'
 
-        Fz = [[self.make_tex(s) for s in t] for t in [
-            [f'o{z}^5', f'a{z}^4', f'b{z}^3', f'c{z}^2', f'd{z}', 'e'],
-            [f'o{z2}^4', f'a{z2}^3', f'b{z2}^2', f'c{z2}'],
-            [f'o{z3}^3', f'a{z3}^2', f'b{z3}'],
-            [f'o{z4}^2', f'a{z4}'],
-            [f'o{z5}'],
-            [f'o{z6}{z3}', f'a{z6}{z2}', f'b{z6}{z}', f'c{z6}'],
-            [f'o{z7}{z2}', f'a{z7}{z}', f'b{z7}'],
-            [f'o{z8}{z}', f'a{z8}'],
-            [f'o{z9}'],
-            [f'o{z9}', 'az^4+4ahz^3+6ah^2z^2+4ah^3z+ah^4', 'bz^3+3bhz^2+3bh^2z+bh^3', 'cz^2+2chz+ch^2', 'dz+dh', 'e']]]
+        Fz = [
+            [self.make_tex(s) for s in t] for t in [
+                [f'o{z}^5', f'a{z}^4', f'b{z}^3', f'c{z}^2', f'd{z}', 'e'],
+                [f'o{z2}^4', f'a{z2}^3', f'b{z2}^2', f'c{z2}'],
+                [f'o{z3}^3', f'a{z3}^2', f'b{z3}'],
+                [f'o{z4}^2', f'a{z4}'],
+                [f'o{z5}'],
+                [f'o{z6}{z3}', f'a{z6}{z2}', f'b{z6}{z}', f'c{z6}'],
+                [f'o{z7}{z2}', f'a{z7}{z}', f'b{z7}'],
+                [f'o{z8}{z}', f'a{z8}'],
+                [f'o{z9}'],
+                [f'o{z9}', 'az^4+4ahz^3+6ah^2z^2+4ah^3z+ah^4', 'bz^3+3bhz^2+3bh^2z+bh^3', 'cz^2+2chz+ch^2', 'dz+dh', 'e']]]
 
         LHS = VGroup(*[self.make_tex(f'{s}o=') for s in ['x', 'y', 'y', 'x^5', 'ax^4', 'bx^3', 'cx^2', 'dx', 'e']])
         RHS = VGroup(*[self.make_tex(s) for s in ['oz+h', 'ox^5+ax^4+bx^3+cx^2+dx+e=0', 'oz^5+0z^4+pz^3+qz^2+rz+s']], *Fz[9])
@@ -263,7 +251,7 @@ class Polynomials(VoiceoverScene):
         EQU = [VGroup(LHS[i], RHS[i]) for i in range(9)]
 
         Y = self.make_matrix((['y'], ['x^5'], ['ax^4'], ['bx^3'], ['cx^2'], ['dx'], ['e']), margin = 0)
-        EQ = MathTex('=').set_color(self.get_colour(Grey))
+        EQ = MathTex('=').set_color(self.get_colour(grey))
         M = self.make_matrix((
             ('z^5', '0z^4', 'pz^3', 'qz^2', 'rz', 's'),
             ('z^5', '5hz^4', '10h^2z^3', '10h^3z^2', '5h^4z', 'h^5'),
@@ -299,16 +287,16 @@ class Polynomials(VoiceoverScene):
             self.play(Uncreate(s1))
 
         with self.say("In other words, transform it into so-called reduced form,"):
-            brace = Brace(Group(EQU[1], EQU[2]), LEFT, color=self.get_colour(Grey))
+            brace = Brace(Group(EQU[1], EQU[2]), LEFT, color=self.get_colour(grey))
             self.play(FadeIn(brace), Create(EQU[2]))
             self.box_on(*EQU[2][1][0][4:8])
 
         with self.say("where the coefficient of this term is zero."):
-            self.play(Indicate(EQU[2][1][0][5], color=self.get_colour(White), scale_factor=2, run_time=2))
+            self.play(Indicate(EQU[2][1][0][5], color=self.get_colour(white), scale_factor=2, run_time=2))
 
         with self.say("This operation is technically known as a Tschirnhaus Transformation,"):
             image = ImageMobject("resources/Tschirnhaus.jpg")
-            caption = MarkupText('Ehrenfried Walther von Tschirnhaus (1651-1708)', color=Grey).scale(0.25).rotate(-PI/2)
+            caption = MarkupText('Ehrenfried Walther von Tschirnhaus (1651-1708)', color=grey).scale(0.25).rotate(-PI/2)
             picture = Group(image, caption).arrange(RIGHT, buff=0.1)
             picture.to_corner(DR, buff=0.5)
             self.play(FadeIn(picture))
@@ -387,7 +375,7 @@ class Polynomials(VoiceoverScene):
             return M[0][row * 6 + col]
         
         def indicate(items: List[VMobject], size: float = 1.2) -> None:
-            self.play(Indicate(VGroup(*items), color = self.get_colour(White), scale_factor = size))
+            self.play(Indicate(VGroup(*items), color = self.get_colour(white), scale_factor = size))
 
         def new_target(row: int, col: int):
             z = ('z^5', 'z^4', 'z^3', 'z^2', 'z', '1')
@@ -526,12 +514,12 @@ class Polynomials(VoiceoverScene):
 #region Scene 1 : Introduction 
 
         self.set_colour_map((
-            ('abcde', Green),
-            ('h', Orange),
-            ('pqrs', Yellow),
-            ('x', Red),
-            ('y', Magenta),
-            ('z', Cyan)))
+            ('abcde', green),
+            ('h', orange),
+            ('pqrs', yellow),
+            ('x', red),
+            ('y', magenta),
+            ('z', cyan)))
 
         s = r'x=\frac{-b\pm\sqrt{b^2-4ac}}{2a}'
         t = MathTex(s)
@@ -545,12 +533,12 @@ class Polynomials(VoiceoverScene):
 #region Scene 3 : Constant 
 
         self.set_colour_map((
-            ('abcde', Green),
-            ('h', Orange),
-            ('pqrs', Yellow),
-            ('x', Red),
-            ('y', Magenta),
-            ('z', Cyan)))
+            ('abcde', green),
+            ('h', orange),
+            ('pqrs', yellow),
+            ('x', red),
+            ('y', magenta),
+            ('z', cyan)))
 
         E1 = self.make_tex(r'y=\sum_{i=0}^{0}a_ix^i=a_0=0')
         E1a = MathTex(r'Degree=n=0').set_color(self.get_text_colour())
@@ -575,12 +563,12 @@ class Polynomials(VoiceoverScene):
 #region Scene 4 : Linear 
 
         self.set_colour_map((
-            ('abcde', Green),
-            ('h', Orange),
-            ('pqrs', Yellow),
-            ('x', Red),
-            ('y', Magenta),
-            ('z', Cyan)))
+            ('abcde', green),
+            ('h', orange),
+            ('pqrs', yellow),
+            ('x', red),
+            ('y', magenta),
+            ('z', cyan)))
 
         E1 = self.make_tex(r'y=\sum_{i=0}^{1}a_ix^i=0')
         E1a = MathTex(r'Degree=n=1').set_color(self.get_text_colour())
@@ -630,12 +618,12 @@ class Polynomials(VoiceoverScene):
 #region Scene 5 : Quadratic 
 
         self.set_colour_map((
-            ('abcde', Green),
-            ('h', Orange),
-            ('pqrs', Yellow),
-            ('x', Red),
-            ('y', Magenta),
-            ('z', Cyan)))
+            ('abcde', green),
+            ('h', orange),
+            ('pqrs', yellow),
+            ('x', red),
+            ('y', magenta),
+            ('z', cyan)))
 
         E1 = self.make_tex(r'y=\sum_{i=0}^{2}a_ix^i=0')
         E1a = MathTex(r'Degree=n=2').set_color(self.get_text_colour())
@@ -660,12 +648,12 @@ class Polynomials(VoiceoverScene):
 #region Scene 6 : Cubic 
 
         self.set_colour_map((
-            ('abcde', Green),
-            ('h', Orange),
-            ('pqrs', Yellow),
-            ('x', Red),
-            ('y', Magenta),
-            ('z', Cyan)))
+            ('abcde', green),
+            ('h', orange),
+            ('pqrs', yellow),
+            ('x', red),
+            ('y', magenta),
+            ('z', cyan)))
 
         E1 = self.make_tex(r'y=\sum_{i=0}^{3}a_ix^i=0')
         E1a = MathTex(r'Degree=n=3').set_color(self.get_text_colour())
@@ -685,12 +673,12 @@ class Polynomials(VoiceoverScene):
 #region Scene 7 : Quartic 
 
         self.set_colour_map((
-            ('abcde', Green),
-            ('h', Orange),
-            ('pqrs', Yellow),
-            ('x', Red),
-            ('y', Magenta),
-            ('z', Cyan)))
+            ('abcde', green),
+            ('h', orange),
+            ('pqrs', yellow),
+            ('x', red),
+            ('y', magenta),
+            ('z', cyan)))
 
         E1 = self.make_tex(r'y=\sum_{i=0}^{4}a_ix^i=0')
         E1a = MathTex(r'Degree=n=4').set_color(self.get_text_colour())

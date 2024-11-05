@@ -1,25 +1,25 @@
 from manim import *
 import re
 
-Background   = 0
-Black        = 1
-Brown        = 2
-Red          = 3
-Orange       = 4
-Yellow       = 5
-Green        = 6
-Blue         = 7
-Cyan         = 8
-Magenta      = 9
-Violet       = 10
-Grey         = 11
-White        = 12
+background   = 0
+black        = 1
+brown        = 2
+red          = 3
+orange       = 4
+yellow       = 5
+green        = 6
+blue         = 7
+cyan         = 8
+magenta      = 9
+violet       = 10
+grey         = 11
+white        = 12
 
-SchemeDefault       = 0
-SchemeBright        = 1
-SchemePastel        = 2
-SchemeBlackOnWhite  = 3
-SchemeWhiteOnBlack  = 4
+scheme_default          = 0
+scheme_bright           = 1
+scheme_pastel           = 2
+scheme_black_on_white   = 3
+scheme_white_on_black   = 4
 
 class Painter():
 
@@ -33,7 +33,7 @@ class Painter():
     colour: ManimColor
     index: int = 0
     map: tuple[tuple[str, int]] = ()
-    scheme: int = SchemeBright
+    scheme: int = scheme_bright
     tex: MathTex = None
     tokens: List[str] = []
 
@@ -47,7 +47,7 @@ class Painter():
 
     def __init__(
             self,
-            scheme: int = SchemeBright,
+            scheme: int = scheme_bright,
             map: tuple[tuple[str, int]] = ()):
         self.scheme = scheme;
         if map is not None:
@@ -58,19 +58,12 @@ class Painter():
 
     def paint(self, tex: MathTex) -> None:
 
-        def accept(token):
-            pop()
-
         def get_token_colour(token: str) -> ManimColor:
             colours = self.colours[self.scheme]
             for map in self.map:
                 if (token in map[0]):
                     return colours[map[1]]
-            return colours[Grey]
-
-        def paint_block():
-            accept('{')
-            paint_expression()
+            return colours[grey]
 
         def paint_expression():
             while self.tokens:
@@ -91,9 +84,11 @@ class Painter():
         def paint_function(token):
             match(token):
                 case r'\frac':
-                    paint_block()
-                    paint_glyph(token, False)
-                    paint_block()
+                    pop() # '{'
+                    paint_expression()
+                    self.index += 1
+                    pop() # '{'
+                    paint_expression()
                 case r'\sqrt':
                     self.index += 1
                     if peek() == '[':
@@ -102,7 +97,8 @@ class Painter():
                             self.index += 1
                     self.index += 1
                 case _:
-                    paint_glyph(token, False)
+                    self.index += 1
+                    #paint_glyph(token, False)
 
         def paint_glyph(token: str, paint: bool) -> None:
             if paint:
@@ -126,7 +122,7 @@ class Painter():
             return token
 
         self.tokens = re.findall(r"\\\w+|\{|\}|[^\\\{\}]", tex.tex_string)
-        tex.set_color(self.get_colour(Grey))
+        tex.set_color(self.get_colour(grey))
         self.tex = tex
         self.index = 0
         paint_expression()
