@@ -391,17 +391,19 @@ class Polynomials(VoiceoverScene):
             s = src.tex_string
             t = tgt.tex_string
             foo = s.replace('^', '')
-            #foo = s.translate({ord(c): None for c in '|^'})
+            bar = t.replace('^', '')
             i = foo.index('z')
             d = [i] if len(foo)<=i+1 else [i,i+1]
             e = (d, ShrinkToCenter)
-            #if i > 0:
-            #    f = (e)
-            #else:
-            #    f = (e, (GrowFromCenter, [0]))
-            print(f"'{s}' -> '{t}', foo = '{foo}', d = '{d}', e='{e}'")
+            f = (GrowFromCenter, [1])
+            g = e, f
+            if (i != 1):
+                g = e
+            #if i == 1:
+            #    e = e, (GrowFromCenter, [1])
+            print(f"'{s}' -> '{t}', foo = '{foo}', bar = '{bar}', i = {i}, d = '{d}', e='{e}', f='{f}', g='{g}'")
             #return ReplacementTransform(src, tgt.move_to(src.get_center()))
-            return TransformByGlyphMap(src, tgt.move_to(src.get_center()), e)
+            return TransformByGlyphMap(src, tgt.move_to(src.get_center()), g)
         
         m2 = (
             ('1', '0', 'p', 'q', 'r', 's'),
