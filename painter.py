@@ -31,12 +31,19 @@ class Painter():
         (BLACK, *[WHITE for _ in range(12)]))
 
     colour: ManimColor
+    index: int = 0
     map: tuple[tuple[str, int]] = ()
     scheme: int = SchemeBright
-    sticky: int = 0
     tex: MathTex = None
-    texIndex: int = 0
     tokens: List[str] = []
+
+    sticky: int = 0
+    """
+    Controls retention of the current colour.
+    0: no retention,
+    1: retain for the next single token,
+    2: retain for the following {block}.
+    """
 
     def __init__(
             self,
@@ -49,16 +56,17 @@ class Painter():
     def get_colour(self, colour_index: int) -> ManimColor:
         return self.colours[self.scheme][colour_index]
 
-    def paint(self, mathTex: MathTex):
+    def paint(self, tex: MathTex) -> None:
 
         def accept(token):
             pop()
 
         def get_token_colour(token: str) -> ManimColor:
+            colours = self.colours[self.scheme]
             for map in self.map:
                 if (token in map[0]):
-                    return self.colours[self.scheme][map[1]]
-            return self.colours[self.scheme][Grey]
+                    return colours[map[1]]
+            return colours[Grey]
 
         def paint_block():
             accept('{')
@@ -75,7 +83,7 @@ class Painter():
                         break
                     case '\\':
                         paint_function(token)
-                    case '_'|'^':
+                    case '_' | '^':
                         self.sticky = 2 if peek() == '{' else 1
                     case _:
                         paint_glyph(token, True)
@@ -87,18 +95,18 @@ class Painter():
                     paint_glyph(token, False)
                     paint_block()
                 case r'\sqrt':
-                    self.texIndex += 1
+                    self.index += 1
                     if peek() == '[':
                         pop()
                         while pop() != ']':
-                            self.texIndex += 1
-                    self.texIndex += 1
+                            self.index += 1
+                    self.index += 1
                 case _:
                     paint_glyph(token, False)
 
         def paint_glyph(token: str, paint: bool) -> None:
             if paint:
-                glyph = self.tex[0][self.texIndex]
+                glyph = self.tex[0][self.index]
                 if token in ['|', 'o']:
                     glyph.set_opacity(0)
                 else:
@@ -107,7 +115,7 @@ class Painter():
                     glyph.set_color(self.colour)
                     if self.sticky == 1:
                         self.sticky = 0
-            self.texIndex += 1
+            self.index += 1
 
         def peek() -> str:
             return self.tokens[0]
@@ -117,11 +125,10 @@ class Painter():
             self.tokens.pop(0)
             return token
 
-        self.level = 0
-        self.tex = mathTex
-        self.texIndex = 0
-        self.tokens = re.findall(r"\\\w+|\{|\}|[^\\\{\}]", self.tex.tex_string)
-        self.tex.set_color(self.get_colour(Grey))
+        self.tokens = re.findall(r"\\\w+|\{|\}|[^\\\{\}]", tex.tex_string)
+        tex.set_color(self.get_colour(Grey))
+        self.tex = tex
+        self.index = 0
         paint_expression()
 
     def set_colour_map(self, map: tuple[tuple[str, int]]):
