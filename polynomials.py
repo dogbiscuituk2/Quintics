@@ -386,9 +386,22 @@ class Polynomials(VoiceoverScene):
             mathTex.target.move_to(Z[0][col], DOWN)
             return mathTex
 
-        def replace(sourceTex: MathTex, targetTex: MathTex) -> Transform:
-            M2.append(targetTex)
-            return ReplacementTransform(sourceTex, targetTex.move_to(sourceTex.get_center()))
+        def replace(src: MathTex, tgt: MathTex) -> Transform:
+            M2.append(tgt)
+            s = src.tex_string
+            t = tgt.tex_string
+            foo = s.replace('^', '')
+            #foo = s.translate({ord(c): None for c in '|^'})
+            i = foo.index('z')
+            d = [i] if len(foo)<=i+1 else [i,i+1]
+            e = (d, ShrinkToCenter)
+            #if i > 0:
+            #    f = (e)
+            #else:
+            #    f = (e, (GrowFromCenter, [0]))
+            print(f"'{s}' -> '{t}', foo = '{foo}', d = '{d}', e='{e}'")
+            #return ReplacementTransform(src, tgt.move_to(src.get_center()))
+            return TransformByGlyphMap(src, tgt.move_to(src.get_center()), e)
         
         m2 = (
             ('1', '0', 'p', 'q', 'r', 's'),
@@ -400,7 +413,7 @@ class Polynomials(VoiceoverScene):
             ('', '', '', '', '', 'e'))
 
         with self.say("If we now consider the case z equals one, then all of these z powers vanish from the matrix."):
-            for col in range(6):
+            for col in range(5):
                 transforms: List[Transform] = []
                 rows = range(col + 2)
                 if col < 5:
@@ -411,6 +424,8 @@ class Polynomials(VoiceoverScene):
                 if col < 5:
                     indicate([get_element(row, col) for row in rows])
                 self.play(*transforms)
+
+        self.wait(10)
 
         return
 
