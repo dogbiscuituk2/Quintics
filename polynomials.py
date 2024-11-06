@@ -388,22 +388,13 @@ class Polynomials(VoiceoverScene):
 
         def replace(src: MathTex, tgt: MathTex) -> Transform:
             M2.append(tgt)
-            s = src.tex_string
-            t = tgt.tex_string
-            foo = s.replace('^', '')
-            bar = t.replace('^', '')
-            i = foo.index('z')
-            d = [i] if len(foo)<=i+1 else [i,i+1]
-            e = (d, ShrinkToCenter)
-            f = (GrowFromCenter, [1])
-            g = e, f
-            if (i != 1):
-                g = e
-            #if i == 1:
-            #    e = e, (GrowFromCenter, [1])
-            print(f"'{s}' -> '{t}', foo = '{foo}', bar = '{bar}', i = {i}, d = '{d}', e='{e}', f='{f}', g='{g}'")
-            #return ReplacementTransform(src, tgt.move_to(src.get_center()))
-            return TransformByGlyphMap(src, tgt.move_to(src.get_center()), g)
+            s = src.tex_string.replace('^', '')
+            i = s.index('z')
+            if i == 1:
+                maps = [([1,2], FadeOut), (GrowFromCenter, [1])]
+            else:
+                maps = [([i] if len(s) <= i + 1 else [i, i + 1], FadeOut)]
+            return TransformByGlyphMap(src, tgt.move_to(src.get_center()), *maps)
         
         m2 = (
             ('1', '0', 'p', 'q', 'r', 's'),
