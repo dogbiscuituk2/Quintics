@@ -266,13 +266,8 @@ class Polynomials(VoiceoverScene):
         EQ.move_to(EQ.get_center() + 2.8 * UP)
         Z.move_to(Z.get_center() + 0.4 * UP)
 
-        #titles_show(self, 0)
-        #titles_show(self, 2)
-
-        with self.say("Let's use letters 'a' through 'e' for the coefficients."):
-            self.play(Create(EQU[1]))
-
         with self.say("We could solve it easily if we didn't have these intermediate powers."):
+            self.play(Create(EQU[1]))
             self.box_on(*EQU[1][1][0][4:19])
             s1 = self.make_tex('y=x^5+e=0')
             s2 = self.make_tex('x=\\sqrt[5]{-e}')
@@ -281,7 +276,7 @@ class Polynomials(VoiceoverScene):
                 TransformMatchingShapes(EQU[1].copy(), s1),
                 Create(s2))
 
-        with self.say("To make a start, we might first try to get rid of the quartic, or x to the fourth, term."):
+        with self.say("To make a start, we might first try to get rid of the quartic, x to the fourth, term."):
             self.box_on(*EQU[1][1][0][4:8])
             self.play(Uncreate(s2))
             self.play(Uncreate(s1))
@@ -291,12 +286,15 @@ class Polynomials(VoiceoverScene):
             self.play(FadeIn(brace), Create(EQU[2]))
             self.box_on(*EQU[2][1][0][4:8])
 
-        with self.say("where the coefficient of this term is zero."):
+        with self.say("with this coefficient equal to zero."):
             self.play(Indicate(EQU[2][1][0][5], color=self.get_colour(white), scale_factor=2, run_time=2))
 
         with self.say("This operation is technically known as a Tschirnhaus Transformation,"):
             image = ImageMobject("resources/Tschirnhaus.jpg")
-            caption = MarkupText('Ehrenfried Walther von Tschirnhaus (1651-1708)', color=grey).scale(0.25).rotate(-PI/2)
+            caption = MarkupText(
+                    'Ehrenfried Walther von Tschirnhaus (1651-1708)',
+                    color=self.get_colour(grey)
+                ).scale(0.25).rotate(-PI/2)
             picture = Group(image, caption).arrange(RIGHT, buff=0.1)
             picture.to_corner(DR, buff=0.5)
             self.play(FadeIn(picture))
@@ -387,13 +385,14 @@ class Polynomials(VoiceoverScene):
             return mathTex
 
         def replace(src: MathTex, tgt: MathTex) -> Transform:
+            print(f"src: {src.tex_string}, tgt: {tgt.tex_string}")
             M2.append(tgt)
             s = src.tex_string.replace('^', '')
             i = s.index('z')
             if i == 1:
-                maps = [([1,2], FadeOut), (GrowFromCenter, [1])]
+                maps = [([1,2], ShrinkToCenter), (GrowFromCenter, [1])]
             else:
-                maps = [([i] if len(s) <= i + 1 else [i, i + 1], FadeOut)]
+                maps = [([i] if len(s) <= i + 1 else [i, i + 1], ShrinkToCenter)]
             return TransformByGlyphMap(src, tgt.move_to(src.get_center()), *maps)
         
         m2 = (
