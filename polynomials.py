@@ -96,8 +96,8 @@ class Polynomials(VoiceoverScene):
         return text if '|' in text else f'|{text}'
 
     def say(self, text: str):
-        line = getframeinfo(currentframe().f_back).lineno
-        print(f"{line}: {text}")
+        line_number = getframeinfo(currentframe().f_back).lineno
+        print(f"{line_number}: {text}")
         # Specify language & disable language check to avoid GTTS bugs.
         return self.voiceover(text, lang='en', lang_check=False)
     
@@ -225,35 +225,11 @@ class Polynomials(VoiceoverScene):
             for g in ((5,7), (11,13), (17,19), (26,30), (34,36)):
                 self.flash(VGroup(*F8[0][g[0]:g[1]]), run_time=1)
             self.wait(2)
-            self.play(FadeOut(F6a, F8))
+            self.play(FadeOut(F6h), FadeOut(F8))
             self.wait(2)
 
 #endregion
 #region Scene 2 : Quintic 
-
-        # from: r'x^n+b_{n-1}x^{n-1}+b_{n-2}x^{n-2}+...+b_1x+b_0=0'
-        # to:   r'y=x^5+ax^4+bx^3+cx^2+dx+e'
-
-        with self.say("The degree five polynomial, the quintic, has five roots."):
-            E1b = self.make_tex(r'y=x^5+ax^4+bx^3+cx^2+dx+e')
-            self.play(
-                TransformByGlyphMap(
-                    F6h,
-                    E1b,
-                    (GrowFromCenter, [1,2]),
-                    ([5,6,7], ShrinkToCenter),
-                    ([9,10,11], [8]),
-                    ([14,15,16], ShrinkToCenter),
-                    ([18,19,20], [12]),
-                    ([22,23,24,25], ShrinkToCenter),
-                    (GrowFromCenter, [14,15,16,17]),
-                    ([27], ShrinkToCenter),
-                    ([31,32,33], ShrinkToCenter)
-                    ))
-
-            self.wait(10)
-
-        return
 
         z = '(z+h)'
         z2 = f'{z}{z}'
@@ -303,8 +279,9 @@ class Polynomials(VoiceoverScene):
         EQ.move_to(EQ.get_center() + 2.8 * UP)
         Z.move_to(Z.get_center() + 0.4 * UP)
 
-        with self.say("We could solve it easily if we didn't have these intermediate powers."):
+        with self.say("The degree five polynomial, the quintic, has five roots."):
             self.play(Create(EQU[1]))
+        with self.say("We could solve it easily if we didn't have these intermediate powers."):
             self.box_on(*EQU[1][1][0][4:19])
             s1 = self.make_tex('y=x^5+e=0')
             s2 = self.make_tex('x=\\sqrt[5]{-e}')
@@ -425,9 +402,10 @@ class Polynomials(VoiceoverScene):
             M2.append(tgt)
             s = src.tex_string.replace('^', '')
             i = s.find('z')
+            maps = [([1], [1])]
             if i == 1:
                 maps = [([1,2], ShrinkToCenter), (GrowFromCenter, [1])]
-            else:
+            elif i > 1:
                 maps = [([i] if len(s) <= i + 1 else [i, i + 1], ShrinkToCenter)]
             return TransformByGlyphMap(src, tgt.move_to(src.get_center()), *maps)
         
@@ -441,17 +419,18 @@ class Polynomials(VoiceoverScene):
             ('', '', '', '', '', 'e'))
 
         with self.say("If we now consider the case z equals one, then all of these z powers vanish from the matrix."):
-            for col in range(5):
+            for col in range(6):
                 transforms: List[Transform] = []
                 rows = range(col + 2)
                 transforms = [MoveToTarget(new_target(row, col)) for row in rows]
                 transforms.append(FadeOut(Z[0][col]))
                 for row in rows:
                     transforms.append(rewrite(get_element(row, col), self.make_tex(m2[row][col])))
-                indicate([get_element(row, col) for row in rows])
+                if col < 5:
+                    indicate([get_element(row, col) for row in rows])
                 self.play(*transforms)
-            for row in range(7):
-                M2.append(self.make_tex(m2[row][5]))
+            #for row in range(7):
+            #    M2.append(self.make_tex(m2[row][5]))
 
         self.wait(10)
 
@@ -471,6 +450,7 @@ class Polynomials(VoiceoverScene):
 
         with self.say("Now we can read the matrix column by column, to get expressions for the new coefficients in terms of the old."):
             self.play(FadeOut(Y, EQ, M, M2[0], M2[1], Z[0][5], Z[1], Z[2], *Z2))
+            #self.play(FadeOut(Y, EQ, M, M2[0], M2[1]))
             for f in (F5, F6, F7, F8, F9):
                 VGroup(F1, F2, F3, f).arrange(DOWN, aligned_edge = LEFT)
             VGroup(F1, F2, F4, F8).arrange(DOWN, aligned_edge = LEFT)
@@ -481,14 +461,12 @@ class Polynomials(VoiceoverScene):
                 VGroup(*[M2[i] for i in range(9, 14)]),
                 VGroup(*[M2[i] for i in range(14, 20)]),
                 VGroup(*[M2[i] for i in range(20, 27)])]
-            for i in range(4):
+            for i in range(5):
                 self.play(TransformMatchingShapes(M6[i], F5[i], path_arc=PI/2))
 
         for i in enumerate(F5):
             print(i);
         
-        return
-
         with self.say(
             """
             This h substitution avoids a lot of ugly fractions with powers of five denominators in the results. 
@@ -498,7 +476,7 @@ class Polynomials(VoiceoverScene):
             self.play(TransformMatchingShapes(F5[0], F6[0]))
             indicate(F6[0])
             for i in range(1, 5):
-                indicate(F5[i][[9, 9, 8, 6][i - 1]], size = 2)
+                #indicate(F5[i][[9, 9, 8, 6][i - 1]], size = 2)
                 self.play(TransformMatchingShapes(F5[i], F6[i]))
                 self.play(TransformMatchingShapes(F6[i], F7[i]))
                 self.play(TransformMatchingShapes(F7[i], F8[i], path_arc=PI/2))
