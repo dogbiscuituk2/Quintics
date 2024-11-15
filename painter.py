@@ -121,7 +121,10 @@ class Painter():
             self.tokens.pop(0)
             return token
 
-        self.tokens = re.findall(r"\\\w+|\{|\}|[^\\\{\}]", tex.tex_string)
+        # A token is either:
+        # 1) a backslash, followed by one or more word characters; or, 
+        # 2) failing that, any single character (including a backslash).
+        self.tokens = re.findall(r"\\\w+|.", tex.tex_string)
         tex.set_color(self.get_colour(grey))
         self.tex = tex
         self.index = 0
