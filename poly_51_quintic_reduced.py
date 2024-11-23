@@ -2,11 +2,11 @@ from MF_Tools import *
 from painter import *
 from poly_00_base import Poly_00_Base
 
-class Poly_51_Quintic(Poly_00_Base):
+class Poly_51_Quintic_Reduced(Poly_00_Base):
 
     def construct(self):
         self.init()
-
+        
         z = '(z+h)'
         z2 = f'{z}{z}'
         z3 = f'{z2}{z}'
@@ -30,10 +30,7 @@ class Poly_51_Quintic(Poly_00_Base):
                 [f'o{z9}'],
                 [f'o{z9}', 'az^4+4ahz^3+6ah^2z^2+4ah^3z+ah^4', 'bz^3+3bhz^2+3bh^2z+bh^3', 'cz^2+2chz+ch^2', 'dz+dh', 'e']]]
 
-        LHS = VGroup(*[self.make_tex(f'{s}o=') for s in ['x^1', 'y^1', 'y^1', 'x^5', 'ax^4', 'bx^3', 'cx^2', 'dx', 'e']])
-        for i in range(3):
-            print(LHS[i])
-            LHS[i][0][2].set_opacity(0)
+        LHS = VGroup(*[self.make_tex(f'{s}o=') for s in ['x^1', 'y^1', 'y^1', 'x^5', 'ax^4', 'bx^3', 'cx^2', 'dx^1', 'eo^0']])
         RHS = VGroup(*[self.make_tex(s) for s in ['oz+h', 'ox^5+ax^4+bx^3+cx^2+dx+e=0', 'oz^5+0z^4+pz^3+qz^2+rz+s']], *Fz[9])
         ALL = VGroup(LHS, RHS)
 
@@ -42,7 +39,7 @@ class Poly_51_Quintic(Poly_00_Base):
         ALL.arrange(RIGHT, aligned_edge=DOWN)
         EQU = [VGroup(LHS[i], RHS[i]) for i in range(9)]
 
-        Y = self.make_matrix((['y'], ['x^5'], ['ax^4'], ['bx^3'], ['cx^2'], ['dx'], ['e']), margin = 0)
+        Y = self.make_matrix((['y^1'], ['x^5'], ['ax^4'], ['bx^3'], ['cx^2'], ['dx^1'], ['eo^0']), margin = 0)
         EQ = MathTex('=').set_color(self.get_colour(grey))
         M = self.make_matrix((
             ('z^5', '0z^4', 'pz^3', 'qz^2', 'rz', 's'),
@@ -60,6 +57,7 @@ class Poly_51_Quintic(Poly_00_Base):
 
         with self.say("The degree five polynomial, the quintic, has five roots."):
             self.play(Create(EQU[1]))
+
         with self.say("We could solve it easily if we didn't have these intermediate powers."):
             self.box_on(*EQU[1][1][0][4:19])
             s1 = self.make_tex('y=x^5+e=0')
@@ -225,8 +223,8 @@ class Poly_51_Quintic(Poly_00_Base):
         F6 = setup('a=-5h' , 'p=10h^2-20h^2+b', 'q=10h^3-30h^3+3bh+c', 'r=5h^4-20h^4+3bh^2+2ch+d'   , 's=h^5-5h^5+bh^3+ch^2+dh+e')
         F7 = setup('h=-a/5', 'p=-10h^2+b'     , 'q=-20h^3+3bh+c'     , 'r=-15h^4+3bh^2+2ch+d'       , 's=-4h^5+bh^3+ch^2+dh+e')
         F8 = setup('h=-a/5', 'p=b-10h^2'      , 'q=c+3bh-20h^3'      , 'r=d+2ch+3bh^2-15h^4'        , 's=e+dh+ch^2+bh^3-4h^5')
-        #F9 = setup('h=-a/5', 'p=b-2a^2/5'     , 'q=c-3ab/5+4a^3/25'  , 'r=d-2ac/5+3a^2b/25-3a^4/125', 's=e-ad/5+a^2c/25-a^3b/125-4a^5/3125')
-
+        F9 = setup('h=-a/5', 'p=b-2a^2/5'     , 'q=c-3ab/5+4a^3/25'  , 'r=d-2ac/5+3a^2b/25-3a^4/125', 's=e-ad/5+a^2c/25-a^3b/125-4a^5/3125')
+        
         with self.say("Now we can read the matrix column by column, to get expressions for the new coefficients in terms of the old."):
             self.play(FadeOut(Y, EQ, M, M2[0], M2[1], Z[0][5], Z[1], Z[2], *Z2))
             for f in (F5, F6, F7, F8):
@@ -241,9 +239,6 @@ class Poly_51_Quintic(Poly_00_Base):
                 VGroup(*[M2[i] for i in range(20, 27)])]
             for i in range(5):
                 self.play(TransformMatchingShapes(M6[i], F5[i], path_arc=PI/2))
-
-        for i in enumerate(F5):
-            print(i);
         
         with self.say(
             """
@@ -269,10 +264,15 @@ class Poly_51_Quintic(Poly_00_Base):
             indicate([F3])
             self.play(TransformMatchingShapes(F3, F4))
             indicate([F4])
+            self.wait(5)
 
-        self.wait(10)
+        with self.say("Here are those ugly power of five denominators, if you prefer:"):
+            for i in range(1, 5):
+                F9[i].move_to(F8[i], aligned_edge=LEFT)
+                self.play(TransformMatchingShapes(F8[i], F9[i]))
+        self.wait(3)
+        with self.say("Maybe not."):
+            for i in range(1, 5):
+                self.play(TransformMatchingShapes(F9[i], F8[i]))
+        self.wait(3)
         self.play(FadeOut(F1), FadeOut(F2), FadeOut(F4), FadeOut(F7[0]), FadeOut(F8))
-
-        #with self.say("Here are those ugly power of five denominators:"):
-        #    for i in range(1, 5):
-        #        self.play(TransformMatchingShapes(F8[i], F9[i]))

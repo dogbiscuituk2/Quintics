@@ -68,6 +68,8 @@ class Painter():
         def paint_expression():
             while self.tokens:
                 token = pop()
+                if token == '\\\\': # 2 backslashes = line continuation
+                    continue
                 match token[0]:
                     case '{':
                         paint_expression()
@@ -103,14 +105,14 @@ class Painter():
         def paint_glyph(token: str, paint: bool) -> None:
             if paint:
                 glyph = self.tex[0][self.index]
-                if token in ['|', 'o']:
-                    glyph.set_opacity(0)
-                else:
-                    if self.sticky == 0:
-                        self.colour = get_token_colour(token)
-                    glyph.set_color(self.colour)
-                    if self.sticky == 1:
-                        self.sticky = 0
+                #if token in ['|', 'O', 'o']:
+                #    glyph.set_opacity(0)
+                #else:
+                if self.sticky == 0:
+                    self.colour = get_token_colour(token)
+                glyph.set_color(self.colour)
+                if self.sticky == 1:
+                    self.sticky = 0
             self.index += 1
 
         def peek() -> str:
@@ -121,10 +123,14 @@ class Painter():
             self.tokens.pop(0)
             return token
 
-        # A token is either:
-        # 1) a backslash, followed by one or more word characters; or, 
-        # 2) failing that, any single character (including a backslash).
-        self.tokens = re.findall(r"\\\w+|.", tex.tex_string)
+        # A backslash followed by word character(s) is a single token.
+        # Two consecutive backslashes make a null token (whitespace).
+        # Otherwise, a token is just any single character, excluding
+        # ampersands & whitespace.
+        self.tokens = re.findall(r"\\\w+|\\\\|[^&\s]", tex.tex_string)
+
+        print(*self.tokens)
+
         tex.set_color(self.get_colour(grey))
         self.tex = tex
         self.index = 0
