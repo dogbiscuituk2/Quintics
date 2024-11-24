@@ -1,9 +1,9 @@
 from manim import *
 import re
 
-ghost   = 0 # transparent
-ground  = 1 # background
-black   = 2
+ghost   = 0 # Transparent.
+ground  = 1 # Background.
+black   = 2 # All other colour names including black & white are purely logical & palette dependent.
 brown   = 3
 red     = 4
 orange  = 5
@@ -23,6 +23,9 @@ scheme_black_on_white   = 3
 scheme_white_on_black   = 4
 
 class Painter():
+    """
+    A class used to apply colours to the glyphs of a MathTex.
+    """
 
     GHOST = [0,0,0,0] # transparent
 
@@ -33,14 +36,14 @@ class Painter():
         (GHOST, WHITE, *[BLACK for _ in range(12)]),
         (GHOST, BLACK, *[WHITE for _ in range(12)]))
 
-    colour: ManimColor
-    colour_map: tuple[tuple[str, int]] = ()
-    index: int = 0
-    scheme: int = scheme_bright
-    tex: MathTex = None
-    tokens: List[str] = []
+    _colour: ManimColor
+    _colour_map: tuple[tuple[re.Pattern[str], int]] = []
+    _index: int = 0
+    _scheme: int = scheme_bright
+    _tex: MathTex = None
+    _tokens: List[str] = []
 
-    sticky: int = 0
+    _sticky: int = 0
     """
     Controls retention of the current colour.
     0: no retention,
@@ -52,24 +55,31 @@ class Painter():
             self,
             scheme: int = scheme_bright,
             colour_map: tuple[tuple[str, int]] = ()):
-        self.scheme = scheme;
+        """
+        Sets the colour palette and character mapping scheme to be applied during paint operations.
+
+        Parameters:
+            scheme (int): The index to the palette used.
+            colour_map(tuple[tuple[str, int]]): The map specifying which colour is to be applied to each glyph.
+        """
+        self._scheme = scheme;
         if colour_map is not None:
-            self.colour_map = colour_map
+            self._colour_map = colour_map
 
     def get_colour(self, colour_index: int) -> ManimColor:
-        return self.colours[self.scheme][colour_index]
+        return self.colours[self._scheme][colour_index]
 
     def paint(self, tex: MathTex) -> None:
 
         def get_token_colour(token: str) -> ManimColor:
-            colours = self.colours[self.scheme]
-            for map in self.colour_map:
+            colours = self.colours[self._scheme]
+            for map in self._colour_map:
                 if (re.match(map[0], token)):
                     return colours[map[1]]
             return colours[grey]
 
-        def paint_expression():
-            while self.tokens:
+        def paint_expression() -> None:
+            while self._tokens:
                 token = pop()
                 if token == r'\\': # 2 backslashes = line continuation
                     continue
@@ -77,62 +87,62 @@ class Painter():
                     case '{':
                         paint_expression()
                     case '}':
-                        self.sticky = 0
+                        self._sticky = 0
                         break
                     case '\\':
                         paint_function(token)
                     case '_' | '^':
-                        self.sticky = 2 if peek() == '{' else 1
+                        self._sticky = 2 if peek() == '{' else 1
                     case _:
                         paint_glyph(token)
 
-        def paint_function(token: str):
+        def paint_function(token: str) -> None:
             match(token):
                 case r'\frac':
                     pop() # '{'
                     paint_expression()
-                    self.index += 1
+                    self._index += 1
                     pop() # '{'
                     paint_expression()
                 case r'\sqrt':
-                    self.index += 1
+                    self._index += 1
                     if peek() == '[':
                         pop()
                         while token := pop() != ']':
-                            self.index += 1
-                    self.index += 1
+                            self._index += 1
+                    self._index += 1
                 case _:
                     paint_glyph(token)
 
         def paint_glyph(token: str) -> None:
-            glyph = self.tex[0][self.index]
-            if self.sticky == 0:
-                self.colour = get_token_colour(token)
-            glyph.set_color(self.colour)
-            if self.sticky == 1:
-                self.sticky = 0
-            self.index += 1
+            glyph = self._tex[0][self._index]
+            if self._sticky == 0:
+                self._colour = get_token_colour(token)
+            glyph.set_color(self._colour)
+            if self._sticky == 1:
+                self._sticky = 0
+            self._index += 1
 
         def peek() -> str:
-            return self.tokens[0]
+            return self._tokens[0]
 
         def pop() -> str:
             token = peek()
-            self.tokens.pop(0)
+            self._tokens.pop(0)
             return token
 
         # A backslash followed by word character(s) is a single token.
         # Two consecutive backslashes make a null token (whitespace).
         # Otherwise, a token is just any single character, excluding
         # ampersands & whitespace.
-        self.tokens = re.findall(r"\\\w+|\\\\|[^&\s]", tex.tex_string)
+        self._tokens = re.findall(r"\\\w+|\\\\|[^&\s]", tex.tex_string)
 
         #print(*self.tokens)
 
         tex.set_color(self.get_colour(grey))
-        self.tex = tex
-        self.index = 0
+        self._tex = tex
+        self._index = 0
         paint_expression()
 
-    def set_colour_map(self, colour_map: tuple[tuple[str, int]]):
-        self.colour_map = colour_map;
+    def set_colour_map(self, colour_map: tuple[tuple[str, int]]) -> tuple[tuple[re.Pattern[str], int]]:
+        self._colour_map = [[re.compile(m[0]), m[1]] for m in colour_map]
