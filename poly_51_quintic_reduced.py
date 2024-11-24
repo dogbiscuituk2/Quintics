@@ -40,7 +40,7 @@ class Poly_51_Quintic_Reduced(Poly_00_Base):
         EQU = [VGroup(LHS[i], RHS[i]) for i in range(9)]
 
         Y = self.make_matrix((['y^1'], ['x^5'], ['ax^4'], ['bx^3'], ['cx^2'], ['dx^1'], ['eo^0']), margin = 0)
-        EQ = MathTex('=').set_color(self.get_colour(grey))
+        EQ = self.make_tex('=')
         M = self.make_matrix((
             ('z^5', '0z^4', 'pz^3', 'qz^2', 'rz', 's'),
             ('z^5', '5hz^4', '10h^2z^3', '10h^3z^2', '5h^4z', 'h^5'),

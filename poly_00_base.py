@@ -10,11 +10,12 @@ config.verbosity = "CRITICAL"
 class Poly_00_Base(VoiceoverScene):
 
     painter = Painter(
-        0,
+        scheme_bright,
         (
-            ('abcde', green),
+            ('oO|', ghost),
+            ('[a-e]', green),
             ('h', orange),
-            ('pqrs', yellow),
+            ('[p-s]', yellow),
             ('x', red),
             ('y', magenta),
             ('z', cyan)))

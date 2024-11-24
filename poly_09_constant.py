@@ -7,9 +7,10 @@ class Poly_09_Constant(Poly_00_Base):
         self.init()
 
         self.set_colour_map((
-            ('[a-e]', green),
+            ('[Oo|]', ghost),
+            (r'[a-e]|\\alpha|\\beta|\\gamma|\\delta|\\epsilon', green),
             ('h', orange),
-            ('[p-s]', yellow),
+            (r'[p-s]|\\pi|\\rho\|\\sigma', yellow),
             ('x', red),
             ('y', magenta),
             ('z', cyan)))
@@ -34,8 +35,8 @@ class Poly_09_Constant(Poly_00_Base):
         b7 = 'dx&=(z+h)'
         b8 = 'e&=e'
         
-        n0 = 'x&=z+h'
-        n1 = 'y&=x^5+ax^4+bx^3+cx^2+dx+e'
+        n0 = r'x&=z+h+\alpha+\sqrt{\beta}+\sqrt[3]{\gamma}+\sqrt[123]{\delta}+o+O+|+o+O+|'
+        n1 = r'y&=x^5+ax^4+bx^3+cx^2+dx+e+\pi+\rho+\sigma'
         n2 = 'y&=z^5+0z^4+pz^3+qz^2+rz+s'
         n3 = 'x^5&=z^5+5hz^4+10h^2z^3+10h^3z^2+5h^4z+h^5'
         n4 = 'ax^4&=az^4+4ahz^3+6ah^2z^2+4ah^3z+ah^4'
