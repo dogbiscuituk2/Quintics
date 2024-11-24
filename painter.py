@@ -61,7 +61,9 @@ class Painter():
         def get_token_colour(token: str) -> ManimColor:
             colours = self.colours[self.scheme]
             for map in self.map:
-                if (token in map[0]):
+                m = re.match(map[0], token)
+                print(f"match('{map[0]}', '{token}') = ", m)
+                if (m):
                     return colours[map[1]]
             return colours[grey]
 

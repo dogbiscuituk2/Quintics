@@ -7,9 +7,9 @@ class Poly_09_Constant(Poly_00_Base):
         self.init()
 
         self.set_colour_map((
-            ('abcde', green),
+            ('[a-e]', green),
             ('h', orange),
-            ('pqrs', yellow),
+            ('[p-s]', yellow),
             ('x', red),
             ('y', magenta),
             ('z', cyan)))
@@ -52,7 +52,7 @@ class Poly_09_Constant(Poly_00_Base):
         #tex = MathTex(fr'{a0}\\{a1}\\{a2}\\{a3}\\{a4}\\{a5}\\{a6}\\{a7}\\{a8}\\')
         tex = make_texx(n0, n1, n2, n3, n4, n5, n6, n7, a8)
         
-        print(tex.tex_string);
+        #print(tex.tex_string);
         self.painter.paint(tex)
         
         self.play(Create(tex))

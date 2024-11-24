@@ -8,9 +8,9 @@ class Poly_31_Cubic(Poly_00_Base):
         self.init()
 
         self.set_colour_map((
-            ('abcde', green),
+            ('[a-e]', green),
             ('h', orange),
-            ('pqrs', yellow),
+            ('[p-s]', yellow),
             ('x', red),
             ('y', magenta),
             ('z', cyan)))
