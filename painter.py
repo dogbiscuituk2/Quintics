@@ -80,6 +80,13 @@ class Painter():
                     return colours[map[1]]
             return colours[grey]
 
+        # Special functions:
+        # \aa \AA \ae \AE
+        # \acute
+        # \amalg \angle \approx \arccos \arcsin \arctan
+        # \aleph
+        # \alpha
+
         def paint_expression() -> None:
             while self._tokens:
                 token = pop()

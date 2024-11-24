@@ -7,13 +7,30 @@ class Poly_09_Constant(Poly_00_Base):
         self.init()
 
         self.set_colour_map((
-            ('[Oo|]', ghost),
+            #('[Oo|]', ghost),
             (r'[a-e]|\\alpha|\\beta|\\gamma|\\delta|\\epsilon', green),
             ('h', orange),
             (r'[p-s]|\\pi|\\rho\|\\sigma', yellow),
             ('x', red),
             ('y', magenta),
             ('z', cyan)))
+        
+        t0 = r'\alpha\beta\gamma\delta\epsilon\zeta\eta\theta\iota\kappa\lambda\mu\nu\xi o\pi\rho\sigma\tau\upsilon\phi\chi\psi\omega'
+        t1 = r'AB\Gamma\Delta EZH\Theta IK\Lambda MN\Xi O\Pi P\Sigma T\Upsilon\Phi X\Psi\Omega'
+        t2 = r'''\leftarrow\rightarrow\uparrow\downarrow\leftrightarrow
+            \updownarrow\leftharpoonup\rightharpoonup\leftharpoondown
+            \rightharpoondown\nearrow\nwarrow\swarrow\searrow
+            \Leftarrow\Rightarrow\Uparrow\Downarrow\Leftrightarrow
+            \Updownarrow\rightleftharpoons\mapsto\longmapsto'''
+        
+        T0 = self.make_tex(t0)
+        T1 = self.make_tex(t1)
+        T2 = self.make_tex(t2)
+        T = VGroup(T0, T1, T2).arrange(DOWN, aligned_edge=LEFT)
+        self.play(Create(T))
+        self.wait(10)
+
+        return
         
         a0 = ['x&=z+h']
         a1 = ['y&=x^5+ax^4+bx^3+cx^2+dx+e']
@@ -35,8 +52,11 @@ class Poly_09_Constant(Poly_00_Base):
         b7 = 'dx&=(z+h)'
         b8 = 'e&=e'
         
-        n0 = r'x&=z+h+\alpha+\sqrt{\beta}+\sqrt[3]{\gamma}+\sqrt[123]{\delta}+o+O+|+o+O+|'
-        n1 = r'y&=x^5+ax^4+bx^3+cx^2+dx+e+\pi+\rho+\sigma'
+        #n0 = r'x&=z+h+\alpha+\sqrt{\beta}+\sqrt[3]{\gamma}+\sqrt[123]{\delta}+o+O+|+o+O+|'
+        #n1 = r'y&=x^5+ax^4+bx^3+cx^2+dx+e+\pi+\rho+\sigma'
+
+        n0 = 'x&=z+h'
+        n1 = 'y&=x^5+ax^4+bx^3+cx^2+dx+e'
         n2 = 'y&=z^5+0z^4+pz^3+qz^2+rz+s'
         n3 = 'x^5&=z^5+5hz^4+10h^2z^3+10h^3z^2+5h^4z+h^5'
         n4 = 'ax^4&=az^4+4ahz^3+6ah^2z^2+4ah^3z+ah^4'
