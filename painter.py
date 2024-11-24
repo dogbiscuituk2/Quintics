@@ -1,20 +1,22 @@
 from manim import *
 import re
 
-ghost   = 0 # Transparent.
-ground  = 1 # Background.
-black   = 2 # All other colour names including black & white are purely logical & palette dependent.
-brown   = 3
-red     = 4
-orange  = 5
-yellow  = 6
-green   = 7
-blue    = 8
-cyan    = 9
-magenta = 10
-violet  = 11
-grey    = 12
-white   = 13
+ghost   = 0 # Transparent
+figure  = 1 # Foreground default
+ground  = 2 # Background
+hilite  = 3 # Highlight background
+black   = 4 # All other colour names are purely logical
+brown   = 5
+red     = 6
+orange  = 7
+yellow  = 8
+green   = 9
+blue    = 10
+cyan    = 11
+magenta = 12
+violet  = 13
+grey    = 14
+white   = 15
 
 scheme_default          = 0
 scheme_bright           = 1
@@ -27,14 +29,14 @@ class Painter():
     A class used to apply colours to the glyphs of a MathTex.
     """
 
-    GHOST = [0,0,0,0] # transparent
+    _GHOST = [0,0,0,0] # transparent
 
-    colours = (
-        (GHOST, BLACK, BLACK, DARK_BROWN, RED, ORANGE, YELLOW, GREEN, PURE_BLUE, TEAL, PINK, PURPLE, GREY, WHITE),
-        (GHOST, BLACK, BLACK, 0x7F3319, 0xFF1933, 0xFF7F4C, 0xCCCC00, 0x33FF33, PURE_BLUE, 0x00FFFF, 0xFF00FF, 0x9A72AC, 0xB2B2B2, WHITE),
-        (GHOST, BLACK, BLACK, 0xCD853F, 0xFF0000, 0xFF7F3F, 0xCCCC00, 0x33FF33, PURE_BLUE, 0x00FFFF, 0xFF00FF, 0x9A72AC, 0xBBBBBB, WHITE),
-        (GHOST, WHITE, *[BLACK for _ in range(12)]),
-        (GHOST, BLACK, *[WHITE for _ in range(12)]))
+    _colours = (
+        (_GHOST, GREY, BLACK, LIGHT_GREY, BLACK, DARK_BROWN, RED, ORANGE, YELLOW, GREEN, PURE_BLUE, TEAL, PINK, PURPLE, GREY, WHITE),
+        (_GHOST, 0xB2B2B2, BLACK, DARK_GREY, BLACK, 0x7F3319, 0xFF1933, 0xFF7F4C, 0xCCCC00, 0x33FF33, PURE_BLUE, 0x00FFFF, 0xFF00FF, 0x9A72AC, 0xB2B2B2, WHITE),
+        (_GHOST, 0xBBBBBB, BLACK, DARK_GREY, BLACK, 0xCD853F, 0xFF0000, 0xFF7F3F, 0xCCCC00, 0x33FF33, PURE_BLUE, 0x00FFFF, 0xFF00FF, 0x9A72AC, 0xBBBBBB, WHITE),
+        (_GHOST, BLACK, WHITE, GREY, *[BLACK for _ in range(12)]),
+        (_GHOST, WHITE, BLACK, GREY, *[WHITE for _ in range(12)]))
 
     _colour: ManimColor
     _colour_map: tuple[tuple[re.Pattern[str], int]] = []
@@ -67,12 +69,12 @@ class Painter():
             self._colour_map = colour_map
 
     def get_colour(self, colour_index: int) -> ManimColor:
-        return self.colours[self._scheme][colour_index]
+        return self._colours[self._scheme][colour_index]
 
     def paint(self, tex: MathTex) -> None:
 
         def get_token_colour(token: str) -> ManimColor:
-            colours = self.colours[self._scheme]
+            colours = self._colours[self._scheme]
             for map in self._colour_map:
                 if (re.match(map[0], token)):
                     return colours[map[1]]

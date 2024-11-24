@@ -14,7 +14,7 @@ class Poly_00_Base(VoiceoverScene):
         (
             ('oO|', ghost),
             ('[a-e]', green),
-            ('h', orange),
+            ('[ghk]', orange),
             ('[p-s]', yellow),
             ('x', red),
             ('y', magenta),
