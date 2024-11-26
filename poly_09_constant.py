@@ -19,14 +19,18 @@ class Poly_09_Constant(Poly_00_Base):
         t1 = r'AB\Gamma\Delta EZH\Theta IK\Lambda MN\Xi O\Pi P\Sigma T\Upsilon\Phi X\Psi\Omega'
         t2 = r'''\leftarrow\rightarrow\uparrow\downarrow\leftrightarrow
             \updownarrow\leftharpoonup\rightharpoonup\leftharpoondown
-            \rightharpoondown\nearrow\nwarrow\swarrow\searrow
+            \rightharpoondown\nwarrow\swarrow\searrow\nearrow
             \Leftarrow\Rightarrow\Uparrow\Downarrow\Leftrightarrow
             \Updownarrow\rightleftharpoons\mapsto\longmapsto'''
+        t3 = r'\sum_{a=0}^\infty 2^{-a}=1'
+        t4 = r'\prod_{p=1}^5 p=120'
         
         T0 = self.make_tex(t0)
         T1 = self.make_tex(t1)
         T2 = self.make_tex(t2)
-        T = VGroup(T0, T1, T2).arrange(DOWN, aligned_edge=LEFT)
+        T3 = self.make_tex(t3)
+        T4 = self.make_tex(t4)
+        T = VGroup(T0, T1, T2, T3, T4).arrange(DOWN, aligned_edge=LEFT)
         self.play(Create(T))
         self.wait(10)
 
