@@ -110,11 +110,14 @@ class Painter():
                 case r'\frac':
                     pop() # '{'
                     paint_expression()
-                    self._index += 1
+
+                    paint_glyph(token)
+                    #self._index += 1
+
                     pop() # '{'
                     paint_expression()
                 case r'\sqrt':
-                    self._index += 1
+                    paint_glyph(token)
                     if peek() == '[':
                         pop()
                         while token := pop() != ']':

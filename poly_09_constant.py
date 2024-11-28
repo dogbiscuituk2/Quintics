@@ -8,6 +8,8 @@ class Poly_09_Constant(Poly_00_Base):
 
         self.set_colour_map((
             #('[Oo|]', ghost),
+            (r'\\frac', red),
+            (r'\\sqrt', orange),
             (r'[a-e]|\\alpha|\\beta|\\gamma|\\delta|\\epsilon', green),
             ('h', orange),
             (r'[p-s]|\\pi|\\rho\|\\sigma', yellow),
@@ -24,13 +26,19 @@ class Poly_09_Constant(Poly_00_Base):
             \Updownarrow\rightleftharpoons\mapsto\longmapsto'''
         t3 = r'\sum_{a=0}^\infty 2^{-a}=1'
         t4 = r'\prod_{p=1}^5 p=120'
-        
+        t5 = r'\frac{x+y}{\sqrt{z+1}}'
+        t6 = r'123'
+
         T0 = self.make_tex(t0)
         T1 = self.make_tex(t1)
         T2 = self.make_tex(t2)
         T3 = self.make_tex(t3)
         T4 = self.make_tex(t4)
-        T = VGroup(T0, T1, T2, T3, T4).arrange(DOWN, aligned_edge=LEFT)
+        T5 = self.make_tex(t5)
+        T6 = self.make_tex(t6)
+
+        G1 = VGroup(T3, T4, T5, T6).arrange(RIGHT)
+        T = VGroup(T0, T1, T2, G1).arrange(DOWN, aligned_edge=LEFT)
         self.play(Create(T))
         self.wait(10)
 
