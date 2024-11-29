@@ -1,7 +1,7 @@
 from painter import *
-from poly_00_base import Poly_00_Base
+from base_scene import BaseScene
 
-class Poly_09_Constant(Poly_00_Base):
+class Poly_09_Constant(BaseScene):
 
     def construct(self):
         self.init()
@@ -16,33 +16,6 @@ class Poly_09_Constant(Poly_00_Base):
             ('x', red),
             ('y', magenta),
             ('z', cyan)))
-        
-        t0 = r'\alpha\beta\gamma\delta\epsilon\zeta\eta\theta\iota\kappa\lambda\mu\nu\xi o\pi\rho\sigma\tau\upsilon\phi\chi\psi\omega'
-        t1 = r'AB\Gamma\Delta EZH\Theta IK\Lambda MN\Xi O\Pi P\Sigma T\Upsilon\Phi X\Psi\Omega'
-        t2 = r'''\leftarrow\rightarrow\uparrow\downarrow\leftrightarrow
-            \updownarrow\leftharpoonup\rightharpoonup\leftharpoondown
-            \rightharpoondown\nwarrow\swarrow\searrow\nearrow
-            \Leftarrow\Rightarrow\Uparrow\Downarrow\Leftrightarrow
-            \Updownarrow\rightleftharpoons\mapsto\longmapsto'''
-        t3 = r'\sum_{a=0}^\infty 2^{-a}=1'
-        t4 = r'\prod_{p=1}^5 p=120'
-        t5 = r'\frac{x+y}{\sqrt{z+1}}'
-        t6 = r'123'
-
-        T0 = self.make_tex(t0)
-        T1 = self.make_tex(t1)
-        T2 = self.make_tex(t2)
-        T3 = self.make_tex(t3)
-        T4 = self.make_tex(t4)
-        T5 = self.make_tex(t5)
-        T6 = self.make_tex(t6)
-
-        G1 = VGroup(T3, T4, T5, T6).arrange(RIGHT)
-        T = VGroup(T0, T1, T2, G1).arrange(DOWN, aligned_edge=LEFT)
-        self.play(Create(T))
-        self.wait(10)
-
-        return
         
         a0 = ['x&=z+h']
         a1 = ['y&=x^5+ax^4+bx^3+cx^2+dx+e']

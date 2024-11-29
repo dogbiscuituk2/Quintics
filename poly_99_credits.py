@@ -1,13 +1,13 @@
 from manim import *
 from manim_voiceover.services.gtts import GTTSService
 import platform
-from poly_00_base import Poly_00_Base
+from base_scene import BaseScene
 
 TITLE = 'Solving the General Quintic Equation'
 SUBTITLE = 'An Ultraradical Animation'
 COPYRIGHT = '©2024 by John Michael Kerr'
 
-class Poly_99_Credits(Poly_00_Base):
+class Poly_99_Credits(BaseScene):
 
     def construct(self):
         self.init()

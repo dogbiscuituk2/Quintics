@@ -7,7 +7,7 @@ from painter import *
 config.max_files_cached = 999
 config.verbosity = "CRITICAL"
 
-class Poly_00_Base(VoiceoverScene):
+class BaseScene(VoiceoverScene):
 
     painter = Painter(
         scheme_bright,
@@ -82,7 +82,7 @@ class Poly_00_Base(VoiceoverScene):
         self.painter.paint(tex)
 
     def prepare_string(self, text: str) -> str:
-        return text if '|' in text else f'|{text}'
+        return text # if '|' in text else f'|{text}'
 
     def say(self, text: str):
         line_number = getframeinfo(currentframe().f_back).lineno

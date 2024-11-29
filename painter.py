@@ -123,17 +123,22 @@ class Painter():
                         while token := pop() != ']':
                             self._index += 1
                     self._index += 1
+                case r'\lim':
+                    paint_glyph(token, 3)
+                case r'\sin':
+                    paint_glyph(token, 3)
                 case _:
                     paint_glyph(token)
 
-        def paint_glyph(token: str) -> None:
-            glyph = self._tex[0][self._index]
+        def paint_glyph(token: str, size: int = 1) -> None:
             if self._sticky == 0:
                 self._colour = get_token_colour(token)
-            glyph.set_color(self._colour)
+            for _ in range(size):
+                glyph = self._tex[0][self._index]
+                glyph.set_color(self._colour)
+                self._index += 1
             if self._sticky == 1:
                 self._sticky = 0
-            self._index += 1
 
         def peek() -> str:
             return self._tokens[0]
@@ -147,7 +152,8 @@ class Painter():
         # Two consecutive backslashes make a null token (whitespace).
         # Otherwise, a token is just any single character, excluding
         # ampersands & whitespace.
-        self._tokens = re.findall(r"\\\w+|\\\\|[^&\s]", tex.tex_string)
+        #self._tokens = re.findall(r"\\\w+|\\\\|[^&\s]", tex.tex_string)
+        self._tokens = re.findall(r"\\[a-z]+|\\\\|[^&\s]", tex.tex_string)
 
         #print(*self.tokens)
 

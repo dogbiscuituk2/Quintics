@@ -1,8 +1,8 @@
 from MF_Tools import *
 from painter import *
-from poly_00_base import Poly_00_Base
+from base_scene import BaseScene
 
-class Poly_01_General(Poly_00_Base):
+class Poly_08_General(BaseScene):
 
     def construct(self):
         self.init()

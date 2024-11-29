@@ -1,8 +1,8 @@
 from MF_Tools import *
 from painter import *
-from poly_00_base import Poly_00_Base
+from base_scene import BaseScene
 
-class Poly_21_Quadratic(Poly_00_Base):
+class Poly_21_Quadratic(BaseScene):
 
     def construct(self):
         self.init()
