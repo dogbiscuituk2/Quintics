@@ -68,14 +68,12 @@ class BaseScene(VoiceoverScene):
 
     def make_tex(self, text: str) -> MathTex:
         text = self.prepare_string(text)
-        print(text)
         tex: MathTex = MathTex(text)
         self.paint(tex)
         return tex
 
     def make_text(self, text: str, *args, **kwargs) -> Text:
-        result = Text(self.prepare_string(text), font_size=24, color=self.get_text_colour(), *args, **kwargs)
-        result[0].set_opacity(0)
+        result = Text(self.prepare_string(text), font_size=30, color=self.get_text_colour(), *args, **kwargs)
         return result;
     
     def paint(self, tex: MathTex) -> None:

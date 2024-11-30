@@ -43,10 +43,69 @@ STANDARD_FUNCTION_NAMES = [ # Function names should appear in Roman, not Italic.
     [r'\arctan', r'\cot', r'\det', r'\hom', r'\lim', r'\log', r'\sec', r'\tan'],
     [r'\arg', r'\coth', r'\dim', r'\inf', r'\liminf', r'\max', r'\sin', r'\tanh']]
 
-BINARY_OPERATION_RELATION_SYMBOLS_1 = []
-BINARY_OPERATION_RELATION_SYMBOLS_2 = []
-BINARY_OPERATION_RELATION_SYMBOLS_3 = []
-BINARY_OPERATION_RELATION_SYMBOLS_4 = []
+BINARY_OPERATION_RELATION_SYMBOLS_1 = [
+    [r'\ast', r'\pm', r'\cap', r'\lhd'],
+    [r'\star', r'\mp', r'\cup', r'\rhd'],
+    [r'\cdot', r'\amalg', r'\uplus', r'\triangleleft'],
+    [r'\circ', r'\odot', r'\sqcap', r'\triangleright'], 
+    [r'\bullet', r'\ominus', r'\sqcup', r'\unlhd'], 
+    [r'\bigcirc', r'\oplus', r'\wedge', r'\unrhd'], 
+    [r'\diamond', r'\oslash', r'\vee', r'\bigtriangledown'], 
+    [r'\times', r'\otimes', r'\dagger', r'\bigtriangleup'], 
+    [r'\div', r'\wr', r'\ddagger', r'\setminus'], 
+    [r'\centerdot', r'\Box', r'\barwedge', r'\veebar'], 
+    [r'\circledast', r'\boxplus', r'\curlywedge', r'\curlyvee'], 
+    [r'\circledcirc', r'\boxminus', r'\Cap', r'\Cup'], 
+    [r'\circleddash', r'\boxtimes', r'\bot', r'\top'], 
+    [r'\dotplus', r'\boxdot', r'\intercal', r'\rightthreetimes'],
+    [r'\divideontimes', r'\square', r'\doublebarwedge', r'\leftthreetime']]
+
+BINARY_OPERATION_RELATION_SYMBOLS_2 = [
+    [r'\equiv', r'\leq', r'\geq', r'\perp'], 
+    [r'\cong', r'\prec', r'\succ', r'\mid'], 
+    [r'\neq', r'\preceq', r'\succeq', r'\parallel'], 
+    [r'\sim', r'\ll', r'\gg', r'\bowtie'], 
+    [r'\simeq', r'\subset', r'\supset', r'\Join'], 
+    [r'\approx', r'\subseteq', r'\supseteq', r'\ltimes'], 
+    [r'\asymp', r'\sqsubset', r'\sqsupset', r'\rtimes'], 
+    [r'\doteq', r'\sqsubseteq', r'\sqsupseteq', r'\smile'], 
+    [r'\propto', r'\dashv', r'\vdash', r'\frown'], 
+    [r'\models', r'\in', r'\ni', r'\notin']]
+
+BINARY_OPERATION_RELATION_SYMBOLS_3 = [
+        [r'\approxeq', r'\leqq', r'\geqq', r'\lessgtr'],
+    [r'\thicksim', r'\leqslant', r'\geqslant', r'\lesseqgtr'],
+    [r'\backsim', r'\lessapprox', r'\gtrapprox', r'\lesseqqgtr'],
+    [r'\backsimeq', r'\lll', r'\ggg', r'\gtreqqless'],
+    [r'\triangleq', r'\lessdot', r'\gtrdot', r'\gtreqless'],
+    [r'\circeq', r'\lesssim', r'\gtrsim', r'\gtrless'],
+    [r'\bumpeq', r'\eqslantless', r'\eqslantgtr', r'\backepsilon'],
+    [r'\Bumpeq', r'\precsim', r'\succsim', r'\between'],
+    [r'\doteqdot', r'\precapprox', r'\succapprox', r'\pitchfork'],
+    [r'\thickapprox', r'\Subset', r'\Supset', r'\shortmid'],
+    [r'\fallingdotseq', r'\subseteqq', r'\supseteqq', r'\smallfrown'],
+    [r'\risingdotseq', r'\sqsubset', r'\sqsupset', r'\smallsmile'],
+    [r'\varpropto', r'\preccurlyeq', r'\succcurlyeq', r'\Vdash'],
+    [r'\therefore', r'\curlyeqprec', r'\curlyeqsucc', r'\vDash'],
+    [r'\because', r'\blacktriangleleft', r'\blacktriangleright', r'\Vvdash'],
+    [r'\eqcirc', r'\trianglelefteq', r'\trianglerighteq', r'\shortparallel'],
+    [r'\neq', r'\vartriangleleft', r'\vartriangleright', r'\nshortparallel']]
+
+BINARY_OPERATION_RELATION_SYMBOLS_4 = [
+    [r'\ncong', r'\nleq', r'\ngeq', r'\nsubseteq'], 
+    [r'\nmid', r'\nleqq', r'\ngeqq', r'\nsupseteq'], 
+    [r'\nparallel', r'\nleqslant', r'\ngeqslant', r'\nsubseteqq'], 
+    [r'\nshortmid', r'\nless', r'\ngtr', r'\nsupseteqq'], 
+    [r'\nshortparallel', r'\nprec', r'\nsucc', r'\subsetneq'], 
+    [r'\nsim', r'\npreceq', r'\nsucceq', r'\supsetneq'], 
+    [r'\nVDash', r'\precnapprox', r'\succnapprox', r'\subsetneqq'], 
+    [r'\nvDash', r'\precnsim', r'\succnsim', r'\supsetneqq'], 
+    [r'\nvdash', r'\lnapprox', r'\gnapprox', r'\varsubsetneq'], 
+    [r'\ntriangleleft', r'\lneq', r'\gneq', r'\varsupsetneq'], 
+    [r'\ntrianglelefteq', r'\lneqq', r'\gneqq', r'\varsubsetneqq'], 
+    [r'\ntriangleright', r'\lnsim', r'\gnsim', r'\varsupsetneqq'], 
+    [r'\ntrianglerighteq', r'\lvertneqq', r'\gvertneqq', '']]
+
 ARROW_SYMBOLS1 = []
 ARROW_SYMBOLS2 = []
 ARROW_SYMBOLS3 = []
@@ -72,23 +131,46 @@ class TestAll(BaseScene):
             ('x', red),
             ('y', magenta),
             ('z', cyan)))
+        
+        def interpose(tokens: List[List[str]]):
+            G = []
+            for row in range(len(tokens)):
+                H = []
+                for col in range(len(tokens[0])):
+                    token = tokens[row][col]
+                    print(token, end='')
+                    tex = self.make_tex(token)
+                    text = self.make_text(token)
+                    H.append(tex)
+                    H.append(text)
+                G.append(VGroup(*H).arrange(RIGHT))
+            G = VGroup(*G).arrange(DOWN)
+            self.add(G)
+            self.wait(10)
+            self.remove(G)
 
         def transpose(tokens: List[List[str]]):
+            G = []
             for row in range(len(tokens[0])):
+                H = []
                 for col in range(len(tokens)):
                     token = tokens[col][row]
-                    print(token)
-                    tex = MathTex(token)
-                    text = Text(token)
-                    pair = VGroup(tex, text).arrange(RIGHT)
-                    self.play(Create(pair))
-                    self.play(Uncreate(pair))
-
-
+                    tex = self.make_tex(token)
+                    text = self.make_text(token)
+                    H.append(tex)
+                    H.append(text)
+                G.append(VGroup(*H).arrange(RIGHT))
+            G = VGroup(*G).arrange(DOWN)
+            self.add(G)
+            self.wait(10)
+            self.remove(G)
 
         transpose(GREEK_AND_HEBREW_LETTERS)
         transpose(LATEX_MATH_CONSTRUCTS)
         transpose(DELIMITERS)
         transpose(VARIABLE_SIZED_SYMBOLS)
         transpose(STANDARD_FUNCTION_NAMES)
-        self.wait(10)
+        interpose(BINARY_OPERATION_RELATION_SYMBOLS_1)
+        interpose(BINARY_OPERATION_RELATION_SYMBOLS_2)
+        interpose(BINARY_OPERATION_RELATION_SYMBOLS_3)
+        interpose(BINARY_OPERATION_RELATION_SYMBOLS_4)

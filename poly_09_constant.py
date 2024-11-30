@@ -58,7 +58,6 @@ class Poly_09_Constant(BaseScene):
         #tex = MathTex(fr'{a0}\\{a1}\\{a2}\\{a3}\\{a4}\\{a5}\\{a6}\\{a7}\\{a8}\\')
         tex = make_texx(n0, n1, n2, n3, n4, n5, n6, n7, a8)
         
-        #print(tex.tex_string);
         self.painter.paint(tex)
         
         self.play(Create(tex))
