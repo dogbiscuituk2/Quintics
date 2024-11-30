@@ -17,26 +17,13 @@ class TestFunctions(BaseScene):
             ('y', magenta),
             ('z', cyan)))
         
-        #T0 = self.make_tex(r'\alpha\beta\gamma\delta\epsilon\zeta\eta\theta\iota\kappa\lambda\mu\nu\xi o\pi\rho\sigma\tau\upsilon\phi\chi\psi\omega')
-        #T1 = self.make_tex(r'AB\Gamma\Delta EZH\Theta IK\Lambda MN\Xi O\Pi P\Sigma T\Upsilon\Phi X\Psi\Omega')
-        #T2 = self.make_tex(
-        #    r'''
-        #        \leftarrow\rightarrow\uparrow\downarrow\leftrightarrow
-        #        \updownarrow\leftharpoonup\rightharpoonup\leftharpoondown
-        #        \rightharpoondown\nwarrow\swarrow\searrow\nearrow
-        #        \Leftarrow\Rightarrow\Uparrow\Downarrow\Leftrightarrow
-        #        \Updownarrow\rightleftharpoons\mapsto\longmapsto
-        #    ''')
-        T3 = self.make_tex(r'\lim_{x\rightarrow 0}\frac{\sin{x}}{x}}=1')
-        #T4 = self.make_tex(r'\sum_{a=0}^\infty 2^{-a}=1')
-        #T5 = self.make_tex(r'\prod_{p=1}^5 p=120')
-        #T6 = self.make_tex(r'\frac{x+y}{\sqrt{z+1}}')
+        T1 = self.make_tex(r'\sin\alpha+\cos\beta+\tan\gamma+\csc\alpha+\sec\beta+\cot\gamma')
+        T2 = self.make_tex(r'\arcsin\alpha+\arctan\gamma+\sinh\alpha+\cosh\beta+\tanh\gamma')
+        T3 = self.make_tex(r'\exp{x}')
+        
+        T = VGroup(T1, T2).arrange(DOWN, aligned_edge=LEFT)
+        self.play(Create(T))
 
-        #G1 = VGroup(T3, T4, T5, T6).arrange(RIGHT)
-        #T = VGroup(T0, T1, T2, G1).arrange(DOWN, aligned_edge=LEFT)
-        #self.play(Create(T))
-
-        self.play(Create(T3))
         self.wait(10)
 
         return

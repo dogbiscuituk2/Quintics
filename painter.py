@@ -73,19 +73,16 @@ class Painter():
 
     def paint(self, tex: MathTex) -> None:
 
+        def get_glyph_count(token: str) -> int:
+            g = MathTex(token)
+            return len(g[0])
+
         def get_token_colour(token: str) -> ManimColor:
             colours = self._colours[self._scheme]
             for map in self._colour_map:
                 if (re.match(map[0], token)):
                     return colours[map[1]]
-            return colours[grey]
-
-        # Special functions:
-        # \aa \AA \ae \AE
-        # \acute
-        # \amalg \angle \approx \arccos \arcsin \arctan
-        # \aleph
-        # \alpha
+            return colours[figure]
 
         def paint_expression() -> None:
             while self._tokens:
@@ -123,16 +120,13 @@ class Painter():
                         while token := pop() != ']':
                             self._index += 1
                     self._index += 1
-                case r'\lim':
-                    paint_glyph(token, 3)
-                case r'\sin':
-                    paint_glyph(token, 3)
                 case _:
                     paint_glyph(token)
 
-        def paint_glyph(token: str, size: int = 1) -> None:
+        def paint_glyph(token: str) -> None:
             if self._sticky == 0:
                 self._colour = get_token_colour(token)
+            size = get_glyph_count(token)
             for _ in range(size):
                 glyph = self._tex[0][self._index]
                 glyph.set_color(self._colour)
@@ -153,11 +147,9 @@ class Painter():
         # Otherwise, a token is just any single character, excluding
         # ampersands & whitespace.
         #self._tokens = re.findall(r"\\\w+|\\\\|[^&\s]", tex.tex_string)
-        self._tokens = re.findall(r"\\[a-z]+|\\\\|[^&\s]", tex.tex_string)
+        self._tokens = re.findall(r"\\[A-Za-z]+|\\\\|[^&\s]", tex.tex_string)
 
-        #print(*self.tokens)
-
-        tex.set_color(self.get_colour(grey))
+        tex.set_color(self.get_colour(figure))
         self._tex = tex
         self._index = 0
         paint_expression()
