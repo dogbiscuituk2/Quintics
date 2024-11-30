@@ -1,3 +1,6 @@
+from painter import *
+from base_scene import BaseScene
+
 # https://www.cmor-faculty.rice.edu/~heinken/latex/symbols.pdf
 
 # LATEX Mathematical Symbols
@@ -5,7 +8,7 @@
 
 GREEK_AND_HEBREW_LETTERS = [
     [r'\alpha', r'\beta', r'\chi', r'\delta', r'\epsilon', r'\eta', r'\gamma', r'\iota'],
-    [r'\kappa', r'\lambda', r'\mu', r'\nu', o, r'\omega', r'\phi', r'\pi'],
+    [r'\kappa', r'\lambda', r'\mu', r'\nu', 'o', r'\omega', r'\phi', r'\pi'],
     [r'\psi', r'\rho', r'\sigma', r'\tau', r'\theta', r'\upsilon', r'\xi', r'\zeta'],
     [r'\digamma', r'\varepsilon', r'\varkappa', r'\varphi', r'\varpi', r'\varrho', r'\varsigma', r'\vartheta'],
     [r'\Delta', r'\Gamma', r'\Lambda', r'\Omega', r'\Phi', r'\Pi', r'\Psi', r'\Sigma'],
@@ -18,11 +21,11 @@ LATEX_MATH_CONSTRUCTS = [
 
 DELIMITERS = [
     ['|', r'\vert', r'\|', r'\Vert'],
-    ['\{', '\}', '\langle', '\rangle'],
-    ['\lfloor', '\rfloor', '\lceil', '\rceil'],
-    ['/', '\backslash', '[', ']'],
-    ['\Uparrow', '\uparrow', '\Downarrow', '\downarrow'],
-    ['\llcorner', '\lrcorner', '\ulcorner', '\urcorner']]
+    [r'\{', r'\}', r'\langle', r'\rangle'],
+    [r'\lfloor', r'\rfloor', r'\lceil', r'\rceil'],
+    ['/', r'\backslash', '[', ']'],
+    [r'\Uparrow', r'\uparrow', r'\Downarrow', r'\downarrow'],
+    [r'\llcorner', r'\lrcorner', r'\ulcorner', r'\urcorner']]
 
 # Use the pair \lefts1 and \rights1 to match height of delimiters s1 and s2 to the height of their contents,
 # e.g. \left| expr \right| -or- \left\{ expr \right\} -or- \left\Vert expr \right.
@@ -30,7 +33,7 @@ DELIMITERS = [
 VARIABLE_SIZED_SYMBOLS = [ # displayed formulae show larger version
     [r'\sum', r'\prod', r'\coprod'],
     [r'\int', r'\oint', r'\iint'],
-    [r'\bigplus', r'\bigcap', r'\bigcup'],
+    [r'\biguplus', r'\bigcap', r'\bigcup'],
     [r'\bigoplus', r'\bigotimes', r'\bigodot'],
     [r'\bigvee', r'\bigwedge', r'\bigsqcup']]
 
@@ -53,3 +56,39 @@ MATH_MODE_ACCENTS = []
 OTHER_STYLES_MATH_MODE_ONLY = []
 FONT_SIZES = []
 TEXT_MODE_ACCENTS_AND_SYMBOLS = []
+
+class TestAll(BaseScene):
+
+    def construct(self):
+        self.init()
+
+        self.set_colour_map((
+            #('[Oo|]', ghost),
+            (r'\\frac', magenta),
+            (r'\\sqrt|\\lim', orange),
+            (r'[a-e]|\\alpha|\\beta|\\gamma|\\delta|\\epsilon', green),
+            ('h', orange),
+            (r'[p-s]|\\pi|\\rho\|\\sigma|\\sin', yellow),
+            ('x', red),
+            ('y', magenta),
+            ('z', cyan)))
+
+        def transpose(tokens: List[List[str]]):
+            for row in range(len(tokens[0])):
+                for col in range(len(tokens)):
+                    token = tokens[col][row]
+                    print(token)
+                    tex = MathTex(token)
+                    text = Text(token)
+                    pair = VGroup(tex, text).arrange(RIGHT)
+                    self.play(Create(pair))
+                    self.play(Uncreate(pair))
+
+
+
+        transpose(GREEK_AND_HEBREW_LETTERS)
+        transpose(LATEX_MATH_CONSTRUCTS)
+        transpose(DELIMITERS)
+        transpose(VARIABLE_SIZED_SYMBOLS)
+        transpose(STANDARD_FUNCTION_NAMES)
+        self.wait(10)
