@@ -5,7 +5,6 @@ from base_scene import BaseScene
 
 # LATEX Mathematical Symbols
 # The more unusual symbols are not defined in base LATEX (NFSS) and require \usepackage{amssymb}
-
 # Use the pair \lefts1 and \rights1 to match height of delimiters s1 and s2 to the height of their contents,
 # e.g. \left| expr \right| -or- \left\{ expr \right\} -or- \left\Vert expr \right.
 
@@ -180,6 +179,12 @@ TABLES = [
         [r'\mathsf{ABCDEFGHIJKLMNOPQRSTUVWXYZabc123}'],
         [r'\mathbf{ABCDEFGHIJKLMNOPQRSTUVWXYZabc123}'],
     ],
+    [ # Font sizes.
+        [r'\displaystyle \int f^{-1}(x-x_a)\,dx}'],
+        [r'\textstyle \int f^{-1}(x-x_a)\,dx}'],
+        [r'\scriptstyle \int f^{-1}(x-x_a)\,dx}'],
+        [r'\scriptscriptstyle \int f^{-1}(x-x_a)\,dx}'],
+    ],
 ]
 
 class TestAll(BaseScene):
@@ -198,25 +203,23 @@ class TestAll(BaseScene):
             ('y', magenta),
             ('z', cyan)))
         
-        def interpose(tokens: List[List[str]]):
-            g = []
-            for line in tokens:
-                h = []
-                for token in line:
-                    print(token, end=' ')
-                    tex = self.make_tex(token)
-                    text = self.make_text(token)
-                    h.append(tex)
-                    h.append(text)
-                g.append(h)
-            T = MobjectTable(
-                g,
+        def show_table(table: List[List[str]]) -> None:
+            page = []
+            for row in table:
+                line = []
+                for cell in row:
+                    print(cell, end=' ')
+                    line.append(self.make_tex(cell))
+                    line.append(self.make_text(cell))
+                page.append(line)
+            page = MobjectTable(
+                page,
                 v_buff=0.2,
-                h_buff=0.4,
+                h_buff=0.2,
                 arrange_in_grid_config={"cell_alignment": LEFT})
-            self.add(T)
+            self.add(page)
             self.wait(5)
-            self.remove(T)
+            self.remove(page)
 
         for table in TABLES:
-            interpose(table)
+            show_table(table)
