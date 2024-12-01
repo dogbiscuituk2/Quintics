@@ -2,7 +2,6 @@ from painter import *
 from base_scene import BaseScene
 
 # https://www.cmor-faculty.rice.edu/~heinken/latex/symbols.pdf
-
 # LATEX Mathematical Symbols
 # The more unusual symbols are not defined in base LATEX (NFSS) and require \usepackage{amssymb}
 # Use the pair \lefts1 and \rights1 to match height of delimiters s1 and s2 to the height of their contents,
@@ -216,7 +215,8 @@ class TestAll(BaseScene):
                 page,
                 v_buff=0.2,
                 h_buff=0.2,
-                arrange_in_grid_config={"cell_alignment": LEFT})
+                arrange_in_grid_config={"cell_alignment": LEFT},
+                line_config={"color": self.get_colour(ghost)})
             self.add(page)
             self.wait(5)
             self.remove(page)
