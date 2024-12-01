@@ -7,41 +7,49 @@ from base_scene import BaseScene
 # The more unusual symbols are not defined in base LATEX (NFSS) and require \usepackage{amssymb}
 
 GREEK_AND_HEBREW_LETTERS = [
-    [r'\alpha', r'\beta', r'\chi', r'\delta', r'\epsilon', r'\eta', r'\gamma', r'\iota'],
-    [r'\kappa', r'\lambda', r'\mu', r'\nu', 'o', r'\omega', r'\phi', r'\pi'],
-    [r'\psi', r'\rho', r'\sigma', r'\tau', r'\theta', r'\upsilon', r'\xi', r'\zeta'],
-    [r'\digamma', r'\varepsilon', r'\varkappa', r'\varphi', r'\varpi', r'\varrho', r'\varsigma', r'\vartheta'],
-    [r'\Delta', r'\Gamma', r'\Lambda', r'\Omega', r'\Phi', r'\Pi', r'\Psi', r'\Sigma'],
-    [r'\Theta', r'\Upsilon', r'\Xi', '', r'\aleph', r'\beth', r'\daleth', r'\gimel']]
+    [r'\alpha', r'\kappa', r'\psi', r'\digamma', r'\Delta', r'\Theta'],
+    [r'\beta', r'\lambda', r'\rho', r'\varepsilon', r'\Gamma', r'\Upsilon'],
+    [r'\chi', r'\mu', r'\sigma', r'\varkappa', r'\Lambda', r'\Xi'],
+    [r'\delta', r'\nu', r'\tau', r'\varphi', r'\Omega'],
+    [r'\epsilon', r'o', r'\theta', r'\varpi', r'\Phi', r'\aleph'],
+    [r'\eta', r'\omega', r'\upsilon', r'\varrho', r'\Pi', r'\beth'],
+    [r'\gamma', r'\phi', r'\xi', r'\varsigma', r'\Psi', r'\daleth'],
+    [r'\iota', r'\pi', r'\zeta', r'\vartheta', r'\Sigma', r'\gimel'],
+]
 
 LATEX_MATH_CONSTRUCTS = [
-    [r'\frac{abc}{xyz}', r"f'", r'\sqrt{abc}', r'\sqrt[n]{abc}'],
-    [r'\overline{abc}', r'\underline{abc}', r'\widehat{abc}', r'\widetilde{abc}'],
-    [r'\overrightarrow{abc}', r'\overleftarrow{abc}', r'\overbrace{abc}', r'\underbrace{abc}']]
+    [r'\frac{abc}{xyz}', r'\overline{abc}', r'\overrightarrow{abc}'],
+    ["f'", r'\underline{abc}', r'\overleftarrow{abc}'],
+    [r'\sqrt{abc}', r'\widehat{abc}', r'\overbrace{abc}'],
+    [r'\sqrt[n]{abc}', r'\widetilde{abc}', r'\underbrace{abc}'],
+]
 
 DELIMITERS = [
-    ['|', r'\vert', r'\|', r'\Vert'],
-    [r'\{', r'\}', r'\langle', r'\rangle'],
-    [r'\lfloor', r'\rfloor', r'\lceil', r'\rceil'],
-    ['/', r'\backslash', '[', ']'],
-    [r'\Uparrow', r'\uparrow', r'\Downarrow', r'\downarrow'],
-    [r'\llcorner', r'\lrcorner', r'\ulcorner', r'\urcorner']]
+    ['|', r'\{', r'\lfloor', '/', r'\Uparrow', r'\llcorner'],
+    [r'\vert', r'\}', r'\rfloor', r'\backslash', r'\uparrow', r'\lrcorner'],
+    [r'\|', r'\langle', r'\lceil', '[', r'\Downarrow', r'\ulcorner'],
+    [r'\Vert', r'\rangle', r'\rceil', ']', r'\downarrow', r'\urcorner'],
+]
 
 # Use the pair \lefts1 and \rights1 to match height of delimiters s1 and s2 to the height of their contents,
 # e.g. \left| expr \right| -or- \left\{ expr \right\} -or- \left\Vert expr \right.
 
 VARIABLE_SIZED_SYMBOLS = [ # displayed formulae show larger version
-    [r'\sum', r'\prod', r'\coprod'],
-    [r'\int', r'\oint', r'\iint'],
-    [r'\biguplus', r'\bigcap', r'\bigcup'],
-    [r'\bigoplus', r'\bigotimes', r'\bigodot'],
-    [r'\bigvee', r'\bigwedge', r'\bigsqcup']]
+    [r'\sum', r'\int', r'\biguplus', r'\bigoplus', r'\bigvee'],
+    [r'\prod', r'\oint', r'\bigcap', r'\bigotimes', r'\bigwedge'],
+    [r'\coprod', r'\iint', r'\bigcup', r'\bigodot', r'\bigsqcup'],
+]
 
 STANDARD_FUNCTION_NAMES = [ # Function names should appear in Roman, not Italic.
-    [r'\arccos', r'\cos', r'\csc', r'\exp', r'\ker', r'\limsup', r'\min', r'\sinh'],
-    [r'\arcsin', r'\cosh', r'\deg', r'\gcd', r'\lg', r'\ln', r'\Pr', r'\sup'],
-    [r'\arctan', r'\cot', r'\det', r'\hom', r'\lim', r'\log', r'\sec', r'\tan'],
-    [r'\arg', r'\coth', r'\dim', r'\inf', r'\liminf', r'\max', r'\sin', r'\tanh']]
+    [r'\arccos', r'\arcsin', r'\arctan', r'\arg'],
+    [r'\cos', r'\cosh', r'\cot', r'\coth'],
+    [r'\csc', r'\deg', r'\det', r'\dim'],
+    [r'\exp', r'\gcd', r'\hom', r'\inf'],
+    [r'\ker', r'\lg', r'\lim', r'\liminf'],
+    [r'\limsup', r'\ln ', r'\log', r'\max'],
+    [r'\min', r'\Pr', r'\sec', r'\sin'],
+    [r'\sinh', r'\sup', r'\tan', r'\tanh'],
+]
 
 BINARY_OPERATION_RELATION_SYMBOLS_1 = [
     [r'\ast', r'\pm', r'\cap', r'\lhd'],
@@ -58,7 +66,7 @@ BINARY_OPERATION_RELATION_SYMBOLS_1 = [
     [r'\circledcirc', r'\boxminus', r'\Cap', r'\Cup'], 
     [r'\circleddash', r'\boxtimes', r'\bot', r'\top'], 
     [r'\dotplus', r'\boxdot', r'\intercal', r'\rightthreetimes'],
-    [r'\divideontimes', r'\square', r'\doublebarwedge', r'\leftthreetime']]
+    [r'\divideontimes', r'\square', r'\doublebarwedge', r'\leftthreetimes']]
 
 BINARY_OPERATION_RELATION_SYMBOLS_2 = [
     [r'\equiv', r'\leq', r'\geq', r'\perp'], 
@@ -73,7 +81,7 @@ BINARY_OPERATION_RELATION_SYMBOLS_2 = [
     [r'\models', r'\in', r'\ni', r'\notin']]
 
 BINARY_OPERATION_RELATION_SYMBOLS_3 = [
-        [r'\approxeq', r'\leqq', r'\geqq', r'\lessgtr'],
+    [r'\approxeq', r'\leqq', r'\geqq', r'\lessgtr'],
     [r'\thicksim', r'\leqslant', r'\geqslant', r'\lesseqgtr'],
     [r'\backsim', r'\lessapprox', r'\gtrapprox', r'\lesseqqgtr'],
     [r'\backsimeq', r'\lll', r'\ggg', r'\gtreqqless'],
@@ -104,16 +112,81 @@ BINARY_OPERATION_RELATION_SYMBOLS_4 = [
     [r'\ntriangleleft', r'\lneq', r'\gneq', r'\varsupsetneq'], 
     [r'\ntrianglelefteq', r'\lneqq', r'\gneqq', r'\varsubsetneqq'], 
     [r'\ntriangleright', r'\lnsim', r'\gnsim', r'\varsupsetneqq'], 
-    [r'\ntrianglerighteq', r'\lvertneqq', r'\gvertneqq', '']]
+    [r'\ntrianglerighteq', r'\lvertneqq', r'\gvertneqq']]
 
-ARROW_SYMBOLS1 = []
-ARROW_SYMBOLS2 = []
-ARROW_SYMBOLS3 = []
-ARROW_SYMBOLS4 = []
-MISCELLANEUOS_SYMBOLS = []
-MATH_MODE_ACCENTS = []
-OTHER_STYLES_MATH_MODE_ONLY = []
+ARROW_SYMBOLS1 = [
+    [r'\leftarrow', r'\longleftarrow', r'\uparrow'],
+    [r'\Leftarrow', r'\Longleftarrow', r'\Uparrow'],
+    [r'\rightarrow', r'\longrightarrow', r'\downarrow'],
+    [r'\Rightarrow', r'\Longrightarrow', r'\Downarrow'],
+    [r'\leftrightarrow', r'\longleftrightarrow', r'\updownarrow'],
+    [r'\Leftrightarrow', r'\Longleftrightarrow', r'\Updownarrow'],
+]
+
+ARROW_SYMBOLS2 = [
+    [r'\mapsto', r'\longmapsto', r'\nearrow'],
+    [r'\hookleftarrow', r'\hookrightarrow', r'\searrow'],
+    [r'\leftharpoonup', r'\rightharpoonup', r'\swarrow'],
+    [r'\leftharpoondown', r'\rightharpoondown', r'\nwarrow'],
+    [r'\rightleftharpoons', r'\leadsto'],
+]
+
+ARROW_SYMBOLS3 = [
+    [r'\dashrightarrow', r'\dashleftarrow', r'\leftleftarrows'],
+    [r'\leftrightarrows', r'\Lleftarrow', r'\twoheadleftarrow'],
+    [r'\leftarrowtail', r'\looparrowleft', r'\leftrightharpoons'],
+    [r'\curvearrowleft', r'\circlearrowleft', r'\Lsh'],
+    [r'\upuparrows', r'\upharpoonleft', r'\downharpoonleft'],
+    [r'\multimap', r'\leftrightsquigarrow', r'\rightrightarrows'],
+    [r'\rightleftarrows', r'\rightrightarrows', r'\rightleftarrows'],
+    [r'\twoheadrightarrow', r'\rightarrowtail', r'\looparrowright'],
+    [r'\rightleftharpoons', r'\curvearrowright', r'\circlearrowright'],
+    [r'\Rsh', r'\downdownarrows', r'\upharpoonright'],
+    [r'\downharpoonright', r'\rightsquigarrow'],
+]
+
+ARROW_SYMBOLS4 = [
+    [r'\nleftarrow', r'\nrightarrow', r'\nLeftarrow'],
+    [r'\nRightarrow', r'\nleftrightarrow', r'\nLeftrightarrow'],
+]
+
+MISCELLANEUOS_SYMBOLS = [
+    [r'\infty', r'\forall', r'\Bbbk', r'\wp'],
+    [r'\nabla', r'\exists', r'\bigstar', r'\angle'],
+    [r'\partial', r'\nexists', r'\diagdown', r'\measuredangle'],
+    [r'\eth', r'\emptyset', r'\diagup', r'\sphericalangle'],
+    [r'\clubsuit', r'\varnothing', r'\Diamond', r'\complement'],
+    [r'\diamondsuit', r'\imath', r'\Finv', r'\triangledown'],
+    [r'\heartsuit', r'\jmath', r'\Game', r'\triangle'],
+    [r'\spadesuit', r'\ell', r'\hbar', r'\vartriangle'],
+    [r'\cdots', r'\iiiint', r'\hslash', r'\blacklozenge'],
+    [r'\vdots', r'\iiint', r'\lozenge', r'\blacksquare'],
+    [r'\ldots', r'\iint', r'\mho', r'\blacktriangle'],
+    [r'\ddots', r'\sharp', r'\prime', r'\blacktriangledown'],
+    [r'\Im', r'\flat', r'\square', r'\backprime'],
+    [r'\Re', r'\natural', r'\surd', r'\circledS'],
+]
+
+MATH_MODE_ACCENTS = [
+    [r'\acute{a}', r'\bar{a}', r'\Acute{\Acute{A}}', r'\Bar{\Bar{A}}'],
+    [r'\breve{a}', r'\check{a}', r'\Breve{\Breve{A}}', r'\Check{\Check{A}}'],
+    [r'\ddot{a}', r'\dot{a}', r'\Ddot{\Ddot{A}}', r'\Dot{\Dot{A}}'],
+    [r'\grave{a}', r'\hat{a}', r'\Grave{\Grave{A}}', r'\Hat{\Hat{A}}'],
+    [r'\tilde{a}', r'\vec{a}', r'\Tilde{\Tilde{A}}', r'\Vec{\Vec{A}}'],
+]
+
+OTHER_STYLES_MATH_MODE_ONLY = [
+    [r'\mathcal{ABCDEFGHIJKLMNOPQRSTUVWXYZ}'],
+    [r'\mathcal{abcdefghijklmnopqrstuvwxyz}'],
+    [r'\mathbb{ABCDEFGHIJKLMNOPQRSTUVWXYZ}'],
+    [r'\mathbb{abcdefghijklmnopqrstuvwxyz}'],
+    [r'\mathfrak{ABCDEFGHIJKLMNOPQRSTUVWXYZabc123}'],
+    [r'\mathsf{ABCDEFGHIJKLMNOPQRSTUVWXYZabc123}'],
+    [r'\mathbf{ABCDEFGHIJKLMNOPQRSTUVWXYZabc123}'],
+]
+
 FONT_SIZES = []
+
 TEXT_MODE_ACCENTS_AND_SYMBOLS = []
 
 class TestAll(BaseScene):
@@ -134,11 +207,10 @@ class TestAll(BaseScene):
         
         def interpose(tokens: List[List[str]]):
             G = []
-            for row in range(len(tokens)):
+            for line in tokens:
                 H = []
-                for col in range(len(tokens[0])):
-                    token = tokens[row][col]
-                    print(token, end='')
+                for token in line:
+                    print(token, end=' ')
                     tex = self.make_tex(token)
                     text = self.make_text(token)
                     H.append(tex)
@@ -165,12 +237,19 @@ class TestAll(BaseScene):
             self.wait(10)
             self.remove(G)
 
-        transpose(GREEK_AND_HEBREW_LETTERS)
-        transpose(LATEX_MATH_CONSTRUCTS)
-        transpose(DELIMITERS)
-        transpose(VARIABLE_SIZED_SYMBOLS)
-        transpose(STANDARD_FUNCTION_NAMES)
+        interpose(GREEK_AND_HEBREW_LETTERS)
+        interpose(LATEX_MATH_CONSTRUCTS)
+        interpose(DELIMITERS)
+        interpose(VARIABLE_SIZED_SYMBOLS)
+        interpose(STANDARD_FUNCTION_NAMES)
         interpose(BINARY_OPERATION_RELATION_SYMBOLS_1)
         interpose(BINARY_OPERATION_RELATION_SYMBOLS_2)
         interpose(BINARY_OPERATION_RELATION_SYMBOLS_3)
         interpose(BINARY_OPERATION_RELATION_SYMBOLS_4)
+        interpose(ARROW_SYMBOLS1)
+        interpose(ARROW_SYMBOLS2)
+        interpose(ARROW_SYMBOLS3)
+        interpose(ARROW_SYMBOLS4)
+        interpose(MISCELLANEUOS_SYMBOLS)
+        interpose(MATH_MODE_ACCENTS)
+        #interpose(OTHER_STYLES_MATH_MODE_ONLY)
