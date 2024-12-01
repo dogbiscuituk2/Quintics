@@ -216,7 +216,7 @@ class TestAll(BaseScene):
                 v_buff=0.2,
                 h_buff=0.2,
                 arrange_in_grid_config={"col_alignments": "clclclclclcl"[0:2*len(table[0])]},
-                line_config={"color": self.get_colour(ghost)})
+                line_config={"color": self.get_colour(ghost)}).scale(0.9)
             self.add(grid)
             self.wait(5)
             self.remove(grid)
