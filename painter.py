@@ -24,6 +24,8 @@ scheme_pastel           = 2
 scheme_black_on_white   = 3
 scheme_white_on_black   = 4
 
+TRANSPARENT = ManimColor([0,0,0,0])
+
 class Painter():
     """
     A class used to apply colours to the glyphs of a MathTex.
