@@ -211,15 +211,15 @@ class TestAll(BaseScene):
                     line.append(self.make_tex(cell))
                     line.append(self.make_text(cell))
                 page.append(line)
-            page = MobjectTable(
+            grid = MobjectTable(
                 page,
                 v_buff=0.2,
                 h_buff=0.2,
-                arrange_in_grid_config={"cell_alignment": LEFT},
+                arrange_in_grid_config={"col_alignments": "clclclclclcl"[0:2*len(table[0])]},
                 line_config={"color": self.get_colour(ghost)})
-            self.add(page)
+            self.add(grid)
             self.wait(5)
-            self.remove(page)
+            self.remove(grid)
 
         for table in TABLES:
             show_table(table)
