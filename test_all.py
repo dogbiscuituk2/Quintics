@@ -210,20 +210,47 @@ class TestAll(BaseScene):
             for row in table:
                 line = []
                 for cell in row:
-                    print(cell, end=' ')
+                    #print(cell, end=' ')
                     line.append(self.make_tex(cell))
                     line.append(self.make_text(cell))
                 page.append(line)
             grid = MobjectTable(
                 page,
-                v_buff=0.2,
-                h_buff=0.2,
+                v_buff=0.25,
+                h_buff=0.5,
                 arrange_in_grid_config={"col_alignments": "clclclclclcl"[0:2*len(table[0])]},
                 line_config={"color": TRANSPARENT})
             grid.scale(0.5)
-            self.add(grid)
-            self.wait(5)
-            self.remove(grid)
+            self.play(FadeIn(grid))
+            self.wait(8)
+            self.play(FadeOut(grid))
 
-        for table in TABLES:
-            show_table(table)
+        with self.say("Greek and Hebrew Letters."):
+            show_table(GREEK_AND_HEBREW_LETTERS)
+        with self.say("Mathematical constructions."):
+            show_table(LATEX_MATH_CONSTRUCTS)
+        with self.say("Delimiters."):
+            show_table(DELIMITERS)
+        with self.say("Variable sized symbols. Displayed formulae show the larger version."):
+            show_table(VARIABLE_SIZED_SYMBOLS)
+        with self.say("Standard function names."):
+            show_table(STANDARD_FUNCTION_NAMES)
+        with self.say("Binary operation and relation symbols."):
+            show_table(BINARY_OPERATION_RELATION_SYMBOLS_1)
+            show_table(BINARY_OPERATION_RELATION_SYMBOLS_2)
+            show_table(BINARY_OPERATION_RELATION_SYMBOLS_3)
+            show_table(BINARY_OPERATION_RELATION_SYMBOLS_4)
+        with self.say("Arrow symbols."):
+            show_table(ARROW_SYMBOLS_1)
+            show_table(ARROW_SYMBOLS_2)
+        with self.say("Miscellaneous symbols."):
+            show_table(MISCELLANEOUS_SYMBOLS)
+        with self.say("Math mode accents."):
+            show_table(MATH_MODE_ACCENTS)
+        with self.say("Other styles."):
+            show_table(OTHER_STYLES)
+        with self.say("Font sizes."):
+            show_table(FONT_SIZES)
+
+        #for table in TABLES:
+        #    show_table(table)
