@@ -171,23 +171,6 @@ FONT_SIZES = [
     [r'\scriptstyle \int f^{-1}(x-x_a)\,dx}'],
     [r'\scriptscriptstyle \int f^{-1}(x-x_a)\,dx}'],
 ]
-TABLES = [
-    GREEK_AND_HEBREW_LETTERS,
-    LATEX_MATH_CONSTRUCTS,
-    DELIMITERS,
-    VARIABLE_SIZED_SYMBOLS,
-    STANDARD_FUNCTION_NAMES,
-    BINARY_OPERATION_RELATION_SYMBOLS_1,
-    BINARY_OPERATION_RELATION_SYMBOLS_2,
-    BINARY_OPERATION_RELATION_SYMBOLS_3,
-    BINARY_OPERATION_RELATION_SYMBOLS_4,
-    ARROW_SYMBOLS_1,
-    ARROW_SYMBOLS_2,
-    MISCELLANEOUS_SYMBOLS,
-    MATH_MODE_ACCENTS,
-    OTHER_STYLES,
-    FONT_SIZES,
-]
 
 class TestAll(BaseScene):
 
@@ -251,6 +234,3 @@ class TestAll(BaseScene):
             show_table(OTHER_STYLES)
         with self.say("Font sizes."):
             show_table(FONT_SIZES)
-
-        #for table in TABLES:
-        #    show_table(table)
