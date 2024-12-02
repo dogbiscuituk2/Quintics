@@ -17,27 +17,23 @@ GREEK_AND_HEBREW_LETTERS = [
     [r'\gamma', r'\phi', r'\xi', r'\varsigma', r'\Psi', r'\daleth'],
     [r'\iota', r'\pi', r'\zeta', r'\vartheta', r'\Sigma', r'\gimel'],
 ]
-
 LATEX_MATH_CONSTRUCTS = [
     [r'\frac{abc}{xyz}', r'\overline{abc}', r'\overrightarrow{abc}'],
     ["f'", r'\underline{abc}', r'\overleftarrow{abc}'],
     [r'\sqrt{abc}', r'\widehat{abc}', r'\overbrace{abc}'],
     [r'\sqrt[n]{abc}', r'\widetilde{abc}', r'\underbrace{abc}'],
 ]
-
 DELIMITERS = [
     ['|', r'\{', r'\lfloor', '/', r'\Uparrow', r'\llcorner'],
     [r'\vert', r'\}', r'\rfloor', r'\backslash', r'\uparrow', r'\lrcorner'],
     [r'\|', r'\langle', r'\lceil', '[', r'\Downarrow', r'\ulcorner'],
     [r'\Vert', r'\rangle', r'\rceil', ']', r'\downarrow', r'\urcorner'],
 ]
-
 VARIABLE_SIZED_SYMBOLS = [ # Displayed formulae show larger version.
     [r'\sum', r'\int', r'\biguplus', r'\bigoplus', r'\bigvee'],
     [r'\prod', r'\oint', r'\bigcap', r'\bigotimes', r'\bigwedge'],
     [r'\coprod', r'\iint', r'\bigcup', r'\bigodot', r'\bigsqcup'],    
 ]
-
 STANDARD_FUNCTION_NAMES = [ # Should appear in Roman, not Italic.
     [r'\arccos', r'\arcsin', r'\arctan', r'\arg'],
     [r'\cos', r'\cosh', r'\cot', r'\coth'],
@@ -48,7 +44,6 @@ STANDARD_FUNCTION_NAMES = [ # Should appear in Roman, not Italic.
     [r'\min', r'\Pr', r'\sec', r'\sin'],
     [r'\sinh', r'\sup', r'\tan', r'\tanh'],
 ]
-
 BINARY_OPERATION_RELATION_SYMBOLS_1 = [
     [r'\ast', r'\pm', r'\cap', r'\lhd'],
     [r'\star', r'\mp', r'\cup', r'\rhd'],
@@ -59,9 +54,6 @@ BINARY_OPERATION_RELATION_SYMBOLS_1 = [
     [r'\diamond', r'\oslash', r'\vee', r'\bigtriangledown'],
     [r'\times', r'\otimes', r'\dagger', r'\bigtriangleup'],
     [r'\div', r'\wr', r'\ddagger', r'\setminus'],
-#]
-#
-#BINARY_OPERATION_RELATION_SYMBOLS_2 = [
     [r'\centerdot', r'\Box', r'\barwedge', r'\veebar'],
     [r'\circledast', r'\boxplus', r'\curlywedge', r'\curlyvee'],
     [r'\circledcirc', r'\boxminus', r'\Cap', r'\Cup'],
@@ -69,7 +61,6 @@ BINARY_OPERATION_RELATION_SYMBOLS_1 = [
     [r'\dotplus', r'\boxdot', r'\intercal', r'\rightthreetimes'],
     [r'\divideontimes', r'\square', r'\doublebarwedge', r'\leftthreetimes'],
 ]
-
 BINARY_OPERATION_RELATION_SYMBOLS_2 = [
     [r'\equiv', r'\leq', r'\geq', r'\perp'], 
     [r'\cong', r'\prec', r'\succ', r'\mid'], 
@@ -81,9 +72,6 @@ BINARY_OPERATION_RELATION_SYMBOLS_2 = [
     [r'\doteq', r'\sqsubseteq', r'\sqsupseteq', r'\smile'], 
     [r'\propto', r'\dashv', r'\vdash', r'\frown'], 
     [r'\models', r'\in', r'\ni', r'\notin'],
-#]
-#
-#BINARY_OPERATION_RELATION_SYMBOLS_4 = [
     [r'\approxeq', r'\leqq', r'\geqq', r'\lessgtr'],
     [r'\thicksim', r'\leqslant', r'\geqslant', r'\lesseqgtr'],
     [r'\backsim', r'\lessapprox', r'\gtrapprox', r'\lesseqqgtr'],
@@ -94,7 +82,6 @@ BINARY_OPERATION_RELATION_SYMBOLS_2 = [
     [r'\Bumpeq', r'\precsim', r'\succsim', r'\between'],
     [r'\doteqdot', r'\precapprox', r'\succapprox', r'\pitchfork'],
 ]
-
 BINARY_OPERATION_RELATION_SYMBOLS_3 = [
     [r'\thickapprox', r'\Subset', r'\Supset', r'\shortmid'],
     [r'\fallingdotseq', r'\subseteqq', r'\supseteqq', r'\smallfrown'],
@@ -104,9 +91,6 @@ BINARY_OPERATION_RELATION_SYMBOLS_3 = [
     [r'\because', r'\blacktriangleleft', r'\blacktriangleright', r'\Vvdash'],
     [r'\eqcirc', r'\trianglelefteq', r'\trianglerighteq', r'\shortparallel'],
     [r'\neq', r'\vartriangleleft', r'\vartriangleright', r'\nshortparallel'],
-#]
-#
-#BINARY_OPERATION_RELATION_SYMBOLS_6 = [
     [r'\ncong', r'\nleq', r'\ngeq', r'\nsubseteq'],
     [r'\nmid', r'\nleqq', r'\ngeqq', r'\nsupseteq'],
     [r'\nparallel', r'\nleqslant', r'\ngeqslant', r'\nsubseteqq'],
@@ -114,7 +98,6 @@ BINARY_OPERATION_RELATION_SYMBOLS_3 = [
     [r'\nshortparallel', r'\nprec', r'\nsucc', r'\subsetneq'],
     [r'\nsim', r'\npreceq', r'\nsucceq', r'\supsetneq'],
 ]
-
 BINARY_OPERATION_RELATION_SYMBOLS_4 = [
     [r'\nVDash', r'\precnapprox', r'\succnapprox', r'\subsetneqq'],
     [r'\nvDash', r'\precnsim', r'\succnsim', r'\supsetneqq'],
@@ -124,7 +107,6 @@ BINARY_OPERATION_RELATION_SYMBOLS_4 = [
     [r'\ntriangleright', r'\lnsim', r'\gnsim', r'\varsupsetneqq'],
     [r'\ntrianglerighteq', r'\lvertneqq', r'\gvertneqq', ''],
 ]
-
 ARROW_SYMBOLS_1 = [
     [r'\leftarrow', r'\longleftarrow', r'\uparrow'],
     [r'\Leftarrow', r'\Longleftarrow', r'\Uparrow'],
@@ -132,16 +114,12 @@ ARROW_SYMBOLS_1 = [
     [r'\Rightarrow', r'\Longrightarrow', r'\Downarrow'],
     [r'\leftrightarrow', r'\longleftrightarrow', r'\updownarrow'],
     [r'\Leftrightarrow', r'\Longleftrightarrow', r'\Updownarrow'],
-#]
-#
-#ARROW_SYMBOLS_2 = [
     [r'\mapsto', r'\longmapsto', r'\nearrow'],
     [r'\hookleftarrow', r'\hookrightarrow', r'\searrow'],
     [r'\leftharpoonup', r'\rightharpoonup', r'\swarrow'],
     [r'\leftharpoondown', r'\rightharpoondown', r'\nwarrow'],
     [r'\rightleftharpoons', r'\leadsto', ''],
 ]
-
 ARROW_SYMBOLS_2 = [
     [r'\dashrightarrow', r'\dashleftarrow', r'\leftleftarrows'],
     [r'\leftrightarrows', r'\Lleftarrow', r'\twoheadleftarrow'],
@@ -154,13 +132,9 @@ ARROW_SYMBOLS_2 = [
     [r'\rightleftharpoons', r'\curvearrowright', r'\circlearrowright'],
     [r'\Rsh', r'\downdownarrows', r'\upharpoonright'],
     [r'\downharpoonright', r'\rightsquigarrow', ''],
-#]
-#
-#ARROW_SYMBOLS_4 = [
     [r'\nleftarrow', r'\nrightarrow', r'\nLeftarrow'],
     [r'\nRightarrow', r'\nleftrightarrow', r'\nLeftrightarrow'],
 ]
-
 MISCELLANEOUS_SYMBOLS = [
     [r'\infty', r'\forall', r'\Bbbk', r'\wp'],
     [r'\nabla', r'\exists', r'\bigstar', r'\angle'],
@@ -170,9 +144,6 @@ MISCELLANEOUS_SYMBOLS = [
     [r'\diamondsuit', r'\imath', r'\Finv', r'\triangledown'],
     [r'\heartsuit', r'\jmath', r'\Game', r'\triangle'],
     [r'\spadesuit', r'\ell', r'\hbar', r'\vartriangle'],
-#]
-#
-#MISCELLANEOUS_SYMBOLS_2 = [
     [r'\cdots', r'\iiiint', r'\hslash', r'\blacklozenge'],
     [r'\vdots', r'\iiint', r'\lozenge', r'\blacksquare'],
     [r'\ldots', r'\iint', r'\mho', r'\blacktriangle'],
@@ -180,7 +151,6 @@ MISCELLANEOUS_SYMBOLS = [
     [r'\Im', r'\flat', r'\square', r'\backprime'],
     [r'\Re', r'\natural', r'\surd', r'\circledS'],
 ]
-
 MATH_MODE_ACCENTS = [
     [r'\acute{a}', r'\bar{a}', r'\Acute{\Acute{A}}', r'\Bar{\Bar{A}}'],
     [r'\breve{a}', r'\check{a}', r'\Breve{\Breve{A}}', r'\Check{\Check{A}}'],
@@ -188,7 +158,6 @@ MATH_MODE_ACCENTS = [
     [r'\grave{a}', r'\hat{a}', r'\Grave{\Grave{A}}', r'\Hat{\Hat{A}}'],
     [r'\tilde{a}', r'\vec{a}', r'\Tilde{\Tilde{A}}', r'\Vec{\Vec{A}}'],
 ]
-
 OTHER_STYLES = [
     [r'\mathcal{ABCDEFGHIJKLMNOPQRSTUVWXYZ}'],
     [r'\mathbb{ABCDEFGHIJKLMNOPQRSTUVWXYZ}'],
@@ -196,14 +165,12 @@ OTHER_STYLES = [
     [r'\mathsf{ABCDEFGHIJKLMNOPQRSTUVWXYZabc123}'],
     [r'\mathbf{ABCDEFGHIJKLMNOPQRSTUVWXYZabc123}'],
 ]
-
 FONT_SIZES = [
     [r'\displaystyle \int f^{-1}(x-x_a)\,dx}'],
     [r'\textstyle \int f^{-1}(x-x_a)\,dx}'],
     [r'\scriptstyle \int f^{-1}(x-x_a)\,dx}'],
     [r'\scriptscriptstyle \int f^{-1}(x-x_a)\,dx}'],
 ]
-
 TABLES = [
     GREEK_AND_HEBREW_LETTERS,
     LATEX_MATH_CONSTRUCTS,
