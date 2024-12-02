@@ -59,9 +59,9 @@ BINARY_OPERATION_RELATION_SYMBOLS_1 = [
     [r'\diamond', r'\oslash', r'\vee', r'\bigtriangledown'],
     [r'\times', r'\otimes', r'\dagger', r'\bigtriangleup'],
     [r'\div', r'\wr', r'\ddagger', r'\setminus'],
-]
-
-BINARY_OPERATION_RELATION_SYMBOLS_2 = [
+#]
+#
+#BINARY_OPERATION_RELATION_SYMBOLS_2 = [
     [r'\centerdot', r'\Box', r'\barwedge', r'\veebar'],
     [r'\circledast', r'\boxplus', r'\curlywedge', r'\curlyvee'],
     [r'\circledcirc', r'\boxminus', r'\Cap', r'\Cup'],
@@ -70,7 +70,7 @@ BINARY_OPERATION_RELATION_SYMBOLS_2 = [
     [r'\divideontimes', r'\square', r'\doublebarwedge', r'\leftthreetimes'],
 ]
 
-BINARY_OPERATION_RELATION_SYMBOLS_3 = [
+BINARY_OPERATION_RELATION_SYMBOLS_2 = [
     [r'\equiv', r'\leq', r'\geq', r'\perp'], 
     [r'\cong', r'\prec', r'\succ', r'\mid'], 
     [r'\neq', r'\preceq', r'\succeq', r'\parallel'], 
@@ -81,9 +81,9 @@ BINARY_OPERATION_RELATION_SYMBOLS_3 = [
     [r'\doteq', r'\sqsubseteq', r'\sqsupseteq', r'\smile'], 
     [r'\propto', r'\dashv', r'\vdash', r'\frown'], 
     [r'\models', r'\in', r'\ni', r'\notin'],
-]
-
-BINARY_OPERATION_RELATION_SYMBOLS_4 = [
+#]
+#
+#BINARY_OPERATION_RELATION_SYMBOLS_4 = [
     [r'\approxeq', r'\leqq', r'\geqq', r'\lessgtr'],
     [r'\thicksim', r'\leqslant', r'\geqslant', r'\lesseqgtr'],
     [r'\backsim', r'\lessapprox', r'\gtrapprox', r'\lesseqqgtr'],
@@ -95,7 +95,7 @@ BINARY_OPERATION_RELATION_SYMBOLS_4 = [
     [r'\doteqdot', r'\precapprox', r'\succapprox', r'\pitchfork'],
 ]
 
-BINARY_OPERATION_RELATION_SYMBOLS_5 = [
+BINARY_OPERATION_RELATION_SYMBOLS_3 = [
     [r'\thickapprox', r'\Subset', r'\Supset', r'\shortmid'],
     [r'\fallingdotseq', r'\subseteqq', r'\supseteqq', r'\smallfrown'],
     [r'\risingdotseq', r'\sqsubset', r'\sqsupset', r'\smallsmile'],
@@ -104,9 +104,9 @@ BINARY_OPERATION_RELATION_SYMBOLS_5 = [
     [r'\because', r'\blacktriangleleft', r'\blacktriangleright', r'\Vvdash'],
     [r'\eqcirc', r'\trianglelefteq', r'\trianglerighteq', r'\shortparallel'],
     [r'\neq', r'\vartriangleleft', r'\vartriangleright', r'\nshortparallel'],
-]
-
-BINARY_OPERATION_RELATION_SYMBOLS_6 = [
+#]
+#
+#BINARY_OPERATION_RELATION_SYMBOLS_6 = [
     [r'\ncong', r'\nleq', r'\ngeq', r'\nsubseteq'],
     [r'\nmid', r'\nleqq', r'\ngeqq', r'\nsupseteq'],
     [r'\nparallel', r'\nleqslant', r'\ngeqslant', r'\nsubseteqq'],
@@ -115,7 +115,7 @@ BINARY_OPERATION_RELATION_SYMBOLS_6 = [
     [r'\nsim', r'\npreceq', r'\nsucceq', r'\supsetneq'],
 ]
 
-BINARY_OPERATION_RELATION_SYMBOLS_7 = [
+BINARY_OPERATION_RELATION_SYMBOLS_4 = [
     [r'\nVDash', r'\precnapprox', r'\succnapprox', r'\subsetneqq'],
     [r'\nvDash', r'\precnsim', r'\succnsim', r'\supsetneqq'],
     [r'\nvdash', r'\lnapprox', r'\gnapprox', r'\varsubsetneq'],
@@ -132,9 +132,9 @@ ARROW_SYMBOLS_1 = [
     [r'\Rightarrow', r'\Longrightarrow', r'\Downarrow'],
     [r'\leftrightarrow', r'\longleftrightarrow', r'\updownarrow'],
     [r'\Leftrightarrow', r'\Longleftrightarrow', r'\Updownarrow'],
-]
-
-ARROW_SYMBOLS_2 = [
+#]
+#
+#ARROW_SYMBOLS_2 = [
     [r'\mapsto', r'\longmapsto', r'\nearrow'],
     [r'\hookleftarrow', r'\hookrightarrow', r'\searrow'],
     [r'\leftharpoonup', r'\rightharpoonup', r'\swarrow'],
@@ -142,7 +142,7 @@ ARROW_SYMBOLS_2 = [
     [r'\rightleftharpoons', r'\leadsto', ''],
 ]
 
-ARROW_SYMBOLS_3 = [
+ARROW_SYMBOLS_2 = [
     [r'\dashrightarrow', r'\dashleftarrow', r'\leftleftarrows'],
     [r'\leftrightarrows', r'\Lleftarrow', r'\twoheadleftarrow'],
     [r'\leftarrowtail', r'\looparrowleft', r'\leftrightharpoons'],
@@ -154,14 +154,14 @@ ARROW_SYMBOLS_3 = [
     [r'\rightleftharpoons', r'\curvearrowright', r'\circlearrowright'],
     [r'\Rsh', r'\downdownarrows', r'\upharpoonright'],
     [r'\downharpoonright', r'\rightsquigarrow', ''],
-]
-
-ARROW_SYMBOLS_4 = [
+#]
+#
+#ARROW_SYMBOLS_4 = [
     [r'\nleftarrow', r'\nrightarrow', r'\nLeftarrow'],
     [r'\nRightarrow', r'\nleftrightarrow', r'\nLeftrightarrow'],
 ]
 
-MISCELLANEOUS_SYMBOLS_1 = [
+MISCELLANEOUS_SYMBOLS = [
     [r'\infty', r'\forall', r'\Bbbk', r'\wp'],
     [r'\nabla', r'\exists', r'\bigstar', r'\angle'],
     [r'\partial', r'\nexists', r'\diagdown', r'\measuredangle'],
@@ -170,9 +170,9 @@ MISCELLANEOUS_SYMBOLS_1 = [
     [r'\diamondsuit', r'\imath', r'\Finv', r'\triangledown'],
     [r'\heartsuit', r'\jmath', r'\Game', r'\triangle'],
     [r'\spadesuit', r'\ell', r'\hbar', r'\vartriangle'],
-]
-
-MISCELLANEOUS_SYMBOLS_2 = [
+#]
+#
+#MISCELLANEOUS_SYMBOLS_2 = [
     [r'\cdots', r'\iiiint', r'\hslash', r'\blacklozenge'],
     [r'\vdots', r'\iiint', r'\lozenge', r'\blacksquare'],
     [r'\ldots', r'\iint', r'\mho', r'\blacktriangle'],
@@ -214,15 +214,9 @@ TABLES = [
     BINARY_OPERATION_RELATION_SYMBOLS_2,
     BINARY_OPERATION_RELATION_SYMBOLS_3,
     BINARY_OPERATION_RELATION_SYMBOLS_4,
-    BINARY_OPERATION_RELATION_SYMBOLS_5,
-    BINARY_OPERATION_RELATION_SYMBOLS_6,
-    BINARY_OPERATION_RELATION_SYMBOLS_7,
     ARROW_SYMBOLS_1,
     ARROW_SYMBOLS_2,
-    ARROW_SYMBOLS_3,
-    ARROW_SYMBOLS_4,
-    MISCELLANEOUS_SYMBOLS_1,
-    MISCELLANEOUS_SYMBOLS_2,
+    MISCELLANEOUS_SYMBOLS,
     MATH_MODE_ACCENTS,
     OTHER_STYLES,
     FONT_SIZES,
@@ -261,7 +255,7 @@ class TestAll(BaseScene):
                 line_config={"color": TRANSPARENT})
             grid.scale(0.5)
             self.add(grid)
-            self.wait(1)
+            self.wait(5)
             self.remove(grid)
 
         for table in TABLES:
