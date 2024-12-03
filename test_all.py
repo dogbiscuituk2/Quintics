@@ -7,7 +7,7 @@ from base_scene import BaseScene
 # Use the pair \lefts1 and \rights1 to match height of delimiters s1 and s2 to the height of their contents,
 # e.g. \left| expr \right| -or- \left\{ expr \right\} -or- \left\Vert expr \right.
 
-GREEK_AND_HEBREW_LETTERS = [
+GREEK_SYMBOLS = [
     [r'\alpha', r'\kappa', r'\psi', r'\digamma', r'\Delta', r'\Theta'],
     [r'\beta', r'\lambda', r'\rho', r'\varepsilon', r'\Gamma', r'\Upsilon'],
     [r'\chi', r'\mu', r'\sigma', r'\varkappa', r'\Lambda', r'\Xi'],
@@ -34,7 +34,7 @@ VARIABLE_SIZED_SYMBOLS = [ # Displayed formulae show larger version.
     [r'\prod', r'\oint', r'\bigcap', r'\bigotimes', r'\bigwedge'],
     [r'\coprod', r'\iint', r'\bigcup', r'\bigodot', r'\bigsqcup'],    
 ]
-STANDARD_FUNCTION_NAMES = [ # Should appear in Roman, not Italic.
+FUNC_SYMBOLS = [ # Should appear in Roman, not Italic.
     [r'\arccos', r'\arcsin', r'\arctan', r'\arg'],
     [r'\cos', r'\cosh', r'\cot', r'\coth'],
     [r'\csc', r'\deg', r'\det', r'\dim'],
@@ -44,7 +44,7 @@ STANDARD_FUNCTION_NAMES = [ # Should appear in Roman, not Italic.
     [r'\min', r'\Pr', r'\sec', r'\sin'],
     [r'\sinh', r'\sup', r'\tan', r'\tanh'],
 ]
-BINARY_OPERATION_RELATION_SYMBOLS_1 = [
+OPREL_SYMBOLS_1 = [
     [r'\ast', r'\pm', r'\cap', r'\lhd'],
     [r'\star', r'\mp', r'\cup', r'\rhd'],
     [r'\cdot', r'\amalg', r'\uplus', r'\triangleleft'],
@@ -61,7 +61,7 @@ BINARY_OPERATION_RELATION_SYMBOLS_1 = [
     [r'\dotplus', r'\boxdot', r'\intercal', r'\rightthreetimes'],
     [r'\divideontimes', r'\square', r'\doublebarwedge', r'\leftthreetimes'],
 ]
-BINARY_OPERATION_RELATION_SYMBOLS_2 = [
+OPREL_SYMBOLS_2 = [
     [r'\equiv', r'\leq', r'\geq', r'\perp'], 
     [r'\cong', r'\prec', r'\succ', r'\mid'], 
     [r'\neq', r'\preceq', r'\succeq', r'\parallel'], 
@@ -82,7 +82,7 @@ BINARY_OPERATION_RELATION_SYMBOLS_2 = [
     [r'\Bumpeq', r'\precsim', r'\succsim', r'\between'],
     [r'\doteqdot', r'\precapprox', r'\succapprox', r'\pitchfork'],
 ]
-BINARY_OPERATION_RELATION_SYMBOLS_3 = [
+OPREL_SYMBOLS_3 = [
     [r'\thickapprox', r'\Subset', r'\Supset', r'\shortmid'],
     [r'\fallingdotseq', r'\subseteqq', r'\supseteqq', r'\smallfrown'],
     [r'\risingdotseq', r'\sqsubset', r'\sqsupset', r'\smallsmile'],
@@ -98,7 +98,7 @@ BINARY_OPERATION_RELATION_SYMBOLS_3 = [
     [r'\nshortparallel', r'\nprec', r'\nsucc', r'\subsetneq'],
     [r'\nsim', r'\npreceq', r'\nsucceq', r'\supsetneq'],
 ]
-BINARY_OPERATION_RELATION_SYMBOLS_4 = [
+OPREL_SYMBOLS_4 = [
     [r'\nVDash', r'\precnapprox', r'\succnapprox', r'\subsetneqq'],
     [r'\nvDash', r'\precnsim', r'\succnsim', r'\supsetneqq'],
     [r'\nvdash', r'\lnapprox', r'\gnapprox', r'\varsubsetneq'],
@@ -135,7 +135,7 @@ ARROW_SYMBOLS_2 = [
     [r'\nleftarrow', r'\nrightarrow', r'\nLeftarrow'],
     [r'\nRightarrow', r'\nleftrightarrow', r'\nLeftrightarrow'],
 ]
-MISCELLANEOUS_SYMBOLS = [
+MISC_SYMBOLS = [
     [r'\infty', r'\forall', r'\Bbbk', r'\wp'],
     [r'\nabla', r'\exists', r'\bigstar', r'\angle'],
     [r'\partial', r'\nexists', r'\diagdown', r'\measuredangle'],
@@ -171,6 +171,21 @@ FONT_SIZES = [
     [r'\scriptstyle \int f^{-1}(x-x_a)\,dx}'],
     [r'\scriptscriptstyle \int f^{-1}(x-x_a)\,dx}'],
 ]
+
+def make_pattern(tables: List[List[List[str]]]) -> str:
+    return f"^({'|'.join([cell for table in tables for row in table for cell in row if cell])})$".replace('\\', '\\\\')
+
+GREEK_PATTERN = make_pattern([GREEK_SYMBOLS])
+FUNC_PATTERN = make_pattern([FUNC_SYMBOLS])
+OPREL_PATTERN = make_pattern([OPREL_SYMBOLS_1, OPREL_SYMBOLS_2, OPREL_SYMBOLS_3, OPREL_SYMBOLS_4])
+ARROW_PATTERN = make_pattern([ARROW_SYMBOLS_1, ARROW_SYMBOLS_2])
+MISC_PATTERN = make_pattern([MISC_SYMBOLS])
+
+string = r"\circlearrowright"
+import re
+print(ARROW_PATTERN)
+print(string)
+print(re.match(ARROW_PATTERN, string))
 
 class TestAll(BaseScene):
 
@@ -209,7 +224,7 @@ class TestAll(BaseScene):
             self.play(FadeOut(grid))
 
         with self.say("Greek and Hebrew Letters."):
-            show_table(GREEK_AND_HEBREW_LETTERS)
+            show_table(GREEK_SYMBOLS)
         with self.say("Mathematical constructions."):
             show_table(LATEX_MATH_CONSTRUCTS)
         with self.say("Delimiters."):
@@ -217,17 +232,17 @@ class TestAll(BaseScene):
         with self.say("Variable sized symbols. Displayed formulae show the larger version."):
             show_table(VARIABLE_SIZED_SYMBOLS)
         with self.say("Standard function names."):
-            show_table(STANDARD_FUNCTION_NAMES)
+            show_table(FUNC_SYMBOLS)
         with self.say("Binary operation and relation symbols."):
-            show_table(BINARY_OPERATION_RELATION_SYMBOLS_1)
-            show_table(BINARY_OPERATION_RELATION_SYMBOLS_2)
-            show_table(BINARY_OPERATION_RELATION_SYMBOLS_3)
-            show_table(BINARY_OPERATION_RELATION_SYMBOLS_4)
+            show_table(OPREL_SYMBOLS_1)
+            show_table(OPREL_SYMBOLS_2)
+            show_table(OPREL_SYMBOLS_3)
+            show_table(OPREL_SYMBOLS_4)
         with self.say("Arrow symbols."):
             show_table(ARROW_SYMBOLS_1)
             show_table(ARROW_SYMBOLS_2)
         with self.say("Miscellaneous symbols."):
-            show_table(MISCELLANEOUS_SYMBOLS)
+            show_table(MISC_SYMBOLS)
         with self.say("Math mode accents."):
             show_table(MATH_MODE_ACCENTS)
         with self.say("Other styles."):
