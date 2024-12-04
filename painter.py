@@ -105,7 +105,6 @@ class Painter():
                         paint_glyph(token)
 
         def paint_function(token: str) -> None:
-            return
             match(token):
                 case r'\frac':
                     pop() # '{'
