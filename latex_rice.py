@@ -39,7 +39,7 @@ SYM_FUNC = [ # Should appear in Roman, not Italic.
     [r'\csc', r'\deg', r'\det', r'\dim'],
     [r'\exp', r'\gcd', r'\hom', r'\inf'],
     [r'\ker', r'\lg', r'\lim', r'\liminf'],
-    [r'\limsup', r'\ln ', r'\log', r'\max'],
+    [r'\limsup', r'\ln', r'\log', r'\max'],
     [r'\min', r'\Pr', r'\sec', r'\sin'],
     [r'\sinh', r'\sup', r'\tan', r'\tanh'],
 ]
@@ -747,7 +747,8 @@ def make_pattern(tables: List[List[List[str]]]) -> str:
     return f"^({'|'.join(cells)})$".replace('\\', '\\\\')
 
 PAT_GREEK = make_pattern([SYM_GREEK])
+PAT_LARGE = make_pattern([SYM_LARGE])
 PAT_FUNC = make_pattern([SYM_FUNC])
-PAT_OPREL = make_pattern([SYM_OPS_1, SYM_OPS_2, SYM_OPS_3, SYM_OPS_4])
+PAT_OPS = make_pattern([SYM_OPS_1, SYM_OPS_2, SYM_OPS_3, SYM_OPS_4])
 PAT_ARROW = make_pattern([SYM_ARROW_1, SYM_ARROW_2])
 PAT_MISC = make_pattern([SYM_MISC])
