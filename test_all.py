@@ -4,9 +4,6 @@ from latex_rice import *
 
 string = r"\circlearrowright"
 import re
-print(PAT_ARROW)
-print(string)
-print(re.match(PAT_ARROW, string))
 
 class TestAll(BaseScene):
 
@@ -16,6 +13,7 @@ class TestAll(BaseScene):
         self.set_colour_map((
             #('[Oo|]', ghost),
             (PAT_GREEK, red),
+            (PAT_DELIM, red),
             (PAT_LARGE, orange),
             (PAT_FUNC, yellow),
             (PAT_OPS, green),
@@ -35,7 +33,6 @@ class TestAll(BaseScene):
             for row in table:
                 line = []
                 for cell in row:
-                    #print(cell, end=' ')
                     line.append(self.make_tex(cell))
                     line.append(self.make_text(cell))
                 page.append(line)
@@ -54,8 +51,8 @@ class TestAll(BaseScene):
             show_table(SYM_GREEK)
         #with self.say("Mathematical constructions."):
         #    show_table(SYM_MATH)
-        #with self.say("Delimiters."):
-        #    show_table(SYM_DELIM)
+        with self.say("Delimiters."):
+            show_table(SYM_DELIM)
         with self.say("Variable sized symbols. Displayed formulae show the larger version."):
             show_table(SYM_LARGE)
         with self.say("Standard function names."):

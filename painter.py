@@ -149,7 +149,7 @@ class Painter():
         # Otherwise, a token is just any single character, excluding
         # ampersands & whitespace.
         #self._tokens = re.findall(r"\\\w+|\\\\|[^&\s]", tex.tex_string)
-        self._tokens = re.findall(r"\\[A-Za-z]+|\\\\|[^&\s]", tex.tex_string)
+        self._tokens = re.findall(r"\\{|\\}|\\\||\\[A-Za-z]+|\\\\|[^&\s]", tex.tex_string)
 
         tex.set_color(self.get_colour(figure))
         self._tex = tex

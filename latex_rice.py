@@ -27,6 +27,11 @@ SYM_DELIM = [
     [r'\vert', r'\}', r'\rfloor', r'\backslash', r'\uparrow', r'\lrcorner'],
     [r'\|', r'\langle', r'\lceil', '[', r'\Downarrow', r'\ulcorner'],
     [r'\Vert', r'\rangle', r'\rceil', ']', r'\downarrow', r'\urcorner'],
+
+#    ['|', r'\{', r'\lfloor', '/', r'\Uparrow', r'\llcorner'],
+#    [r'\vert', r'\}', r'\rfloor', r'\backslash', r'\uparrow', r'\lrcorner'],
+#    [r'\|', r'\langle', r'\lceil', '[', r'\Downarrow', r'\ulcorner'],
+#    [r'\Vert', r'\rangle', r'\rceil', ']', r'\downarrow', r'\urcorner'],
 ]
 SYM_LARGE = [ # Displayed formulae show larger version.
     [r'\sum', r'\int', r'\biguplus', r'\bigoplus', r'\bigvee'],
@@ -747,6 +752,7 @@ def make_pattern(tables: List[List[List[str]]]) -> str:
     return f"^({'|'.join(cells)})$".replace('\\', '\\\\')
 
 PAT_GREEK = make_pattern([SYM_GREEK])
+PAT_DELIM = make_pattern([SYM_DELIM])
 PAT_LARGE = make_pattern([SYM_LARGE])
 PAT_FUNC = make_pattern([SYM_FUNC])
 PAT_OPS = make_pattern([SYM_OPS_1, SYM_OPS_2, SYM_OPS_3, SYM_OPS_4])
