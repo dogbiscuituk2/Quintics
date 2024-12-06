@@ -1,6 +1,6 @@
 from base_scene import BaseScene
-from painter import *
 from latex_rice import *
+from painter import *
 
 string = r"\circlearrowright"
 import re
@@ -13,12 +13,16 @@ class TestAll(BaseScene):
         self.set_colour_map((
             #('[Oo|]', ghost),
             (PAT_GREEK, red),
+            (PAT_MATH, brown),
             (PAT_DELIM, red),
             (PAT_LARGE, orange),
             (PAT_FUNC, yellow),
             (PAT_OPS, green),
             (PAT_ARROW, blue),
             (PAT_MISC, cyan),
+            (PAT_ACCENT, violet),
+            (PAT_STYLE, violet),
+            (PAT_FONT, violet),
             (r'\\frac', magenta),
             (r'\\sqrt|\\lim', orange),
             (r'[a-e]|\\alpha|\\beta|\\gamma|\\delta|\\epsilon', green),
@@ -33,8 +37,11 @@ class TestAll(BaseScene):
             for row in table:
                 line = []
                 for cell in row:
-                    line.append(self.make_tex(cell))
-                    line.append(self.make_text(cell))
+                    tex = self.make_tex(cell)
+                    #text = self.make_text(cell)
+                    text = self.make_text(f"{cell}({len(tex[0])})")
+                    line.append(tex)
+                    line.append(text)
                 page.append(line)
             grid = MobjectTable(
                 page,
@@ -47,29 +54,39 @@ class TestAll(BaseScene):
             self.wait(8)
             self.play(FadeOut(grid))
 
+        for token in SYM_ALL:
+            print(token, sep='')
+            txt = MathTex(token)
+            print(f" {len(txt[0])}")
+        return
+
         with self.say("Greek and Hebrew Letters."):
             show_table(SYM_GREEK)
-        #with self.say("Mathematical constructions."):
-        #    show_table(SYM_MATH)
+        with self.say("Mathematical constructions."):
+            show_table(SYM_MATH)
         with self.say("Delimiters."):
             show_table(SYM_DELIM)
         with self.say("Variable sized symbols. Displayed formulae show the larger version."):
             show_table(SYM_LARGE)
         with self.say("Standard function names."):
             show_table(SYM_FUNC)
-        with self.say("Binary operation and relation symbols."):
+        with self.say("Binary operation and relation symbols, page 1."):
             show_table(SYM_OPS_1)
+        with self.say("Page 2."):
             show_table(SYM_OPS_2)
+        with self.say("Page 3."):
             show_table(SYM_OPS_3)
+        with self.say("Page 4."):
             show_table(SYM_OPS_4)
-        with self.say("Arrow symbols."):
+        with self.say("Arrow symbols, page 1."):
             show_table(SYM_ARROW_1)
+        with self.say("Page 2."):
             show_table(SYM_ARROW_2)
         with self.say("Miscellaneous symbols."):
             show_table(SYM_MISC)
-        #with self.say("Math mode accents."):
-        #    show_table(SYM_ACCENT)
-        #with self.say("Other styles - math mode only."):
-        #    show_table(SYM_STYLE)
-        #with self.say("Font sizes."):
-        #    show_table(SYM_FONT)
+        with self.say("Math mode accents."):
+            show_table(SYM_ACCENT)
+        with self.say("Other styles - math mode only."):
+            show_table(SYM_STYLE)
+        with self.say("Font sizes."):
+            show_table(SYM_FONT)

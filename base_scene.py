@@ -68,9 +68,6 @@ class BaseScene(VoiceoverScene):
 
     def make_tex(self, text: str) -> MathTex:
         text = self.prepare_string(text)
-
-        print(text)
-        
         tex: MathTex = MathTex(text)
         self.paint(tex)
         return tex

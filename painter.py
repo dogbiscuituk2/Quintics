@@ -35,7 +35,7 @@ class Painter():
 
     _colours = (
         (_GHOST, GREY, BLACK, LIGHT_GREY, BLACK, DARK_BROWN, RED, ORANGE, YELLOW, GREEN, PURE_BLUE, TEAL, PINK, PURPLE, GREY, WHITE),
-        (_GHOST, 0xB2B2B2, BLACK, DARK_GREY, BLACK, 0x7F3319, 0xFF1933, 0xFF7F4C, 0xCCCC00, 0x33FF33, PURE_BLUE, 0x00FFFF, 0xFF00FF, 0x9A72AC, 0xB2B2B2, WHITE),
+        (_GHOST, 0xB2B2B2, BLACK, DARK_GREY, BLACK, 0x7F3319, 0xFF1933, 0xFF7F4C, 0xCCCC00, 0x33FF33, 0x5FBFFF, 0x00FFFF, 0xFF00FF, 0x9A72AC, 0xB2B2B2, WHITE),
         (_GHOST, 0xBBBBBB, BLACK, DARK_GREY, BLACK, 0xCD853F, 0xFF0000, 0xFF7F3F, 0xCCCC00, 0x33FF33, PURE_BLUE, 0x00FFFF, 0xFF00FF, 0x9A72AC, 0xBBBBBB, WHITE),
         (_GHOST, BLACK, WHITE, GREY, *[BLACK for _ in range(12)]),
         (_GHOST, WHITE, BLACK, GREY, *[WHITE for _ in range(12)]))
@@ -76,6 +76,7 @@ class Painter():
     def paint(self, tex: MathTex) -> None:
 
         def get_glyph_count(token: str) -> int:
+            print(token)
             g = MathTex(token)
             return len(g[0])
 
@@ -126,6 +127,9 @@ class Painter():
                     paint_glyph(token)
 
         def paint_glyph(token: str) -> None:
+
+            return
+
             if self._sticky == 0:
                 self._colour = get_token_colour(token)
             size = get_glyph_count(token)
