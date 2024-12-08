@@ -1,4 +1,4 @@
-from painter import *
+from painter_old import *
 from base_scene import BaseScene
 
 class Poly_09_Constant(BaseScene):

@@ -26,7 +26,7 @@ scheme_white_on_black   = 4
 
 TRANSPARENT = ManimColor([0,0,0,0])
 
-class Painter():
+class PainterOld():
     """
     A class used to apply colours to the glyphs of a MathTex.
     """
@@ -80,9 +80,10 @@ class Painter():
             print(self._token)
             try:
                 g = MathTex(self._token)
-                return len(g[0])
             except ValueError:
+                buffer = f"{buffer}{self._token}"
                 return -1
+            return len(g[0])
 
         def get_token_colour() -> ManimColor:
             colours = self._colours[self._scheme]
@@ -93,7 +94,6 @@ class Painter():
 
         def paint_expression() -> None:
             while self._tokens:
-                #self._token = pop()
                 pop()
                 if self._token == r'\\': # 2 backslashes = line continuation
                     continue
@@ -132,7 +132,6 @@ class Painter():
         def pop() -> None:
             self._token = peek()
             self._tokens.pop(0)
-            #return self._token
 
         # A backslash followed by word character(s) is a single token.
         # Two consecutive backslashes make a null token (whitespace).

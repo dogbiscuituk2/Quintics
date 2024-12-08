@@ -1,6 +1,6 @@
 from base_scene import BaseScene
 from latex_rice import *
-from painter import *
+from painter_old import *
 
 string = r"\circlearrowright"
 import re

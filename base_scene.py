@@ -2,14 +2,14 @@ from inspect import currentframe, getframeinfo
 from manim import *
 from manim_voiceover import VoiceoverScene
 from manim_voiceover.services.gtts import GTTSService
-from painter import *
+from painter_old import *
 
 config.max_files_cached = 999
 config.verbosity = "CRITICAL"
 
 class BaseScene(VoiceoverScene):
 
-    painter = Painter(
+    painter = PainterOld(
         scheme_bright,
         (
             ('oO|', ghost),

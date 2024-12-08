@@ -1,5 +1,5 @@
 from MF_Tools import *
-from painter import *
+from painter_old import *
 from base_scene import BaseScene
 
 class Poly_21_Quadratic(BaseScene):

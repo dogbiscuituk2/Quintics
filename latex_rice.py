@@ -21,21 +21,16 @@ SYM_GREEK = [
     [r'\iota', r'\pi', r'\zeta', r'\vartheta', r'\Sigma', r'\gimel'],
 ]
 SYM_MATH = [
-    [r'\frac{abc}{xyz}', r'\overline{abc}', r'\overrightarrow{abc}'],
-    ["f'", r'\underline{abc}', r'\overleftarrow{abc}'],
-    [r'\sqrt{abc}', r'\widehat{abc}', r'\overbrace{abc}'],
-    [r'\sqrt[n]{abc}', r'\widetilde{abc}', r'\underbrace{abc}'],
+    [r'\frac{x}{y}', r'\overline{x}', r'\overrightarrow{x}'],
+    ["f'", r'\underline{x}', r'\overleftarrow{x}'],
+    [r'\sqrt{x}', r'\widehat{x}', r'\overbrace{x}'],
+    [r'\sqrt[n]{x}', r'\widetilde{x}', r'\underbrace{x}'],
 ]
 SYM_DELIM = [
     ['|', r'\{', r'\lfloor', '/', r'\Uparrow', r'\llcorner'],
     [r'\vert', r'\}', r'\rfloor', r'\backslash', r'\uparrow', r'\lrcorner'],
     [r'\|', r'\langle', r'\lceil', '[', r'\Downarrow', r'\ulcorner'],
     [r'\Vert', r'\rangle', r'\rceil', ']', r'\downarrow', r'\urcorner'],
-
-#    ['|', r'\{', r'\lfloor', '/', r'\Uparrow', r'\llcorner'],
-#    [r'\vert', r'\}', r'\rfloor', r'\backslash', r'\uparrow', r'\lrcorner'],
-#    [r'\|', r'\langle', r'\lceil', '[', r'\Downarrow', r'\ulcorner'],
-#    [r'\Vert', r'\rangle', r'\rceil', ']', r'\downarrow', r'\urcorner'],
 ]
 SYM_LARGE = [ # Displayed formulae show larger version.
     [r'\sum', r'\int', r'\biguplus', r'\bigoplus', r'\bigvee'],
@@ -160,7 +155,7 @@ SYM_MISC = [
     [r'\Re', r'\natural', r'\surd', r'\circledS'],
 ]
 SYM_ACCENT = [
-    [r'\acute{a}', r'\bar{a}', r'\Acute\Acute A', r'\Bar{\Bar{A}}'],
+    [r'\acute{a}', r'\bar{a}', r'\Acute{\Acute{A}}', r'\Bar{\Bar{A}}'],
     [r'\breve{a}', r'\check{a}', r'\Breve{\Breve{A}}', r'\Check{\Check{A}}'],
     [r'\ddot{a}', r'\dot{a}', r'\Ddot{\Ddot{A}}', r'\Dot{\Dot{A}}'],
     [r'\grave{a}', r'\hat{a}', r'\Grave{\Grave{A}}', r'\Hat{\Hat{A}}'],
