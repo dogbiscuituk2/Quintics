@@ -77,8 +77,11 @@ class Painter():
 
         def get_glyph_count(token: str) -> int:
             print(token)
-            g = MathTex(token)
-            return len(g[0])
+            try:
+                g = MathTex(token)
+                return len(g[0])
+            except ValueError:
+                return -1
 
         def get_token_colour(token: str) -> ManimColor:
             colours = self._colours[self._scheme]
@@ -127,12 +130,13 @@ class Painter():
                     paint_glyph(token)
 
         def paint_glyph(token: str) -> None:
-
-            return
-
             if self._sticky == 0:
                 self._colour = get_token_colour(token)
             size = get_glyph_count(token)
+
+            if size < 0:
+                return
+
             for _ in range(size):
                 glyph = self._tex[0][self._index]
                 glyph.set_color(self._colour)

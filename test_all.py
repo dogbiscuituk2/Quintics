@@ -38,8 +38,7 @@ class TestAll(BaseScene):
                 line = []
                 for cell in row:
                     tex = self.make_tex(cell)
-                    #text = self.make_text(cell)
-                    text = self.make_text(f"{cell}({len(tex[0])})")
+                    text = self.make_text(cell)
                     line.append(tex)
                     line.append(text)
                 page.append(line)
@@ -54,16 +53,10 @@ class TestAll(BaseScene):
             self.wait(8)
             self.play(FadeOut(grid))
 
-        for token in SYM_ALL:
-            print(token, sep='')
-            txt = MathTex(token)
-            print(f" {len(txt[0])}")
-        return
-
         with self.say("Greek and Hebrew Letters."):
             show_table(SYM_GREEK)
-        with self.say("Mathematical constructions."):
-            show_table(SYM_MATH)
+        #with self.say("Mathematical constructions."):
+        #    show_table(SYM_MATH)
         with self.say("Delimiters."):
             show_table(SYM_DELIM)
         with self.say("Variable sized symbols. Displayed formulae show the larger version."):
@@ -88,5 +81,5 @@ class TestAll(BaseScene):
             show_table(SYM_ACCENT)
         with self.say("Other styles - math mode only."):
             show_table(SYM_STYLE)
-        with self.say("Font sizes."):
-            show_table(SYM_FONT)
+        #with self.say("Font sizes."):
+        #    show_table(SYM_FONT)

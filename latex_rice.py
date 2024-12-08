@@ -160,7 +160,7 @@ SYM_MISC = [
     [r'\Re', r'\natural', r'\surd', r'\circledS'],
 ]
 SYM_ACCENT = [
-    [r'\acute{a}', r'\bar{a}', r'\Acute{\Acute{A}}', r'\Bar{\Bar{A}}'],
+    [r'\acute{a}', r'\bar{a}', r'\Acute\Acute A', r'\Bar{\Bar{A}}'],
     [r'\breve{a}', r'\check{a}', r'\Breve{\Breve{A}}', r'\Check{\Check{A}}'],
     [r'\ddot{a}', r'\dot{a}', r'\Ddot{\Ddot{A}}', r'\Dot{\Dot{A}}'],
     [r'\grave{a}', r'\hat{a}', r'\Grave{\Grave{A}}', r'\Hat{\Hat{A}}'],
