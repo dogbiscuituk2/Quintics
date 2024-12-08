@@ -45,6 +45,7 @@ class Painter():
     _index: int = 0
     _scheme: int = scheme_bright
     _tex: MathTex = None
+    _token: str
     _tokens: List[str] = []
 
     _sticky: int = 0
@@ -75,64 +76,45 @@ class Painter():
 
     def paint(self, tex: MathTex) -> None:
 
-        def get_glyph_count(token: str) -> int:
-            print(token)
+        def get_glyph_count() -> int:
+            print(self._token)
             try:
-                g = MathTex(token)
+                g = MathTex(self._token)
                 return len(g[0])
             except ValueError:
                 return -1
 
-        def get_token_colour(token: str) -> ManimColor:
+        def get_token_colour() -> ManimColor:
             colours = self._colours[self._scheme]
             for map in self._colour_map:
-                if (re.match(map[0], token)):
+                if (re.match(map[0], self._token)):
                     return colours[map[1]]
             return colours[figure]
 
         def paint_expression() -> None:
             while self._tokens:
-                token = pop()
-                if token == r'\\': # 2 backslashes = line continuation
+                #self._token = pop()
+                pop()
+                if self._token == r'\\': # 2 backslashes = line continuation
                     continue
-                match token[0]:
+                match self._token[0]:
                     case '{':
                         paint_expression()
                     case '}':
                         self._sticky = 0
                         break
                     case '\\':
-                        paint_function(token)
+                        paint_glyph()
                     case '_' | '^':
                         self._sticky = 2 if peek() == '{' else 1
                     case _:
-                        paint_glyph(token)
+                        paint_glyph()
 
-        def paint_function(token: str) -> None:
-            match(token):
-                case r'\frac':
-                    pop() # '{'
-                    paint_expression()
-
-                    paint_glyph(token)
-                    #self._index += 1
-
-                    pop() # '{'
-                    paint_expression()
-                case r'\sqrt':
-                    paint_glyph(token)
-                    if peek() == '[':
-                        pop()
-                        while token := pop() != ']':
-                            self._index += 1
-                    self._index += 1
-                case _:
-                    paint_glyph(token)
-
-        def paint_glyph(token: str) -> None:
+           
+        def paint_glyph() -> None:
             if self._sticky == 0:
-                self._colour = get_token_colour(token)
-            size = get_glyph_count(token)
+                self._colour = get_token_colour()
+            size = get_glyph_count()
 
             if size < 0:
                 return
@@ -147,10 +129,10 @@ class Painter():
         def peek() -> str:
             return self._tokens[0]
 
-        def pop() -> str:
-            token = peek()
+        def pop() -> None:
+            self._token = peek()
             self._tokens.pop(0)
-            return token
+            #return self._token
 
         # A backslash followed by word character(s) is a single token.
         # Two consecutive backslashes make a null token (whitespace).
