@@ -34,6 +34,14 @@ class Parser():
     def _peek(self) -> str:
         return self._tokens[self._token_index]
 
+    @property
+    def _size(self) -> int:
+        try:
+            tex = MathTex(self._peek)
+        except ValueError:
+            return -1
+        return len(tex[0])
+
     def _accept(self, token: str) -> None:
         if (self._peek != token):
             pass
