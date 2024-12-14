@@ -6,12 +6,14 @@ PAT_TOKEN = r"\\{|\\}|\\\||\\[A-Za-z]+|\\\\|[^&\s]"
 
 class Parser():
 
-    _index: int
+    _glyph_index: int
+    _token_index: int
     _tex: MathTex
     _tokens: List[str]
 
     def __init__(self, tex: MathTex) -> None:
-        self._index = 0
+        self._glyph_index = 0
+        self._token_index = 0
         self._tex = tex
         self._tokens = re.findall(PAT_TOKEN, tex.tex_string)
 
@@ -20,22 +22,22 @@ class Parser():
 
     @property
     def _more(self) -> bool:
-        return self._index < len(self._tokens)
+        return self._token_index < len(self._tokens)
 
     @property
     def _next(self) -> str:
         token = self._peek
-        self._index += 1
+        self._token_index += 1
         return token
 
     @property
     def _peek(self) -> str:
-        return self._tokens[self._index]
+        return self._tokens[self._token_index]
 
     def _accept(self, token: str) -> None:
         if (self._peek != token):
             pass
-        self._index += 1
+        self._token_index += 1
 
     def _parse_expression(self, context: Context) -> None:
         self._accept('{')
