@@ -6,7 +6,6 @@ PAT_TOKEN = r"\\{|\\}|\\\||\\[A-Za-z]+|\\\\|[^&\s]"
 class Term():
 
     token_index: int
-    token_count: int
     glyph_index: int
     glyph_count: int
 
@@ -15,9 +14,12 @@ class Term():
             token_index: int,
             glyph_index: int,
             glyph_count: int = 1):
-        token_index = token_index
-        glyph_index = glyph_index
-        glyph_count = glyph_count
+        self.token_index = token_index
+        self.glyph_index = glyph_index
+        self.glyph_count = glyph_count
+
+    def __str__(self) -> str:
+        return f'[{self.token_index},{self.glyph_index},{self.glyph_count}]'
         
 class Parser():
 
@@ -33,8 +35,8 @@ class Parser():
         self._tokens = re.findall(PAT_TOKEN, tex.tex_string)
         print(self._tokens)
 
-    def parse(self) -> None:
-        self._parse_string()
+    def parse(self) -> List[Term]:
+        return self._parse_string()
 
     @property
     def _more(self) -> bool:
@@ -55,25 +57,54 @@ class Parser():
             pass
         self._token_index += 1
 
+    def _get_tex_len(self, token: str) -> int:
+        try:
+            tex = MathTex(token)
+        except Exception:
+            return 0
+        return len(tex[0])
+
     def _parse_shift(self, token: str) -> List[Term]:
         self._accept(token)
         return self._parse_atom()
     
-    def _parse_string(self) -> None:
+    def _parse_string(self) -> List[Term]:
+        result = []
         while self._more and self._peek != '}':
-            self._parse_atom()
+            result += self._parse_atom()
+        return result
 
-    def _parse_subscript(self) -> List[Term]:
-        return self._parse_shift('_')
+    def _parse_shift(self, token: str) -> List[Term]:
+        '''
+        If the current token is either '_' or '^' then return the following atom,
+        otherwise return the empty list.
 
-    def _parse_superscript(self) -> List[Term]:
-        return self._parse_shift('^')
+        str: The expected token, '_' or '^'.
+        '''
+        if self._peek == token:
+            self._accept(token)
+            return self._parse_atom()
+        return []
 
     def _parse_sum(self) -> List[Term]:
-        middle = Term(self._token_index, self._glyph_index)
+
+        middle = [Term(self._token_index, self._glyph_index)]
         self._token_index += 1
-        bottom = self._parse_subscript() if self._peek == '_' else None
-        top = self._parse_superscript() if self._peek == '^' else None
+
+        bottom = self._parse_shift('_')
+        top = self._parse_shift('^')
+        top_len = len(top)
+        mb_len = len(middle) + len(bottom)
+        for term in top:
+            term.glyph_index -= mb_len
+        for term in middle:
+            term.glyph_index += top_len
+
+        print(*top)
+        print(*middle)
+        print(*bottom)
+
+        return top + middle + bottom
 
     def _parse_atom(self) -> List[Term]:
         match self._peek:
@@ -81,12 +112,17 @@ class Parser():
                 return self._parse_sum()
             case '{':
                 self._accept('{')
-                term = self._parse_atom()
+                result = self._parse_string()
                 self._accept('}')
-                return term
+                return result
             case _:
+                token = self._peek
+                glyph_count = self._get_tex_len(token)
+                result = [Term(self._token_index, self._glyph_index, glyph_count)]
                 token = self._next
                 print(token)
+                self._glyph_index += glyph_count
+                return result
 
 if (__name__ == '__main__'):
 
