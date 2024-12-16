@@ -81,7 +81,7 @@ class PainterOld():
             try:
                 g = MathTex(self._token)
             except ValueError:
-                buffer = f"{buffer}{self._token}"
+                #buffer = f"{buffer}{self._token}"
                 return -1
             return len(g[0])
 
