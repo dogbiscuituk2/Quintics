@@ -2,14 +2,16 @@ from inspect import currentframe, getframeinfo
 from manim import *
 from manim_voiceover import VoiceoverScene
 from manim_voiceover.services.gtts import GTTSService
-from painter_old import *
+from palette import *
+from painter import Painter
 
 config.max_files_cached = 999
 config.verbosity = "CRITICAL"
 
 class BaseScene(VoiceoverScene):
 
-    painter = PainterOld(
+    painter = Painter(
+        Palette(
         scheme_bright,
         (
             ('oO|', ghost),
@@ -18,7 +20,7 @@ class BaseScene(VoiceoverScene):
             ('[p-s]', yellow),
             ('x', red),
             ('y', magenta),
-            ('z', cyan)))
+            ('z', cyan))))
     
     def box(self, *args: VMobject) -> Polygon:
         b = self.box_make(*args)
