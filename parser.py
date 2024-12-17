@@ -4,11 +4,12 @@ import re
 
 PAT_TOKEN = r"\\{|\\}|\\\||\\[A-Za-z]+|\\\\|[^&\s]"
 
-class Term():
+class Symbol():
 
     token_index: int
     glyph_index: int
     glyph_count: int
+    glyph_colour: ManimColor
 
     def __init__(
             self,
@@ -36,7 +37,7 @@ class Parser():
         self._tokens = re.findall(PAT_TOKEN, tex.tex_string)
         print(self._tokens)
 
-    def parse(self) -> List[Term]:
+    def parse(self) -> List[Symbol]:
         return self._parse_string()
 
     @property
@@ -58,8 +59,8 @@ class Parser():
             pass
         self._token_index += 1
 
-    def _get_glyph_count(self, terms: List[Term]) -> int:
-        return sum(term.glyph_count for term in terms)
+    def _get_glyph_count(self, symbols: List[Symbol]) -> int:
+        return sum(symbol.glyph_count for symbol in symbols)
 
     def _get_tex_len(self, token: str) -> int:
         try:
@@ -68,11 +69,13 @@ class Parser():
             return 0
         return len(tex[0])
 
-    def _parse_atom(self) -> List[Term]:
+    def _parse_atom(self) -> List[Symbol]:
         token = self._peek
         if re.match(PAT_LARGE, token):
             return self._parse_large()
         match token:
+            case r'\frac':
+                return self._parse_frac()
             case '{':
                 self._accept('{')
                 result = self._parse_string()
@@ -84,14 +87,42 @@ class Parser():
                 return self._parse_shift(token)
             case _:
                 glyph_count = self._get_tex_len(token)
-                result = [Term(self._token_index, self._glyph_index, glyph_count)]
+                result = [Symbol(self._token_index, self._glyph_index, glyph_count)]
                 token = self._next
                 print(token)
                 self._glyph_index += glyph_count
                 return result
 
-    def _parse_large(self) -> List[Term]:
-        middle = [Term(self._token_index, self._glyph_index)]
+    def _parse_frac(self) -> List[Symbol]:
+
+        middle = [Symbol(self._token_index, self._glyph_index)]
+        self._token_index += 1
+        self._glyph_index += 1
+
+        top = self._parse_atom()
+        bottom = self._parse_atom()
+
+        print('old top:', *top)
+        print('old middle:', *middle)
+        print('old bottom:', *bottom)
+
+        top_len = self._get_glyph_count(top)
+        mid_len = self._get_glyph_count(middle)
+
+        for term in top:
+            term.glyph_index -= mid_len
+        for term in middle:
+            term.glyph_index += top_len
+
+        print('old top:', *top)
+        print('old middle:', *middle)
+        print('old bottom:', *bottom)
+
+        return top + middle + bottom
+
+    def _parse_large(self) -> List[Symbol]:
+
+        middle = [Symbol(self._token_index, self._glyph_index)]
         self._token_index += 1
         self._glyph_index += 1
 
@@ -104,6 +135,7 @@ class Parser():
 
         top_len = self._get_glyph_count(top)
         mb_len = self._get_glyph_count(middle) + self._get_glyph_count(bottom)
+
         for term in top:
             term.glyph_index -= mb_len
         for term in middle:
@@ -117,7 +149,7 @@ class Parser():
 
         return top + middle + bottom
 
-    def _parse_shift(self, token: str) -> List[Term]:
+    def _parse_shift(self, token: str) -> List[Symbol]:
         '''
         If the current token is either '_' or '^' then return the following atom,
         otherwise return the empty list.
@@ -128,12 +160,22 @@ class Parser():
             self._accept(token)
             return self._parse_atom()
         return []
+
+    def _parse_sqrt(self):
+
+        outer = [Symbol(self._token_index, self._glyph_index)]
+        self._token_index += 1
+        self._glyph_index += 1
+
+        inner = []
+
+        return outer + inner
     
-    def _parse_string(self) -> List[Term]:
-        result = []
+    def _parse_string(self) -> List[Symbol]:
+        symbols = []
         while self._more and self._peek != '}':
-            result += self._parse_atom()
-        return result
+            symbols += self._parse_atom()
+        return symbols
 
 if (__name__ == '__main__'):
 
