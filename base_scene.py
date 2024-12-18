@@ -2,46 +2,36 @@ from inspect import currentframe, getframeinfo
 from manim import *
 from manim_voiceover import VoiceoverScene
 from manim_voiceover.services.gtts import GTTSService
-from palette import *
-from painter import Painter
+from latex_rice import *
+from painter import *
 
 config.max_files_cached = 999
 config.verbosity = "CRITICAL"
 
 class BaseScene(VoiceoverScene):
 
-    painter = Painter(
-        Palette(
-        scheme_bright,
-        (
-            ('oO|', ghost),
-            ('[a-e]', green),
-            ('[ghk]', orange),
-            ('[p-s]', yellow),
-            ('x', red),
-            ('y', magenta),
-            ('z', cyan))))
-    
     def box(self, *args: VMobject) -> Polygon:
         b = self.box_make(*args)
         self.play(Create(b))
         return b
 
-    boxes = None
+    _boxes = None
+    _painter: Painter = Painter()
+    _scheme: int = scheme_bright
 
     def box_make(self, *args: VMobject) -> Polygon:
         return SurroundingRectangle(VGroup(*args), self.get_colour(yellow)) 
 
     def box_move(self, *args: VMobject) -> Animation:
         b = self.box_make(*args)
-        result = Create(b) if self.boxes == None else ReplacementTransform(self.boxes, b)
-        self.boxes = b
+        result = Create(b) if self._boxes == None else ReplacementTransform(self._boxes, b)
+        self._boxes = b
         return result
 
     def box_off(self) -> None:
-        if self.boxes != None:
-            self.play(Uncreate(self.boxes))
-            self.boxes = None
+        if self._boxes != None:
+            self.play(Uncreate(self._boxes))
+            self._boxes = None
 
     def box_on(self, *args: VMobject) -> None:
         self.play(self.box_move(*args))
@@ -53,7 +43,7 @@ class BaseScene(VoiceoverScene):
         return self.get_colour(grey)
 
     def get_colour(self, index: int) -> ManimColor:
-        return self.painter.get_colour(index)
+        return self._painter.get_colour(index)
 
     def init(self):
         self.set_speech_service(GTTSService())
@@ -79,7 +69,7 @@ class BaseScene(VoiceoverScene):
         return result;
     
     def paint(self, tex: MathTex) -> None:
-        self.painter.paint(tex)
+        self._painter.paint(tex)
 
     def prepare_string(self, text: str) -> str:
         return text # if '|' in text else f'|{text}'
@@ -91,4 +81,4 @@ class BaseScene(VoiceoverScene):
         return self.voiceover(text, lang='en', lang_check=False)
     
     def set_colour_map(self, map: tuple[tuple[str, int]]):
-        self.painter.set_colour_map(map)
+        self._painter.set_colour_map(map)

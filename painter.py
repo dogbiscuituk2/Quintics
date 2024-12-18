@@ -1,17 +1,76 @@
 from latex_rice import *
 from manim import *
-from palette import *
 import re
 from symbol import Symbol
+
+ghost   = 0 # Transparent
+figure  = 1 # Foreground default
+ground  = 2 # Background
+hilite  = 3 # Highlight background
+black   = 4 # These remaining colour names are all purely logical
+brown   = 5
+red     = 6
+orange  = 7
+yellow  = 8
+green   = 9
+blue    = 10
+cyan    = 11
+magenta = 12
+violet  = 13
+grey    = 14
+white   = 15
+
+scheme_default          = 0
+scheme_bright           = 1
+scheme_pastel           = 2
+scheme_black_on_white   = 3
+scheme_white_on_black   = 4
+
+TRANSPARENT = ManimColor([0,0,0,0])
 
 PAT_TOKEN = r"\\{|\\}|\\\||\\[A-Za-z]+|\\\\|[^&\s]"
 
 class Painter():
 
-    def __init__(self, palette: Palette):
-        self._palette = palette
+    def __init__(self):
+        self._scheme = scheme_bright
+        self.set_colour_map
+        (
+            #('oO|', ghost),
+            (PAT_GREEK, red),
+            (PAT_MATH, brown),
+            (PAT_DELIM, red),
+            (PAT_LARGE, orange),
+            (PAT_FUNC, yellow),
+            (PAT_OPS, green),
+            (PAT_ARROW, blue),
+            (PAT_MISC, cyan),
+            (PAT_ACCENT, violet),
+            (PAT_STYLE, violet),
+            (PAT_FONT, violet),
+            (r'\\frac', magenta),
+            (r'\\sqrt|\\lim', orange),
+            (r'[a-e]|\\alpha|\\beta|\\gamma|\\delta|\\epsilon', green),
+            ('h', orange),
+            (r'[p-s]|\\pi|\\rho\|\\sigma|\\sin', yellow),
+            ('x', red),
+            ('y', magenta),
+            ('z', cyan),
+        )
 
-    _palette: Palette
+    _GHOST = [0,0,0,0] # transparent
+
+    _colours = (
+        (_GHOST, GREY, BLACK, LIGHT_GREY, BLACK, DARK_BROWN, RED, ORANGE, YELLOW, GREEN, PURE_BLUE, TEAL, PINK, PURPLE, GREY, WHITE),
+        (_GHOST, 0xB2B2B2, BLACK, DARK_GREY, BLACK, 0x7F3319, 0xFF1933, 0xFF7F4C, 0xCCCC00, 0x33FF33, 0x5FBFFF, 0x00FFFF, 0xFF00FF, 0x9A72AC, 0xB2B2B2, WHITE),
+        (_GHOST, 0xBBBBBB, BLACK, DARK_GREY, BLACK, 0xCD853F, 0xFF0000, 0xFF7F3F, 0xCCCC00, 0x33FF33, PURE_BLUE, 0x00FFFF, 0xFF00FF, 0x9A72AC, 0xBBBBBB, WHITE),
+        (_GHOST, BLACK, WHITE, GREY, *[BLACK for _ in range(12)]),
+        (_GHOST, WHITE, BLACK, GREY, *[WHITE for _ in range(12)]))
+
+    _colour: ManimColor
+    _colour_map: tuple[tuple[re.Pattern[str], int]] = []
+    _scheme: int = scheme_bright
+
     _glyph_index: int
     _token_index: int
     _tex: MathTex
@@ -30,13 +89,9 @@ class Painter():
             for index in range(start, stop):
                 glyph = tex[0][index]
                 glyph.set_color(colour)
-                print(index, colour)
 
     def set_colour_map(self, colour_map: tuple[tuple[str, int]]):
-        self._palette.set_colour_map = [[re.compile(m[0]), m[1]] for m in colour_map]
-
-    def get_colour(self, index: int) -> ManimColor:
-        return self._palette.get_colour(index)
+        self._colour_map = [[re.compile(m[0]), m[1]] for m in colour_map]
 
     @property
     def _more(self) -> bool:
@@ -139,16 +194,31 @@ class Painter():
     
     def _parse_token(self, token: str) -> List[Symbol]:
         glyph_count = self._get_tex_len(token)
+        colour = self.get_token_colour(token)
         result = [Symbol(
             token_index = self._token_index,
             glyph_index = self._glyph_index,
             glyph_count = glyph_count,
-            colour = self._palette.get_token_colour(token))]
+            colour = colour)]
+        print('colour = ', colour)
         self._token_index += 1
         self._glyph_index += glyph_count
         return result
     
-if __name__ == '__main__':
-    painter = Palette()
-    parser = Painter(painter)
-    parser.paint(MathTex(r'\prod_{i=\sin{0}}^{\cos{x^2}+1}{i^2}'))
+
+
+    def get_colour(self, index: int):
+        return self._colours[self._scheme][index]
+
+    def get_token_colour(self, token: str):
+        colours = self._colours[self._scheme]
+        for map in self._colour_map:
+            pattern = map[0]
+            print('pattern = ', pattern, 'token = ', token, end=' : ')
+            if (re.match(map[0], token)):
+                return colours[map[1]]
+            return colours[figure]
+
+    def set_colour_map(self, colour_map: tuple[tuple[str, int]]):
+        #self._colour_map = [[re.compile(m[0]), m[1]] for m in colour_map]
+        self._colour_map = colour_map
