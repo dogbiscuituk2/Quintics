@@ -28,7 +28,7 @@ scheme_white_on_black   = 4
 
 TRANSPARENT = ManimColor([0,0,0,0])
 
-PAT_TOKEN = r"\\{|\\}|\\\||\\[A-Za-z]+|\\\\|[^&\s]"
+PAT_TOKEN = r"\\{|\\}|\\\||\\[A-Za-z]+|\\\\|\\\,|[^&\s]"
 
 class Painter():
 
@@ -76,7 +76,8 @@ class Painter():
 
     @property
     def _peek(self) -> str:
-        return self._tokens[self._token_index]
+        index = self._token_index
+        return self._tokens[index] if self._more else ''
 
     def _accept(self, token: str) -> None:
         if (self._peek != token):
