@@ -101,10 +101,9 @@ class Painter():
             case r'\frac':
                 return 1
         try:
-            tex = MathTex(token)
+            return len(MathTex(token)[0])
         except Exception:
             return 0
-        return len(tex[0])
 
     def _get_token_colour(self, token: str):
         colours = self._colours[self._scheme]
@@ -168,8 +167,12 @@ class Painter():
     def _paint_sqrt(self):
         outer = self._paint_symbol()
         if self._peek == '[':
-            outer += self._paint_string('[', ']')
-        inner = self._paint_atom()
+            colour = outer[0].colour
+            power = self._paint_string('[', ']')
+            for symbol in power:
+                symbol.colour = colour
+            outer += power
+        inner = self._paint_atom() if self._more else []
         return outer + inner
     
     def _paint_string(self, begin: str = '', end: str = '') -> List[Symbol]:
