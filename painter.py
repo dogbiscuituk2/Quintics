@@ -32,32 +32,6 @@ PAT_TOKEN = r"\\{|\\}|\\\||\\[A-Za-z]+|\\\\|[^&\s]"
 
 class Painter():
 
-    def __init__(self):
-        self._scheme = scheme_bright
-        self.set_colour_map
-        (
-            #('oO|', ghost),
-            (PAT_GREEK, red),
-            (PAT_MATH, brown),
-            (PAT_DELIM, red),
-            (PAT_LARGE, orange),
-            (PAT_FUNC, yellow),
-            (PAT_OPS, green),
-            (PAT_ARROW, blue),
-            (PAT_MISC, cyan),
-            (PAT_ACCENT, violet),
-            (PAT_STYLE, violet),
-            (PAT_FONT, violet),
-            (r'\\frac', magenta),
-            (r'\\sqrt|\\lim', orange),
-            (r'[a-e]|\\alpha|\\beta|\\gamma|\\delta|\\epsilon', green),
-            ('h', orange),
-            (r'[p-s]|\\pi|\\rho\|\\sigma|\\sin', yellow),
-            ('x', red),
-            ('y', magenta),
-            ('z', cyan),
-        )
-
     _GHOST = [0,0,0,0] # transparent
 
     _colours = (
@@ -92,6 +66,9 @@ class Painter():
 
     def set_colour_map(self, colour_map: tuple[tuple[str, int]]):
         self._colour_map = [[re.compile(m[0]), m[1]] for m in colour_map]
+
+    def set_scheme(self, scheme: int):
+        self._scheme = scheme
 
     @property
     def _more(self) -> bool:
@@ -200,12 +177,9 @@ class Painter():
             glyph_index = self._glyph_index,
             glyph_count = glyph_count,
             colour = colour)]
-        print('colour = ', colour)
         self._token_index += 1
         self._glyph_index += glyph_count
         return result
-    
-
 
     def get_colour(self, index: int):
         return self._colours[self._scheme][index]
@@ -213,12 +187,11 @@ class Painter():
     def get_token_colour(self, token: str):
         colours = self._colours[self._scheme]
         for map in self._colour_map:
-            pattern = map[0]
-            print('pattern = ', pattern, 'token = ', token, end=' : ')
             if (re.match(map[0], token)):
                 return colours[map[1]]
-            return colours[figure]
+        return colours[figure]
 
     def set_colour_map(self, colour_map: tuple[tuple[str, int]]):
         #self._colour_map = [[re.compile(m[0]), m[1]] for m in colour_map]
         self._colour_map = colour_map
+        pass

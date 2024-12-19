@@ -10,8 +10,33 @@ class TestAll(BaseScene):
 
         self.init()
 
+        colour_map = [
+            #('oO|', ghost),
+            (PAT_GREEK, red),
+            (PAT_MATH, brown),
+            (PAT_DELIM, red),
+            (PAT_LARGE, orange),
+            (PAT_FUNC, yellow),
+            (PAT_OPS, green),
+            (PAT_ARROW, blue),
+            (PAT_MISC, cyan),
+            (PAT_ACCENT, violet),
+            (PAT_STYLE, violet),
+            (PAT_FONT, violet),
+            (r'\\frac', magenta),
+            (r'\\sqrt|\\lim', orange),
+            (r'[a-e]|\\alpha|\\beta|\\gamma|\\delta|\\epsilon', green),
+            ('h', orange),
+            ('[p-s]', yellow),
+            ('x', red),
+            ('y', magenta),
+            ('z', cyan),
+        ]
+
+        self.set_scheme(scheme_bright)
+        self.set_colour_map(colour_map)
+
         def show_table(table: List[List[str]]) -> None:
-            print(PAT_GREEK)
             page = []
             for row in table:
                 line = []
