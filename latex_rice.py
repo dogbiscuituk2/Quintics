@@ -33,10 +33,13 @@ SYM_DELIM = [
     [r'\|', r'\langle', r'\lceil', '[', r'\Downarrow', r'\ulcorner'],
     [r'\Vert', r'\rangle', r'\rceil', ']', r'\downarrow', r'\urcorner'],
 ]
+SYM_INT = [
+    [r'\int', r'\oint', r'\iint', r'\iiint', r'\iiiint'],
+]
 SYM_LARGE = [ # Displayed formulae show larger version.
-    [r'\sum', r'\int', r'\biguplus', r'\bigoplus', r'\bigvee'],
-    [r'\prod', r'\oint', r'\bigcap', r'\bigotimes', r'\bigwedge'],
-    [r'\coprod', r'\iint', r'\bigcup', r'\bigodot', r'\bigsqcup'],    
+    [r'\sum', r'\biguplus', r'\bigoplus', r'\bigvee'],
+    [r'\prod', r'\bigcap', r'\bigotimes', r'\bigwedge'],
+    [r'\coprod', r'\bigcup', r'\bigodot', r'\bigsqcup'],    
 ]
 SYM_FUNC = [ # Should appear in Roman, not Italic.
     [r'\arccos', r'\arcsin', r'\arctan', r'\arg'],
@@ -179,6 +182,7 @@ SYM_FONT = [
 PAT_GREEK = make_pattern([SYM_GREEK])
 PAT_MATH = make_pattern([SYM_MATH])
 PAT_DELIM = make_pattern([SYM_DELIM])
+PAT_INT = make_pattern([SYM_INT])
 PAT_LARGE = make_pattern([SYM_LARGE])
 PAT_FUNC = make_pattern([SYM_FUNC])
 PAT_OPS = make_pattern([SYM_OPS_1, SYM_OPS_2, SYM_OPS_3, SYM_OPS_4])

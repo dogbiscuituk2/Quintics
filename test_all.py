@@ -63,6 +63,8 @@ class TestAll(BaseScene):
             show_table(SYM_MATH)
         with self.say("Delimiters."):
             show_table(SYM_DELIM)
+        with self.say("Integrals. Displayed formulae show the larger version."):
+            show_table(SYM_INT)
         with self.say("Variable sized symbols. Displayed formulae show the larger version."):
             show_table(SYM_LARGE)
         with self.say("Standard function names."):

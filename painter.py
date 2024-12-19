@@ -114,8 +114,10 @@ class Painter():
 
     def _paint_atom(self) -> List[Symbol]:
         token = self._peek
+        if re.match(PAT_INT, token):
+            return self._paint_aggregate(prototype = r'\int')
         if re.match(PAT_LARGE, token):
-            return self._paint_large()
+            return self._paint_aggregate(prototype = r'\sum')
         match token:
             case r'\frac':
                 return self._paint_frac()
@@ -132,25 +134,31 @@ class Painter():
                 return self._paint_token(token)
 
     def _paint_frac(self) -> List[Symbol]:
-        middle = self._paint_symbol()
-        top = self._paint_atom()
-        bottom = self._paint_atom()
-        top_len = self._get_glyph_count(top)
-        mid_len = self._get_glyph_count(middle)
-        self._adjust(top, -mid_len)
-        self._adjust(middle, top_len)
-        return top + middle + bottom
-
-    def _paint_large(self) -> List[Symbol]:
-        middle = self._paint_symbol()
-        bottom = self._paint_shift('_')
-        top = self._paint_shift('^')
-        top_len = self._get_glyph_count(top)
-        mb_len = self._get_glyph_count(middle) + self._get_glyph_count(bottom)
-        self._adjust(top, -mb_len)
-        self._adjust(middle, top_len)
-        self._adjust(bottom, top_len)
-        return top + middle + bottom
+        g1 = self._paint_symbol()
+        g2 = self._paint_atom()
+        g3 = self._paint_atom()
+        n1 = self._get_glyph_count(g1)
+        n2 = self._get_glyph_count(g2)
+        self._adjust(g2, -n1)
+        self._adjust(g1, n2)
+        return g2 + g1 + g3
+    
+    def _paint_aggregate(self, prototype: str) -> List[Symbol]:
+        g1 = self._paint_symbol()
+        g2 = self._paint_shift('_')
+        g3 = self._paint_shift('^')
+        n1 = self._get_glyph_count(g1)
+        n2 = self._get_glyph_count(g2)
+        n3 = self._get_glyph_count(g3)
+        match prototype:
+            case r'\int':
+                self._adjust(g2, n3)
+                self._adjust(g3, -n2)
+            case r'\sum':
+                self._adjust(g3, -(n1+n2))
+                self._adjust(g1, n3)
+                self._adjust(g2, n3)
+        return g1 + g2 + g3
 
     def _paint_shift(self, token: str) -> List[Symbol]:
         '''
@@ -165,15 +173,15 @@ class Painter():
         return []
 
     def _paint_sqrt(self):
-        outer = self._paint_symbol()
+        g1 = self._paint_symbol()
         if self._peek == '[':
-            colour = outer[0].colour
-            power = self._paint_string('[', ']')
-            for symbol in power:
+            colour = g1[0].colour
+            g2 = self._paint_string('[', ']')
+            for symbol in g2:
                 symbol.colour = colour
-            outer += power
-        inner = self._paint_atom() if self._more else []
-        return outer + inner
+            g1 += g2
+        g3 = self._paint_atom() if self._more else []
+        return g1 + g3
     
     def _paint_string(self, begin: str = '', end: str = '') -> List[Symbol]:
         if begin:

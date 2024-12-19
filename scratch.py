@@ -30,6 +30,6 @@ painter = Painter()
 painter.set_scheme(scheme_bright)
 painter.set_colour_map(colour_map)
 
-text = r'\frac{x}{y}'
+text = r'\int_{x}^{y}{z}'
 tex = MathTex(text)
 painter.paint(tex)
