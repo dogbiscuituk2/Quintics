@@ -30,6 +30,21 @@ painter = Painter()
 painter.set_scheme(scheme_bright)
 painter.set_colour_map(colour_map)
 
-text = r'\int_{x}^{y}{z}'
+
+# Function to recursively print submobjects
+def print_submobjects(mobject, indent=0):
+    for submobject in mobject.submobjects:
+        print(" " * indent + f"Submobject: {submobject}")
+        print_submobjects(submobject, indent + 2)
+
+# Create a MathTex object
+text = r'\frac{x}{y} + \sqrt{z}'
 tex = MathTex(text)
-painter.paint(tex)
+
+print_submobjects(tex)
+
+
+# Print the submobjects and their indices
+#for i, submobject in enumerate(tex.submobjects):
+#    print(f"Index: {i}, Submobject: {submobject}, Text: {submobject.get_tex_string()}")
+
