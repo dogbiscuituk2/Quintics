@@ -2,8 +2,6 @@ from re import escape
 from typing import List
 
 def make_pattern(tables: List[List[List[str]]]) -> str:
-    #cells = [cell for table in tables for row in table for cell in row if cell]
-    #return f"^({'|'.join(cells)})$".replace('\\', '\\\\')
     cells = map(escape, [cell for table in tables for row in table for cell in row if cell])
     return f"^({'|'.join(cells)})$"
 
