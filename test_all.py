@@ -23,7 +23,7 @@ class TestAll(BaseScene):
             (PAT_ACCENT, violet),
             (PAT_STYLE, violet),
             (PAT_FONT, violet),
-            (r'\\frac', magenta),
+            (r'\\frac', green),
             (r'\\sqrt|\\lim', orange),
             (r'[a-e]|\\alpha|\\beta|\\gamma|\\delta|\\epsilon', green),
             ('h', orange),

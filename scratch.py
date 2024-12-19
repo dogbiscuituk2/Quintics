@@ -30,19 +30,6 @@ painter = Painter()
 painter.set_scheme(scheme_bright)
 painter.set_colour_map(colour_map)
 
-text = r'\alpha'
+text = r'\frac{x}{y}'
 tex = MathTex(text)
-
-print(PAT_GREEK)
-print(PAT_MATH)
-print(PAT_DELIM)
-print(PAT_LARGE)
-print(PAT_FUNC)
-print(PAT_OPS)
-print(PAT_ARROW)
-print(PAT_MISC)
-print(PAT_ACCENT)
-print(PAT_STYLE)
-print(PAT_FONT)
-
 painter.paint(tex)

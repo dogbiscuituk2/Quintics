@@ -50,12 +50,15 @@ class Painter():
     _tex: MathTex
     _tokens: List[str]
 
+    def get_colour(self, index: int):
+        return self._colours[self._scheme][index]
+
     def paint(self, tex: MathTex) -> None:
         self._glyph_index = 0
         self._token_index = 0
         self._tex = tex
         self._tokens = re.findall(PAT_TOKEN, tex.tex_string)
-        symbols = self._parse_string()
+        symbols = self._paint_string()
         for symbol in symbols:
             start = symbol.glyph_index
             stop = start + symbol.glyph_count
@@ -69,6 +72,8 @@ class Painter():
 
     def set_scheme(self, scheme: int):
         self._scheme = scheme
+
+#region Private Implementation
 
     @property
     def _more(self) -> bool:
@@ -92,45 +97,55 @@ class Painter():
         return sum(symbol.glyph_count for symbol in symbols)
 
     def _get_tex_len(self, token: str) -> int:
+        match token:
+            case r'\frac':
+                return 1
         try:
             tex = MathTex(token)
         except Exception:
             return 0
         return len(tex[0])
 
-    def _parse_atom(self) -> List[Symbol]:
+    def _get_token_colour(self, token: str):
+        colours = self._colours[self._scheme]
+        for map in self._colour_map:
+            if (re.match(map[0], token)):
+                return colours[map[1]]
+        return colours[figure]
+
+    def _paint_atom(self) -> List[Symbol]:
         token = self._peek
         if re.match(PAT_LARGE, token):
-            return self._parse_large()
+            return self._paint_large()
         match token:
             case r'\frac':
-                return self._parse_frac()
+                return self._paint_frac()
             case r'\sqrt':
-                return self._parse_sqrt()
+                return self._paint_sqrt()
             case '{':
-                result = self._parse_string('{', '}')
+                result = self._paint_string('{', '}')
                 return result
             case '_':
-                return self._parse_shift(token)
+                return self._paint_shift(token)
             case '^':
-                return self._parse_shift(token)
+                return self._paint_shift(token)
             case _:
-                return self._parse_token(token)
+                return self._paint_token(token)
 
-    def _parse_frac(self) -> List[Symbol]:
-        middle = self._parse_symbol()
-        top = self._parse_atom()
-        bottom = self._parse_atom()
+    def _paint_frac(self) -> List[Symbol]:
+        middle = self._paint_symbol()
+        top = self._paint_atom()
+        bottom = self._paint_atom()
         top_len = self._get_glyph_count(top)
         mid_len = self._get_glyph_count(middle)
         self._adjust(top, -mid_len)
         self._adjust(middle, top_len)
         return top + middle + bottom
 
-    def _parse_large(self) -> List[Symbol]:
-        middle = self._parse_symbol()
-        bottom = self._parse_shift('_')
-        top = self._parse_shift('^')
+    def _paint_large(self) -> List[Symbol]:
+        middle = self._paint_symbol()
+        bottom = self._paint_shift('_')
+        top = self._paint_shift('^')
         top_len = self._get_glyph_count(top)
         mb_len = self._get_glyph_count(middle) + self._get_glyph_count(bottom)
         self._adjust(top, -mb_len)
@@ -138,7 +153,7 @@ class Painter():
         self._adjust(bottom, top_len)
         return top + middle + bottom
 
-    def _parse_shift(self, token: str) -> List[Symbol]:
+    def _paint_shift(self, token: str) -> List[Symbol]:
         '''
         If the current token is either '_' or '^' then return the following atom,
         otherwise return the empty list.
@@ -147,32 +162,32 @@ class Painter():
         '''
         if self._peek == token:
             self._accept(token)
-            return self._parse_atom()
+            return self._paint_atom()
         return []
 
-    def _parse_sqrt(self):
-        outer = self._parse_symbol()
+    def _paint_sqrt(self):
+        outer = self._paint_symbol()
         if self._peek == '[':
-            outer += self._parse_string('[', ']')
-        inner = self._parse_atom()
+            outer += self._paint_string('[', ']')
+        inner = self._paint_atom()
         return outer + inner
     
-    def _parse_string(self, begin: str = '', end: str = '') -> List[Symbol]:
+    def _paint_string(self, begin: str = '', end: str = '') -> List[Symbol]:
         if begin:
             self._accept(begin)
         symbols = []
         while self._more and self._peek != end:
-            symbols += self._parse_atom()
+            symbols += self._paint_atom()
         if end:
             self._accept(end)
         return symbols
     
-    def _parse_symbol(self):
-        return self._parse_token(self._peek)
+    def _paint_symbol(self):
+        return self._paint_token(self._peek)
     
-    def _parse_token(self, token: str) -> List[Symbol]:
+    def _paint_token(self, token: str) -> List[Symbol]:
         glyph_count = self._get_tex_len(token)
-        colour = self.get_token_colour(token)
+        colour = self._get_token_colour(token)
         result = [Symbol(
             token_index = self._token_index,
             glyph_index = self._glyph_index,
@@ -182,17 +197,4 @@ class Painter():
         self._glyph_index += glyph_count
         return result
 
-    def get_colour(self, index: int):
-        return self._colours[self._scheme][index]
-
-    def get_token_colour(self, token: str):
-        colours = self._colours[self._scheme]
-        for map in self._colour_map:
-            if (re.match(map[0], token)):
-                return colours[map[1]]
-        return colours[figure]
-
-    def set_colour_map(self, colour_map: tuple[tuple[str, int]]):
-        #self._colour_map = [[re.compile(m[0]), m[1]] for m in colour_map]
-        self._colour_map = colour_map
-        pass
+#endregion
