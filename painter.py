@@ -62,10 +62,10 @@ class Painter():
         for symbol in symbols:
             start = symbol.glyph_index
             stop = start + symbol.glyph_count
-            colour = symbol.colour
+            colour_index = symbol.colour_index
             for index in range(start, stop):
                 glyph = tex[0][index]
-                glyph.set_color(colour)
+                glyph.set_color(self.get_colour(colour_index))
 
     def set_colour_map(self, colour_map: tuple[tuple[str, int]]):
         self._colour_map = [[re.compile(m[0]), m[1]] for m in colour_map]
@@ -93,6 +93,10 @@ class Painter():
         for symbol in symbols:
             symbol.glyph_index += delta
 
+    def _get_colour(self, symbols: List[Symbol]) -> ManimColor:
+        return symbols[0].colour_index if symbols else self._painter.get_colour(figure)
+
+
     def _get_glyph_count(self, symbols: List[Symbol]) -> int:
         return sum(symbol.glyph_count for symbol in symbols)
 
@@ -105,12 +109,24 @@ class Painter():
         except Exception:
             return 0
 
-    def _get_token_colour(self, token: str):
-        colours = self._colours[self._scheme]
+    def _get_token_colour_index(self, token: str) -> int:
+        #colours = self._colours[self._scheme]
         for map in self._colour_map:
             if (re.match(map[0], token)):
-                return colours[map[1]]
-        return colours[figure]
+                return map[1]
+        return figure
+
+    def _paint_accent(self) -> List[Symbol]:
+
+        def dump(s: List[Symbol]):
+            print(*[t for t in s])
+
+        g1 = self._paint_symbol()
+        g2 = self._paint_atom()
+        dump(g1)
+        dump(g2)
+        self._set_colour(g1, self._get_colour(g2))
+        return g1 + g2
 
     def _paint_atom(self) -> List[Symbol]:
         token = self._peek
@@ -118,6 +134,8 @@ class Painter():
             return self._paint_aggregate(prototype = r'\int')
         if re.match(PAT_LARGE, token):
             return self._paint_aggregate(prototype = r'\sum')
+        if re.match(PAT_ACCENT, token):
+            return self._paint_accent()
         match token:
             case r'\frac':
                 return self._paint_frac()
@@ -175,10 +193,10 @@ class Painter():
     def _paint_sqrt(self):
         g1 = self._paint_symbol()
         if self._peek == '[':
-            colour = g1[0].colour
+            colour = g1[0].colour_index
             g2 = self._paint_string('[', ']')
             for symbol in g2:
-                symbol.colour = colour
+                symbol.colour_index = colour
             g1 += g2
         g3 = self._paint_atom() if self._more else []
         return g1 + g3
@@ -197,15 +215,22 @@ class Painter():
         return self._paint_token(self._peek)
     
     def _paint_token(self, token: str) -> List[Symbol]:
+        token_count = 1
         glyph_count = self._get_tex_len(token)
-        colour = self._get_token_colour(token)
-        result = [Symbol(
+        colour_index = self._get_token_colour_index(token)
+        symbols = [Symbol(
             token_index = self._token_index,
+            token_count = token_count,
             glyph_index = self._glyph_index,
             glyph_count = glyph_count,
-            colour = colour)]
-        self._token_index += 1
+            colour_index = colour_index,
+            tokens = token)]
+        self._token_index += token_count
         self._glyph_index += glyph_count
-        return result
+        return symbols
 
+    def _set_colour(self, symbols: List[Symbol], colour: ManimColor) -> None:
+        for symbol in symbols:
+            symbol.colour_index = colour
+            
 #endregion

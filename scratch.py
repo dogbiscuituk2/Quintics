@@ -18,7 +18,7 @@ colour_map = [
     (PAT_FONT, violet),
     (r'\\frac', magenta),
     (r'\\sqrt|\\lim', orange),
-    (r'[a-e]|\\alpha|\\beta|\\gamma|\\delta|\\epsilon', green),
+    (r'[a-eA-E]|\\alpha|\\beta|\\gamma|\\delta|\\epsilon', red),
     ('h', orange),
     (r'[p-s]|\\pi|\\rho\|\\sigma|\\sin', yellow),
     ('x', red),

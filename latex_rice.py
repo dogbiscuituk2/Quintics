@@ -159,6 +159,13 @@ SYM_MISC = [
     [r'\Re', r'\natural', r'\surd', r'\circledS'],
 ]
 SYM_ACCENT = [
+    [r'\acute', r'\bar', r'\Acute', r'\Bar'],
+    [r'\breve', r'\check', r'\Breve', r'\Check'],
+    [r'\ddot', r'\dot', r'\Ddot', r'\Dot'],
+    [r'\grave', r'\hat', r'\Grave', r'\Hat'],
+    [r'\tilde', r'\vec', r'\Tilde', r'\Vec'],
+]
+SYM_ACCENTED = [
     [r'\acute{a}', r'\bar{a}', r'\Acute{\Acute{A}}', r'\Bar{\Bar{A}}'],
     [r'\breve{a}', r'\check{a}', r'\Breve{\Breve{A}}', r'\Check{\Check{A}}'],
     [r'\ddot{a}', r'\dot{a}', r'\Ddot{\Ddot{A}}', r'\Dot{\Dot{A}}'],
