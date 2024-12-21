@@ -37,10 +37,10 @@ class BaseScene(VoiceoverScene):
         self.play(self.box_move(*args))
 
     def flash(self, tex: MathTex, run_time=2) -> None:
-        self.play(Indicate(tex, color=self.get_colour(white), run_time=run_time, scale_factor=2))
+        self.play(Indicate(tex, color=self.get_colour(Pen.WHITE), run_time=run_time, scale_factor=2))
 
     def get_text_colour(self) -> ManimColor:
-        return self.get_colour(grey)
+        return self.get_colour(Pen.FG)
 
     def get_colour(self, index: int) -> ManimColor:
         return self._painter.get_colour(index)

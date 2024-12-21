@@ -4,32 +4,31 @@
 from painter import *
 
 colour_map = [
-    #('oO|', ghost),
-    (PAT_GREEK, red),
-    (PAT_MATH, brown),
-    (PAT_DELIM, red),
-    (PAT_LARGE, orange),
-    (PAT_FUNC, yellow),
-    (PAT_OPS, green),
-    (PAT_ARROW, blue),
-    (PAT_MISC, cyan),
-    (PAT_ACCENT, violet),
-    (PAT_STYLE, violet),
-    (PAT_FONT, violet),
-    (r'\\frac', magenta),
-    (r'\\sqrt|\\lim', orange),
-    (r'[a-eA-E]|\\alpha|\\beta|\\gamma|\\delta|\\epsilon', red),
-    ('h', orange),
-    (r'[p-s]|\\pi|\\rho\|\\sigma|\\sin', yellow),
-    ('x', red),
-    ('y', magenta),
-    ('z', cyan),
+    #('oO|', Pen.NONE),
+    (PAT_GREEK, Pen.RED),
+    (PAT_MATH, Pen.BROWN),
+    (PAT_DELIM, Pen.RED),
+    (PAT_LARGE, Pen.ORANGE),
+    (PAT_FUNC, Pen.YELLOW),
+    (PAT_OPS, Pen.GREEN),
+    (PAT_ARROW, Pen.BLUE),
+    (PAT_MISC, Pen.CYAN),
+    (PAT_ACCENT, Pen.VIOLET),
+    (PAT_STYLE, Pen.VIOLET),
+    (PAT_FONT, Pen.VIOLET),
+    (r'\\frac', Pen.GREEN),
+    (r'\\sqrt|\\lim', Pen.ORANGE),
+    (r'[a-eA-E]|\\alpha|\\beta|\\gamma|\\delta|\\epsilon', Pen.RED),
+    ('h', Pen.ORANGE),
+    ('[p-s]', Pen.YELLOW),
+    ('x', Pen.RED),
+    ('y', Pen.MAGENTA),
+    ('z', Pen.CYAN),
 ]
 
 painter = Painter()
 painter.set_scheme(scheme_bright)
 painter.set_colour_map(colour_map)
-
 
 # Function to recursively print submobjects
 def print_submobjects(mobject, indent=0):
@@ -40,7 +39,6 @@ def print_submobjects(mobject, indent=0):
 # Create a MathTex object
 text = r'\frac{x}{y} + \sqrt{z}'
 tex = MathTex(text)
-
 print_submobjects(tex)
 
 

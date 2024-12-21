@@ -1,12 +1,13 @@
 from manim import ManimColor
-from typing import List
+from pens import Pen
 
 class Symbol():
 
     token_index: int
+    token_count: int
     glyph_index: int
     glyph_count: int
-    colour_index: ManimColor
+    pen: Pen
     tokens: str
 
     def __init__(
@@ -15,13 +16,13 @@ class Symbol():
             token_count: int,
             glyph_index: int,
             glyph_count: int,
-            colour_index: ManimColor,
+            pen: Pen,
             tokens: str) -> None:
         self.token_index = token_index
         self.token_count = token_count
         self.glyph_index = glyph_index
         self.glyph_count = glyph_count
-        self.colour_index = colour_index
+        self.pen = pen
         self.tokens = tokens
 
     @property
@@ -41,4 +42,4 @@ class Symbol():
         return f'{prefix}{index}-{index + count - 1}'
 
     def __str__(self) -> str:
-        return f'({self.token_range} {self.glyph_range} {self.colour_index} {self.tokens})'
+        return f'({self.token_range} {self.glyph_range} {self.pen.name} {self.tokens})'

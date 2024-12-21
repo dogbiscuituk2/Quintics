@@ -1,24 +1,25 @@
 from latex_rice import *
 from manim import *
 import re
+from pens import Pen
 from symbol import Symbol
 
-ghost   = 0 # Transparent
-figure  = 1 # Foreground default
-ground  = 2 # Background
-hilite  = 3 # Highlight background
-black   = 4 # These remaining colour names are all purely logical
-brown   = 5
-red     = 6
-orange  = 7
-yellow  = 8
-green   = 9
-blue    = 10
-cyan    = 11
-magenta = 12
-violet  = 13
-grey    = 14
-white   = 15
+#ghost   = 0 # Transparent
+#figure  = 1 # Foreground default
+#ground  = 2 # Background
+#hilite  = 3 # Highlight background
+#black   = 4 # These remaining colour names are all purely logical
+#brown   = 5
+#red     = 6
+#orange  = 7
+#yellow  = 8
+#green   = 9
+#blue    = 10
+#cyan    = 11
+#magenta = 12
+#violet  = 13
+#grey    = 14
+#white   = 15
 
 scheme_default          = 0
 scheme_bright           = 1
@@ -45,27 +46,36 @@ class Painter():
     _colour_map: tuple[tuple[re.Pattern[str], int]] = []
     _scheme: int = scheme_bright
 
-    _glyph_index: int
-    _token_index: int
     _tex: MathTex
     _tokens: List[str]
+    _token_index: int
+    _glyph_index: int
+    _glyph_count: int
 
-    def get_colour(self, index: int):
-        return self._colours[self._scheme][index]
+    def get_colour(self, pen: Pen) -> ManimColor:
+        return self._colours[self._scheme][pen.value]
 
     def paint(self, tex: MathTex) -> None:
-        self._glyph_index = 0
-        self._token_index = 0
         self._tex = tex
-        self._tokens = re.findall(PAT_TOKEN, tex.tex_string)
+        text = tex.tex_string
+        self._tokens = re.findall(PAT_TOKEN, text)
+        self._token_index = 0
+        self._glyph_index = 0
+        if len(text) > 0:
+            glyphs = tex[0]
+            self._glyph_count = len(glyphs)
+        else:
+            glyphs = []
+            self._glyph_count = 0
         symbols = self._paint_string()
         for symbol in symbols:
             start = symbol.glyph_index
             stop = start + symbol.glyph_count
-            colour_index = symbol.colour_index
+            colour = self.get_colour(symbol.pen)
             for index in range(start, stop):
-                glyph = tex[0][index]
-                glyph.set_color(self.get_colour(colour_index))
+                glyph = glyphs[index]
+                glyph.set_color(colour)
+        print(f'({self._glyph_count}) {text} =>', *[symbol for symbol in symbols])
 
     def set_colour_map(self, colour_map: tuple[tuple[str, int]]):
         self._colour_map = [[re.compile(m[0]), m[1]] for m in colour_map]
@@ -94,8 +104,7 @@ class Painter():
             symbol.glyph_index += delta
 
     def _get_colour(self, symbols: List[Symbol]) -> ManimColor:
-        return symbols[0].colour_index if symbols else self._painter.get_colour(figure)
-
+        return symbols[0].pen if symbols else self._painter.get_colour(figure)
 
     def _get_glyph_count(self, symbols: List[Symbol]) -> int:
         return sum(symbol.glyph_count for symbol in symbols)
@@ -109,22 +118,17 @@ class Painter():
         except Exception:
             return 0
 
-    def _get_token_colour_index(self, token: str) -> int:
-        #colours = self._colours[self._scheme]
+    def _get_token_pen(self, token: str) -> Pen:
         for map in self._colour_map:
             if (re.match(map[0], token)):
                 return map[1]
-        return figure
+        return Pen.FG
 
     def _paint_accent(self) -> List[Symbol]:
-
-        def dump(s: List[Symbol]):
-            print(*[t for t in s])
-
         g1 = self._paint_symbol()
         g2 = self._paint_atom()
-        dump(g1)
-        dump(g2)
+        #self._dump(g1)
+        #self._dump(g2)
         self._set_colour(g1, self._get_colour(g2))
         return g1 + g2
 
@@ -193,10 +197,10 @@ class Painter():
     def _paint_sqrt(self):
         g1 = self._paint_symbol()
         if self._peek == '[':
-            colour = g1[0].colour_index
+            colour = g1[0].pen
             g2 = self._paint_string('[', ']')
             for symbol in g2:
-                symbol.colour_index = colour
+                symbol.pen = colour
             g1 += g2
         g3 = self._paint_atom() if self._more else []
         return g1 + g3
@@ -217,13 +221,13 @@ class Painter():
     def _paint_token(self, token: str) -> List[Symbol]:
         token_count = 1
         glyph_count = self._get_tex_len(token)
-        colour_index = self._get_token_colour_index(token)
+        pen = self._get_token_pen(token)
         symbols = [Symbol(
             token_index = self._token_index,
             token_count = token_count,
             glyph_index = self._glyph_index,
             glyph_count = glyph_count,
-            colour_index = colour_index,
+            pen = pen,
             tokens = token)]
         self._token_index += token_count
         self._glyph_index += glyph_count
@@ -231,6 +235,6 @@ class Painter():
 
     def _set_colour(self, symbols: List[Symbol], colour: ManimColor) -> None:
         for symbol in symbols:
-            symbol.colour_index = colour
+            symbol.pen = colour
             
 #endregion
