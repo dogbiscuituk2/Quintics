@@ -57,35 +57,35 @@ class TestAll(BaseScene):
             self.wait(8)
             self.play(FadeOut(grid))
 
-        #with self.say("Greek and Hebrew Letters."):
-        #    show_table(SYM_GREEK)
-        #with self.say("Mathematical constructions."):
-        #    show_table(SYM_MATH)
-        #with self.say("Delimiters."):
-        #    show_table(SYM_DELIM)
-        #with self.say("Integrals. Displayed formulae show the larger version."):
-        #    show_table(SYM_INT)
-        #with self.say("Variable sized symbols. Displayed formulae show the larger version."):
-        #    show_table(SYM_LARGE)
-        #with self.say("Standard function names."):
-        #    show_table(SYM_FUNC)
-        #with self.say("Binary operation and relation symbols, page 1."):
-        #    show_table(SYM_OPS_1)
-        #with self.say("Page 2."):
-        #    show_table(SYM_OPS_2)
-        #with self.say("Page 3."):
-        #    show_table(SYM_OPS_3)
-        #with self.say("Page 4."):
-        #    show_table(SYM_OPS_4)
-        #with self.say("Arrow symbols, page 1."):
-        #    show_table(SYM_ARROW_1)
-        #with self.say("Page 2."):
-        #    show_table(SYM_ARROW_2)
-        #with self.say("Miscellaneous symbols."):
-        #    show_table(SYM_MISC)
+        with self.say("Greek and Hebrew Letters."):
+            show_table(SYM_GREEK)
+        with self.say("Mathematical constructions."):
+            show_table(SYM_MATH)
+        with self.say("Delimiters."):
+            show_table(SYM_DELIM)
+        with self.say("Integrals. Displayed formulae show the larger version."):
+            show_table(SYM_INT)
+        with self.say("Variable sized symbols. Displayed formulae show the larger version."):
+            show_table(SYM_LARGE)
+        with self.say("Standard function names."):
+            show_table(SYM_FUNC)
+        with self.say("Binary operation and relation symbols, page 1."):
+            show_table(SYM_OPS_1)
+        with self.say("Page 2."):
+            show_table(SYM_OPS_2)
+        with self.say("Page 3."):
+            show_table(SYM_OPS_3)
+        with self.say("Page 4."):
+            show_table(SYM_OPS_4)
+        with self.say("Arrow symbols, page 1."):
+            show_table(SYM_ARROW_1)
+        with self.say("Page 2."):
+            show_table(SYM_ARROW_2)
+        with self.say("Miscellaneous symbols."):
+            show_table(SYM_MISC)
         with self.say("Math mode accents."):
             show_table(SYM_ACCENTED)
-        #with self.say("Other styles - math mode only."):
-        #    show_table(SYM_STYLE)
-        #with self.say("Font sizes."):
-        #    show_table(SYM_FONT)
+        with self.say("Other styles - math mode only."):
+            show_table(SYM_STYLE)
+        with self.say("Font sizes."):
+            show_table(SYM_FONT)
