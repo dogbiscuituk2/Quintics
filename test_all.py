@@ -2,6 +2,14 @@
 # -*- coding: utf-8 -*-
 """
 Test all the symbols in the LaTeX Rice document.
+
+This scene is used to test all the symbols in the LaTeX Rice document. The
+symbols are grouped into categories and displayed in a table. The symbols are
+coloured according to the colour map and the colour scheme. The symbols are
+displayed in both MathTex and text form. The symbols are displayed in a grid
+with the MathTex object above the text object. The symbols are displayed in
+groups according to their category. The symbols are displayed in a sequence of
+scenes.
 """
 
 from base_scene import BaseScene

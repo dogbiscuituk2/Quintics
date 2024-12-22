@@ -2,6 +2,11 @@
 # -*- coding: utf-8 -*-
 """
 Utility classes for colouring MathTex objects.
+
+The Pen class is an enumeration of the colours used to colour the glyphs in a
+MathTex object. The Scheme class is an enumeration of the colour schemes used 
+to colour the glyphs in a MathTex object. The COLOURS tuple is a list of 
+colours used to colour the glyphs in a MathTex object.
 """
 
 from enum import Enum

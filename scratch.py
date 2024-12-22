@@ -1,6 +1,13 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""Scratchpad for project Polynomials"""
+"""
+Scratchpad for project Polynomials
+This scratchpad is used to test code snippets and to experiment with the Manim 
+library.
+It is not part of the project and is not used to generate any output.
+It is a standalone script that can be run from the command line.
+It is used to test the parsing of MathTex objects and the painting of glyphs.
+"""
 
 from painter import *
 

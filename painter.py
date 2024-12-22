@@ -2,11 +2,13 @@
 # -*- coding: utf-8 -*-
 """
 The Painter class is used to apply colours to the glyphs in a MathTex object.
-The colours are determined by a colour map which is a list of tuples, each containing a regular expression pattern and a pen index.
-The pattern is used to match the token of a glyph and the pen index is used to determine the colour of the glyph.
-The pen index is an integer that corresponds to an index in the colour scheme.
-The colour scheme is a list of colours that are used to colour the glyphs in the MathTex object.
-The Painter class is used to apply colours to the glyphs in a MathTex object.
+The colours are determined by a colour map which is a list of tuples, each 
+containing a regular expression pattern and a pen index. The pattern is used 
+to match the token of a glyph and the pen index is used to determine the 
+colour of the glyph. The pen index is an integer that corresponds to an index 
+in the colour scheme. The colour scheme is a list of colours that are used to 
+colour the glyphs in the MathTex object. The Painter class is used to apply 
+colours to the glyphs in a MathTex object.
 """
 
 from latex_rice import *

@@ -3,8 +3,9 @@
 """
 Output data class for the parsing of MathTex objects.
 
-The Symbol class is used to store the output data from the parsing of MathTex objects.
-The data includes the token and glyph indices and counts, the pen index and the tokens.
+The Symbol class is used to store the output data from the parsing of MathTex 
+objects. The data includes the token and glyph indices and counts, the pen 
+index and the tokens.
 
 The token index is the index of the first token in the symbol.
 The token count is the number of tokens in the symbol.
