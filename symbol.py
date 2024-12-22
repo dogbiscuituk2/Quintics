@@ -1,4 +1,3 @@
-from manim import ManimColor
 from pens import Pen
 
 class Symbol():
@@ -25,21 +24,22 @@ class Symbol():
         self.pen = pen
         self.tokens = tokens
 
+    def __str__(self) -> str:
+        return f'({self._token_range} {self._glyph_range} {self.pen.name} {self.tokens})'
+
     @property
-    def glyph_range(self) -> str:
+    def _glyph_range(self) -> str:
         return self._make_range('G', self.glyph_index, self.glyph_count)
 
     @property
-    def token_range(self) -> str:
+    def _token_range(self) -> str:
         return self._make_range('T', self.token_index, self.token_count)
     
-    def _make_range(self, prefix: str, index: int, count: int) -> str:
+    @staticmethod
+    def _make_range(prefix: str, index: int, count: int) -> str:
         match count:
             case 0:
                 return f'{prefix}x'
             case 1:
                 return f'{prefix}{index}'
         return f'{prefix}{index}-{index + count - 1}'
-
-    def __str__(self) -> str:
-        return f'({self.token_range} {self.glyph_range} {self.pen.name} {self.tokens})'

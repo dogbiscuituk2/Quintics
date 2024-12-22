@@ -17,3 +17,10 @@ class Pen(Enum):
     VIOLET  = 13
     GREY    = 14
     WHITE   = 15
+
+class Scheme(Enum):
+    DEFAULT         = 0
+    BRIGHT          = 1
+    PASTEL          = 2
+    BLACK_ON_WHITE  = 3
+    WHITE_ON_BLACK  = 4

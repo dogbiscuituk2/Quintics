@@ -33,7 +33,7 @@ class TestAll(BaseScene):
             ('z', Pen.CYAN),
         ]
 
-        self.set_scheme(scheme_bright)
+        self.set_scheme(Scheme.BRIGHT)
         self.set_colour_map(colour_map)
 
         def show_table(table: List[List[str]]) -> None:
@@ -51,7 +51,7 @@ class TestAll(BaseScene):
                 v_buff=0.25,
                 h_buff=0.5,
                 arrange_in_grid_config={"col_alignments": "clclclclclcl"[0:2*len(table[0])]},
-                line_config={"color": TRANSPARENT})
+                line_config={"color": ManimColor([0,0,0,0])})
             grid.scale(0.5)
             self.play(FadeIn(grid))
             self.wait(8)

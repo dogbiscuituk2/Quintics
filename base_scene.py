@@ -15,12 +15,8 @@ class BaseScene(VoiceoverScene):
         self.play(Create(b))
         return b
 
-    _boxes = None
-    _painter: Painter = Painter()
-    _scheme: int = scheme_bright
-
     def box_make(self, *args: VMobject) -> Polygon:
-        return SurroundingRectangle(VGroup(*args), self.get_colour(yellow)) 
+        return SurroundingRectangle(VGroup(*args), self.get_colour(Pen.YELLOW))
 
     def box_move(self, *args: VMobject) -> Animation:
         b = self.box_make(*args)
@@ -39,11 +35,11 @@ class BaseScene(VoiceoverScene):
     def flash(self, tex: MathTex, run_time=2) -> None:
         self.play(Indicate(tex, color=self.get_colour(Pen.WHITE), run_time=run_time, scale_factor=2))
 
-    def get_text_colour(self) -> ManimColor:
-        return self.get_colour(Pen.FG)
-
     def get_colour(self, index: int) -> ManimColor:
         return self._painter.get_colour(index)
+
+    def get_text_colour(self) -> ManimColor:
+        return self.get_colour(Pen.FG)
 
     def init(self):
         self.set_speech_service(GTTSService())
@@ -51,28 +47,21 @@ class BaseScene(VoiceoverScene):
     def make_matrix(self, matrix: List[List[str]], margin: float = MED_SMALL_BUFF, padding: float = 1.3) -> Matrix:
         rows: int = len(matrix)
         cols: int = len(matrix[0])
-        strings: List[str] = [[self.prepare_string(t) for t in row] for row in matrix]
-        matrix: Matrix = Matrix(strings, bracket_h_buff = margin, h_buff = padding).set_color(self.get_colour(grey))
+        strings: List[str] = [[t for t in row] for row in matrix]
+        matrix: Matrix = Matrix(strings, bracket_h_buff = margin, h_buff = padding)
+        matrix.set_color(self.get_text_colour())
         for row in range(rows):
             for col in range(cols):
-                self.paint(matrix[0][row * cols + col])
+                self._paint_tex(matrix[0][row * cols + col])
         return matrix
 
     def make_tex(self, text: str) -> MathTex:
-        text = self.prepare_string(text)
         tex: MathTex = MathTex(text)
-        self.paint(tex)
+        self._paint_tex(tex)
         return tex
 
     def make_text(self, text: str, *args, **kwargs) -> Text:
-        result = Text(self.prepare_string(text), font_size=30, color=self.get_text_colour(), *args, **kwargs)
-        return result;
-    
-    def paint(self, tex: MathTex) -> None:
-        self._painter.paint(tex)
-
-    def prepare_string(self, text: str) -> str:
-        return text # if '|' in text else f'|{text}'
+        return Text(text, font_size=30, color=self.get_text_colour(), *args, **kwargs)
 
     def say(self, text: str):
         line_number = getframeinfo(currentframe().f_back).lineno
@@ -85,3 +74,14 @@ class BaseScene(VoiceoverScene):
 
     def set_scheme(self, scheme: int) -> None:
         self._painter.set_scheme(scheme)
+
+#region Private Implementation
+
+    _boxes = None
+    _painter: Painter = Painter()
+    _scheme: Scheme = Scheme.BRIGHT
+    
+    def _paint_tex(self, tex: MathTex) -> None:
+        self._painter.paint_tex(tex)
+
+#endregion
