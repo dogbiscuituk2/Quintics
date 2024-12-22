@@ -1,3 +1,21 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Lists of Latex tokens.
+
+The tokens are grouped into categories such as Greek letters, mathematical 
+symbols, delimiters, integrals, large operators, functions, operators, arrows, 
+miscellaneous symbols, accents, styles and fonts.
+The tokens are used to create regular expression patterns that are used to 
+match the tokens in a MathTex object.
+The patterns are used to colour the tokens in the MathTex object.
+
+The tokens are taken from the following sources:
+- LATEX Mathematical Symbols
+- TEX Mathematical Symbols
+- The Comprehensive LATEX Symbol List
+"""
+
 from re import escape
 from typing import List
 

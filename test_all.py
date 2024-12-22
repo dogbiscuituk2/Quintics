@@ -1,3 +1,9 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Test all the symbols in the LaTeX Rice document.
+"""
+
 from base_scene import BaseScene
 from latex_rice import *
 from painter import *

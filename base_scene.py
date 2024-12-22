@@ -1,3 +1,18 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Base class for scenes in project Polynomials.
+
+The BaseScene class is used to provide common functionality to all scenes in 
+the project.
+The functionality includes methods for creating and manipulating boxes, 
+flashing text, making matrices, making text and making MathTex objects.
+The BaseScene class also provides methods for setting the colour map and 
+colour scheme and for painting MathTex objects.
+The BaseScene class is a subclass of the Manim Scene class and the Manim 
+VoiceoverScene class.
+"""
+
 from inspect import currentframe, getframeinfo
 from manim import *
 from manim_voiceover import VoiceoverScene

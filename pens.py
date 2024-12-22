@@ -1,4 +1,11 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Utility classes for colouring MathTex objects.
+"""
+
 from enum import Enum
+from manim import *
 
 class Pen(Enum):
     NONE    = 0 # Transparent
@@ -24,3 +31,12 @@ class Scheme(Enum):
     PASTEL          = 2
     BLACK_ON_WHITE  = 3
     WHITE_ON_BLACK  = 4
+
+_GHOST = [0,0,0,0] # transparent
+
+COLOURS = (
+    (_GHOST, GREY, BLACK, LIGHT_GREY, BLACK, DARK_BROWN, RED, ORANGE, YELLOW, GREEN, PURE_BLUE, TEAL, PINK, PURPLE, GREY, WHITE),
+    (_GHOST, 0xB2B2B2, BLACK, DARK_GREY, BLACK, 0x7F3319, 0xFF1933, 0xFF7F4C, 0xCCCC00, 0x33FF33, 0x5FBFFF, 0x00FFFF, 0xFF00FF, 0x9A72AC, 0xB2B2B2, WHITE),
+    (_GHOST, 0xBBBBBB, BLACK, DARK_GREY, BLACK, 0xCD853F, 0xFF0000, 0xFF7F3F, 0xCCCC00, 0x33FF33, PURE_BLUE, 0x00FFFF, 0xFF00FF, 0x9A72AC, 0xBBBBBB, WHITE),
+    (_GHOST, BLACK, WHITE, GREY, *[BLACK for _ in range(12)]),
+    (_GHOST, WHITE, BLACK, GREY, *[WHITE for _ in range(12)]))

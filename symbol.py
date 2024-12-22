@@ -1,3 +1,18 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Output data class for the parsing of MathTex objects.
+
+The Symbol class is used to store the output data from the parsing of MathTex objects.
+The data includes the token and glyph indices and counts, the pen index and the tokens.
+
+The token index is the index of the first token in the symbol.
+The token count is the number of tokens in the symbol.
+The glyph index is the index of the first glyph in the symbol.
+The glyph count is the number of glyphs in the symbol.
+The pen is the pen index used to colour the symbol.
+The tokens are the tokens in the symbol.
+"""
 from pens import Pen
 
 class Symbol():

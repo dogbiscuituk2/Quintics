@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """Scratchpad for project Polynomials"""
+
 from painter import *
 
 colour_map = [

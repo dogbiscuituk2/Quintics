@@ -1,23 +1,21 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+The Painter class is used to apply colours to the glyphs in a MathTex object.
+The colours are determined by a colour map which is a list of tuples, each containing a regular expression pattern and a pen index.
+The pattern is used to match the token of a glyph and the pen index is used to determine the colour of the glyph.
+The pen index is an integer that corresponds to an index in the colour scheme.
+The colour scheme is a list of colours that are used to colour the glyphs in the MathTex object.
+The Painter class is used to apply colours to the glyphs in a MathTex object.
+"""
+
 from latex_rice import *
 from manim import *
+from pens import *
 import re
-from pens import Pen, Scheme
 from symbol import Symbol
 
-PAT_TOKEN = r"\\{|\\}|\\\||\\[A-Za-z]+|\\\\|\\\,|[^&\s]"
-
 class Painter():
-
-    _GHOST = [0,0,0,0] # transparent
-
-    _colours = (
-        (_GHOST, GREY, BLACK, LIGHT_GREY, BLACK, DARK_BROWN, RED, ORANGE, YELLOW, GREEN, PURE_BLUE, TEAL, PINK, PURPLE, GREY, WHITE),
-        (_GHOST, 0xB2B2B2, BLACK, DARK_GREY, BLACK, 0x7F3319, 0xFF1933, 0xFF7F4C, 0xCCCC00, 0x33FF33, 0x5FBFFF, 0x00FFFF, 0xFF00FF, 0x9A72AC, 0xB2B2B2, WHITE),
-        (_GHOST, 0xBBBBBB, BLACK, DARK_GREY, BLACK, 0xCD853F, 0xFF0000, 0xFF7F3F, 0xCCCC00, 0x33FF33, PURE_BLUE, 0x00FFFF, 0xFF00FF, 0x9A72AC, 0xBBBBBB, WHITE),
-        (_GHOST, BLACK, WHITE, GREY, *[BLACK for _ in range(12)]),
-        (_GHOST, WHITE, BLACK, GREY, *[WHITE for _ in range(12)]))
-
-    _colour: ManimColor
     _colour_map: tuple[tuple[re.Pattern[str], int]] = []
     _scheme: Scheme = Scheme.BRIGHT
 
@@ -28,9 +26,22 @@ class Painter():
     _glyph_count: int
 
     def get_colour(self, pen: Pen) -> ManimColor:
-        return self._colours[self._scheme.value][pen.value]
+        """
+        Return the colour associated with the given pen.
+        
+        pen: The pen whose colour is to be returned.
+        
+        Returns: The colour associated with the given pen.
+        """
+        return COLOURS[self._scheme.value][pen.value]
 
     def paint_tex(self, tex: MathTex) -> None:
+        """
+        Apply colours to the glyphs in the given MathTex object.
+
+        tex: The MathTex object to be painted.
+        """
+        PAT_TOKEN = r"\\{|\\}|\\\||\\[A-Za-z]+|\\\\|\\\,|[^&\s]"
         self._tex = tex
         text = tex.tex_string
         if not text:
@@ -57,6 +68,25 @@ class Painter():
         print(f'({self._glyph_count}) {text} =>', *[symbol for symbol in symbols], error)
 
     def set_colour_map(self, colour_map: tuple[tuple[str, int]]):
+        """
+        Set the colour map to be used by the painter.
+        
+        colour_map: A tuple of tuples, each containing a regular expression pattern and a pen index.
+        
+        Example:
+        painter.set_colour_map((
+            (r'\\alpha', Pen.RED),
+            (r'\\beta', Pen.GREEN),
+            (r'\\gamma', Pen.BLUE)))
+
+        The above example will set the colour of the glyphs representing the Greek letters alpha, beta and gamma to red, green and blue respectively.   
+
+        The colour map is used to determine the colour of a glyph based on the token that it represents.
+
+        The colour map is a list of tuples, each containing a regular expression pattern and a pen index. 
+        The pattern is used to match the token of a glyph and the pen index is used to determine the colour of the glyph. 
+        The pen index is an integer that corresponds to an index in the colour scheme.
+        """
         self._colour_map = [[re.compile(m[0]), m[1]] for m in colour_map]
 
     def set_scheme(self, scheme: int):
