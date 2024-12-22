@@ -18,6 +18,37 @@ import re
 from symbol import Symbol
 
 class Painter():
+    def __init__(self):
+        self._colour_map = [
+            #('oO|', Pen.NONE),
+            (PAT_GREEK, Pen.FG),
+            (PAT_MATH, Pen.FG),
+            (PAT_DELIM, Pen.FG),
+            (PAT_INT, Pen.MAGENTA),
+            (PAT_LARGE, Pen.MAGENTA),
+            (PAT_FUNC, Pen.YELLOW),
+            (PAT_OPS, Pen.GREEN),
+            (PAT_ARROW, Pen.BLUE),
+            (PAT_MISC, Pen.CYAN),
+            (PAT_ACCENT, Pen.VIOLET),
+            (PAT_STYLE, Pen.VIOLET),
+            (PAT_FONT, Pen.VIOLET),
+            (r'\\frac', Pen.GREEN),
+            (r'\\sqrt|\\lim', Pen.ORANGE),
+            (r'[a-eA-E]|\\alpha|\\beta|\\gamma|\\delta|\\epsilon', Pen.RED),
+            ('fgh', Pen.ORANGE),
+            ('[i-n]', Pen.YELLOW),
+            ('[p-s]', Pen.GREEN),
+            ('[u-w]', Pen.CYAN),
+            ('[x-z]', Pen.BLUE),
+        ]
+        self._scheme = Scheme.BRIGHT
+        self._tex = None
+        self._tokens = []
+        self._token_index = 0
+        self._glyph_index = 0
+        self._glyph_count = 0
+
     _colour_map: tuple[tuple[re.Pattern[str], int]] = []
     _scheme: Scheme = Scheme.BRIGHT
 
@@ -145,6 +176,28 @@ class Painter():
         #self._dump(g2)
         self._set_colour(g1, self._get_colour(g2))
         return g1 + g2
+    
+    def _paint_aggregate(self, prototype: str) -> List[Symbol]:
+        g1 = self._paint_symbol()
+        g2 = self._paint_shift('_')
+        g3 = self._paint_shift('^')
+
+        print('g1 =', *g1)
+        print('g2 =', *g2)
+        print('g3 =', *g3)
+
+        n1 = self._get_glyph_count(g1)
+        n2 = self._get_glyph_count(g2)
+        n3 = self._get_glyph_count(g3)
+        match prototype:
+            case r'\int':
+                self._adjust(g2, n3)
+                self._adjust(g3, -n2)
+            case r'\sum':
+                self._adjust(g3, -(n1+n2))
+                self._adjust(g1, n3)
+                self._adjust(g2, n3)
+        return g1 + g2 + g3
 
     def _paint_atom(self) -> List[Symbol]:
         token = self._peek
@@ -178,23 +231,6 @@ class Painter():
         self._adjust(g2, -n1)
         self._adjust(g1, n2)
         return g2 + g1 + g3
-    
-    def _paint_aggregate(self, prototype: str) -> List[Symbol]:
-        g1 = self._paint_symbol()
-        g2 = self._paint_shift('_')
-        g3 = self._paint_shift('^')
-        n1 = self._get_glyph_count(g1)
-        n2 = self._get_glyph_count(g2)
-        n3 = self._get_glyph_count(g3)
-        match prototype:
-            case r'\int':
-                self._adjust(g2, n3)
-                self._adjust(g3, -n2)
-            case r'\sum':
-                self._adjust(g3, -(n1+n2))
-                self._adjust(g1, n3)
-                self._adjust(g2, n3)
-        return g1 + g2 + g3
 
     def _paint_shift(self, token: str) -> List[Symbol]:
         '''
