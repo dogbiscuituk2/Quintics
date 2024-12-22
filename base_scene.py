@@ -48,7 +48,12 @@ class BaseScene(VoiceoverScene):
         self.play(self.box_move(*args))
 
     def flash(self, tex: MathTex, run_time=2) -> None:
-        self.play(Indicate(tex, color=self.get_colour(Pen.WHITE), run_time=run_time, scale_factor=2))
+        self.play(
+            Indicate(
+                tex,
+                color=self.get_colour(Pen.WHITE),
+                run_time=run_time,
+                scale_factor=2))
 
     def get_colour(self, index: int) -> ManimColor:
         return self._painter.get_colour(index)
@@ -59,7 +64,11 @@ class BaseScene(VoiceoverScene):
     def init(self):
         self.set_speech_service(GTTSService())
 
-    def make_matrix(self, matrix: List[List[str]], margin: float = MED_SMALL_BUFF, padding: float = 1.3) -> Matrix:
+    def make_matrix(
+            self,
+            matrix: List[List[str]],
+            margin: float = MED_SMALL_BUFF,
+            padding: float = 1.3) -> Matrix:
         rows: int = len(matrix)
         cols: int = len(matrix[0])
         strings: List[str] = [[t for t in row] for row in matrix]

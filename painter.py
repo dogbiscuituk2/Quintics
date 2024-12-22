@@ -110,7 +110,8 @@ class Painter():
             pass
         self._token_index += 1
     
-    def _adjust(self, symbols: List[Symbol], delta: int) -> None:
+    @staticmethod
+    def _adjust(symbols: List[Symbol], delta: int) -> None:
         for symbol in symbols:
             symbol.glyph_index += delta
 
@@ -246,7 +247,8 @@ class Painter():
         self._glyph_index += glyph_count
         return symbols
 
-    def _set_colour(self, symbols: List[Symbol], colour: ManimColor) -> None:
+    @staticmethod
+    def _set_colour(symbols: List[Symbol], colour: ManimColor) -> None:
         for symbol in symbols:
             symbol.pen = colour
             

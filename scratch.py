@@ -35,7 +35,7 @@ colour_map = [
 ]
 
 painter = Painter()
-painter.set_scheme(scheme_bright)
+painter.set_scheme(Scheme.BRIGHT)
 painter.set_colour_map(colour_map)
 
 # Function to recursively print submobjects
@@ -48,9 +48,4 @@ def print_submobjects(mobject, indent=0):
 text = r'\frac{x}{y} + \sqrt{z}'
 tex = MathTex(text)
 print_submobjects(tex)
-
-
-# Print the submobjects and their indices
-#for i, submobject in enumerate(tex.submobjects):
-#    print(f"Index: {i}, Submobject: {submobject}, Text: {submobject.get_tex_string()}")
-
+painter.paint_tex(tex)
