@@ -85,6 +85,7 @@ class Painter():
         glyphs = tex[0]
         self._glyph_count = len(glyphs)
         symbols = self._paint_string()
+
         for symbol in symbols:
             start = symbol.glyph_index
             stop = start + symbol.glyph_count
@@ -92,13 +93,14 @@ class Painter():
             for index in range(start, stop):
                 glyph = glyphs[index]
                 glyph.set_color(colour)
-        expected = self._glyph_count
-        actual = self._get_glyph_count(symbols)
-        ok = actual == expected
-        if ok and len(symbols) == 1:
-            return
-        error = '' if ok else f'** Expected: {expected}. Actual: {actual}. **'
-        print(f'({self._glyph_count}) {text} =>', *[symbol for symbol in symbols], error)
+
+        #expected = self._glyph_count
+        #actual = self._get_glyph_count(symbols)
+        #ok = actual == expected
+        #if ok and len(symbols) == 1:
+        #    return
+        #error = '' if ok else f'** Expected: {expected}. Actual: {actual}. **'
+        #print(f'({self._glyph_count}) {text} =>', *[symbol for symbol in symbols], error)
 
     def set_colour_map(self, colour_map: tuple[tuple[str, int]]):
         """
@@ -182,6 +184,7 @@ class Painter():
         g2 = self._paint_shift('_')
         g3 = self._paint_shift('^')
 
+        print("Before:")
         print('g1 =', *g1)
         print('g2 =', *g2)
         print('g3 =', *g3)
@@ -191,12 +194,26 @@ class Painter():
         n3 = self._get_glyph_count(g3)
         match prototype:
             case r'\int':
+                # g1 is the integral symbol
+                # g2 is the lower limit
+                # g3 is the upper limit
+                # g1-g3-g2 is the rendering order
                 self._adjust(g2, n3)
                 self._adjust(g3, -n2)
             case r'\sum':
+                # g1 is the sum symbol
+                # g2 is the lower limit
+                # g3 is the upper limit
+                # g3-g1-g2 is the rendering order
                 self._adjust(g3, -(n1+n2))
                 self._adjust(g1, n3)
                 self._adjust(g2, n3)
+
+        print("After:")
+        print('g1 =', *g1)
+        print('g2 =', *g2)
+        print('g3 =', *g3)
+
         return g1 + g2 + g3
 
     def _paint_atom(self) -> List[Symbol]:

@@ -45,6 +45,20 @@ class TestAll(BaseScene):
             self.wait(8)
             self.play(FadeOut(grid))
 
+        with self.say("Scratchpad."):
+            painter = Painter()
+            text = r'\int_{abcde}^{xyz}'
+            tex = MathTex(text)
+            painter.paint_tex(tex)
+            self.play(FadeIn(tex))
+            self.wait(8)
+            self.play(FadeOut(tex))
+            text = r'\sum_{abcde}^{xyz}'
+            tex = MathTex(text)
+            painter.paint_tex(tex)
+            self.play(FadeIn(tex))
+            self.wait(8)
+            self.play(FadeOut(tex))
         #with self.say("Greek and Hebrew Letters."):
         #    show_table(SYM_GREEK)
         #with self.say("Mathematical constructions."):
