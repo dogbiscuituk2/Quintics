@@ -183,37 +183,29 @@ class Painter():
         g1 = self._paint_symbol()
         g2 = self._paint_shift('_')
         g3 = self._paint_shift('^')
-
-        print("Before:")
-        print('g1 =', *g1)
-        print('g2 =', *g2)
-        print('g3 =', *g3)
-
         n1 = self._get_glyph_count(g1)
         n2 = self._get_glyph_count(g2)
         n3 = self._get_glyph_count(g3)
         match prototype:
             case r'\int':
-                # g1 is the integral symbol
-                # g2 is the lower limit
-                # g3 is the upper limit
-                # g1-g3-g2 is the rendering order
+                # Expressions in the "\int" family are rendered with the 
+                # integral sign(s) first on the left, then the upper and lower 
+                # bounds (in that order) in the middle, and finally the 
+                # integrand on the right. Note that the bounds rendering order
+                # is the opposite of their occurrence order in the text,
+                # necessitating the following adjustments.
                 self._adjust(g2, n3)
                 self._adjust(g3, -n2)
             case r'\sum':
-                # g1 is the sum symbol
-                # g2 is the lower limit
-                # g3 is the upper limit
-                # g3-g1-g2 is the rendering order
+                # Expressions in the "\sum" family are rendered with the upper
+                # bounds, summation sign, and lower bounds, stacked vertically 
+                # (in that order), followed by the summand on the right. Note
+                # that all three items in the vertical stack require adjustment 
+                # because their rendering order is completely different from 
+                # their occurrence order in the text.
                 self._adjust(g3, -(n1+n2))
                 self._adjust(g1, n3)
                 self._adjust(g2, n3)
-
-        print("After:")
-        print('g1 =', *g1)
-        print('g2 =', *g2)
-        print('g3 =', *g3)
-
         return g1 + g2 + g3
 
     def _paint_atom(self) -> List[Symbol]:

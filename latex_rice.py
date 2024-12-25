@@ -52,7 +52,7 @@ SYM_DELIM = [
     [r'\Vert', r'\rangle', r'\rceil', ']', r'\downarrow', r'\urcorner'],
 ]
 SYM_INT = [
-    [r'\int', r'\oint', r'\iint', r'\iiint', r'\iiiint', r'\idotsint'],
+    [r'\int', r'\iint', r'\iiint', r'\iiiint', r'\idotsint', r'\oint'],
 ]
 SYM_LARGE = [ # Displayed formulae show larger version.
     [r'\sum', r'\biguplus', r'\bigoplus', r'\bigvee'],
