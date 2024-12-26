@@ -19,237 +19,204 @@ The tokens are taken from the following sources:
 from re import escape
 from typing import List
 
-def make_pattern(tables: List[List[List[str]]]) -> str:
-    cells = map(escape, [cell for table in tables for row in table for cell in row if cell])
-    return f"^({'|'.join(cells)})$"
+def make_pattern(symbols: List[str]) -> str:
+    matches = map(
+        escape,
+        [symbol for symbol in symbols if symbol])
+    return f"^({'|'.join(matches)})$"
 
 # https://www.cmor-faculty.rice.edu/~heinken/latex/symbols.pdf
 # LATEX Mathematical Symbols
-# The more unusual symbols are not defined in base LATEX (NFSS) and require \usepackage{amssymb}
-# Use the pair \lefts1 and \rights1 to match height of delimiters s1 and s2 to the height of their contents,
-# e.g. \left| expr \right| -or- \left\{ expr \right\} -or- \left\Vert expr \right.
+# The more unusual symbols are not defined in base LATEX (NFSS) and require 
+# \usepackage{amssymb} Use the pair \lefts1 and \rights1 to match height of 
+# delimiters s1 and s2 to the height of their contents,
+# eg \left| expr \right| or \left\{ expr \right\} or \left\Vert expr \right.
 
 SYM_GREEK = [
-    r'\alpha',
-    r'\beta',
-    r'\gamma',
-    r'\delta',
-    r'\epsilon',
-    r'\zeta',
-    r'\eta',
-    r'\theta',
-    r'\iota',
-    r'\kappa',
-    r'\lambda',
-    r'\mu',
-    r'\nu',
-    r'\xi',
-    'o',
-    r'\pi',
-    r'\rho',
-    r'\sigma',
-    r'\tau',
-    r'\upsilon',
-    r'\phi',
-    r'\chi',
-    r'\psi',
-    r'\omega',
-    r'\digamma',
-    r'\Delta',
-    r'\Theta',
-    r'\varepsilon',
-    r'\Gamma',
-    r'\Upsilon',
-    r'\varkappa',
-    r'\Lambda',
-    r'\Xi',
-    r'\varphi',
-    r'\Omega',
-    r'o',
-    r'\varpi',
-    r'\Phi',
-    r'\aleph',
-    r'\varrho',
-    r'\Pi',
-    r'\beth',
-    r'\varsigma',
-    r'\Psi',
-    r'\daleth',
-    r'\vartheta',
-    r'\Sigma',
-    r'\gimel',
+    r'\alpha', r'\nu', r'\Gamma', r'\digamma',
+    r'\beta', r'\xi',  r'\Delta', r'\varepsilon',
+    r'\gamma', 'o', r'\Theta', r'\vartheta',
+    r'\delta', r'\pi', r'\Lambda', r'\varkappa',
+    r'\epsilon', r'\rho', r'\Xi', r'\varpi',
+    r'\zeta', r'\sigma', r'\Pi', r'\varrho',
+    r'\eta', r'\tau', r'\Sigma', r'\varsigma',
+    r'\theta', r'\upsilon', r'\Upsilon', r'\varphi',
+    r'\iota', r'\phi', r'\Phi', r'\aleph',
+    r'\kappa', r'\chi', r'\Psi', r'\beth',
+    r'\lambda', r'\psi', r'\Omega', r'\gimel',
+    r'\mu', r'\omega', '', r'\daleth',
 ]
 SYM_MATH = [
-    [r'\overline', r'\overrightarrow'],
-    [r'\underline', r'\overleftarrow'],
-    [r'\widehat', r'\overbrace'],
-    [r'\widetilde', r'\underbrace'],
+    r'\overline', r'\overrightarrow',
+    r'\underline', r'\overleftarrow',
+    r'\widehat', r'\overbrace',
+    r'\widetilde', r'\underbrace',
 ]
 SYM_DELIM = [
-    ['|', r'\{', r'\lfloor', '/', r'\Uparrow', r'\llcorner'],
-    [r'\vert', r'\}', r'\rfloor', r'\backslash', r'\uparrow', r'\lrcorner'],
-    [r'\|', r'\langle', r'\lceil', '[', r'\Downarrow', r'\ulcorner'],
-    [r'\Vert', r'\rangle', r'\rceil', ']', r'\downarrow', r'\urcorner'],
+    '|', r'\{', r'\lfloor', '/', r'\Uparrow', r'\llcorner',
+    r'\vert', r'\}', r'\rfloor', r'\backslash', r'\uparrow', r'\lrcorner',
+    r'\|', r'\langle', r'\lceil', '[', r'\Downarrow', r'\ulcorner',
+    r'\Vert', r'\rangle', r'\rceil', ']', r'\downarrow', r'\urcorner',
 ]
 SYM_INT = [
-    [r'\int', r'\iint', r'\iiint', r'\iiiint', r'\idotsint', r'\oint'],
+    r'\int', r'\iint', r'\iiint', r'\iiiint', r'\idotsint', r'\oint',
 ]
 SYM_LARGE = [ # Displayed formulae show larger version.
-    [r'\sum', r'\biguplus', r'\bigoplus', r'\bigvee'],
-    [r'\prod', r'\bigcap', r'\bigotimes', r'\bigwedge'],
-    [r'\coprod', r'\bigcup', r'\bigodot', r'\bigsqcup'],    
+    r'\sum', r'\biguplus', r'\bigoplus', r'\bigvee',
+    r'\prod', r'\bigcap', r'\bigotimes', r'\bigwedge',
+    r'\coprod', r'\bigcup', r'\bigodot', r'\bigsqcup',
 ]
 SYM_FUNC = [ # Should appear in Roman, not Italic.
-    [r'\arccos', r'\arcsin', r'\arctan', r'\arg'],
-    [r'\cos', r'\cosh', r'\cot', r'\coth'],
-    [r'\csc', r'\deg', r'\det', r'\dim'],
-    [r'\exp', r'\gcd', r'\hom', r'\inf'],
-    [r'\ker', r'\lg', r'\lim', r'\liminf'],
-    [r'\limsup', r'\ln', r'\log', r'\max'],
-    [r'\min', r'\Pr', r'\sec', r'\sin'],
-    [r'\sinh', r'\sup', r'\tan', r'\tanh'],
+    r'\arccos', r'\arcsin', r'\arctan', r'\arg',
+    r'\cos', r'\cosh', r'\cot', r'\coth',
+    r'\csc', r'\deg', r'\det', r'\dim',
+    r'\exp', r'\gcd', r'\hom', r'\inf',
+    r'\ker', r'\lg', r'\lim', r'\liminf',
+    r'\limsup', r'\ln', r'\log', r'\max',
+    r'\min', r'\Pr', r'\sec', r'\sin',
+    r'\sinh', r'\sup', r'\tan', r'\tanh',
 ]
 SYM_OPS_1 = [
-    [r'\ast', r'\pm', r'\cap', r'\lhd'],
-    [r'\star', r'\mp', r'\cup', r'\rhd'],
-    [r'\cdot', r'\amalg', r'\uplus', r'\triangleleft'],
-    [r'\circ', r'\odot', r'\sqcap', r'\triangleright'],
-    [r'\bullet', r'\ominus', r'\sqcup', r'\unlhd'],
-    [r'\bigcirc', r'\oplus', r'\wedge', r'\unrhd'],
-    [r'\diamond', r'\oslash', r'\vee', r'\bigtriangledown'],
-    [r'\times', r'\otimes', r'\dagger', r'\bigtriangleup'],
-    [r'\div', r'\wr', r'\ddagger', r'\setminus'],
-    [r'\centerdot', r'\Box', r'\barwedge', r'\veebar'],
-    [r'\circledast', r'\boxplus', r'\curlywedge', r'\curlyvee'],
-    [r'\circledcirc', r'\boxminus', r'\Cap', r'\Cup'],
-    [r'\circleddash', r'\boxtimes', r'\bot', r'\top'],
-    [r'\dotplus', r'\boxdot', r'\intercal', r'\rightthreetimes'],
-    [r'\divideontimes', r'\square', r'\doublebarwedge', r'\leftthreetimes'],
+    r'\ast', r'\pm', r'\cap', r'\lhd',
+    r'\star', r'\mp', r'\cup', r'\rhd',
+    r'\cdot', r'\amalg', r'\uplus', r'\triangleleft',
+    r'\circ', r'\odot', r'\sqcap', r'\triangleright',
+    r'\bullet', r'\ominus', r'\sqcup', r'\unlhd',
+    r'\bigcirc', r'\oplus', r'\wedge', r'\unrhd',
+    r'\diamond', r'\oslash', r'\vee', r'\bigtriangledown',
+    r'\times', r'\otimes', r'\dagger', r'\bigtriangleup',
+    r'\div', r'\wr', r'\ddagger', r'\setminus',
+    r'\centerdot', r'\Box', r'\barwedge', r'\veebar',
+    r'\circledast', r'\boxplus', r'\curlywedge', r'\curlyvee',
+    r'\circledcirc', r'\boxminus', r'\Cap', r'\Cup',
+    r'\circleddash', r'\boxtimes', r'\bot', r'\top',
+    r'\dotplus', r'\boxdot', r'\intercal', r'\rightthreetimes',
+    r'\divideontimes', r'\square', r'\doublebarwedge', r'\leftthreetimes',
 ]
 SYM_OPS_2 = [
-    [r'\equiv', r'\leq', r'\geq', r'\perp'], 
-    [r'\cong', r'\prec', r'\succ', r'\mid'], 
-    [r'\neq', r'\preceq', r'\succeq', r'\parallel'], 
-    [r'\sim', r'\ll', r'\gg', r'\bowtie'], 
-    [r'\simeq', r'\subset', r'\supset', r'\Join'], 
-    [r'\approx', r'\subseteq', r'\supseteq', r'\ltimes'], 
-    [r'\asymp', r'\sqsubset', r'\sqsupset', r'\rtimes'], 
-    [r'\doteq', r'\sqsubseteq', r'\sqsupseteq', r'\smile'], 
-    [r'\propto', r'\dashv', r'\vdash', r'\frown'], 
-    [r'\models', r'\in', r'\ni', r'\notin'],
-    [r'\approxeq', r'\leqq', r'\geqq', r'\lessgtr'],
-    [r'\thicksim', r'\leqslant', r'\geqslant', r'\lesseqgtr'],
-    [r'\backsim', r'\lessapprox', r'\gtrapprox', r'\lesseqqgtr'],
-    [r'\backsimeq', r'\lll', r'\ggg', r'\gtreqqless'],
-    [r'\triangleq', r'\lessdot', r'\gtrdot', r'\gtreqless'],
-    [r'\circeq', r'\lesssim', r'\gtrsim', r'\gtrless'],
-    [r'\bumpeq', r'\eqslantless', r'\eqslantgtr', r'\backepsilon'],
-    [r'\Bumpeq', r'\precsim', r'\succsim', r'\between'],
-    [r'\doteqdot', r'\precapprox', r'\succapprox', r'\pitchfork'],
+    r'\equiv', r'\leq', r'\geq', r'\perp', 
+    r'\cong', r'\prec', r'\succ', r'\mid', 
+    r'\neq', r'\preceq', r'\succeq', r'\parallel', 
+    r'\sim', r'\ll', r'\gg', r'\bowtie', 
+    r'\simeq', r'\subset', r'\supset', r'\Join', 
+    r'\approx', r'\subseteq', r'\supseteq', r'\ltimes', 
+    r'\asymp', r'\sqsubset', r'\sqsupset', r'\rtimes', 
+    r'\doteq', r'\sqsubseteq', r'\sqsupseteq', r'\smile', 
+    r'\propto', r'\dashv', r'\vdash', r'\frown', 
+    r'\models', r'\in', r'\ni', r'\notin',
+    r'\approxeq', r'\leqq', r'\geqq', r'\lessgtr',
+    r'\thicksim', r'\leqslant', r'\geqslant', r'\lesseqgtr',
+    r'\backsim', r'\lessapprox', r'\gtrapprox', r'\lesseqqgtr',
+    r'\backsimeq', r'\lll', r'\ggg', r'\gtreqqless',
+    r'\triangleq', r'\lessdot', r'\gtrdot', r'\gtreqless',
+    r'\circeq', r'\lesssim', r'\gtrsim', r'\gtrless',
+    r'\bumpeq', r'\eqslantless', r'\eqslantgtr', r'\backepsilon',
+    r'\Bumpeq', r'\precsim', r'\succsim', r'\between',
+    r'\doteqdot', r'\precapprox', r'\succapprox', r'\pitchfork',
 ]
 SYM_OPS_3 = [
-    [r'\thickapprox', r'\Subset', r'\Supset', r'\shortmid'],
-    [r'\fallingdotseq', r'\subseteqq', r'\supseteqq', r'\smallfrown'],
-    [r'\risingdotseq', r'\sqsubset', r'\sqsupset', r'\smallsmile'],
-    [r'\varpropto', r'\preccurlyeq', r'\succcurlyeq', r'\Vdash'],
-    [r'\therefore', r'\curlyeqprec', r'\curlyeqsucc', r'\vDash'],
-    [r'\because', r'\blacktriangleleft', r'\blacktriangleright', r'\Vvdash'],
-    [r'\eqcirc', r'\trianglelefteq', r'\trianglerighteq', r'\shortparallel'],
-    [r'\neq', r'\vartriangleleft', r'\vartriangleright', r'\nshortparallel'],
-    [r'\ncong', r'\nleq', r'\ngeq', r'\nsubseteq'],
-    [r'\nmid', r'\nleqq', r'\ngeqq', r'\nsupseteq'],
-    [r'\nparallel', r'\nleqslant', r'\ngeqslant', r'\nsubseteqq'],
-    [r'\nshortmid', r'\nless', r'\ngtr', r'\nsupseteqq'],
-    [r'\nshortparallel', r'\nprec', r'\nsucc', r'\subsetneq'],
-    [r'\nsim', r'\npreceq', r'\nsucceq', r'\supsetneq'],
+    r'\thickapprox', r'\Subset', r'\Supset', r'\shortmid',
+    r'\fallingdotseq', r'\subseteqq', r'\supseteqq', r'\smallfrown',
+    r'\risingdotseq', r'\sqsubset', r'\sqsupset', r'\smallsmile',
+    r'\varpropto', r'\preccurlyeq', r'\succcurlyeq', r'\Vdash',
+    r'\therefore', r'\curlyeqprec', r'\curlyeqsucc', r'\vDash',
+    r'\because', r'\blacktriangleleft', r'\blacktriangleright', r'\Vvdash',
+    r'\eqcirc', r'\trianglelefteq', r'\trianglerighteq', r'\shortparallel',
+    r'\neq', r'\vartriangleleft', r'\vartriangleright', r'\nshortparallel',
+    r'\ncong', r'\nleq', r'\ngeq', r'\nsubseteq',
+    r'\nmid', r'\nleqq', r'\ngeqq', r'\nsupseteq',
+    r'\nparallel', r'\nleqslant', r'\ngeqslant', r'\nsubseteqq',
+    r'\nshortmid', r'\nless', r'\ngtr', r'\nsupseteqq',
+    r'\nshortparallel', r'\nprec', r'\nsucc', r'\subsetneq',
+    r'\nsim', r'\npreceq', r'\nsucceq', r'\supsetneq',
 ]
 SYM_OPS_4 = [
-    [r'\nVDash', r'\precnapprox', r'\succnapprox', r'\subsetneqq'],
-    [r'\nvDash', r'\precnsim', r'\succnsim', r'\supsetneqq'],
-    [r'\nvdash', r'\lnapprox', r'\gnapprox', r'\varsubsetneq'],
-    [r'\ntriangleleft', r'\lneq', r'\gneq', r'\varsupsetneq'],
-    [r'\ntrianglelefteq', r'\lneqq', r'\gneqq', r'\varsubsetneqq'],
-    [r'\ntriangleright', r'\lnsim', r'\gnsim', r'\varsupsetneqq'],
-    [r'\ntrianglerighteq', r'\lvertneqq', r'\gvertneqq', ''],
+    r'\nVDash', r'\precnapprox', r'\succnapprox', r'\subsetneqq',
+    r'\nvDash', r'\precnsim', r'\succnsim', r'\supsetneqq',
+    r'\nvdash', r'\lnapprox', r'\gnapprox', r'\varsubsetneq',
+    r'\ntriangleleft', r'\lneq', r'\gneq', r'\varsupsetneq',
+    r'\ntrianglelefteq', r'\lneqq', r'\gneqq', r'\varsubsetneqq',
+    r'\ntriangleright', r'\lnsim', r'\gnsim', r'\varsupsetneqq',
+    r'\ntrianglerighteq', r'\lvertneqq', r'\gvertneqq', '',
 ]
 SYM_ARROW_1 = [
-    [r'\leftarrow', r'\longleftarrow', r'\uparrow'],
-    [r'\Leftarrow', r'\Longleftarrow', r'\Uparrow'],
-    [r'\rightarrow', r'\longrightarrow', r'\downarrow'],
-    [r'\Rightarrow', r'\Longrightarrow', r'\Downarrow'],
-    [r'\leftrightarrow', r'\longleftrightarrow', r'\updownarrow'],
-    [r'\Leftrightarrow', r'\Longleftrightarrow', r'\Updownarrow'],
-    [r'\mapsto', r'\longmapsto', r'\nearrow'],
-    [r'\hookleftarrow', r'\hookrightarrow', r'\searrow'],
-    [r'\leftharpoonup', r'\rightharpoonup', r'\swarrow'],
-    [r'\leftharpoondown', r'\rightharpoondown', r'\nwarrow'],
-    [r'\rightleftharpoons', r'\leadsto', ''],
+    r'\leftarrow', r'\longleftarrow', r'\uparrow',
+    r'\Leftarrow', r'\Longleftarrow', r'\Uparrow',
+    r'\rightarrow', r'\longrightarrow', r'\downarrow',
+    r'\Rightarrow', r'\Longrightarrow', r'\Downarrow',
+    r'\leftrightarrow', r'\longleftrightarrow', r'\updownarrow',
+    r'\Leftrightarrow', r'\Longleftrightarrow', r'\Updownarrow',
+    r'\mapsto', r'\longmapsto', r'\nearrow',
+    r'\hookleftarrow', r'\hookrightarrow', r'\searrow',
+    r'\leftharpoonup', r'\rightharpoonup', r'\swarrow',
+    r'\leftharpoondown', r'\rightharpoondown', r'\nwarrow',
+    r'\rightleftharpoons', r'\leadsto', '',
 ]
 SYM_ARROW_2 = [
-    [r'\dashrightarrow', r'\dashleftarrow', r'\leftleftarrows'],
-    [r'\leftrightarrows', r'\Lleftarrow', r'\twoheadleftarrow'],
-    [r'\leftarrowtail', r'\looparrowleft', r'\leftrightharpoons'],
-    [r'\curvearrowleft', r'\circlearrowleft', r'\Lsh'],
-    [r'\upuparrows', r'\upharpoonleft', r'\downharpoonleft'],
-    [r'\multimap', r'\leftrightsquigarrow', r'\rightrightarrows'],
-    [r'\rightleftarrows', r'\rightrightarrows', r'\rightleftarrows'],
-    [r'\twoheadrightarrow', r'\rightarrowtail', r'\looparrowright'],
-    [r'\rightleftharpoons', r'\curvearrowright', r'\circlearrowright'],
-    [r'\Rsh', r'\downdownarrows', r'\upharpoonright'],
-    [r'\downharpoonright', r'\rightsquigarrow', ''],
-    [r'\nleftarrow', r'\nrightarrow', r'\nLeftarrow'],
-    [r'\nRightarrow', r'\nleftrightarrow', r'\nLeftrightarrow'],
+    r'\dashrightarrow', r'\dashleftarrow', r'\leftleftarrows',
+    r'\leftrightarrows', r'\Lleftarrow', r'\twoheadleftarrow',
+    r'\leftarrowtail', r'\looparrowleft', r'\leftrightharpoons',
+    r'\curvearrowleft', r'\circlearrowleft', r'\Lsh',
+    r'\upuparrows', r'\upharpoonleft', r'\downharpoonleft',
+    r'\multimap', r'\leftrightsquigarrow', r'\rightrightarrows',
+    r'\rightleftarrows', r'\rightrightarrows', r'\rightleftarrows',
+    r'\twoheadrightarrow', r'\rightarrowtail', r'\looparrowright',
+    r'\rightleftharpoons', r'\curvearrowright', r'\circlearrowright',
+    r'\Rsh', r'\downdownarrows', r'\upharpoonright',
+    r'\downharpoonright', r'\rightsquigarrow', '',
+    r'\nleftarrow', r'\nrightarrow', r'\nLeftarrow',
+    r'\nRightarrow', r'\nleftrightarrow', r'\nLeftrightarrow',
 ]
 SYM_MISC = [
-    [r'\infty', r'\forall', r'\Bbbk', r'\wp'],
-    [r'\nabla', r'\exists', r'\bigstar', r'\angle'],
-    [r'\partial', r'\nexists', r'\diagdown', r'\measuredangle'],
-    [r'\eth', r'\emptyset', r'\diagup', r'\sphericalangle'],
-    [r'\clubsuit', r'\varnothing', r'\Diamond', r'\complement'],
-    [r'\diamondsuit', r'\imath', r'\Finv', r'\triangledown'],
-    [r'\heartsuit', r'\jmath', r'\Game', r'\triangle'],
-    [r'\spadesuit', r'\ell', r'\hbar', r'\vartriangle'],
-    [r'\cdots', r'\iiiint', r'\hslash', r'\blacklozenge'],
-    [r'\vdots', r'\iiint', r'\lozenge', r'\blacksquare'],
-    [r'\ldots', r'\iint', r'\mho', r'\blacktriangle'],
-    [r'\ddots', r'\sharp', r'\prime', r'\blacktriangledown'],
-    [r'\Im', r'\flat', r'\square', r'\backprime'],
-    [r'\Re', r'\natural', r'\surd', r'\circledS'],
+    r'\infty', r'\forall', r'\Bbbk', r'\wp',
+    r'\nabla', r'\exists', r'\bigstar', r'\angle',
+    r'\partial', r'\nexists', r'\diagdown', r'\measuredangle',
+    r'\eth', r'\emptyset', r'\diagup', r'\sphericalangle',
+    r'\clubsuit', r'\varnothing', r'\Diamond', r'\complement',
+    r'\diamondsuit', r'\imath', r'\Finv', r'\triangledown',
+    r'\heartsuit', r'\jmath', r'\Game', r'\triangle',
+    r'\spadesuit', r'\ell', r'\hbar', r'\vartriangle',
+    r'\cdots', r'\iiiint', r'\hslash', r'\blacklozenge',
+    r'\vdots', r'\iiint', r'\lozenge', r'\blacksquare',
+    r'\ldots', r'\iint', r'\mho', r'\blacktriangle',
+    r'\ddots', r'\sharp', r'\prime', r'\blacktriangledown',
+    r'\Im', r'\flat', r'\square', r'\backprime',
+    r'\Re', r'\natural', r'\surd', r'\circledS',
 ]
 SYM_ACCENT = [
-    [r'\acute', r'\bar', r'\Acute', r'\Bar'],
-    [r'\breve', r'\check', r'\Breve', r'\Check'],
-    [r'\ddot', r'\dot', r'\Ddot', r'\Dot'],
-    [r'\grave', r'\hat', r'\Grave', r'\Hat'],
-    [r'\tilde', r'\vec', r'\Tilde', r'\Vec'],
+    r'\acute', r'\bar', r'\Acute', r'\Bar',
+    r'\breve', r'\check', r'\Breve', r'\Check',
+    r'\ddot', r'\dot', r'\Ddot', r'\Dot',
+    r'\grave', r'\hat', r'\Grave', r'\Hat',
+    r'\tilde', r'\vec', r'\Tilde', r'\Vec',
 ]
 SYM_STYLE = [
-    [r'\mathcal{ABCDEFGHIJKLMNOPQRSTUVWXYZ}'],
-    [r'\mathbb{ABCDEFGHIJKLMNOPQRSTUVWXYZ}'],
-    [r'\mathfrak{ABCDEFGHIJKLMNOPQRSTUVWXYZabc123}'],
-    [r'\mathsf{ABCDEFGHIJKLMNOPQRSTUVWXYZabc123}'],
-    [r'\mathbf{ABCDEFGHIJKLMNOPQRSTUVWXYZabc123}'],
+    r'\mathcal{ABCDEFGHIJKLMNOPQRSTUVWXYZ}',
+    r'\mathbb{ABCDEFGHIJKLMNOPQRSTUVWXYZ}',
+    r'\mathfrak{ABCDEFGHIJKLMNOPQRSTUVWXYZabc123}',
+    r'\mathsf{ABCDEFGHIJKLMNOPQRSTUVWXYZabc123}',
+    r'\mathbf{ABCDEFGHIJKLMNOPQRSTUVWXYZabc123}',
 ]
 SYM_FONT = [
-    [r'\displaystyle \int f^{-1}(x-x_a)\,dx}'],
-    [r'\textstyle \int f^{-1}(x-x_a)\,dx}'],
-    [r'\scriptstyle \int f^{-1}(x-x_a)\,dx}'],
-    [r'\scriptscriptstyle \int f^{-1}(x-x_a)\,dx}'],
+    r'\displaystyle \int f^{-1}(x-x_a)\,dx}',
+    r'\textstyle \int f^{-1}(x-x_a)\,dx}',
+    r'\scriptstyle \int f^{-1}(x-x_a)\,dx}',
+    r'\scriptscriptstyle \int f^{-1}(x-x_a)\,dx}',
 ]
 
-PAT_GREEK = make_pattern([SYM_GREEK])
-PAT_MATH = make_pattern([SYM_MATH])
-PAT_DELIM = make_pattern([SYM_DELIM])
-PAT_INT = make_pattern([SYM_INT])
-PAT_LARGE = make_pattern([SYM_LARGE])
-PAT_FUNC = make_pattern([SYM_FUNC])
-PAT_OPS = make_pattern([SYM_OPS_1, SYM_OPS_2, SYM_OPS_3, SYM_OPS_4])
-PAT_ARROW = make_pattern([SYM_ARROW_1, SYM_ARROW_2])
-PAT_MISC = make_pattern([SYM_MISC])
-PAT_ACCENT = make_pattern([SYM_ACCENT])
-PAT_STYLE = make_pattern([SYM_STYLE])
-PAT_FONT = make_pattern([SYM_FONT])
-PAT_SYM = make_pattern([SYM_MATH, SYM_ACCENT])
+PAT_GREEK = make_pattern(SYM_GREEK)
+PAT_MATH = make_pattern(SYM_MATH)
+PAT_DELIM = make_pattern(SYM_DELIM)
+PAT_INT = make_pattern(SYM_INT)
+PAT_LARGE = make_pattern(SYM_LARGE)
+PAT_FUNC = make_pattern(SYM_FUNC)
+PAT_OPS = make_pattern(SYM_OPS_1 + SYM_OPS_2 + SYM_OPS_3 + SYM_OPS_4)
+PAT_ARROW = make_pattern(SYM_ARROW_1 + SYM_ARROW_2)
+PAT_MISC = make_pattern(SYM_MISC)
+PAT_ACCENT = make_pattern(SYM_ACCENT)
+PAT_STYLE = make_pattern(SYM_STYLE)
+PAT_FONT = make_pattern(SYM_FONT)
+PAT_SYM = make_pattern(SYM_MATH + SYM_ACCENT)
 
 # https://www.cmor-faculty.rice.edu/~heinken/latex/symbol-list.pdf
 # TEX Mathematical Symbols - Paul Taylor - 1 June 1993
@@ -837,4 +804,4 @@ SYM_ALL = [
     r'\zeta',
 ]
 
-PAT_ALL = make_pattern([SYM_ALL])
+PAT_ALL = make_pattern(SYM_ALL)

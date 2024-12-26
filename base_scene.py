@@ -88,7 +88,7 @@ class BaseScene(VoiceoverScene):
         return Text(text, font_size=30, color=self.get_text_colour(), *args, **kwargs)
 
     def say(self, text: str):
-        line_number = getframeinfo(currentframe().f_back).lineno
+        line_number = getframeinfo(currentframe().f_back.f_back).lineno
         print(f"{line_number}: {text}")
         # Specify language & disable language check to avoid GTTS bugs.
         return self.voiceover(text, lang='en', lang_check=False)
