@@ -36,47 +36,51 @@ class TestAll(BaseScene):
 
     def construct(self):
 
-        def show_page(caption: str, items: List[str], column_count: int = 4) -> None:
-            with self.say(caption):
-                item_count = len(items)
-                row_count = (item_count + column_count - 1) // column_count
-                page = []
-                for row_index in range(row_count):
-                    line = []
-                    for column_index in range(column_count):
-                        item_index = row_index * column_count + column_index
-                        item = items[item_index] if item_index < item_count else ''                       
-                        tex = self.make_tex(item)
-                        line.append(tex)
-                        text = self.make_text(item)
-                        line.append(text)
-                    page.append(line)
-                grid = MobjectTable(
-                    page,
-                    v_buff=0.25,
-                    h_buff=0.5,
-                    #arrange_in_grid_config={"col_alignments": "clclclclclcl"[0:2*len(page)]},
-                    line_config={"color": ManimColor([0,0,0,0])})
-                grid.scale(0.5)
-                self.play(FadeIn(grid))
-                self.wait(8)
-                self.play(FadeOut(grid))
+        def show_group(caption: str, items: List[str], column_count: int = 4) -> None:
+            item_count = len(items)
+            item_index = 0
+            page_size = 20 * column_count
+            page_count = (item_count + page_size - 1) // page_size
+            if page_count > 1:
+                caption = f'{caption} - Page 1'
+            for page_index in range(page_count):
+                with self.say(caption):
+                    page = []
+                    for _ in range(20):
+                        line = []
+                        for _ in range(column_count):
+                            item = items[item_index] if item_index < item_count else ''                       
+                            tex = self.make_tex(item)
+                            line.append(tex)
+                            text = self.make_text(item)
+                            line.append(text)
+                            item_index += 1
+                        page.append(line)
+                        if (item_index >= item_count):
+                            break
+                    grid = MobjectTable(
+                        page,
+                        v_buff=0.25,
+                        h_buff=0.5,
+                        arrange_in_grid_config={"col_alignments": "clclclclclcl"[0:2*column_count]},
+                        line_config={"color": ManimColor([0,0,0,0])})
+                    grid.scale(0.5)
+                    self.play(FadeIn(grid))
+                    self.wait(8)
+                    self.play(FadeOut(grid))
+                caption = f'Page {page_index + 2}'
 
         self.init()
 
-        show_page("Greek and Hebrew Letters", SYM_GREEK)
-        show_page("Mathematical constructions", EXP_MATH)
-        show_page("Delimiters", SYM_DELIM)
-        show_page("Integrals", SYM_INT, 6)
-        show_page("Variable sized symbols", SYM_LARGE)
-        show_page("Standard function names", SYM_FUNC)
-        show_page("Binary operation and relation symbols", SYM_OPS_1)
-        show_page("Page 2", SYM_OPS_2)
-        show_page("Page 3", SYM_OPS_3)
-        show_page("Page 4", SYM_OPS_4)
-        show_page("Arrow symbols", SYM_ARROW_1)
-        show_page("Page 2", SYM_ARROW_2)
-        show_page("Miscellaneous symbols", SYM_MISC)
-        show_page("Math mode accents", EXP_ACCENT)
-        show_page("Other styles - math mode only", SYM_STYLE, 1)
-        show_page("Font sizes", SYM_FONT, 1)
+        show_group("Greek and Hebrew Letters", SYM_GREEK)
+        show_group("Mathematical constructions", EXP_MATH, 3)
+        show_group("Delimiters", SYM_DELIM, 5)
+        show_group("Integrals", SYM_INT, 1)
+        show_group("Variable sized symbols", SYM_LARGE)
+        show_group("Standard function names", SYM_FUNC)
+        show_group("Binary operation and relation symbols", SYM_OPS, 5)
+        show_group("Arrow symbols", SYM_ARROW)
+        show_group("Miscellaneous symbols", SYM_MISC)
+        show_group("Math mode accents", EXP_ACCENT)
+        show_group("Other styles - math mode only", SYM_STYLE, 1)
+        show_group("Font sizes", SYM_FONT, 1)

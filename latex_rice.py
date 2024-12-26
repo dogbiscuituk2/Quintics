@@ -76,7 +76,7 @@ SYM_FUNC = [ # Should appear in Roman, not Italic.
     r'\min', r'\Pr', r'\sec', r'\sin',
     r'\sinh', r'\sup', r'\tan', r'\tanh',
 ]
-SYM_OPS_1 = [
+SYM_OPS = [
     r'\ast', r'\pm', r'\cap', r'\lhd',
     r'\star', r'\mp', r'\cup', r'\rhd',
     r'\cdot', r'\amalg', r'\uplus', r'\triangleleft',
@@ -92,8 +92,6 @@ SYM_OPS_1 = [
     r'\circleddash', r'\boxtimes', r'\bot', r'\top',
     r'\dotplus', r'\boxdot', r'\intercal', r'\rightthreetimes',
     r'\divideontimes', r'\square', r'\doublebarwedge', r'\leftthreetimes',
-]
-SYM_OPS_2 = [
     r'\equiv', r'\leq', r'\geq', r'\perp', 
     r'\cong', r'\prec', r'\succ', r'\mid', 
     r'\neq', r'\preceq', r'\succeq', r'\parallel', 
@@ -113,8 +111,6 @@ SYM_OPS_2 = [
     r'\bumpeq', r'\eqslantless', r'\eqslantgtr', r'\backepsilon',
     r'\Bumpeq', r'\precsim', r'\succsim', r'\between',
     r'\doteqdot', r'\precapprox', r'\succapprox', r'\pitchfork',
-]
-SYM_OPS_3 = [
     r'\thickapprox', r'\Subset', r'\Supset', r'\shortmid',
     r'\fallingdotseq', r'\subseteqq', r'\supseteqq', r'\smallfrown',
     r'\risingdotseq', r'\sqsubset', r'\sqsupset', r'\smallsmile',
@@ -129,8 +125,6 @@ SYM_OPS_3 = [
     r'\nshortmid', r'\nless', r'\ngtr', r'\nsupseteqq',
     r'\nshortparallel', r'\nprec', r'\nsucc', r'\subsetneq',
     r'\nsim', r'\npreceq', r'\nsucceq', r'\supsetneq',
-]
-SYM_OPS_4 = [
     r'\nVDash', r'\precnapprox', r'\succnapprox', r'\subsetneqq',
     r'\nvDash', r'\precnsim', r'\succnsim', r'\supsetneqq',
     r'\nvdash', r'\lnapprox', r'\gnapprox', r'\varsubsetneq',
@@ -139,7 +133,7 @@ SYM_OPS_4 = [
     r'\ntriangleright', r'\lnsim', r'\gnsim', r'\varsupsetneqq',
     r'\ntrianglerighteq', r'\lvertneqq', r'\gvertneqq', '',
 ]
-SYM_ARROW_1 = [
+SYM_ARROW = [
     r'\leftarrow', r'\longleftarrow', r'\uparrow',
     r'\Leftarrow', r'\Longleftarrow', r'\Uparrow',
     r'\rightarrow', r'\longrightarrow', r'\downarrow',
@@ -151,8 +145,6 @@ SYM_ARROW_1 = [
     r'\leftharpoonup', r'\rightharpoonup', r'\swarrow',
     r'\leftharpoondown', r'\rightharpoondown', r'\nwarrow',
     r'\rightleftharpoons', r'\leadsto', '',
-]
-SYM_ARROW_2 = [
     r'\dashrightarrow', r'\dashleftarrow', r'\leftleftarrows',
     r'\leftrightarrows', r'\Lleftarrow', r'\twoheadleftarrow',
     r'\leftarrowtail', r'\looparrowleft', r'\leftrightharpoons',
@@ -210,8 +202,8 @@ PAT_DELIM = make_pattern(SYM_DELIM)
 PAT_INT = make_pattern(SYM_INT)
 PAT_LARGE = make_pattern(SYM_LARGE)
 PAT_FUNC = make_pattern(SYM_FUNC)
-PAT_OPS = make_pattern(SYM_OPS_1 + SYM_OPS_2 + SYM_OPS_3 + SYM_OPS_4)
-PAT_ARROW = make_pattern(SYM_ARROW_1 + SYM_ARROW_2)
+PAT_OPS = make_pattern(SYM_OPS)
+PAT_ARROW = make_pattern(SYM_ARROW)
 PAT_MISC = make_pattern(SYM_MISC)
 PAT_ACCENT = make_pattern(SYM_ACCENT)
 PAT_STYLE = make_pattern(SYM_STYLE)
