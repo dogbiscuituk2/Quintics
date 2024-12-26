@@ -18,29 +18,51 @@ from painter import *
 
 string = r"\circlearrowright"
 
+EXP_ACCENT = [
+    [r'\acute{a}', r'\bar{a}', r'\Acute{\Acute{A}}', r'\Bar{\Bar{A}}'],
+    [r'\breve{a}', r'\check{a}', r'\Breve{\Breve{A}}', r'\Check{\Check{A}}'],
+    [r'\ddot{a}', r'\dot{a}', r'\Ddot{\Ddot{A}}', r'\Dot{\Dot{A}}'],
+    [r'\grave{a}', r'\hat{a}', r'\Grave{\Grave{A}}', r'\Hat{\Hat{A}}'],
+    [r'\tilde{a}', r'\vec{a}', r'\Tilde{\Tilde{A}}', r'\Vec{\Vec{A}}'],
+]
+EXP_MATH = [
+    [r'\frac{x}{y}', r'\overline{ax}', r'\overrightarrow{ax}'],
+    ["f'(x)", r'\underline{ax}', r'\overleftarrow{ax}'],
+    [r'\sqrt{ax}', r'\widehat{ax}', r'\overbrace{ax}'],
+    [r'\sqrt[n]{ax}', r'\widetilde{ax}', r'\underbrace{ax}'],
+]
+
 class TestAll(BaseScene):
 
     def construct(self):
 
-        def show_table(table: List[List[str]]) -> None:
+        def show_page_old(items: List[str]) -> None:
+            item_count = len(items)
+            column_count = 1 if item_count <= 10 else 4
+            row_count = (item_count + column_count - 1) // column_count
             page = []
-            for row in table:
+            for row_index in range(row_count):
                 line = []
-                for cell in row:
-                    tex = self.make_tex(cell)
+                for column_index in range(column_count):
+                    item_index = row_index * column_count + column_index
+                    item = items[item_index] if item_index < item_count else ''                       
+                    tex = self.make_tex(item)
                     line.append(tex)
+                    text = self.make_text(item)
+                    line.append(text)
                 page.append(line)
             grid = MobjectTable(
                 page,
                 v_buff=0.25,
                 h_buff=0.5,
+                #arrange_in_grid_config={"col_alignments": "clclclclclcl"[0:2*len(page)]},
                 line_config={"color": ManimColor([0,0,0,0])})
             grid.scale(0.5)
             self.play(FadeIn(grid))
             self.wait(8)
             self.play(FadeOut(grid))
 
-        def show_page(table: List[List[str]]) -> None:
+        def show_page_very_old(table: List[List[str]]) -> None:
             page = []
             for row in table:
                 line = []
@@ -63,56 +85,35 @@ class TestAll(BaseScene):
 
         self.init()
 
-        with self.say("Expressions."):
-            show_table([
-                [r'\int_{abcde}^{xyz}', r'\iint_{abcde}^{xyz}', r'\iiint_{abcde}^{xyz}', r'\iiiint_{abcde}^{xyz}', r'\idotsint_{abcde}^{xyz}', r'\oint_{abcde}^{xyz}'],
-                [r'\sum_{abcde}^{xyz}', r'\prod_{abcde}^{xyz}', r'\coprod_{abcde}^{xyz}', r'\bigvee_{abcde}^{xyz}', r'\bigwedge_{abcde}^{xyz}', r'\bigsqcup_{abcde}^{xyz}'],
-                [r'\bigoplus_{abcde}^{xyz}', r'\bigotimes_{abcde}^{xyz}', r'\bigodot_{abcde}^{xyz}', r'\bigcup_{abcde}^{xyz}', r'\bigcap_{abcde}^{xyz}', r'\biguplus_{abcde}^{xyz}'],
-                ])
-
-        #with self.say("Scratchpad."):
-        #    painter = Painter()
-        #    text = r'\int_{abcde}^{xyz}'
-        #    tex = MathTex(text)
-        #    painter.paint_tex(tex)
-        #    self.play(FadeIn(tex))
-        #    self.wait(8)
-        #    self.play(FadeOut(tex))
-        #    text = r'\sum_{abcde}^{xyz}'
-        #    tex = MathTex(text)
-        #    painter.paint_tex(tex)
-        #    self.play(FadeIn(tex))
-        #    self.wait(8)
-        #    self.play(FadeOut(tex))
-        #with self.say("Greek and Hebrew Letters."):
-        #    show_page(SYM_GREEK)
+        with self.say("Greek and Hebrew Letters."):
+            show_page_old(SYM_GREEK)
         #with self.say("Mathematical constructions."):
-        #    show_page(SYM_MATH)
+        #    show_page_old(EXP_MATH)
         #with self.say("Delimiters."):
-        #    show_page(SYM_DELIM)
+        #    show_page_old(SYM_DELIM)
         #with self.say("Integrals. Displayed formulae show the larger version."):
-        #    show_page(SYM_INT)
+        #    show_page_old(SYM_INT)
         #with self.say("Variable sized symbols. Displayed formulae show the larger version."):
-        #    show_page(SYM_LARGE)
+        #    show_page_old(SYM_LARGE)
         #with self.say("Standard function names."):
-        #    show_page(SYM_FUNC)
+        #    show_page_old(SYM_FUNC)
         #with self.say("Binary operation and relation symbols, page 1."):
-        #    show_page(SYM_OPS_1)
+        #    show_page_old(SYM_OPS_1)
         #with self.say("Page 2."):
-        #    show_page(SYM_OPS_2)
+        #    show_page_old(SYM_OPS_2)
         #with self.say("Page 3."):
-        #    show_page(SYM_OPS_3)
+        #    show_page_old(SYM_OPS_3)
         #with self.say("Page 4."):
-        #    show_page(SYM_OPS_4)
+        #    show_page_old(SYM_OPS_4)
         #with self.say("Arrow symbols, page 1."):
-        #    show_page(SYM_ARROW_1)
+        #    show_page_old(SYM_ARROW_1)
         #with self.say("Page 2."):
-        #    show_page(SYM_ARROW_2)
+        #    show_page_old(SYM_ARROW_2)
         #with self.say("Miscellaneous symbols."):
-        #    show_page(SYM_MISC)
+        #    show_page_old(SYM_MISC)
         #with self.say("Math mode accents."):
-        #    show_page(SYM_ACCENTED)
+        #    show_page_old(EXP_ACCENT)
         #with self.say("Other styles - math mode only."):
-        #    show_page(SYM_STYLE)
+        #    show_page_old(SYM_STYLE)
         #with self.say("Font sizes."):
-        #    show_page(SYM_FONT)
+        #    show_page_old(SYM_FONT)

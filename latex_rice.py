@@ -30,20 +30,60 @@ def make_pattern(tables: List[List[List[str]]]) -> str:
 # e.g. \left| expr \right| -or- \left\{ expr \right\} -or- \left\Vert expr \right.
 
 SYM_GREEK = [
-    [r'\alpha', r'\kappa', r'\psi', r'\digamma', r'\Delta', r'\Theta'],
-    [r'\beta', r'\lambda', r'\rho', r'\varepsilon', r'\Gamma', r'\Upsilon'],
-    [r'\chi', r'\mu', r'\sigma', r'\varkappa', r'\Lambda', r'\Xi'],
-    [r'\delta', r'\nu', r'\tau', r'\varphi', r'\Omega', ''],
-    [r'\epsilon', r'o', r'\theta', r'\varpi', r'\Phi', r'\aleph'],
-    [r'\eta', r'\omega', r'\upsilon', r'\varrho', r'\Pi', r'\beth'],
-    [r'\gamma', r'\phi', r'\xi', r'\varsigma', r'\Psi', r'\daleth'],
-    [r'\iota', r'\pi', r'\zeta', r'\vartheta', r'\Sigma', r'\gimel'],
+    r'\alpha',
+    r'\beta',
+    r'\gamma',
+    r'\delta',
+    r'\epsilon',
+    r'\zeta',
+    r'\eta',
+    r'\theta',
+    r'\iota',
+    r'\kappa',
+    r'\lambda',
+    r'\mu',
+    r'\nu',
+    r'\xi',
+    'o',
+    r'\pi',
+    r'\rho',
+    r'\sigma',
+    r'\tau',
+    r'\upsilon',
+    r'\phi',
+    r'\chi',
+    r'\psi',
+    r'\omega',
+    r'\digamma',
+    r'\Delta',
+    r'\Theta',
+    r'\varepsilon',
+    r'\Gamma',
+    r'\Upsilon',
+    r'\varkappa',
+    r'\Lambda',
+    r'\Xi',
+    r'\varphi',
+    r'\Omega',
+    r'o',
+    r'\varpi',
+    r'\Phi',
+    r'\aleph',
+    r'\varrho',
+    r'\Pi',
+    r'\beth',
+    r'\varsigma',
+    r'\Psi',
+    r'\daleth',
+    r'\vartheta',
+    r'\Sigma',
+    r'\gimel',
 ]
 SYM_MATH = [
-    [r'\frac{x}{y}', r'\overline{x}', r'\overrightarrow{x}'],
-    ["f'", r'\underline{x}', r'\overleftarrow{x}'],
-    [r'\sqrt{x}', r'\widehat{x}', r'\overbrace{x}'],
-    [r'\sqrt[n]{x}', r'\widetilde{x}', r'\underbrace{x}'],
+    [r'\overline', r'\overrightarrow'],
+    [r'\underline', r'\overleftarrow'],
+    [r'\widehat', r'\overbrace'],
+    [r'\widetilde', r'\underbrace'],
 ]
 SYM_DELIM = [
     ['|', r'\{', r'\lfloor', '/', r'\Uparrow', r'\llcorner'],
@@ -183,13 +223,6 @@ SYM_ACCENT = [
     [r'\grave', r'\hat', r'\Grave', r'\Hat'],
     [r'\tilde', r'\vec', r'\Tilde', r'\Vec'],
 ]
-SYM_ACCENTED = [
-    [r'\acute{a}', r'\bar{a}', r'\Acute{\Acute{A}}', r'\Bar{\Bar{A}}'],
-    [r'\breve{a}', r'\check{a}', r'\Breve{\Breve{A}}', r'\Check{\Check{A}}'],
-    [r'\ddot{a}', r'\dot{a}', r'\Ddot{\Ddot{A}}', r'\Dot{\Dot{A}}'],
-    [r'\grave{a}', r'\hat{a}', r'\Grave{\Grave{A}}', r'\Hat{\Hat{A}}'],
-    [r'\tilde{a}', r'\vec{a}', r'\Tilde{\Tilde{A}}', r'\Vec{\Vec{A}}'],
-]
 SYM_STYLE = [
     [r'\mathcal{ABCDEFGHIJKLMNOPQRSTUVWXYZ}'],
     [r'\mathbb{ABCDEFGHIJKLMNOPQRSTUVWXYZ}'],
@@ -216,6 +249,7 @@ PAT_MISC = make_pattern([SYM_MISC])
 PAT_ACCENT = make_pattern([SYM_ACCENT])
 PAT_STYLE = make_pattern([SYM_STYLE])
 PAT_FONT = make_pattern([SYM_FONT])
+PAT_SYM = make_pattern([SYM_MATH, SYM_ACCENT])
 
 # https://www.cmor-faculty.rice.edu/~heinken/latex/symbol-list.pdf
 # TEX Mathematical Symbols - Paul Taylor - 1 June 1993

@@ -9,6 +9,7 @@ It is a standalone script that can be run from the command line.
 It is used to test the parsing of MathTex objects and the painting of glyphs.
 """
 
+from manim import *
 from painter import *
 
 painter = Painter()
@@ -20,7 +21,8 @@ painter = Painter()
 #        print_submobjects(submobject, indent + 2)
 
 # Create a MathTex object
-text = r'\int_{abcde}^{xyz}'
-tex = MathTex(text)
+text = r'\underline{xyz}'
+#tex = MathTex(text)
 #print_submobjects(tex)
-painter.paint_tex(tex)
+print(painter.get_tex_length(text))
+#painter.paint_tex(tex)

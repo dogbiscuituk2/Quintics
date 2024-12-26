@@ -21,26 +21,26 @@ class Painter():
     def __init__(self):
         self._colour_map = [
             #('oO|', Pen.NONE),
-            (PAT_GREEK, Pen.FG),
-            (PAT_MATH, Pen.FG),
-            (PAT_DELIM, Pen.FG),
-            (PAT_INT, Pen.MAGENTA),
-            (PAT_LARGE, Pen.MAGENTA),
-            (PAT_FUNC, Pen.YELLOW),
-            (PAT_OPS, Pen.GREEN),
-            (PAT_ARROW, Pen.BLUE),
-            (PAT_MISC, Pen.CYAN),
-            (PAT_ACCENT, Pen.VIOLET),
-            (PAT_STYLE, Pen.VIOLET),
-            (PAT_FONT, Pen.VIOLET),
-            (r'\\frac', Pen.GREEN),
-            (r'\\sqrt|\\lim', Pen.ORANGE),
             (r'[a-eA-E]|\\alpha|\\beta|\\gamma|\\delta|\\epsilon', Pen.RED),
             ('fgh', Pen.ORANGE),
             ('[i-n]', Pen.YELLOW),
             ('[p-s]', Pen.GREEN),
             ('[u-w]', Pen.CYAN),
             ('[x-z]', Pen.BLUE),
+            (PAT_GREEK, Pen.ORANGE),
+            (PAT_MATH, Pen.YELLOW),
+            (PAT_DELIM, Pen.GREEN),
+            (PAT_INT, Pen.MAGENTA),
+            (PAT_LARGE, Pen.MAGENTA),
+            (PAT_FUNC, Pen.YELLOW),
+            (PAT_OPS, Pen.GREEN),
+            (PAT_ARROW, Pen.BLUE),
+            (PAT_MISC, Pen.CYAN),
+            (PAT_ACCENT, Pen.YELLOW),
+            (PAT_STYLE, Pen.VIOLET),
+            (PAT_FONT, Pen.VIOLET),
+            (r'\\frac', Pen.GREEN),
+            (r'\\sqrt|\\lim', Pen.ORANGE),
         ]
         self._scheme = Scheme.BRIGHT
         self._tex = None
@@ -68,6 +68,16 @@ class Painter():
         """
         return COLOURS[self._scheme.value][pen.value]
 
+    @staticmethod
+    def get_tex_length(token: str) -> int:
+        match token:
+            case r'\frac':
+                return 1
+        try:
+            return len(MathTex(token)[0])
+        except Exception:
+            return 0
+        
     def paint_tex(self, tex: MathTex) -> None:
         """
         Apply colours to the glyphs in the given MathTex object.
@@ -85,22 +95,14 @@ class Painter():
         glyphs = tex[0]
         self._glyph_count = len(glyphs)
         symbols = self._paint_string()
-
         for symbol in symbols:
             start = symbol.glyph_index
             stop = start + symbol.glyph_count
-            colour = self.get_colour(symbol.pen)
-            for index in range(start, stop):
-                glyph = glyphs[index]
-                glyph.set_color(colour)
-
-        #expected = self._glyph_count
-        #actual = self._get_glyph_count(symbols)
-        #ok = actual == expected
-        #if ok and len(symbols) == 1:
-        #    return
-        #error = '' if ok else f'** Expected: {expected}. Actual: {actual}. **'
-        #print(f'({self._glyph_count}) {text} =>', *[symbol for symbol in symbols], error)
+            if stop > start:
+                colour = self.get_colour(symbol.pen)
+                for index in range(start, stop):
+                    glyph = glyphs[index]
+                    glyph.set_color(colour)
 
     def set_colour_map(self, colour_map: tuple[tuple[str, int]]):
         """
@@ -155,29 +157,11 @@ class Painter():
     def _get_glyph_count(symbols: List[Symbol]) -> int:
         return sum(symbol.glyph_count for symbol in symbols)
 
-    @staticmethod
-    def _get_tex_len(token: str) -> int:
-        match token:
-            case r'\frac':
-                return 1
-        try:
-            return len(MathTex(token)[0])
-        except Exception:
-            return 0
-
     def _get_token_pen(self, token: str) -> Pen:
         for map in self._colour_map:
             if (re.match(map[0], token)):
                 return map[1]
         return Pen.FG
-    
-    def _paint_accent(self) -> List[Symbol]:
-        g1 = self._paint_symbol()
-        g2 = self._paint_atom()
-        #self._dump(g1)
-        #self._dump(g2)
-        self._set_colour(g1, self._get_colour(g2))
-        return g1 + g2
     
     def _paint_aggregate(self, prototype: str) -> List[Symbol]:
         g1 = self._paint_symbol()
@@ -206,6 +190,9 @@ class Painter():
                 self._adjust(g3, -(n1+n2))
                 self._adjust(g1, n3)
                 self._adjust(g2, n3)
+            case _:
+                # All other aggregates are rendered as-is.
+                pass
         return g1 + g2 + g3
 
     def _paint_atom(self) -> List[Symbol]:
@@ -214,8 +201,8 @@ class Painter():
             return self._paint_aggregate(prototype = r'\int')
         if re.match(PAT_LARGE, token):
             return self._paint_aggregate(prototype = r'\sum')
-        if re.match(PAT_ACCENT, token):
-            return self._paint_accent()
+        if re.match(PAT_SYM, token):
+            return self._paint_group(token)
         match token:
             case r'\frac':
                 return self._paint_frac()
@@ -237,9 +224,26 @@ class Painter():
         g3 = self._paint_atom()
         n1 = self._get_glyph_count(g1)
         n2 = self._get_glyph_count(g2)
-        self._adjust(g2, -n1)
         self._adjust(g1, n2)
+        self._adjust(g2, -n1)
         return g2 + g1 + g3
+    
+    def _paint_group(self, token: str) -> List[Symbol]:
+        extra = 4 if token.endswith('brace') else 2 if token.endswith('arrow') else 1
+        flip = token not in [r'\underline', r'\underbrace']
+        g1 = self._paint_symbol()
+        g2 = self._paint_atom() if self._more else []
+        n1 = self._get_glyph_count(g1)
+        n2 = self._get_glyph_count(g2)
+        if n1 < 1:
+            g1[0].glyph_index = g2[0].glyph_index + self._get_glyph_count(g2)
+            g1[0].glyph_count = extra
+            if flip:
+                n1 = self._get_glyph_count(g1)
+                n2 = self._get_glyph_count(g2)
+                self._adjust(g1, -n2)
+                self._adjust(g2, +n1)
+        return g1 + g2
 
     def _paint_shift(self, token: str) -> List[Symbol]:
         '''
@@ -279,7 +283,7 @@ class Painter():
     
     def _paint_token(self, token: str) -> List[Symbol]:
         token_count = 1
-        glyph_count = self._get_tex_len(token)
+        glyph_count = self.get_tex_length(token)
         pen = self._get_token_pen(token)
         symbols = [Symbol(
             token_index = self._token_index,
