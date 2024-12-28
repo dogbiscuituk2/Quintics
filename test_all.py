@@ -25,6 +25,14 @@ EXP_ACCENT = [
     r'\grave{a}', r'\hat{a}', r'\Grave{\Grave{A}}', r'\Hat{\Hat{A}}',
     r'\tilde{a}', r'\vec{a}', r'\Tilde{\Tilde{A}}', r'\Vec{\Vec{A}}',
 ]
+EXP_INT = [
+    r'\int_0^1 x\,dx', 
+    r'\iint_{x=0,y=0}^{x=1,y=1} xy\,dy\,dx', 
+    r'\iiint xyz\,dz\,dy\,dx', 
+    r'\iiiint xyzw\,dw\,dz\,dy\,dx',
+    r'\idotsint x_0x_1x_2\,...\,x_n\,dx_0\,dx_1\,dx_2\,...\,dx_n', 
+    r'\oint_0^{2\pi}f(\theta)\,d\theta',
+]
 EXP_MATH = [
     r'\frac{x}{y}', r'\overline{ax}', r'\overrightarrow{ax}',
     "f'(x)", r'\underline{ax}', r'\overleftarrow{ax}',
@@ -39,14 +47,15 @@ class TestAll(BaseScene):
         def show_group(caption: str, items: List[str], column_count: int = 4) -> None:
             item_count = len(items)
             item_index = 0
-            page_size = 20 * column_count
+            row_count = 17
+            page_size = row_count * column_count
             page_count = (item_count + page_size - 1) // page_size
             if page_count > 1:
                 caption = f'{caption} - Page 1'
             for page_index in range(page_count):
                 with self.say(caption):
                     page = []
-                    for _ in range(20):
+                    for _ in range(row_count):
                         line = []
                         for _ in range(column_count):
                             item = items[item_index] if item_index < item_count else ''                       
@@ -63,7 +72,7 @@ class TestAll(BaseScene):
                         v_buff=0.25,
                         h_buff=0.5,
                         arrange_in_grid_config={"col_alignments": "clclclclclcl"[0:2*column_count]},
-                        line_config={"color": ManimColor([0,0,0,0])})
+                        line_config={"color": GHOST})
                     grid.scale(0.5)
                     self.play(FadeIn(grid))
                     self.wait(5)
@@ -72,15 +81,16 @@ class TestAll(BaseScene):
 
         self.init()
 
-        #show_group("Greek and Hebrew Letters", SYM_GREEK)
-        #show_group("Mathematical constructions", EXP_MATH, 3)
-        #show_group("Delimiters", SYM_DELIM, 5)
-        #show_group("Integrals", SYM_INT, 1)
-        #show_group("Variable sized symbols", SYM_LARGE)
-        #show_group("Standard function names", SYM_FUNC)
-        #show_group("Binary operation and relation symbols", SYM_OPS, 5)
+        show_group("Greek and Hebrew Letters", SYM_GREEK)
+        show_group("Mathematical constructions", EXP_MATH, 3)
+        show_group("Delimiters", SYM_DELIM, 6)
+        show_group("Integrals", EXP_INT, 1)
+        show_group("Variable sized symbols", SYM_LARGE)
+        show_group("Standard function names", SYM_FUNC)
+        show_group("Binary operation and relation symbols", SYM_OPS, 5)
         show_group("Arrow symbols", SYM_ARROW)
-        #show_group("Miscellaneous symbols", SYM_MISC)
-        #show_group("Math mode accents", EXP_ACCENT)
-        #show_group("Other styles - math mode only", SYM_STYLE, 1)
-        #show_group("Font sizes", SYM_FONT, 1)
+        show_group("Miscellaneous symbols", SYM_MISC)
+        show_group("Math mode accents", EXP_ACCENT)
+        show_group("Other styles - math mode only", SYM_STYLE, 1)
+        show_group("Font sizes", SYM_FONT, 1)
+        show_group("All symbols", SYM_ALL)

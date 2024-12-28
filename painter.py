@@ -18,6 +18,70 @@ import re
 from symbol import Symbol
 
 class Painter():
+
+    def get_colour(self, pen: Pen) -> ManimColor:
+        """
+        Return the colour associated with the given pen.
+        
+        pen: The pen whose colour is to be returned.
+        
+        Returns: The colour associated with the given pen.
+        """
+        return COLOURS[self._scheme.value][pen.value]
+        
+    def paint_tex(self, tex: MathTex) -> None:
+        """
+        Apply colours to the glyphs in the given MathTex object.
+
+        tex: The MathTex object to be painted.
+        """
+        PAT_TOKEN = r"\\{|\\}|\\\||\\[A-Za-z]+|\\\\|\\\,|[^&\s]"
+        self._tex = tex
+        text = tex.tex_string
+        if not text:
+            return
+        self._tokens = re.findall(PAT_TOKEN, text)
+        self._token_index = 0
+        self._glyph_index = 0
+        glyphs = tex[0]
+        self._glyph_count = len(glyphs)
+        symbols = self._paint_string()
+        for symbol in symbols:
+            start = symbol.glyph_index
+            stop = start + symbol.glyph_count
+            if stop > start:
+                colour = self.get_colour(symbol.pen)
+                for index in range(start, stop):
+                    glyph = glyphs[index]
+                    glyph.set_color(colour)
+
+    def set_colour_map(self, colour_map: List[tuple[str, int]]) -> None:
+        """
+        Set the colour map to be used by the painter.
+        
+        colour_map: A List of tuples, each containing a regular expression pattern and a pen index.
+        
+        Example:
+        painter.set_colour_map((
+            (r'\\alpha', Pen.RED),
+            (r'\\beta', Pen.GREEN),
+            (r'\\gamma', Pen.BLUE)))
+
+        The above example will set the colour of the glyphs representing the Greek letters alpha, beta and gamma to red, green and blue respectively.   
+
+        The colour map is used to determine the colour of a glyph based on the token that it represents.
+
+        The colour map is a list of tuples, each containing a regular expression pattern and a pen index. 
+        The pattern is used to match the token of a glyph and the pen index is used to determine the colour of the glyph. 
+        The pen index is an integer that corresponds to an index in the colour scheme.
+        """
+        self._colour_map = [[re.compile(m[0]), m[1]] for m in colour_map]
+
+    def set_scheme(self, scheme: Scheme) -> None:
+        self._scheme = scheme
+
+#region Private Implementation
+
     def __init__(self):
         self._colour_map = [
             #('oO|', Pen.NONE),
@@ -49,87 +113,14 @@ class Painter():
         self._glyph_index = 0
         self._glyph_count = 0
 
-    _colour_map: tuple[tuple[re.Pattern[str], int]] = []
+    _colour_map: List[tuple[re.Pattern[str], int]] = []
     _scheme: Scheme = Scheme.BRIGHT
 
     _tex: MathTex
-    _tokens: List[str]
+    _tokens: List[str] = []
     _token_index: int
     _glyph_index: int
     _glyph_count: int
-
-    def get_colour(self, pen: Pen) -> ManimColor:
-        """
-        Return the colour associated with the given pen.
-        
-        pen: The pen whose colour is to be returned.
-        
-        Returns: The colour associated with the given pen.
-        """
-        return COLOURS[self._scheme.value][pen.value]
-
-    @staticmethod
-    def get_tex_length(token: str) -> int:
-        match token:
-            case r'\frac':
-                return 1
-        try:
-            return len(MathTex(token)[0])
-        except Exception:
-            return 0
-        
-    def paint_tex(self, tex: MathTex) -> None:
-        """
-        Apply colours to the glyphs in the given MathTex object.
-
-        tex: The MathTex object to be painted.
-        """
-        PAT_TOKEN = r"\\{|\\}|\\\||\\[A-Za-z]+|\\\\|\\\,|[^&\s]"
-        self._tex = tex
-        text = tex.tex_string
-        if not text:
-            return
-        self._tokens = re.findall(PAT_TOKEN, text)
-        self._token_index = 0
-        self._glyph_index = 0
-        glyphs = tex[0]
-        self._glyph_count = len(glyphs)
-        symbols = self._paint_string()
-        for symbol in symbols:
-            start = symbol.glyph_index
-            stop = start + symbol.glyph_count
-            if stop > start:
-                colour = self.get_colour(symbol.pen)
-                for index in range(start, stop):
-                    glyph = glyphs[index]
-                    glyph.set_color(colour)
-
-    def set_colour_map(self, colour_map: tuple[tuple[str, int]]):
-        """
-        Set the colour map to be used by the painter.
-        
-        colour_map: A tuple of tuples, each containing a regular expression pattern and a pen index.
-        
-        Example:
-        painter.set_colour_map((
-            (r'\\alpha', Pen.RED),
-            (r'\\beta', Pen.GREEN),
-            (r'\\gamma', Pen.BLUE)))
-
-        The above example will set the colour of the glyphs representing the Greek letters alpha, beta and gamma to red, green and blue respectively.   
-
-        The colour map is used to determine the colour of a glyph based on the token that it represents.
-
-        The colour map is a list of tuples, each containing a regular expression pattern and a pen index. 
-        The pattern is used to match the token of a glyph and the pen index is used to determine the colour of the glyph. 
-        The pen index is an integer that corresponds to an index in the colour scheme.
-        """
-        self._colour_map = [[re.compile(m[0]), m[1]] for m in colour_map]
-
-    def set_scheme(self, scheme: int):
-        self._scheme = scheme
-
-#region Private Implementation
 
     @property
     def _more(self) -> bool:
@@ -156,6 +147,16 @@ class Painter():
     @staticmethod
     def _get_glyph_count(symbols: List[Symbol]) -> int:
         return sum(symbol.glyph_count for symbol in symbols)
+
+    @staticmethod
+    def _get_tex_length(token: str) -> int:
+        match token:
+            case r'\frac':
+                return 1
+        try:
+            return len(MathTex(token)[0])
+        except Exception:
+            return 0
 
     def _get_token_pen(self, token: str) -> Pen:
         for map in self._colour_map:
@@ -257,7 +258,7 @@ class Painter():
             return self._paint_atom()
         return []
 
-    def _paint_sqrt(self):
+    def _paint_sqrt(self) -> List[Symbol]:
         g1 = self._paint_symbol()
         if self._peek == '[':
             colour = g1[0].pen
@@ -278,12 +279,12 @@ class Painter():
             self._accept(end)
         return symbols
     
-    def _paint_symbol(self):
+    def _paint_symbol(self) -> List[Symbol]:
         return self._paint_token(self._peek)
     
     def _paint_token(self, token: str) -> List[Symbol]:
         token_count = 1
-        glyph_count = self.get_tex_length(token)
+        glyph_count = self._get_tex_length(token)
         pen = self._get_token_pen(token)
         symbols = [Symbol(
             token_index = self._token_index,

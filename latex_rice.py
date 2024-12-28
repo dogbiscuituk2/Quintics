@@ -33,18 +33,18 @@ def make_pattern(symbols: List[str]) -> str:
 # eg \left| expr \right| or \left\{ expr \right\} or \left\Vert expr \right.
 
 SYM_GREEK = [
-    r'\alpha', r'\nu', r'\Gamma', r'\digamma',
-    r'\beta', r'\xi',  r'\Delta', r'\varepsilon',
-    r'\gamma', 'o', r'\Theta', r'\vartheta',
-    r'\delta', r'\pi', r'\Lambda', r'\varkappa',
-    r'\epsilon', r'\rho', r'\Xi', r'\varpi',
-    r'\zeta', r'\sigma', r'\Pi', r'\varrho',
-    r'\eta', r'\tau', r'\Sigma', r'\varsigma',
-    r'\theta', r'\upsilon', r'\Upsilon', r'\varphi',
+    r'\alpha', r'\nu', r'\Gamma', r'\varepsilon',
+    r'\beta', r'\xi',  r'\Delta', r'\vartheta',
+    r'\gamma', 'o', r'\Theta', r'\varkappa',
+    r'\delta', r'\pi', r'\Lambda', r'\varpi',
+    r'\epsilon', r'\rho', r'\Xi', r'\varrho',
+    r'\zeta', r'\sigma', r'\Pi', r'\varsigma',
+    r'\eta', r'\tau', r'\Sigma', r'\varphi',
+    r'\theta', r'\upsilon', r'\Upsilon', '',
     r'\iota', r'\phi', r'\Phi', r'\aleph',
     r'\kappa', r'\chi', r'\Psi', r'\beth',
     r'\lambda', r'\psi', r'\Omega', r'\gimel',
-    r'\mu', r'\omega', '', r'\daleth',
+    r'\mu', r'\omega', r'\digamma', r'\daleth',
 ]
 SYM_MATH = [
     r'\overline', r'\overrightarrow',
