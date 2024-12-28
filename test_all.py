@@ -25,6 +25,12 @@ EXP_ACCENT = [
     r'\grave{a}', r'\hat{a}', r'\Grave{\Grave{A}}', r'\Hat{\Hat{A}}',
     r'\tilde{a}', r'\vec{a}', r'\Tilde{\Tilde{A}}', r'\Vec{\Vec{A}}',
 ]
+EXP_FONT = [
+    r'\displaystyle \int f^{-1}(x-x_a)\,dx}',
+    r'\textstyle \int f^{-1}(x-x_a)\,dx}',
+    r'\scriptstyle \int f^{-1}(x-x_a)\,dx}',
+    r'\scriptscriptstyle \int f^{-1}(x-x_a)\,dx}',
+]
 EXP_INT = [
     r'\int_0^1 x\,dx', 
     r'\iint_{x=0,y=0}^{x=1,y=1} xy\,dy\,dx', 
@@ -39,12 +45,22 @@ EXP_MATH = [
     r'\sqrt{ax}', r'\widehat{ax}', r'\overbrace{ax}',
     r'\sqrt[n]{ax}', r'\widetilde{ax}', r'\underbrace{ax}',
 ]
+EXP_STYLE = [
+    r'\mathcal{ABCDEFGHIJKLMNOPQRSTUVWXYZ}',
+    r'\mathbb{ABCDEFGHIJKLMNOPQRSTUVWXYZ}',
+    r'\mathfrak{ABCDEFGHIJKLMNOPQRSTUVWXYZabc123}',
+    r'\mathsf{ABCDEFGHIJKLMNOPQRSTUVWXYZabc123}',
+    r'\mathbf{ABCDEFGHIJKLMNOPQRSTUVWXYZabc123}',
+]
 
 class TestAll(BaseScene):
 
     def construct(self):
 
-        def show_group(caption: str, items: List[str], column_count: int = 4) -> None:
+        def show_group(
+                caption: str, 
+                items: List[str], 
+                column_count: int = 4) -> None:
             item_count = len(items)
             item_index = 0
             row_count = 17
@@ -91,6 +107,6 @@ class TestAll(BaseScene):
         show_group("Arrow symbols", SYM_ARROW)
         show_group("Miscellaneous symbols", SYM_MISC)
         show_group("Math mode accents", EXP_ACCENT)
-        show_group("Other styles - math mode only", SYM_STYLE, 1)
-        show_group("Font sizes", SYM_FONT, 1)
+        show_group("Other styles - math mode only", EXP_STYLE, 1)
+        show_group("Font sizes", EXP_FONT, 1)
         show_group("All symbols", SYM_ALL)

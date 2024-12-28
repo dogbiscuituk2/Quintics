@@ -175,33 +175,6 @@ SYM_ACCENT = [
     r'\grave', r'\hat', r'\Grave', r'\Hat',
     r'\tilde', r'\vec', r'\Tilde', r'\Vec',
 ]
-SYM_STYLE = [
-    r'\mathcal{ABCDEFGHIJKLMNOPQRSTUVWXYZ}',
-    r'\mathbb{ABCDEFGHIJKLMNOPQRSTUVWXYZ}',
-    r'\mathfrak{ABCDEFGHIJKLMNOPQRSTUVWXYZabc123}',
-    r'\mathsf{ABCDEFGHIJKLMNOPQRSTUVWXYZabc123}',
-    r'\mathbf{ABCDEFGHIJKLMNOPQRSTUVWXYZabc123}',
-]
-SYM_FONT = [
-    r'\displaystyle \int f^{-1}(x-x_a)\,dx}',
-    r'\textstyle \int f^{-1}(x-x_a)\,dx}',
-    r'\scriptstyle \int f^{-1}(x-x_a)\,dx}',
-    r'\scriptscriptstyle \int f^{-1}(x-x_a)\,dx}',
-]
-
-PAT_GREEK = make_pattern(SYM_GREEK)
-PAT_MATH = make_pattern(SYM_MATH)
-PAT_DELIM = make_pattern(SYM_DELIM)
-PAT_INT = make_pattern(SYM_INT)
-PAT_LARGE = make_pattern(SYM_LARGE)
-PAT_FUNC = make_pattern(SYM_FUNC)
-PAT_OPS = make_pattern(SYM_OPS)
-PAT_ARROW = make_pattern(SYM_ARROW)
-PAT_MISC = make_pattern(SYM_MISC)
-PAT_ACCENT = make_pattern(SYM_ACCENT)
-PAT_STYLE = make_pattern(SYM_STYLE)
-PAT_FONT = make_pattern(SYM_FONT)
-PAT_SYM = make_pattern(SYM_MATH + SYM_ACCENT)
 
 # https://www.cmor-faculty.rice.edu/~heinken/latex/symbol-list.pdf
 # TEX Mathematical Symbols - Paul Taylor - 1 June 1993
@@ -789,4 +762,15 @@ SYM_ALL = [
     r'\zeta',
 ]
 
+PAT_GREEK = make_pattern(SYM_GREEK)
+PAT_MATH = make_pattern(SYM_MATH)
+PAT_DELIM = make_pattern(SYM_DELIM)
+PAT_INT = make_pattern(SYM_INT)
+PAT_LARGE = make_pattern(SYM_LARGE)
+PAT_FUNC = make_pattern(SYM_FUNC)
+PAT_OPS = make_pattern(SYM_OPS)
+PAT_ARROW = make_pattern(SYM_ARROW)
+PAT_MISC = make_pattern(SYM_MISC)
+PAT_ACCENT = make_pattern(SYM_ACCENT)
+PAT_MOD = make_pattern(SYM_MATH + SYM_ACCENT)
 PAT_ALL = make_pattern(SYM_ALL)

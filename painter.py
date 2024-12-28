@@ -101,8 +101,6 @@ class Painter():
             (PAT_ARROW, Pen.BLUE),
             (PAT_MISC, Pen.CYAN),
             (PAT_ACCENT, Pen.YELLOW),
-            (PAT_STYLE, Pen.VIOLET),
-            (PAT_FONT, Pen.VIOLET),
             (r'\\frac', Pen.GREEN),
             (r'\\sqrt|\\lim', Pen.ORANGE),
         ]
@@ -202,7 +200,7 @@ class Painter():
             return self._paint_aggregate(prototype = r'\int')
         if re.match(PAT_LARGE, token):
             return self._paint_aggregate(prototype = r'\sum')
-        if re.match(PAT_SYM, token):
+        if re.match(PAT_MOD, token):
             return self._paint_group(token)
         match token:
             case r'\frac':
