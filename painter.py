@@ -85,7 +85,8 @@ class Painter():
 
 #region Private Implementation
 
-    def __init__(self):
+    def __init__(self, scheme: Scheme):
+        self._scheme = scheme
         self._colour_map = [
             #('oO|', Pen.NONE),
             (r'[a-eA-E]|\\alpha|\\beta|\\gamma|\\delta|\\epsilon', Pen.RED),
@@ -107,15 +108,14 @@ class Painter():
             (r'\\frac', Pen.GREEN),
             (r'\\sqrt|\\lim', Pen.ORANGE),
         ]
-        self._scheme = Scheme.BRIGHT
         self._tex = None
         self._tokens = []
         self._token_index = 0
         self._glyph_index = 0
         self._glyph_count = 0
 
+    _scheme: Scheme
     _colour_map: List[tuple[re.Pattern[str], int]] = []
-    _scheme: Scheme = Scheme.BRIGHT
 
     _tex: MathTex
     _tokens: List[str] = []

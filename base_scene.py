@@ -27,6 +27,10 @@ config.verbosity = "CRITICAL"
 
 class BaseScene(VoiceoverScene):
 
+    def __init__(self, scheme: Scheme):
+        self.set_scheme(scheme)
+        VoiceoverScene.__init__(self)
+
     def box(self, *args: VMobject) -> Polygon:
         b = self.box_make(*args)
         self.play(Create(b))
@@ -100,12 +104,17 @@ class BaseScene(VoiceoverScene):
     def set_colour_map(self, map: List[tuple[str, int]]) -> None:
         self._painter.set_colour_map(map)
 
+    def set_scheme(self, scheme: Scheme) -> None:
+        #self._scheme = scheme
+        self._painter = Painter(scheme)
+        config.background_color = self.get_colour(Pen.BG)
+
 #region Private Implementation
 
     _boxes = None
     _options: Opt = Opt.DEFAULT
-    _painter: Painter = Painter()
-    _scheme: Scheme = Scheme.BRIGHT
+    _painter: Painter
+    #_scheme: Scheme
     
     def _paint_tex(self, tex: MathTex) -> None:
         self._painter.paint_tex(tex, self._options)
