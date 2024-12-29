@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+
 """
 Scratchpad for project Polynomials
 This scratchpad is used to test code snippets and to experiment with the Manim 

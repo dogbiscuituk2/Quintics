@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+
 """
 The Painter class is used to apply colours to the glyphs in a MathTex object.
 The colours are determined by a colour map which is a list of tuples, each 
@@ -13,6 +14,7 @@ colours to the glyphs in a MathTex object.
 
 from latex_rice import *
 from manim import *
+from options import Opt
 from pens import *
 import re
 from symbol import Symbol
@@ -29,7 +31,7 @@ class Painter():
         """
         return COLOURS[self._scheme.value][pen.value]
         
-    def paint_tex(self, tex: MathTex) -> None:
+    def paint_tex(self, tex: MathTex, options: Opt) -> None:
         """
         Apply colours to the glyphs in the given MathTex object.
 
@@ -46,11 +48,15 @@ class Painter():
         glyphs = tex[0]
         self._glyph_count = len(glyphs)
         symbols = self._paint_string()
+        pen = Pen.BLACK
         for symbol in symbols:
             start = symbol.glyph_index
             stop = start + symbol.glyph_count
             if stop > start:
-                colour = self.get_colour(symbol.pen)
+                if Opt.DEBUG not in options:
+                    pen = symbol.pen
+                colour = self.get_colour(pen)
+                pen = pen.BLACK if pen == Pen.WHITE else Pen(pen.value + 1)
                 for index in range(start, stop):
                     glyph = glyphs[index]
                     glyph.set_color(colour)
@@ -76,9 +82,6 @@ class Painter():
         The pen index is an integer that corresponds to an index in the colour scheme.
         """
         self._colour_map = [[re.compile(m[0]), m[1]] for m in colour_map]
-
-    def set_scheme(self, scheme: Scheme) -> None:
-        self._scheme = scheme
 
 #region Private Implementation
 

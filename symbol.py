@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+
 """
 Output data class for the parsing of MathTex objects.
 
@@ -14,6 +15,7 @@ The glyph count is the number of glyphs in the symbol.
 The pen is the pen index used to colour the symbol.
 The tokens are the tokens in the symbol.
 """
+
 from pens import Pen
 
 class Symbol():

@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+
 """
 Base class for scenes in project Polynomials.
 
@@ -8,16 +9,17 @@ the project.
 The functionality includes methods for creating and manipulating boxes, 
 flashing text, making matrices, making text and making MathTex objects.
 The BaseScene class also provides methods for setting the colour map and 
-colour scheme and for painting MathTex objects.
+for painting MathTex objects.
 The BaseScene class is a subclass of the Manim Scene class and the Manim 
 VoiceoverScene class.
 """
 
-from inspect import currentframe, getframeinfo
+from inspect import currentframe
 from manim import *
 from manim_voiceover import VoiceoverScene
 from manim_voiceover.services.gtts import GTTSService
 from latex_rice import *
+from options import Opt
 from painter import *
 
 config.max_files_cached = 999
@@ -98,16 +100,14 @@ class BaseScene(VoiceoverScene):
     def set_colour_map(self, map: List[tuple[str, int]]) -> None:
         self._painter.set_colour_map(map)
 
-    def set_scheme(self, scheme: int) -> None:
-        self._painter.set_scheme(scheme)
-
 #region Private Implementation
 
     _boxes = None
+    _options: Opt = Opt.DEFAULT
     _painter: Painter = Painter()
     _scheme: Scheme = Scheme.BRIGHT
     
     def _paint_tex(self, tex: MathTex) -> None:
-        self._painter.paint_tex(tex)
+        self._painter.paint_tex(tex, self._options)
 
 #endregion

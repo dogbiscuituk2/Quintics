@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+
 """
 Test all the symbols in the LaTeX Rice document.
 
@@ -15,8 +16,6 @@ scenes.
 from base_scene import BaseScene
 from latex_rice import *
 from painter import *
-
-string = r"\circlearrowright"
 
 EXP_ACCENT = [
     r'\acute{a}', r'\bar{a}', r'\Acute{\Acute{A}}', r'\Bar{\Bar{A}}',
@@ -54,7 +53,7 @@ EXP_STYLE = [
 ]
 
 class TestAll(BaseScene):
-
+        
     def construct(self):
 
         def show_group(
@@ -96,17 +95,18 @@ class TestAll(BaseScene):
                 caption = f'Page {page_index + 2}'
 
         self.init()
+        self._options = self._options | Opt.DEBUG
 
-        show_group("Greek and Hebrew Letters", SYM_GREEK)
-        show_group("Mathematical constructions", EXP_MATH, 3)
-        show_group("Delimiters", SYM_DELIM, 6)
+        #show_group("Greek and Hebrew Letters", SYM_GREEK)
+        #show_group("Mathematical constructions", EXP_MATH, 3)
+        #show_group("Delimiters", SYM_DELIM, 6)
         show_group("Integrals", EXP_INT, 1)
-        show_group("Variable sized symbols", SYM_LARGE)
+        #show_group("Variable sized symbols", SYM_LARGE)
         show_group("Standard function names", SYM_FUNC)
-        show_group("Binary operation and relation symbols", SYM_OPS, 5)
-        show_group("Arrow symbols", SYM_ARROW)
-        show_group("Miscellaneous symbols", SYM_MISC)
-        show_group("Math mode accents", EXP_ACCENT)
-        show_group("Other styles - math mode only", EXP_STYLE, 1)
-        show_group("Font sizes", EXP_FONT, 1)
-        show_group("All symbols", SYM_ALL)
+        #show_group("Binary operation and relation symbols", SYM_OPS, 5)
+        #show_group("Arrow symbols", SYM_ARROW)
+        #show_group("Miscellaneous symbols", SYM_MISC)
+        #show_group("Math mode accents", EXP_ACCENT)
+        #show_group("Other styles - math mode only", EXP_STYLE, 1)
+        #show_group("Font sizes", EXP_FONT, 1)
+        #show_group("All symbols", SYM_ALL)
