@@ -8,70 +8,62 @@ The Pen class is an enumeration of the colours used to colour the glyphs in a
 MathTex object. The Scheme class is an enumeration of the colour schemes used 
 to colour the glyphs in a MathTex object. The COLOURS tuple is a list of 
 colours used to colour the glyphs in a MathTex object.
+
+The basic list of 20 physical names, and their RGB values, are due to
+
+    Sasha Trubetskoy: https://sashamaps.net/docs/resources/20-colors/
+
+The enum ordering used here reflects his "convenience" ordering.
 """
 
 from enum import Enum, auto
 from manim import *
 
 class Pen(Enum):
-    NONE    = 0
-    FG      = auto() # Foreground
-    BG      = auto() # Background
-    BLACK   = auto() # These remaining colour names are all purely logical
-    BROWN   = auto()
-    RED     = auto()
-    ORANGE  = auto()
-    YELLOW  = auto()
-    GREEN   = auto()
-    CYAN    = auto()
-    BLUE    = auto()
-    MAGENTA = auto()
-    VIOLET  = auto()
-    GREY    = auto()
-    WHITE   = auto()
+    BLACK    = 0
+    RED      = auto()
+    GREEN    = auto()
+    YELLOW   = auto()
+    BLUE     = auto()
+    ORANGE   = auto()
+    PURPLE   = auto()
+    CYAN     = auto()
+    MAGENTA  = auto()
+    LIME     = auto()
+    PINK     = auto()
+    TEAL     = auto()
+    LAVENDER = auto()
+    BROWN    = auto()
+    BEIGE    = auto()
+    MAROON   = auto()
+    MINT     = auto()
+    OLIVE    = auto()
+    APRICOT  = auto()
+    NAVY     = auto()
+    GREY     = auto()
+    WHITE    = auto()
 
-class Scheme(Enum):
-    NONE            = 0
-    DEFAULT         = auto()
-    BRIGHT          = auto()
-    PASTEL          = auto()
-    MONOCHROME      = auto()
-    BLACK_ON_WHITE  = auto()
-    WHITE_ON_BLACK  = auto()
-
-COLOURS: List[List[ManimColor]] = [
-    [],
-    [
-        0, WHITE, BLACK,
-        BLACK, LIGHT_BROWN, PURE_RED, ORANGE, 
-        YELLOW, PURE_GREEN, TEAL, PURE_BLUE, 
-        PINK, GOLD, GREY, WHITE, 
-        #PINK, PURPLE_A, GREY, WHITE, 
-    ],
-    [
-        0, 0xB2B2B2, BLACK, 
-        DARK_GREY, 0x7F3319, 0xFF1933, 0xFF7F4C, 
-        0xCCCC00, 0x33FF33, 0x00FFFF, 0x5FBFFF, 
-        0xFF00FF, 0x9A72AC, 0xB2B2B2, WHITE,
-    ],
-    [
-        0, 0xBBBBBB, BLACK, 
-        BLACK, 0xCD853F, 0xFF0000, 0xFF7F3F, 
-        0xCCCC00, 0x33FF33, 0x00FFFF, PURE_BLUE, 
-        0xFF00FF, 0x9A72AC, 0xBBBBBB, WHITE,
-    ],
-    [
-        0, BLACK, WHITE, 
-        0x222222, 0x333333, 0x444444, 0x555555, 
-        0x666666, 0x777777, 0x888888, 0x999999,
-        0xAAAAAA, 0xBBBBBB, 0xCCCCCC, 0xDDDDDD,
-    ],
-    [
-        0, BLACK, WHITE, 
-        *[BLACK for _ in range(12)]
-    ],
-    [
-        0, WHITE, BLACK, 
-        *[WHITE for _ in range(12)]
-    ],
+PALETTE_DEFAULT: List[ManimColor] = [
+    0x000000, # black
+    0xe6194b, # red
+    0x3cb44b, # green
+    0xffe119, # yellow
+    0x4363d8, # blue
+    0xf58231, # orange
+    0x911eb4, # purple
+    0x42d4f4, # cyan
+    0xf032e6, # magenta
+    0xbfef45, # lime
+    0xfabed4, # pink
+    0x469990, # teal
+    0xdcbeff, # lavender
+    0x9A6324, # brown
+    0xfffac8, # beige
+    0x800000, # maroon
+    0xaaffc3, # mint
+    0x808000, # olive
+    0xffd8b1, # apricot
+    0x000075, # navy
+    0xa9a9a9, # grey
+    0xffffff, # white
 ]

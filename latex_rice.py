@@ -775,3 +775,40 @@ PAT_MISC = make_pattern(SYM_MISC)
 PAT_ACCENT = make_pattern(SYM_ACCENT)
 PAT_MOD = make_pattern(SYM_MATH + SYM_ACCENT)
 PAT_ALL = make_pattern(SYM_ALL)
+
+# Test expressions
+
+EXP_ACCENT = [
+    r'\acute{a}', r'\bar{a}', r'\Acute{\Acute{A}}', r'\Bar{\Bar{A}}',
+    r'\breve{a}', r'\check{a}', r'\Breve{\Breve{A}}', r'\Check{\Check{A}}',
+    r'\ddot{a}', r'\dot{a}', r'\Ddot{\Ddot{A}}', r'\Dot{\Dot{A}}',
+    r'\grave{a}', r'\hat{a}', r'\Grave{\Grave{A}}', r'\Hat{\Hat{A}}',
+    r'\tilde{a}', r'\vec{a}', r'\Tilde{\Tilde{A}}', r'\Vec{\Vec{A}}',
+]
+EXP_FONT = [
+    r'\displaystyle \int f^{-1}(x-x_a)\,dx}',
+    r'\textstyle \int f^{-1}(x-x_a)\,dx}',
+    r'\scriptstyle \int f^{-1}(x-x_a)\,dx}',
+    r'\scriptscriptstyle \int f^{-1}(x-x_a)\,dx}',
+]
+EXP_INT = [
+    r'\int_0^1 x\,dx', 
+    r'\iint_{x=0,y=0}^{x=1,y=1} xy\,dy\,dx', 
+    r'\iiint xyz\,dz\,dy\,dx', 
+    r'\iiiint xyzw\,dw\,dz\,dy\,dx',
+    r'\idotsint x_0x_1x_2\,...\,x_n\,dx_0\,dx_1\,dx_2\,...\,dx_n', 
+    r'\oint_0^{2\pi}f(\theta)\,d\theta',
+]
+EXP_MATH = [
+    r'\frac{x}{y}', r'\overline{ax}', r'\overrightarrow{ax}',
+    "f'(x)", r'\underline{ax}', r'\overleftarrow{ax}',
+    r'\sqrt{ax}', r'\widehat{ax}', r'\overbrace{ax}',
+    r'\sqrt[n]{ax}', r'\widetilde{ax}', r'\underbrace{ax}',
+]
+EXP_STYLE = [
+    r'\mathcal{ABCDEFGHIJKLMNOPQRSTUVWXYZ}',
+    r'\mathbb{ABCDEFGHIJKLMNOPQRSTUVWXYZ}',
+    r'\mathfrak{ABCDEFGHIJKLMNOPQRSTUVWXYZabc123}',
+    r'\mathsf{ABCDEFGHIJKLMNOPQRSTUVWXYZabc123}',
+    r'\mathbf{ABCDEFGHIJKLMNOPQRSTUVWXYZabc123}',
+]
