@@ -6,7 +6,7 @@ Test all the symbols in the LaTeX Rice document.
 
 This scene is used to test all the symbols in the LaTeX Rice document. These 
 are grouped into categories and displayed in a table, in both MathTex and text 
-form, coloured according to the colour map and scheme. 
+form, coloured according to the colour map. 
 """
 
 from base_scene import BaseScene
@@ -16,7 +16,7 @@ from painter import *
 class TestAll(BaseScene):
 
     def __init__(self):
-        BaseScene.__init__(self, Scheme.BRIGHT)
+        BaseScene.__init__(self)
 
     def construct(self):
 
@@ -51,7 +51,7 @@ class TestAll(BaseScene):
                         v_buff=0.25,
                         h_buff=0.5,
                         arrange_in_grid_config={"col_alignments": "clclclclclcl"[0:2*column_count]},
-                        line_config={"color": self.get_colour(Pen.BG)})
+                        line_config={"color": self.background_colour})
                     grid.scale(0.5)
                     self.play(FadeIn(grid))
                     self.wait(5)

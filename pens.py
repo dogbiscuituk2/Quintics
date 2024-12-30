@@ -5,9 +5,7 @@
 Utility classes for colouring MathTex objects.
 
 The Pen class is an enumeration of the colours used to colour the glyphs in a
-MathTex object. The Scheme class is an enumeration of the colour schemes used 
-to colour the glyphs in a MathTex object. The COLOURS tuple is a list of 
-colours used to colour the glyphs in a MathTex object.
+MathTex object. 
 
 The basic list of 20 physical names, and their RGB values, are due to
 
@@ -57,7 +55,7 @@ PALETTE_DEFAULT: List[ManimColor] = [
     0xfabed4, # pink
     0x469990, # teal
     0xdcbeff, # lavender
-    0x9A6324, # brown
+    0x9a6324, # brown
     0xfffac8, # beige
     0x800000, # maroon
     0xaaffc3, # mint

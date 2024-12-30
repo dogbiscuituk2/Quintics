@@ -7,8 +7,7 @@ The colours are determined by a colour map which is a list of tuples, each
 containing a regular expression pattern and a pen index. The pattern is used 
 to match the token of a glyph and the pen index is used to determine the 
 colour of the glyph. The pen index is an integer that corresponds to an index 
-in the colour scheme. The colour scheme is a list of colours that are used to 
-colour the glyphs in the MathTex object. The Painter class is used to apply 
+in the colours list. The Painter class is used to apply 
 colours to the glyphs in a MathTex object.
 """
 
@@ -20,6 +19,18 @@ import re
 from symbol import Symbol
 
 class Painter():
+    
+    @property
+    def background_colour(self) -> ManimColor:
+        return self.get_colour(self.background_pen)
+
+    @property
+    def background_pen(self) -> Pen:
+        return Pen.BLACK
+
+    @property
+    def foreground_pen(self) -> Pen:
+        return Pen.WHITE
 
     def get_colour(self, pen: Pen) -> ManimColor:
         """
@@ -29,7 +40,7 @@ class Painter():
         
         Returns: The colour associated with the given pen.
         """
-        return COLOURS[self._scheme.value][pen.value]
+        return PALETTE_DEFAULT[pen.value]
         
     def paint_tex(self, tex: MathTex, options: Opt) -> None:
         """
@@ -79,14 +90,13 @@ class Painter():
 
         The colour map is a list of tuples, each containing a regular expression pattern and a pen index. 
         The pattern is used to match the token of a glyph and the pen index is used to determine the colour of the glyph. 
-        The pen index is an integer that corresponds to an index in the colour scheme.
+        The pen index is an integer that corresponds to an index in the colour list.
         """
         self._colour_map = [[re.compile(m[0]), m[1]] for m in colour_map]
 
 #region Private Implementation
 
-    def __init__(self, scheme: Scheme):
-        self._scheme = scheme
+    def __init__(self):
         self._colour_map = [
             #('oO|', Pen.NONE),
             (r'[a-eA-E]|\\alpha|\\beta|\\gamma|\\delta|\\epsilon', Pen.RED),
@@ -114,7 +124,6 @@ class Painter():
         self._glyph_index = 0
         self._glyph_count = 0
 
-    _scheme: Scheme
     _colour_map: List[tuple[re.Pattern[str], int]] = []
 
     _tex: MathTex
@@ -163,7 +172,7 @@ class Painter():
         for map in self._colour_map:
             if (re.match(map[0], token)):
                 return map[1]
-        return Pen.FG
+        return self.foreground_pen
     
     def _paint_aggregate(self, prototype: str) -> List[Symbol]:
         g1 = self._paint_symbol()

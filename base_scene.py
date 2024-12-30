@@ -27,9 +27,18 @@ config.verbosity = "CRITICAL"
 
 class BaseScene(VoiceoverScene):
 
-    def __init__(self, scheme: Scheme):
-        self.set_scheme(scheme)
+    def __init__(self):
         VoiceoverScene.__init__(self)
+        self._painter = Painter()
+        config.background_color = self.background_colour
+
+    @property
+    def background_colour(self) -> ManimColor:
+        return self._painter.background_colour
+
+    @property
+    def foreground_pen(self) -> Pen:
+        return self._painter.foreground_pen
 
     def box(self, *args: VMobject) -> Polygon:
         b = self.box_make(*args)
@@ -61,11 +70,11 @@ class BaseScene(VoiceoverScene):
                 run_time=run_time,
                 scale_factor=2))
 
-    def get_colour(self, index: int) -> ManimColor:
-        return self._painter.get_colour(index)
+    def get_colour(self, pen: Pen) -> ManimColor:
+        return self._painter.get_colour(pen)
 
     def get_text_colour(self) -> ManimColor:
-        return self.get_colour(Pen.FG)
+        return self.get_colour(self.foreground_pen)
 
     def init(self):
         self.set_speech_service(GTTSService())
@@ -104,17 +113,11 @@ class BaseScene(VoiceoverScene):
     def set_colour_map(self, map: List[tuple[str, int]]) -> None:
         self._painter.set_colour_map(map)
 
-    def set_scheme(self, scheme: Scheme) -> None:
-        #self._scheme = scheme
-        self._painter = Painter(scheme)
-        config.background_color = self.get_colour(Pen.BG)
-
 #region Private Implementation
 
     _boxes = None
     _options: Opt = Opt.DEFAULT
     _painter: Painter
-    #_scheme: Scheme
     
     def _paint_tex(self, tex: MathTex) -> None:
         self._painter.paint_tex(tex, self._options)
