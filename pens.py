@@ -44,6 +44,7 @@ class Pen(Enum):
 
 PALETTE_BRIGHT: List[ManimColor] = [
     0x000000, # black
+    0xffffff, # white
     0xff0000, # red
     0x00ff00, # green
     0xffff00, # yellow
@@ -64,10 +65,10 @@ PALETTE_BRIGHT: List[ManimColor] = [
     0xffd8b1, # apricot
     0x1f1fff, # navy
     0xa9a9a9, # grey
-    0xffffff, # white
 ]
 PALETTE_SASHA: List[ManimColor] = [
     0x000000, # black
+    0xffffff, # white
     0xe6194b, # red
     0x3cb44b, # green
     0xffe119, # yellow
@@ -88,5 +89,4 @@ PALETTE_SASHA: List[ManimColor] = [
     0xffd8b1, # apricot
     0x000075, # navy
     0xa9a9a9, # grey
-    0xffffff, # white
 ]
