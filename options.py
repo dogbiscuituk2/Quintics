@@ -11,7 +11,7 @@ class Opt(Flag):
     NONE    = 0
     SUB     = auto() # 'x_1': '1' matches 'x'.
     SUPER   = auto() # 'x^2': '2' matches 'x'.
-    DIFF    = auto() # r'\frac{d^2x}{dy^2}': 'd' & '2' match 'x' or 'y'.
+    DIFF    = auto() # r'\frac{d^2x}{dy^2}': 'd' or r'\partial' match 'x' or 'y'.
     MATH    = auto() # r'\overbrace{x}': brace matches'x'.
     ACCENT  = auto() # r'acute{e}': the accent matches the letter.
     DEBUG   = auto() # override all: assign colours sequentially.
@@ -25,7 +25,7 @@ if __name__ == '__main__':
         Opt.NONE.value,
         Opt.SUB.value,
         Opt.SUPER.value,
-        Opt.DIFF.value,
+        Opt.DIFF.value, # Treat 'd', r'\partial' as prefixes.
         Opt.MATH.value,
         Opt.ACCENT.value,
         Opt.DEBUG.value,
