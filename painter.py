@@ -55,15 +55,13 @@ class Painter():
         glyphs = tex[0]
         self._glyph_count = len(glyphs)
         symbols = self._paint_string()
-        pen = Pen.BLACK
+        pen = self._back_pen
         for symbol in symbols:
             start = symbol.glyph_index
             stop = start + symbol.glyph_count
             if stop > start:
-                if Opt.DEBUG not in options:
-                    pen = symbol.pen
+                pen = self._get_next_pen(pen) if Opt.DEBUG in options else symbol.pen
                 colour = self.get_colour(pen)
-                pen = pen.BLACK if pen == Pen.WHITE else Pen(pen.value + 1)
                 for index in range(start, stop):
                     glyph = glyphs[index]
                     glyph.set_color(colour)
@@ -72,7 +70,8 @@ class Painter():
         """
         Set the colour map to be used by the painter.
         
-        colour_map: A List of tuples, each containing a regular expression pattern and a pen index.
+        colour_map: A List of tuples, each containing a regular expression 
+        pattern and a pen index.
         
         Example:
         painter.set_colour_map((
@@ -80,13 +79,16 @@ class Painter():
             (r'\\beta', Pen.GREEN),
             (r'\\gamma', Pen.BLUE)))
 
-        The above example will set the colour of the glyphs representing the Greek letters alpha, beta and gamma to red, green and blue respectively.   
+        The above example will set the colour of the glyphs representing the 
+        Greek letters alpha, beta, gamma to red, green, blue respectively.
 
-        The colour map is used to determine the colour of a glyph based on the token that it represents.
+        The colour map is used to determine the colour of a glyph based on the 
+        token that it represents.
 
-        The colour map is a list of tuples, each containing a regular expression pattern and a pen index. 
-        The pattern is used to match the token of a glyph and the pen index is used to determine the colour of the glyph. 
-        The pen index is an integer that corresponds to an index in the colour list.
+        The colour map is a list of tuples, each having a regular expression 
+        pattern and a Pen. 
+        The pattern is used to match the token of a glyph, and the Pen is used 
+        to determine the colour of the glyph.
         """
         self._colour_map = [[re.compile(m[0]), m[1]] for m in colour_map]
 
@@ -163,6 +165,10 @@ class Painter():
     @staticmethod
     def _get_glyph_count(symbols: List[Symbol]) -> int:
         return sum(symbol.glyph_count for symbol in symbols)
+
+    def _get_next_pen(self, pen: Pen) -> Pen:
+        pen = Pen(pen.value + 1) if pen.value < 21 else Pen(0)
+        return pen if pen != self._back_pen else self._get_next_pen(pen)
 
     @staticmethod
     def _get_tex_length(token: str) -> int:

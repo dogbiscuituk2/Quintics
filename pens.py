@@ -4,12 +4,12 @@
 """
 Utility classes for colouring MathTex objects.
 
-The Pen class is an enumeration of the colours used to colour the glyphs in a
-MathTex object. 
+The Pen class is an enumeration of the 22 colours used to colour the glyphs in 
+a MathTex object. 
 
-The list of 22 physical names, and the PALETTE_SASHA values, are due to
+The list of physical names, and the PALETTE_SASHA values, are due to:
 
-    Sasha Trubetskoy: https://sashamaps.net/docs/resources/20-colors/
+    Sasha Trubetskoy - https://sashamaps.net/docs/resources/20-colors/
 
 The enum ordering used here reflects his "convenience" ordering. For a project 
 requiring 10 colours, you might use the first 10 "Pen"s from the enumeration.
@@ -89,4 +89,10 @@ PALETTE_SASHA: List[ManimColor] = [
     0xffd8b1, # apricot
     0x000075, # navy
     0xa9a9a9, # grey
+]
+PALETTE_BLACK_ON_WHITE: List[ManimColor] = [
+    BLACK, WHITE, *[BLACK for _ in range(20)]
+]
+PALETTE_WHITE_ON_BLACK: List[ManimColor] = [
+    BLACK, WHITE, *[WHITE for _ in range(20)]
 ]
