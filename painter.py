@@ -19,19 +19,15 @@ import re
 from symbol import Symbol
 
 class Painter():
+
+    @property
+    def back_colour(self) -> ManimColor:
+        return self.get_colour(self._back_pen)
+
+    @property
+    def fore_colour(self) -> ManimColor:
+        return self.get_colour(self._fore_pen)
     
-    @property
-    def background_colour(self) -> ManimColor:
-        return self.get_colour(self.background_pen)
-
-    @property
-    def background_pen(self) -> Pen:
-        return Pen.BLACK
-
-    @property
-    def foreground_pen(self) -> Pen:
-        return Pen.WHITE
-
     def get_colour(self, pen: Pen) -> ManimColor:
         """
         Return the colour associated with the given pen.
@@ -40,7 +36,7 @@ class Painter():
         
         Returns: The colour associated with the given pen.
         """
-        return PALETTE_DEFAULT[pen.value]
+        return PALETTE_BRIGHT[pen.value]
         
     def paint_tex(self, tex: MathTex, options: Opt) -> None:
         """
@@ -98,9 +94,11 @@ class Painter():
 
     def __init__(self):
         self._colour_map = [
-            #('oO|', Pen.NONE),
+            ('FG', Pen.GREY),
+            ('BG', Pen.BLACK),
+            #('oO|', Pen.BLACK),
             (r'[a-eA-E]|\\alpha|\\beta|\\gamma|\\delta|\\epsilon', Pen.RED),
-            ('fgh', Pen.ORANGE),
+            ('[f-h]', Pen.ORANGE),
             ('[i-n]', Pen.YELLOW),
             ('[p-s]', Pen.GREEN),
             ('[u-w]', Pen.CYAN),
@@ -131,6 +129,14 @@ class Painter():
     _token_index: int
     _glyph_index: int
     _glyph_count: int
+
+    @property
+    def _back_pen(self) -> Pen:
+        return self._get_token_pen('BG')
+
+    @property
+    def _fore_pen(self) -> Pen:
+        return self._get_token_pen('FG')
 
     @property
     def _more(self) -> bool:
@@ -172,7 +178,7 @@ class Painter():
         for map in self._colour_map:
             if (re.match(map[0], token)):
                 return map[1]
-        return self.foreground_pen
+        return self._fore_pen
     
     def _paint_aggregate(self, prototype: str) -> List[Symbol]:
         g1 = self._paint_symbol()

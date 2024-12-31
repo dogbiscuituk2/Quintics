@@ -23,40 +23,41 @@ class TestAll(BaseScene):
         def show_group(
                 caption: str, 
                 items: List[str], 
-                column_count: int = 4) -> None:
-            item_count = len(items)
-            item_index = 0
-            row_count = 17
-            page_size = row_count * column_count
-            page_count = (item_count + page_size - 1) // page_size
-            if page_count > 1:
+                cols: int = 4) -> None:
+            count = len(items)
+            index = 0
+            rows = 17
+            size = rows * cols
+            pages = (count + size - 1) // size
+            if pages > 1:
                 caption = f'{caption} - Page 1'
-            for page_index in range(page_count):
+            for page in range(pages):
                 with self.say(caption):
-                    page = []
-                    for _ in range(row_count):
+                    lines = []
+                    for _ in range(rows):
                         line = []
-                        for _ in range(column_count):
-                            item = items[item_index] if item_index < item_count else ''                       
+                        for _ in range(cols):
+                            item = items[index] if index < count else ''                       
                             tex = self.make_tex(item)
                             line.append(tex)
                             text = self.make_text(item)
                             line.append(text)
-                            item_index += 1
-                        page.append(line)
-                        if (item_index >= item_count):
+                            index += 1
+                        lines.append(line)
+                        if (index >= count):
                             break
                     grid = MobjectTable(
-                        page,
+                        lines,
                         v_buff=0.25,
                         h_buff=0.5,
-                        arrange_in_grid_config={"col_alignments": "clclclclclcl"[0:2*column_count]},
-                        line_config={"color": self.background_colour})
+                        arrange_in_grid_config={
+                            "col_alignments": "clclclclclcl"[0:2*cols]},
+                        line_config={"color": self.back_colour})
                     grid.scale(0.5)
                     self.play(FadeIn(grid))
                     self.wait(5)
                     self.play(FadeOut(grid))
-                caption = f'Page {page_index + 2}'
+                caption = f'Page {page + 2}'
 
         self.init()
         self._options = self._options | Opt.DEBUG

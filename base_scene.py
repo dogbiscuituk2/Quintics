@@ -30,15 +30,15 @@ class BaseScene(VoiceoverScene):
     def __init__(self):
         VoiceoverScene.__init__(self)
         self._painter = Painter()
-        config.background_color = self.background_colour
+        config.background_color = self.back_colour
 
     @property
-    def background_colour(self) -> ManimColor:
-        return self._painter.background_colour
+    def back_colour(self) -> ManimColor:
+        return self._painter.back_colour
 
     @property
-    def foreground_pen(self) -> Pen:
-        return self._painter.foreground_pen
+    def fore_colour(self) -> ManimColor:
+        return self._painter.fore_colour
 
     def box(self, *args: VMobject) -> Polygon:
         b = self.box_make(*args)
@@ -73,9 +73,6 @@ class BaseScene(VoiceoverScene):
     def get_colour(self, pen: Pen) -> ManimColor:
         return self._painter.get_colour(pen)
 
-    def get_text_colour(self) -> ManimColor:
-        return self.get_colour(self.foreground_pen)
-
     def init(self):
         self.set_speech_service(GTTSService())
 
@@ -88,7 +85,7 @@ class BaseScene(VoiceoverScene):
         cols: int = len(matrix[0])
         strings: List[str] = [[t for t in row] for row in matrix]
         matrix: Matrix = Matrix(strings, bracket_h_buff = margin, h_buff = padding)
-        matrix.set_color(self.get_text_colour())
+        matrix.set_color(self.fore_colour)
         for row in range(rows):
             for col in range(cols):
                 self._paint_tex(matrix[0][row * cols + col])
@@ -100,7 +97,7 @@ class BaseScene(VoiceoverScene):
         return tex
 
     def make_text(self, text: str, *args, **kwargs) -> Text:
-        return Text(text, font_size=30, color=self.get_text_colour(), *args, **kwargs)
+        return Text(text, font_size=30, color=self.fore_colour, *args, **kwargs)
 
     def say(self, text: str):
         frame = currentframe()

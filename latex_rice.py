@@ -792,6 +792,7 @@ EXP_FONT = [
     r'\scriptscriptstyle \int f^{-1}(x-x_a)\,dx}',
 ]
 EXP_INT = [
+    r'mmmmmmmmmmmmmmmmmmmmmm',
     r'\int_0^1 x\,dx', 
     r'\iint_{x=0,y=0}^{x=1,y=1} xy\,dy\,dx', 
     r'\iiint xyz\,dz\,dy\,dx', 
