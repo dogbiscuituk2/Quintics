@@ -60,7 +60,7 @@ class Painter():
             start = symbol.glyph_index
             stop = start + symbol.glyph_count
             if stop > start:
-                pen = self._get_next_pen(pen) if Opt.DEBUG in options else symbol.pen
+                pen = self._get_next_pen(pen) if Opt.AUTO in options else symbol.pen
                 colour = self.get_colour(pen)
                 for index in range(start, stop):
                     glyph = glyphs[index]
@@ -240,7 +240,7 @@ class Painter():
                 return self._paint_shift(token)
             case _:
                 return self._paint_token(token)
-
+            
     def _paint_frac(self) -> List[Symbol]:
         g1 = self._paint_symbol()
         g2 = self._paint_atom()

@@ -18,7 +18,7 @@ class Opt(Flag):
     DIFF    = auto() # r'\frac{d^2x}{dy^2}': 'd' or r'\partial' match 'x' or 'y'.
     MATH    = auto() # r'\overbrace{x}': brace matches'x'.
     ACCENT  = auto() # r'acute{e}': the accent matches the letter.
-    DEBUG   = auto() # override all: assign colours sequentially.
+    AUTO    = auto() # override all: assign colours sequentially.
     SHIFT   = SUB | SUPER
     SYM     = MATH | ACCENT
-    DEFAULT = SHIFT | DIFF | SYM # everything except DEBUG.
+    DEFAULT = SHIFT | DIFF | SYM # everything except AUTO, DEBUG.
