@@ -56,11 +56,12 @@ class TestAll(BaseScene):
 
             items = iter(strings)
             count = len(strings)
-            rows = min((count + cols - 1) // cols, rows)
-            size = rows * cols
+            total_rows = (count + cols - 1) // cols
+            size = min(total_rows, rows) * cols
             pages = (count + size - 1) // size
             if pages > 1:
                 caption = f'{caption} - Page 1 of {pages}'
+                rows = (total_rows + pages - 1) // pages
             for page in range(pages):
                 with self.say(caption):
                     lines: List[List[SVGMobject]] = []
@@ -81,16 +82,16 @@ class TestAll(BaseScene):
         self.init()
         #self._options = self._options | Opt.DEBUG
 
-        show_group("Greek and Hebrew Letters", SYM_GREEK, transpose=True)
-        show_group("Mathematical constructions", EXP_MATH, 3)
-        show_group("Delimiters", EXP_DELIM, 2)
-        show_group("Integrals", EXP_INT, 1)
-        show_group("Variable sized symbols", SYM_LARGE)
-        show_group("Standard function names", SYM_FUNC)
+        #show_group("Greek and Hebrew Letters", SYM_GREEK, transpose=True)
+        #show_group("Mathematical constructions", EXP_MATH, 3)
+        #show_group("Delimiters", EXP_DELIM, 2)
+        #show_group("Integrals", EXP_INT, 1)
+        #show_group("Variable sized symbols", SYM_LARGE)
+        #show_group("Standard function names", SYM_FUNC)
         show_group("Binary operation and relation symbols", SYM_OPS, 5)
         show_group("Arrow symbols", SYM_ARROW)
         show_group("Miscellaneous symbols", SYM_MISC)
-        show_group("Math mode accents", EXP_ACCENT)
-        show_group("Other styles - math mode only", EXP_STYLE, 1)
-        show_group("Font sizes", EXP_FONT, 1)
-        show_group("All symbols", SYM_ALL)
+        #show_group("Math mode accents", EXP_ACCENT)
+        #show_group("Other styles - math mode only", EXP_STYLE, 1)
+        #show_group("Font sizes", EXP_FONT, 1)
+        #show_group("All symbols", SYM_ALL)
