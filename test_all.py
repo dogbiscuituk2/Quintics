@@ -24,20 +24,30 @@ class TestAll(BaseScene):
                 caption: str, 
                 strings: List[str], 
                 cols: int = 4,
-                rows = 12,
+                rows: int = 12,
                 transpose: bool = False) -> None:
+            """
+            Display a group of symbols in a table.
+
+            Args:
+                caption: The caption for the table.
+                strings: The list of symbols to display.
+                cols: The number of columns on a page.
+                rows: The maximum number of rows on a page.
+                transpose: Whether to transpose the table.
+            """
             
             def add_items() -> None:
-
-                def add_tex(line: List[SVGMobject], item: str) -> None:
-                    line.append(self.make_tex(item))
-                    line.append(self.make_text(item))
 
                 def add_item(row: int) -> None:
                     item = next(items)
                     if len(lines) <= row:
                         lines.append([])
                     add_tex(lines[row], item)
+
+                def add_tex(line: List[SVGMobject], item: str) -> None:
+                    line.append(self.make_tex(item))
+                    line.append(self.make_text(item))
 
                 try:
                     if transpose:
