@@ -34,18 +34,18 @@ def make_pattern(symbols: List[str]) -> str:
 # eg \left| expr \right| or \left\{ expr \right\} or \left\Vert expr \right.
 
 SYM_GREEK = [
-    r'\alpha', r'\nu', r'\Gamma', r'\varepsilon',
-    r'\beta', r'\xi',  r'\Delta', r'\vartheta',
-    r'\gamma', 'o', r'\Theta', r'\varkappa',
-    r'\delta', r'\pi', r'\Lambda', r'\varpi',
-    r'\epsilon', r'\rho', r'\Xi', r'\varrho',
-    r'\zeta', r'\sigma', r'\Pi', r'\varsigma',
-    r'\eta', r'\tau', r'\Sigma', r'\varphi',
-    r'\theta', r'\upsilon', r'\Upsilon', '',
-    r'\iota', r'\phi', r'\Phi', r'\aleph',
-    r'\kappa', r'\chi', r'\Psi', r'\beth',
-    r'\lambda', r'\psi', r'\Omega', r'\gimel',
-    r'\mu', r'\omega', r'\digamma', r'\daleth',
+    r'\alpha', r'\beta', r'\gamma', r'\delta', 
+    r'\epsilon', r'\zeta', r'\eta', r'\theta', 
+    r'\iota', r'\kappa', r'\lambda', r'\mu',
+    r'\nu', r'\xi', 'o', r'\pi', 
+    r'\rho', r'\sigma', r'\tau', r'\upsilon', 
+    r'\phi', r'\chi', r'\psi', r'\omega', 
+    r'\Gamma', r'\Delta', r'\Theta', r'\Lambda', 
+    r'\Xi', r'\Pi', r'\Sigma', r'\Upsilon', 
+    r'\Phi', r'\Psi', r'\Omega', r'\varepsilon', 
+    r'\vartheta', r'\varkappa', r'\varpi', r'\varrho', 
+    r'\varsigma', r'\varphi', r'\digamma', '', 
+    r'\aleph', r'\beth', r'\gimel', r'\daleth'
 ]
 SYM_MATH = [
     r'\overline', r'\overrightarrow',
@@ -785,6 +785,31 @@ EXP_ACCENT = [
     r'\grave{a}', r'\hat{a}', r'\Grave{\Grave{A}}', r'\Hat{\Hat{A}}',
     r'\tilde{a}', r'\vec{a}', r'\Tilde{\Tilde{A}}', r'\Vec{\Vec{A}}',
 ]
+EXP_DELIM = [
+    r'\left(\frac{x}{2}\right)_0^1',
+    r'\left\{\frac{x}{2}\right\}_0^1',
+    r'\left[\frac{x}{2}\right]_0^1',
+    r'\left\lfloor\frac{x}{2}\right\rfloor_0^1',
+    r'\left\lceil\frac{x}{2}\right\rceil_0^1',
+    r'\left\langle\frac{x}{2}\right\rangle_0^1',
+    
+    r'\left\llcorner\frac{x}{2}\right\lrcorner_0^1',
+    r'\left\ulcorner\frac{x}{2}\right\urcorner_0^1',
+
+    r'\left\vert\frac{x}{2}\right\vert_0^1',
+    r'\left|\frac{x}{2}\right|_0^1',
+    r'\left\|\frac{x}{2}\right\|_0^1',
+    r'\left\uparrow\frac{x}{2}\right\uparrow_0^1',
+    r'\left\downarrow\frac{x}{2}\right\downarrow_0^1',
+    r'\left\Uparrow\frac{x}{2}\right\Uparrow_0^1',
+    r'\left\Downarrow\frac{x}{2}\right\Downarrow_0^1',
+]
+    #'|', r'\{', r'\lfloor', '/', r'\Uparrow', r'\llcorner',
+    #r'\vert', r'\}', r'\rfloor', r'\backslash', r'\uparrow', r'\lrcorner',
+    #r'\|', r'\langle', r'\lceil', '[', r'\Downarrow', r'\ulcorner',
+    #r'\Vert', r'\rangle', r'\rceil', ']', r'\downarrow', r'\urcorner',
+
+
 EXP_FONT = [
     r'\displaystyle \int f^{-1}(x-x_a)\,dx}',
     r'\textstyle \int f^{-1}(x-x_a)\,dx}',
@@ -792,7 +817,6 @@ EXP_FONT = [
     r'\scriptscriptstyle \int f^{-1}(x-x_a)\,dx}',
 ]
 EXP_INT = [
-    r'mmmmmmmmmmmmmmmmmmmmmm',
     r'\int_0^1 x\,dx', 
     r'\iint_{x=0,y=0}^{x=1,y=1} xy\,dy\,dx', 
     r'\iiint xyz\,dz\,dy\,dx', 

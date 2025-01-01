@@ -22,56 +22,75 @@ class TestAll(BaseScene):
 
         def show_group(
                 caption: str, 
-                items: List[str], 
-                cols: int = 4) -> None:
-            count = len(items)
-            index = 0
-            rows = 17
+                strings: List[str], 
+                cols: int = 4,
+                rows = 12,
+                transpose: bool = False) -> None:
+            
+            def add_items() -> None:
+
+                def add_tex(line: List[SVGMobject], item: str) -> None:
+                    line.append(self.make_tex(item))
+                    line.append(self.make_text(item))
+
+                def add_item(row: int) -> None:
+                    item = next(items)
+                    if len(lines) <= row:
+                        lines.append([])
+                    add_tex(lines[row], item)
+
+                try:
+                    if transpose:
+                        for _ in range(cols):
+                            for row in range(rows):
+                                add_item(row)
+                    else:
+                        for row in range(rows):
+                            for _ in range(cols):
+                                add_item(row)
+                except StopIteration:
+                    pass
+                for line in lines:
+                    while len(line) < len(lines[0]):
+                        add_tex(line, '')
+
+            items = iter(strings)
+            count = len(strings)
+            rows = min((count + cols - 1) // cols, rows)
             size = rows * cols
             pages = (count + size - 1) // size
             if pages > 1:
-                caption = f'{caption} - Page 1'
+                caption = f'{caption} - Page 1 of {pages}'
             for page in range(pages):
                 with self.say(caption):
-                    lines = []
-                    for _ in range(rows):
-                        line = []
-                        for _ in range(cols):
-                            item = items[index] if index < count else ''                       
-                            tex = self.make_tex(item)
-                            line.append(tex)
-                            text = self.make_text(item)
-                            line.append(text)
-                            index += 1
-                        lines.append(line)
-                        if (index >= count):
-                            break
+                    lines: List[List[SVGMobject]] = []
+                    add_items()
                     grid = MobjectTable(
                         lines,
                         v_buff=0.25,
                         h_buff=0.5,
                         arrange_in_grid_config={
-                            "col_alignments": "clclclclclcl"[0:2*cols]},
-                        line_config={"color": self.back_colour})
+                            "col_alignments": "cl" * cols},
+                            line_config={"color": self.back_colour})
                     grid.scale(0.5)
                     self.play(FadeIn(grid))
                     self.wait(5)
                     self.play(FadeOut(grid))
-                caption = f'Page {page + 2}'
+                caption = f'Page {page + 2} of {pages}'
 
         self.init()
-        self._options = self._options | Opt.DEBUG
+        #self._options = self._options | Opt.DEBUG
 
-        #show_group("Greek and Hebrew Letters", SYM_GREEK)
-        #show_group("Mathematical constructions", EXP_MATH, 3)
-        #show_group("Delimiters", SYM_DELIM, 6)
+        show_group("Greek and Hebrew Letters", SYM_GREEK, transpose=True)
+        show_group("Mathematical constructions", EXP_MATH, 3)
+        show_group("Delimiters", EXP_DELIM, 2)
         show_group("Integrals", EXP_INT, 1)
-        #show_group("Variable sized symbols", SYM_LARGE)
-        #show_group("Standard function names", SYM_FUNC)
-        #show_group("Binary operation and relation symbols", SYM_OPS, 5)
-        #show_group("Arrow symbols", SYM_ARROW)
-        #show_group("Miscellaneous symbols", SYM_MISC)
-        #show_group("Math mode accents", EXP_ACCENT)
-        #show_group("Other styles - math mode only", EXP_STYLE, 1)
-        #show_group("Font sizes", EXP_FONT, 1)
-        #show_group("All symbols", SYM_ALL)
+        show_group("Variable sized symbols", SYM_LARGE)
+        show_group("Standard function names", SYM_FUNC)
+        show_group("Binary operation and relation symbols", SYM_OPS, 5)
+        show_group("Arrow symbols", SYM_ARROW)
+        show_group("Miscellaneous symbols", SYM_MISC)
+        show_group("Math mode accents", EXP_ACCENT)
+        show_group("Other styles - math mode only", EXP_STYLE, 1)
+        show_group("Font sizes", EXP_FONT, 1)
+        show_group("All symbols", SYM_ALL)
