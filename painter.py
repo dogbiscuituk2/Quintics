@@ -336,7 +336,12 @@ class Painter():
     def _dump(self, flag: str, *lists: List[Symbol]) -> None:
         if Opt.DEBUG in self.options:
             frame = currentframe().f_back
+            if flag == '<':
+                print(frame.f_code.co_name, end=' ')
+            print(flag, end=' ')
             for list in lists:
-                print(frame.f_code.co_name, frame.f_lineno, flag, *list)
+                print(*list, end=' ')
+            if flag == '>':
+                print()
             
 #endregion
