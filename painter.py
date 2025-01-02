@@ -11,6 +11,7 @@ in the colours list. The Painter class is used to apply
 colours to the glyphs in a MathTex object.
 """
 
+from inspect import currentframe
 from latex_rice import *
 from manim import *
 from options import Opt
@@ -19,6 +20,39 @@ import re
 from symbol import Symbol
 
 class Painter():
+
+    def __init__(self, options: Opt = Opt.DEFAULT):
+        self.options = options
+        self._colour_map = [
+            ('FG', Pen.GREY),
+            ('BG', Pen.BLACK),
+            #('oO|', Pen.BLACK),
+            (r'[a-eA-E]|\\alpha|\\beta|\\gamma|\\delta|\\epsilon', Pen.RED),
+            ('[f-h]', Pen.ORANGE),
+            ('[i-n]', Pen.YELLOW),
+            ('[p-s]', Pen.GREEN),
+            ('[u-w]', Pen.CYAN),
+            ('[x-z]', Pen.BLUE),
+            (PAT_GREEK, Pen.ORANGE),
+            (PAT_MATH, Pen.YELLOW),
+            (PAT_DELIM, Pen.GREEN),
+            (PAT_INT, Pen.MAGENTA),
+            (PAT_LARGE, Pen.MAGENTA),
+            (PAT_FUNC, Pen.YELLOW),
+            (PAT_OPS, Pen.GREEN),
+            (PAT_ARROW, Pen.BLUE),
+            (PAT_MISC, Pen.CYAN),
+            (PAT_ACCENT, Pen.YELLOW),
+            (r'\\frac', Pen.GREEN),
+            (r'\\sqrt|\\lim', Pen.ORANGE),
+        ]
+        self._tex = None
+        self._tokens = []
+        self._token_index = 0
+        self._glyph_index = 0
+        self._glyph_count = 0
+
+    options: Opt
 
     @property
     def back_colour(self) -> ManimColor:
@@ -38,7 +72,7 @@ class Painter():
         """
         return PALETTE_BRIGHT[pen.value]
         
-    def paint_tex(self, tex: MathTex, options: Opt) -> None:
+    def paint_tex(self, tex: MathTex) -> None:
         """
         Apply colours to the glyphs in the given MathTex object.
 
@@ -60,7 +94,7 @@ class Painter():
             start = symbol.glyph_index
             stop = start + symbol.glyph_count
             if stop > start:
-                pen = self._get_next_pen(pen) if Opt.AUTO in options else symbol.pen
+                pen = self._get_next_pen(pen) if Opt.AUTO in self.options else symbol.pen
                 colour = self.get_colour(pen)
                 for index in range(start, stop):
                     glyph = glyphs[index]
@@ -94,38 +128,7 @@ class Painter():
 
 #region Private Implementation
 
-    def __init__(self):
-        self._colour_map = [
-            ('FG', Pen.GREY),
-            ('BG', Pen.BLACK),
-            #('oO|', Pen.BLACK),
-            (r'[a-eA-E]|\\alpha|\\beta|\\gamma|\\delta|\\epsilon', Pen.RED),
-            ('[f-h]', Pen.ORANGE),
-            ('[i-n]', Pen.YELLOW),
-            ('[p-s]', Pen.GREEN),
-            ('[u-w]', Pen.CYAN),
-            ('[x-z]', Pen.BLUE),
-            (PAT_GREEK, Pen.ORANGE),
-            (PAT_MATH, Pen.YELLOW),
-            (PAT_DELIM, Pen.GREEN),
-            (PAT_INT, Pen.MAGENTA),
-            (PAT_LARGE, Pen.MAGENTA),
-            (PAT_FUNC, Pen.YELLOW),
-            (PAT_OPS, Pen.GREEN),
-            (PAT_ARROW, Pen.BLUE),
-            (PAT_MISC, Pen.CYAN),
-            (PAT_ACCENT, Pen.YELLOW),
-            (r'\\frac', Pen.GREEN),
-            (r'\\sqrt|\\lim', Pen.ORANGE),
-        ]
-        self._tex = None
-        self._tokens = []
-        self._token_index = 0
-        self._glyph_index = 0
-        self._glyph_count = 0
-
     _colour_map: List[tuple[re.Pattern[str], int]] = []
-
     _tex: MathTex
     _tokens: List[str] = []
     _token_index: int
@@ -190,6 +193,7 @@ class Painter():
         g1 = self._paint_symbol()
         g2 = self._paint_shift('_')
         g3 = self._paint_shift('^')
+        self._dump('<', g1, g2, g3)
         n1 = self._get_glyph_count(g1)
         n2 = self._get_glyph_count(g2)
         n3 = self._get_glyph_count(g3)
@@ -216,6 +220,7 @@ class Painter():
             case _:
                 # All other aggregates are rendered as-is.
                 pass
+        self._dump('>', g1, g2, g3)
         return g1 + g2 + g3
 
     def _paint_atom(self) -> List[Symbol]:
@@ -245,10 +250,12 @@ class Painter():
         g1 = self._paint_symbol()
         g2 = self._paint_atom()
         g3 = self._paint_atom()
+        self._dump('<', g1, g2, g3)
         n1 = self._get_glyph_count(g1)
         n2 = self._get_glyph_count(g2)
         self._adjust(g1, n2)
         self._adjust(g2, -n1)
+        self._dump('>', g1, g2, g3)
         return g2 + g1 + g3
     
     def _paint_group(self, token: str) -> List[Symbol]:
@@ -256,6 +263,7 @@ class Painter():
         flip = token not in [r'\underline', r'\underbrace']
         g1 = self._paint_symbol()
         g2 = self._paint_atom() if self._more else []
+        self._dump('<', g1, g2)
         n1 = self._get_glyph_count(g1)
         n2 = self._get_glyph_count(g2)
         if n1 < 1:
@@ -266,6 +274,7 @@ class Painter():
                 n2 = self._get_glyph_count(g2)
                 self._adjust(g1, -n2)
                 self._adjust(g2, +n1)
+        self._dump('>', g1, g2)
         return g1 + g2
 
     def _paint_shift(self, token: str) -> List[Symbol]:
@@ -323,5 +332,11 @@ class Painter():
     def _set_colour(symbols: List[Symbol], colour: ManimColor) -> None:
         for symbol in symbols:
             symbol.pen = colour
+
+    def _dump(self, flag: str, *lists: List[Symbol]) -> None:
+        if Opt.DEBUG in self.options:
+            frame = currentframe().f_back
+            for list in lists:
+                print(frame.f_code.co_name, frame.f_lineno, flag, *list)
             
 #endregion

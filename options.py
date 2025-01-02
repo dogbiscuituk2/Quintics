@@ -19,6 +19,7 @@ class Opt(Flag):
     MATH    = auto() # r'\overbrace{x}': brace matches'x'.
     ACCENT  = auto() # r'acute{e}': the accent matches the letter.
     AUTO    = auto() # override all: assign colours sequentially.
+    DEBUG   = auto() # print state information.
     SHIFT   = SUB | SUPER
     SYM     = MATH | ACCENT
     DEFAULT = SHIFT | DIFF | SYM # everything except AUTO, DEBUG.

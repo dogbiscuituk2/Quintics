@@ -27,9 +27,10 @@ config.verbosity = "CRITICAL"
 
 class BaseScene(VoiceoverScene):
 
-    def __init__(self):
+    def __init__(self, options: Opt = Opt.DEFAULT):
         VoiceoverScene.__init__(self)
-        self._painter = Painter()
+        self.set_speech_service(GTTSService())
+        self._painter = Painter(options)
         config.background_color = self.back_colour
 
     @property
@@ -39,6 +40,14 @@ class BaseScene(VoiceoverScene):
     @property
     def fore_colour(self) -> ManimColor:
         return self._painter.fore_colour
+
+    @property
+    def options(self) -> Opt:
+        return self._painter.options
+    
+    @options.setter
+    def options(self, value: Opt) -> None:
+        self._painter.options = value
 
     def box(self, *args: VMobject) -> Polygon:
         b = self.box_make(*args)
@@ -72,9 +81,6 @@ class BaseScene(VoiceoverScene):
 
     def get_colour(self, pen: Pen) -> ManimColor:
         return self._painter.get_colour(pen)
-
-    def init(self):
-        self.set_speech_service(GTTSService())
 
     def make_matrix(
             self,
@@ -113,10 +119,9 @@ class BaseScene(VoiceoverScene):
 #region Private Implementation
 
     _boxes = None
-    _options: Opt = Opt.DEFAULT
     _painter: Painter
     
     def _paint_tex(self, tex: MathTex) -> None:
-        self._painter.paint_tex(tex, self._options)
+        self._painter.paint_tex(tex)
 
 #endregion

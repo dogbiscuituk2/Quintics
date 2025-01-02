@@ -89,19 +89,19 @@ class TestAll(BaseScene):
                     self.play(FadeOut(grid))
                 caption = f'Page {page + 2} of {pages}'
 
-        self.init()
-        #self._options = self._options | Opt.AUTO | Opt.DEBUG
+        #self.options = self._options | Opt.AUTO | Opt.DEBUG
+        self.options = self.options | Opt.DEBUG
 
         #show_group("Greek and Hebrew Letters", SYM_GREEK, transpose=True)
-        #show_group("Mathematical constructions", EXP_MATH, 3)
-        show_group("Delimiters", EXP_DELIM, 2)
+        show_group("Mathematical constructions", EXP_MATH, 3)
+        #show_group("Delimiters", EXP_DELIM, 2)
         #show_group("Integrals", EXP_INT, 1)
         #show_group("Variable sized symbols", SYM_LARGE)
         #show_group("Standard function names", SYM_FUNC)
         #show_group("Binary operation and relation symbols", SYM_OPS, 5)
         #show_group("Arrow symbols", SYM_ARROW)
         #show_group("Miscellaneous symbols", SYM_MISC)
-        #show_group("Math mode accents", EXP_ACCENT)
+        show_group("Math mode accents", EXP_ACCENT)
         #show_group("Other styles - math mode only", EXP_STYLE, 1)
         #show_group("Font sizes", EXP_FONT, 1)
         #show_group("All symbols", SYM_ALL)
