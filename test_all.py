@@ -86,7 +86,7 @@ class TestAll(BaseScene):
                         arrange_in_grid_config={
                             "col_alignments": "cl" * cols},
                             line_config={"color": self.back_colour})
-                    grid.scale(0.5)
+                    grid.scale(min(14 / grid.width, 8 / grid.height))
                     self.play(FadeIn(grid))
                     self.wait(5)
                     self.play(FadeOut(grid))
@@ -94,16 +94,16 @@ class TestAll(BaseScene):
 
         self.options = self.options | Opt.DEBUG_TEX
 
-        #show_group("Greek and Hebrew Letters", SYM_GREEK, transpose=True)
-        #show_group("Mathematical constructions", EXP_MATH, 3)
-        show_group("Delimiters", EXP_DELIM)
-        #show_group("Integrals", EXP_INT, 1)
-        #show_group("Variable sized symbols", SYM_LARGE)
-        #show_group("Standard function names", SYM_FUNC)
-        #show_group("Binary operation and relation symbols", SYM_OPS, 5)
-        #show_group("Arrow symbols", SYM_ARROW)
-        #show_group("Miscellaneous symbols", SYM_MISC)
-        #show_group("Math mode accents", EXP_ACCENT)
-        #show_group("Other styles - math mode only", EXP_STYLE, 1)
-        #show_group("Font sizes", EXP_FONT, 1)
-        #show_group("All symbols", SYM_ALL)
+        show_group("Greek and Hebrew Letters", SYM_GREEK, transpose=True)
+        show_group("Mathematical constructions", EXP_MATH, cols=3)
+        show_group("Delimiters", EXP_DELIM, rows=6, transpose=True)
+        show_group("Integrals", EXP_INT, 1)
+        show_group("Variable sized symbols", SYM_LARGE)
+        show_group("Standard function names", SYM_FUNC)
+        show_group("Binary operation and relation symbols", SYM_OPS, 5)
+        show_group("Arrow symbols", SYM_ARROW)
+        show_group("Miscellaneous symbols", SYM_MISC)
+        show_group("Math mode accents", EXP_ACCENT)
+        show_group("Other styles - math mode only", EXP_STYLE, 1)
+        show_group("Font sizes", EXP_FONT, 1)
+        show_group("All symbols", SYM_ALL, transpose=True)

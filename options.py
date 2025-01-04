@@ -15,10 +15,11 @@ class Opt(Flag):
     NONE          = 0
     SUB           = auto() # 'x_1': 1 matches x.
     SUPER         = auto() # 'x^2': 2 matches x.
-    DIFF          = auto() # r'\frac{d^2x}{dy^2}': d, \partial match x, y.
+    DIFF          = auto() # r'\frac{d^2x}{dy^2}': d,\partial match x,y.
     MATH          = auto() # r'\overbrace{x}': brace matches x.
     ACCENT        = auto() # r'acute{e}': accent matches letter.
     DEBUG_COLOURS = auto() # override all colours & assign sequentially.
+    DEBUG_NOPAINT = auto() # skip painting glyphs.
     DEBUG_SYMBOLS = auto() # print Symbols before & after.
     DEBUG_TEX     = auto() # print MathTex structure.
     SHIFT         = SUB | SUPER

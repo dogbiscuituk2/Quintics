@@ -792,30 +792,43 @@ EXP_ACCENT = [
     r'\tilde{a}', r'\vec{a}', r'\Tilde{\Tilde{A}}', r'\Vec{\Vec{A}}',
 ]
 EXP_DELIM = [
-    '(x)',
-    r'\left(x\right)',
-    r'\bigl(x\bigr)',
-    r'\Bigl(x\Bigr)',
-    r'\biggl(x\biggr)',
-    r'\Biggl(x\Biggr)',
-    #r'\left|x\right|',
-    #r'\left|x\right|',
+    *[fr'{size[0]}{delim[0]} x {size[1]}{delim[1]}' 
+        for size in [
+            ('', ''),
+            (r'\big', r'\big'), 
+            (r'\bigl', r'\bigr'), 
+            (r'\Bigl', r'\Bigr'), 
+            (r'\biggl', r'\biggr'), 
+            (r'\Biggl', r'\Biggr'), 
+        ]
+        for delim in [
+            ('(', ')'), 
+            ('[', ']'),
+            (r'\{', r'\}'),
+            (r'\langle', r'\rangle'),
 
-    #r'\left({x}\right)_0^1',
-    #r'\left\{{x}\right\}_0^1',
-    #r'\left[{x}\right]_0^1',
-    #r'\left\lfloor{x}\right\rfloor_0^1',
-    #r'\left\lceil{x}\right\rceil_0^1',
-    #r'\left\langle{x}\right\rangle_0^1',
-    #r'\left/{x}\right/_0^1',
-    #r'\left\backslash{x}\right\backslash_0^1',
-    #r'\left\llcorner{x}\right\lrcorner_0^1',
-    #r'\left\ulcorner{x}\right\urcorner_0^1',
+            ('/', '/'),
+            ('/', r'\backslash'),
+            (r'\backslash', '/'),
+            (r'\backslash', r'\backslash'),
 
-    #r'\left\vert{x}\right\vert_0^1',
-    #r'\left\Vert{x}\right\Vert_0^1',
-    #r'\left|{x}\right|_0^1',
-    #r'\left\|{x}\right\|_0^1',
+            ('|', '|'),
+            (r'\|', r'\|'),
+            (r'\vert', r'\vert'),
+            (r'\Vert', r'\Vert'),
+
+            (r'\lfloor', r'\rfloor'),
+            (r'\lceil', r'\rceil'),
+            (r'\ulcorner', r'\urcorner'),
+            (r'\llcorner', r'\lrcorner'),
+
+            (r'\uparrow', r'\uparrow'),
+            (r'\downarrow', r'\downarrow'),
+            (r'\Uparrow', r'\Uparrow'),
+            (r'\Downarrow', r'\Downarrow'),
+        ]
+    ],
+
     #r'\left\uparrow{x}\right\uparrow_0^1',
     #r'\left\downarrow{x}\right\downarrow_0^1',
     #r'\left\Uparrow{x}\right\Uparrow_0^1',

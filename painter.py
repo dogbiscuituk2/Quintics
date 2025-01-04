@@ -50,7 +50,6 @@ class Painter():
         self._tokens = []
         self._token_index = 0
         self._glyph_index = 0
-        self._glyph_count = 0
 
     options: Opt
 
@@ -86,20 +85,9 @@ class Painter():
         self._tokens = re.findall(PAT_TOKEN, text)
         self._token_index = 0
         self._glyph_index = 0
-        glyphs = tex[0]
-        self._glyph_count = len(glyphs)
         self._dump_tex()
-        symbols = self._paint_string()
-        pen = self._back_pen
-        for symbol in symbols:
-            start = symbol.glyph_index
-            stop = start + symbol.glyph_count
-            if stop > start:
-                pen = self._get_next_pen(pen) if Opt.DEBUG_COLOURS in self.options else symbol.pen
-                colour = self.get_colour(pen)
-                for index in range(start, stop):
-                    glyph = glyphs[index]
-                    glyph.set_color(colour)
+        if Opt.DEBUG_NOPAINT not in self.options:
+            self._paint()
 
     def set_colour_map(self, colour_map: List[tuple[str, int]]) -> None:
         """
@@ -132,7 +120,6 @@ class Painter():
     _tokens: List[str] = []
     _token_index: int
     _glyph_index: int
-    _glyph_count: int
 
     @property
     def _back_pen(self) -> Pen:
@@ -187,6 +174,20 @@ class Painter():
             if (re.match(map[0], token)):
                 return map[1]
         return self._fore_pen
+
+    def _paint(self) -> None:
+        symbols = self._paint_string()
+        glyphs = self._tex[0]
+        pen = self._back_pen
+        for symbol in symbols:
+            start = symbol.glyph_index
+            stop = start + symbol.glyph_count
+            if stop > start:
+                pen = self._get_next_pen(pen) if Opt.DEBUG_COLOURS in self.options else symbol.pen
+                colour = self.get_colour(pen)
+                for index in range(start, stop):
+                    glyph = glyphs[index]
+                    glyph.set_color(colour)
     
     def _paint_aggregate(self, prototype: str) -> List[Symbol]:
         g1 = self._paint_symbol()
@@ -358,5 +359,5 @@ class Painter():
         if Opt.DEBUG_TEX in self.options:
             print(self._tex.tex_string)
             print(len(self._tokens), 'tokens:', *self._tokens)
-            print(self._glyph_count, 'glyphs')
+            print(len(self._tex[0]), 'glyphs')
             print()
