@@ -53,6 +53,12 @@ SYM_MATH = [
     r'\widehat', r'\overbrace',
     r'\widetilde', r'\underbrace',
 ]
+SYM_SIZE = [
+    r'\left', r'\right', r'\left.', r'\right.',
+    r'\big', r'\Big', r'\bigg', r'\Bigg',
+    r'\bigl', r'\Bigl', r'\biggl', r'\Biggl',
+    r'\bigr', r'\Bigr', r'\biggr', r'\Biggr',
+]
 SYM_DELIM = [
     '|', r'\{', r'\lfloor', '/', r'\Uparrow', r'\llcorner',
     r'\vert', r'\}', r'\rfloor', r'\backslash', r'\uparrow', r'\lrcorner',
@@ -786,26 +792,34 @@ EXP_ACCENT = [
     r'\tilde{a}', r'\vec{a}', r'\Tilde{\Tilde{A}}', r'\Vec{\Vec{A}}',
 ]
 EXP_DELIM = [
-    r'\left({x}\right)_0^1',
-    r'\left\{{x}\right\}_0^1',
-    r'\left[{x}\right]_0^1',
-    r'\left\lfloor{x}\right\rfloor_0^1',
-    r'\left\lceil{x}\right\rceil_0^1',
-    r'\left\langle{x}\right\rangle_0^1',
-    r'\left/{x}\right/_0^1',
-    r'\left\backslash{x}\right\backslash_0^1',
-    r'\left\llcorner{x}\right\lrcorner_0^1',
-    r'\left\ulcorner{x}\right\urcorner_0^1',
-    r'\left\vert{x}\right\vert_0^1',
-    r'\left\Vert{x}\right\Vert_0^1',
-    r'\left|{x}\right|_0^1',
-    r'\left\|{x}\right\|_0^1',
-    r'\left\uparrow{x}\right\uparrow_0^1',
-    r'\left\downarrow{x}\right\downarrow_0^1',
-    r'\left\Uparrow{x}\right\Uparrow_0^1',
-    r'\left\Downarrow{x}\right\Downarrow_0^1',
+    '(x)',
+    r'\left(x\right)',
+    r'\bigl(x\bigr)',
+    r'\Bigl(x\Bigr)',
+    r'\biggl(x\biggr)',
+    r'\Biggl(x\Biggr)',
+    #r'\left|x\right|',
+    #r'\left|x\right|',
 
-]
+    #r'\left({x}\right)_0^1',
+    #r'\left\{{x}\right\}_0^1',
+    #r'\left[{x}\right]_0^1',
+    #r'\left\lfloor{x}\right\rfloor_0^1',
+    #r'\left\lceil{x}\right\rceil_0^1',
+    #r'\left\langle{x}\right\rangle_0^1',
+    #r'\left/{x}\right/_0^1',
+    #r'\left\backslash{x}\right\backslash_0^1',
+    #r'\left\llcorner{x}\right\lrcorner_0^1',
+    #r'\left\ulcorner{x}\right\urcorner_0^1',
+
+    #r'\left\vert{x}\right\vert_0^1',
+    #r'\left\Vert{x}\right\Vert_0^1',
+    #r'\left|{x}\right|_0^1',
+    #r'\left\|{x}\right\|_0^1',
+    #r'\left\uparrow{x}\right\uparrow_0^1',
+    #r'\left\downarrow{x}\right\downarrow_0^1',
+    #r'\left\Uparrow{x}\right\Uparrow_0^1',
+    #r'\left\Downarrow{x}\right\Downarrow_0^1',
 
     #r'\left(\frac{x}{2}\right)_0^1',
     #r'\left\{\frac{x}{2}\right\}_0^1',
@@ -817,6 +831,7 @@ EXP_DELIM = [
     #r'\left\backslash\frac{x}{2}\right\backslash_0^1',
     #r'\left\llcorner\frac{x}{2}\right\lrcorner_0^1',
     #r'\left\ulcorner\frac{x}{2}\right\urcorner_0^1',
+
     #r'\left\vert\frac{x}{2}\right\vert_0^1',
     #r'\left\Vert\frac{x}{2}\right\Vert_0^1',
     #r'\left|\frac{x}{2}\right|_0^1',
@@ -825,7 +840,7 @@ EXP_DELIM = [
     #r'\left\downarrow\frac{x}{2}\right\downarrow_0^1',
     #r'\left\Uparrow\frac{x}{2}\right\Uparrow_0^1',
     #r'\left\Downarrow\frac{x}{2}\right\Downarrow_0^1',
-
+]
 EXP_FONT = [
     r'\displaystyle \int f^{-1}(x-x_a)\,dx}',
     r'\textstyle \int f^{-1}(x-x_a)\,dx}',

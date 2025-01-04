@@ -15,15 +15,17 @@ from painter import *
 
 painter = Painter()
 
-# Function to recursively print submobjects
-#def print_submobjects(mobject, indent=0):
-#    for submobject in mobject.submobjects:
-#        print(" " * indent + f"Submobject: {submobject}")
-#        print_submobjects(submobject, indent + 2)
-
 # Create a MathTex object
-text = r'\underline{xyz}'
-#tex = MathTex(text)
-#print_submobjects(tex)
-print(painter.get_tex_length(text))
-#painter.paint_tex(tex)
+text = r'\left\vert \frac{x}{y} \right\vert'
+tex = MathTex(text)
+
+# Function to recursively print submobjects
+def print_submobjects(mobject, indent=0):
+    for submobject in mobject.submobjects:
+        print(" " * indent + f"Submobject: {submobject}")
+        print_submobjects(submobject, indent + 2)
+
+# Print the submobjects and their indices
+print_submobjects(tex)
+
+VMobjectFromSVGPath

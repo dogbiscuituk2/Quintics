@@ -88,13 +88,14 @@ class Painter():
         self._glyph_index = 0
         glyphs = tex[0]
         self._glyph_count = len(glyphs)
+        self._dump_tex()
         symbols = self._paint_string()
         pen = self._back_pen
         for symbol in symbols:
             start = symbol.glyph_index
             stop = start + symbol.glyph_count
             if stop > start:
-                pen = self._get_next_pen(pen) if Opt.AUTO in self.options else symbol.pen
+                pen = self._get_next_pen(pen) if Opt.DEBUG_COLOURS in self.options else symbol.pen
                 colour = self.get_colour(pen)
                 for index in range(start, stop):
                     glyph = glyphs[index]
@@ -125,8 +126,6 @@ class Painter():
         to determine the colour of the glyph.
         """
         self._colour_map = [[re.compile(m[0]), m[1]] for m in colour_map]
-
-#region Private Implementation
 
     _colour_map: List[tuple[re.Pattern[str], int]] = []
     _tex: MathTex
@@ -193,7 +192,7 @@ class Painter():
         g1 = self._paint_symbol()
         g2 = self._paint_shift('_')
         g3 = self._paint_shift('^')
-        self._dump('<', g1, g2, g3)
+        self._dump_symbols('<', g1, g2, g3)
         n1 = self._get_glyph_count(g1)
         n2 = self._get_glyph_count(g2)
         n3 = self._get_glyph_count(g3)
@@ -220,7 +219,7 @@ class Painter():
             case _:
                 # All other aggregates are rendered as-is.
                 pass
-        self._dump('>', g1, g2, g3)
+        self._dump_symbols('>', g1, g2, g3)
         return g1 + g2 + g3
 
     def _paint_atom(self) -> List[Symbol]:
@@ -232,6 +231,10 @@ class Painter():
         if re.match(PAT_MOD, token):
             return self._paint_group(token)
         match token:
+            case r'\left':
+                return self._paint_delim(token)
+            case r'\right':
+                return self._paint_delim(token)
             case r'\frac':
                 return self._paint_frac()
             case r'\sqrt':
@@ -246,16 +249,23 @@ class Painter():
             case _:
                 return self._paint_token(token)
             
+    def _paint_delim(self, token:str) -> List[Symbol]:
+        self._accept(token)
+        g1 = self._paint_atom()
+        self._dump_symbols('<', g1)
+        self._dump_symbols('>', g1)
+        return g1
+            
     def _paint_frac(self) -> List[Symbol]:
         g1 = self._paint_symbol()
         g2 = self._paint_atom()
         g3 = self._paint_atom()
-        self._dump('<', g1, g2, g3)
+        self._dump_symbols('<', g1, g2, g3)
         n1 = self._get_glyph_count(g1)
         n2 = self._get_glyph_count(g2)
         self._adjust(g1, n2)
         self._adjust(g2, -n1)
-        self._dump('>', g1, g2, g3)
+        self._dump_symbols('>', g1, g2, g3)
         return g2 + g1 + g3
     
     def _paint_group(self, token: str) -> List[Symbol]:
@@ -263,7 +273,7 @@ class Painter():
         flip = token not in [r'\underline', r'\underbrace']
         g1 = self._paint_symbol()
         g2 = self._paint_atom() if self._more else []
-        self._dump('<', g1, g2)
+        self._dump_symbols('<', g1, g2)
         n1 = self._get_glyph_count(g1)
         n2 = self._get_glyph_count(g2)
         if n1 < 1:
@@ -274,7 +284,7 @@ class Painter():
                 n2 = self._get_glyph_count(g2)
                 self._adjust(g1, -n2)
                 self._adjust(g2, +n1)
-        self._dump('>', g1, g2)
+        self._dump_symbols('>', g1, g2)
         return g1 + g2
 
     def _paint_shift(self, token: str) -> List[Symbol]:
@@ -333,8 +343,8 @@ class Painter():
         for symbol in symbols:
             symbol.pen = colour
 
-    def _dump(self, flag: str, *lists: List[Symbol]) -> None:
-        if Opt.DEBUG in self.options:
+    def _dump_symbols(self, flag: str, *lists: List[Symbol]) -> None:
+        if Opt.DEBUG_SYMBOLS in self.options:
             frame = currentframe().f_back
             if flag == '<':
                 print(frame.f_code.co_name, end=' ')
@@ -343,5 +353,10 @@ class Painter():
                 print(*list, end=' ')
             if flag == '>':
                 print()
-            
-#endregion
+
+    def _dump_tex(self) -> None:
+        if Opt.DEBUG_TEX in self.options:
+            print(self._tex.tex_string)
+            print(len(self._tokens), 'tokens:', *self._tokens)
+            print(self._glyph_count, 'glyphs')
+            print()

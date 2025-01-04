@@ -32,7 +32,7 @@ class TestAll(BaseScene):
             Args:
                 caption: The caption for the table.
                 strings: The list of symbols to display.
-                cols: The number of columns on a page.
+                cols: The maximum number of columns on a page.
                 rows: The maximum number of rows on a page.
                 transpose: Whether to transpose the table.
             """
@@ -64,8 +64,11 @@ class TestAll(BaseScene):
                     while len(line) < len(lines[0]):
                         add_tex(line, '')
 
-            items = iter(strings)
             count = len(strings)
+            if count < 1:
+                return
+            items = iter(strings)
+            cols = min(cols, count)
             total_rows = (count + cols - 1) // cols
             size = min(total_rows, rows) * cols
             pages = (count + size - 1) // size
@@ -89,19 +92,18 @@ class TestAll(BaseScene):
                     self.play(FadeOut(grid))
                 caption = f'Page {page + 2} of {pages}'
 
-        #self.options = self._options | Opt.AUTO | Opt.DEBUG
-        self.options = self.options | Opt.DEBUG
+        self.options = self.options | Opt.DEBUG_TEX
 
-        show_group("Greek and Hebrew Letters", SYM_GREEK, transpose=True)
-        show_group("Mathematical constructions", EXP_MATH, 3)
-        show_group("Delimiters", EXP_DELIM, 2)
-        show_group("Integrals", EXP_INT, 1)
-        show_group("Variable sized symbols", SYM_LARGE)
-        show_group("Standard function names", SYM_FUNC)
-        show_group("Binary operation and relation symbols", SYM_OPS, 5)
-        show_group("Arrow symbols", SYM_ARROW)
-        show_group("Miscellaneous symbols", SYM_MISC)
-        show_group("Math mode accents", EXP_ACCENT)
-        show_group("Other styles - math mode only", EXP_STYLE, 1)
-        show_group("Font sizes", EXP_FONT, 1)
-        show_group("All symbols", SYM_ALL)
+        #show_group("Greek and Hebrew Letters", SYM_GREEK, transpose=True)
+        #show_group("Mathematical constructions", EXP_MATH, 3)
+        show_group("Delimiters", EXP_DELIM)
+        #show_group("Integrals", EXP_INT, 1)
+        #show_group("Variable sized symbols", SYM_LARGE)
+        #show_group("Standard function names", SYM_FUNC)
+        #show_group("Binary operation and relation symbols", SYM_OPS, 5)
+        #show_group("Arrow symbols", SYM_ARROW)
+        #show_group("Miscellaneous symbols", SYM_MISC)
+        #show_group("Math mode accents", EXP_ACCENT)
+        #show_group("Other styles - math mode only", EXP_STYLE, 1)
+        #show_group("Font sizes", EXP_FONT, 1)
+        #show_group("All symbols", SYM_ALL)
