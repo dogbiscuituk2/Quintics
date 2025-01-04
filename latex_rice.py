@@ -45,7 +45,7 @@ SYM_GREEK = [
     r'\Phi', r'\Psi', r'\Omega', r'\varepsilon', 
     r'\vartheta', r'\varkappa', r'\varpi', r'\varrho', 
     r'\varsigma', r'\varphi', r'\digamma', '', 
-    r'\aleph', r'\beth', r'\gimel', r'\daleth'
+    r'\aleph', r'\beth', r'\gimel', r'\daleth',
 ]
 SYM_MATH = [
     r'\overline', r'\overrightarrow',
@@ -804,55 +804,26 @@ EXP_DELIM = [
         for delim in [
             ('(', ')'), 
             ('[', ']'),
+            (r'\lceil', r'\rceil'),
+            (r'\lfloor', r'\rfloor'),
             (r'\{', r'\}'),
             (r'\langle', r'\rangle'),
-
-            ('/', '/'),
-            ('/', r'\backslash'),
-            (r'\backslash', '/'),
-            (r'\backslash', r'\backslash'),
-
             ('|', '|'),
-            (r'\|', r'\|'),
             (r'\vert', r'\vert'),
+            (r'\|', r'\|'),
             (r'\Vert', r'\Vert'),
-
-            (r'\lfloor', r'\rfloor'),
-            (r'\lceil', r'\rceil'),
             (r'\ulcorner', r'\urcorner'),
             (r'\llcorner', r'\lrcorner'),
-
+            ('/', '/'),
+            (r'\backslash', r'\backslash'),
+            ('/', r'\backslash'),
+            (r'\backslash', '/'),
             (r'\uparrow', r'\uparrow'),
             (r'\downarrow', r'\downarrow'),
             (r'\Uparrow', r'\Uparrow'),
             (r'\Downarrow', r'\Downarrow'),
         ]
     ],
-
-    #r'\left\uparrow{x}\right\uparrow_0^1',
-    #r'\left\downarrow{x}\right\downarrow_0^1',
-    #r'\left\Uparrow{x}\right\Uparrow_0^1',
-    #r'\left\Downarrow{x}\right\Downarrow_0^1',
-
-    #r'\left(\frac{x}{2}\right)_0^1',
-    #r'\left\{\frac{x}{2}\right\}_0^1',
-    #r'\left[\frac{x}{2}\right]_0^1',
-    #r'\left\lfloor\frac{x}{2}\right\rfloor_0^1',
-    #r'\left\lceil\frac{x}{2}\right\rceil_0^1',
-    #r'\left\langle\frac{x}{2}\right\rangle_0^1',
-    #r'\left/\frac{x}{2}\right/_0^1',
-    #r'\left\backslash\frac{x}{2}\right\backslash_0^1',
-    #r'\left\llcorner\frac{x}{2}\right\lrcorner_0^1',
-    #r'\left\ulcorner\frac{x}{2}\right\urcorner_0^1',
-
-    #r'\left\vert\frac{x}{2}\right\vert_0^1',
-    #r'\left\Vert\frac{x}{2}\right\Vert_0^1',
-    #r'\left|\frac{x}{2}\right|_0^1',
-    #r'\left\|\frac{x}{2}\right\|_0^1',
-    #r'\left\uparrow\frac{x}{2}\right\uparrow_0^1',
-    #r'\left\downarrow\frac{x}{2}\right\downarrow_0^1',
-    #r'\left\Uparrow\frac{x}{2}\right\Uparrow_0^1',
-    #r'\left\Downarrow\frac{x}{2}\right\Downarrow_0^1',
 ]
 EXP_FONT = [
     r'\displaystyle \int f^{-1}(x-x_a)\,dx}',
