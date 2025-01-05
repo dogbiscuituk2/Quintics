@@ -794,8 +794,10 @@ EXP_ACCENT = [
 EXP_DELIM = [
     *[fr'{size[0]}{delim[0]} x {size[1]}{delim[1]}' 
         for size in [
-            ('', ''),
             (r'\big', r'\big'), 
+            (r'\Big', r'\Big'), 
+            (r'\bigg', r'\bigg'), 
+            (r'\Bigg', r'\Bigg'), 
             (r'\bigl', r'\bigr'), 
             (r'\Bigl', r'\Bigr'), 
             (r'\biggl', r'\biggr'), 
