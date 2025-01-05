@@ -19,6 +19,7 @@ class Opt(Flag):
     MATH          = auto() # r'\overbrace{x}': brace matches x.
     ACCENT        = auto() # r'acute{e}': accent matches letter.
     DEBUG_COLOURS = auto() # override all colours & assign sequentially.
+    DEBUG_LABELS  = auto() # show index_labels for each MathTex/Text.
     DEBUG_NOPAINT = auto() # skip painting glyphs.
     DEBUG_SYMBOLS = auto() # print Symbols before & after.
     DEBUG_TEX     = auto() # print MathTex structure.

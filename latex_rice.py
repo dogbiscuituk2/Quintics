@@ -796,26 +796,27 @@ EXP_ACCENT = [
 EXP_DELIM = [
     *[fr'{size[0]}{delim[0]} x {size[1]}{delim[1]}' 
         for size in [
-            #(r'\big', r'\big'), 
-            #(r'\Big', r'\Big'), 
-            #(r'\bigg', r'\bigg'), 
-            #(r'\Bigg', r'\Bigg'), 
-            #(r'\bigl', r'\bigr'), 
-            #(r'\Bigl', r'\Bigr'), 
-            #(r'\biggl', r'\biggr'), 
+            (r'\big', r'\big'), 
+            (r'\Big', r'\Big'), 
+            (r'\bigg', r'\bigg'), 
+            (r'\Bigg', r'\Bigg'), 
+            (r'\bigl', r'\bigr'), 
+            (r'\Bigl', r'\Bigr'), 
+            (r'\biggl', r'\biggr'), 
             (r'\Biggl', r'\Biggr'), 
         ]
         for delim in [
-            #('(', ')'), ('[', ']'),
-            #(r'\lceil', r'\rceil'), (r'\lfloor', r'\rfloor'),
-            #(r'\{', r'\}'), (r'\langle', r'\rangle'),
-            #('|', '|'), (r'\vert', r'\vert'),
-            #(r'\|', r'\|'), (r'\Vert', r'\Vert'),
-            #(r'\ulcorner', r'\urcorner'), (r'\llcorner', r'\lrcorner'),
-            #('/', '/'), (r'\backslash', r'\backslash'),
-            #('/', r'\backslash'), (r'\backslash', '/'),
+            ('(', ')'), ('[', ']'),
+            (r'\lceil', r'\rceil'), (r'\lfloor', r'\rfloor'),
+            (r'\{', r'\}'), (r'\langle', r'\rangle'),
+            ('|', '|'), (r'\vert', r'\vert'),
+            (r'\|', r'\|'), (r'\Vert', r'\Vert'),
+            (r'\ulcorner', r'\urcorner'), (r'\llcorner', r'\lrcorner'),
+            ('/', '/'), (r'\backslash', r'\backslash'),
+            ('/', r'\backslash'), (r'\backslash', '/'),
             (r'\uparrow', r'\uparrow'), (r'\downarrow', r'\downarrow'), 
             (r'\Uparrow', r'\Uparrow'), (r'\Downarrow', r'\Downarrow'),
+            (r'\updownarrow', r'\updownarrow'), (r'\Updownarrow', r'\Updownarrow'),
         ]
     ],
 ]

@@ -84,16 +84,25 @@ class TestAll(BaseScene):
                     h_buff=0.5,
                     arrange_in_grid_config={
                         "col_alignments": "cl" * cols})
-                grid.remove(*grid.get_horizontal_lines())
-                grid.remove(*grid.get_vertical_lines())
+                grid.remove(
+                    *grid.get_horizontal_lines(), 
+                    *grid.get_vertical_lines())
                 grid.scale(min(14 / grid.width, 8 / grid.height))
+                labels = VGroup()
+                if Opt.DEBUG_LABELS in self.options:
+                    for line in lines:
+                        for item in line:
+                            if len(item) > 0:
+                                labels.add(index_labels(item[0]))
                 with self.say(caption):
+                    self.add(labels)
                     self.play(FadeIn(grid))
                     self.wait(5)
                     self.play(FadeOut(grid))
+                    self.remove(labels)
                 caption = f'Page {page + 2} of {pages}'
 
-        #self.options = self.options | Opt.DEBUG_TEX
+        #self.options = self.options | Opt.DEBUG_LABELS | Opt.DEBUG_SYMBOLS
 
         #show_group("Greek and Hebrew Letters", SYM_GREEK, flip=True)
         #show_group("Mathematical constructions", EXP_MATH, cols=3)

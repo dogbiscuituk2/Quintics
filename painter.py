@@ -137,6 +137,12 @@ class Painter():
     def _peek(self) -> str:
         index = self._token_index
         return self._tokens[index] if self._more else ''
+    
+    @property
+    def _pop(self) -> str:
+        token = self._peek
+        self._token_index += 1
+        return token
 
     def _accept(self, token: str) -> None:
         if (self._peek != token):
@@ -299,16 +305,21 @@ class Painter():
         token: The size modifier, e.g. '\\big', '\\Bigg'.
         '''
         self._accept(token)
-        delim = self._peek
-        g1 = self._paint_atom()
-        tex = MathTex(token + delim)
+        delim = self._pop
+        tokens = f'{token}{delim}'
+        symbol = Symbol(
+            token_index=self._token_index - 2,
+            token_count=2,
+            glyph_index=self._glyph_index,
+            glyph_count=1,
+            pen=self._get_token_pen(delim),
+            tokens = tokens)
+        tex = MathTex(tokens)
         glyphs = tex[0]
-        count = len(glyphs)
-        g1[0].glyph_count = len(glyphs)
-
-        print(f'{token=} {delim=} {count=}')
-
-        return g1
+        glyph_count = len(glyphs)
+        symbol.glyph_count = len(glyphs)
+        self._glyph_index += glyph_count
+        return [symbol]
 
     def _paint_sqrt(self) -> List[Symbol]:
         g1 = self._paint_symbol()
