@@ -769,16 +769,18 @@ SYM_ALL = [
     r'\zeta',
 ]
 
-PAT_GREEK = make_pattern(SYM_GREEK)
-PAT_MATH = make_pattern(SYM_MATH)
+PAT_ACCENT = make_pattern(SYM_ACCENT)
+PAT_ARROW = make_pattern(SYM_ARROW)
 PAT_DELIM = make_pattern(SYM_DELIM)
+PAT_FUNC = make_pattern(SYM_FUNC)
+PAT_GREEK = make_pattern(SYM_GREEK)
 PAT_INT = make_pattern(SYM_INT)
 PAT_LARGE = make_pattern(SYM_LARGE)
-PAT_FUNC = make_pattern(SYM_FUNC)
-PAT_OPS = make_pattern(SYM_OPS)
-PAT_ARROW = make_pattern(SYM_ARROW)
+PAT_MATH = make_pattern(SYM_MATH)
 PAT_MISC = make_pattern(SYM_MISC)
-PAT_ACCENT = make_pattern(SYM_ACCENT)
+PAT_OPS = make_pattern(SYM_OPS)
+PAT_SIZE = make_pattern(SYM_SIZE)
+
 PAT_MOD = make_pattern(SYM_MATH + SYM_ACCENT)
 PAT_ALL = make_pattern(SYM_ALL)
 
@@ -794,36 +796,26 @@ EXP_ACCENT = [
 EXP_DELIM = [
     *[fr'{size[0]}{delim[0]} x {size[1]}{delim[1]}' 
         for size in [
-            (r'\big', r'\big'), 
-            (r'\Big', r'\Big'), 
-            (r'\bigg', r'\bigg'), 
-            (r'\Bigg', r'\Bigg'), 
-            (r'\bigl', r'\bigr'), 
-            (r'\Bigl', r'\Bigr'), 
-            (r'\biggl', r'\biggr'), 
+            #(r'\big', r'\big'), 
+            #(r'\Big', r'\Big'), 
+            #(r'\bigg', r'\bigg'), 
+            #(r'\Bigg', r'\Bigg'), 
+            #(r'\bigl', r'\bigr'), 
+            #(r'\Bigl', r'\Bigr'), 
+            #(r'\biggl', r'\biggr'), 
             (r'\Biggl', r'\Biggr'), 
         ]
         for delim in [
-            ('(', ')'), 
-            ('[', ']'),
-            (r'\lceil', r'\rceil'),
-            (r'\lfloor', r'\rfloor'),
-            (r'\{', r'\}'),
-            (r'\langle', r'\rangle'),
-            ('|', '|'),
-            (r'\vert', r'\vert'),
-            (r'\|', r'\|'),
-            (r'\Vert', r'\Vert'),
-            (r'\ulcorner', r'\urcorner'),
-            (r'\llcorner', r'\lrcorner'),
-            ('/', '/'),
-            (r'\backslash', r'\backslash'),
-            ('/', r'\backslash'),
-            (r'\backslash', '/'),
-            (r'\uparrow', r'\uparrow'),
-            (r'\downarrow', r'\downarrow'),
-            (r'\Uparrow', r'\Uparrow'),
-            (r'\Downarrow', r'\Downarrow'),
+            #('(', ')'), ('[', ']'),
+            #(r'\lceil', r'\rceil'), (r'\lfloor', r'\rfloor'),
+            #(r'\{', r'\}'), (r'\langle', r'\rangle'),
+            #('|', '|'), (r'\vert', r'\vert'),
+            #(r'\|', r'\|'), (r'\Vert', r'\Vert'),
+            #(r'\ulcorner', r'\urcorner'), (r'\llcorner', r'\lrcorner'),
+            #('/', '/'), (r'\backslash', r'\backslash'),
+            #('/', r'\backslash'), (r'\backslash', '/'),
+            (r'\uparrow', r'\uparrow'), (r'\downarrow', r'\downarrow'), 
+            (r'\Uparrow', r'\Uparrow'), (r'\Downarrow', r'\Downarrow'),
         ]
     ],
 ]

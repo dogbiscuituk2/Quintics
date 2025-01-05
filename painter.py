@@ -231,11 +231,9 @@ class Painter():
             return self._paint_aggregate(prototype = r'\sum')
         if re.match(PAT_MOD, token):
             return self._paint_group(token)
+        if re.match(PAT_SIZE, token):
+            return self._paint_size(token)
         match token:
-            case r'\left':
-                return self._paint_delim(token)
-            case r'\right':
-                return self._paint_delim(token)
             case r'\frac':
                 return self._paint_frac()
             case r'\sqrt':
@@ -249,14 +247,7 @@ class Painter():
                 return self._paint_shift(token)
             case _:
                 return self._paint_token(token)
-            
-    def _paint_delim(self, token:str) -> List[Symbol]:
-        self._accept(token)
-        g1 = self._paint_atom()
-        self._dump_symbols('<', g1)
-        self._dump_symbols('>', g1)
-        return g1
-            
+
     def _paint_frac(self) -> List[Symbol]:
         g1 = self._paint_symbol()
         g2 = self._paint_atom()
@@ -290,15 +281,34 @@ class Painter():
 
     def _paint_shift(self, token: str) -> List[Symbol]:
         '''
-        If the current token is either '_' or '^' then return the following atom,
+        If the current token is either '_' or '^' then return the next atom,
         otherwise return the empty list.
 
-        str: The expected token, '_' or '^'.
+        token: The expected token, this will be either '_' or '^'.
         '''
         if self._peek == token:
             self._accept(token)
             return self._paint_atom()
         return []
+    
+    def _paint_size(self, token: str) -> List[Symbol]:
+        '''
+        Paint a delimiter symbol correctly, when the symbol is preceded by a 
+        size modifier.
+
+        token: The size modifier, e.g. '\\big', '\\Bigg'.
+        '''
+        self._accept(token)
+        delim = self._peek
+        g1 = self._paint_atom()
+        tex = MathTex(token + delim)
+        glyphs = tex[0]
+        count = len(glyphs)
+        g1[0].glyph_count = len(glyphs)
+
+        print(f'{token=} {delim=} {count=}')
+
+        return g1
 
     def _paint_sqrt(self) -> List[Symbol]:
         g1 = self._paint_symbol()
