@@ -77,7 +77,7 @@ class Painter():
 
         tex: The MathTex object to be painted.
         """
-        PAT_TOKEN = r"\\{|\\}|\\\||\\[A-Za-z]+|\\\\|\\\,|[^&\s]"
+        PAT_TOKEN = r"\\{|\\}|\\\||\\left\.|\\right\.|\\[A-Za-z]+|\\\\|\\\,|[^&\s]"
         self._tex = tex
         text = tex.tex_string
         if not text:
