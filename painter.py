@@ -154,6 +154,24 @@ class Painter():
         for symbol in symbols:
             symbol.glyph_index += delta
 
+    def _dump_symbols(self, flag: str, *lists: List[Symbol]) -> None:
+        if Opt.DEBUG_SYMBOLS in self.options:
+            frame = currentframe().f_back
+            if flag == '<':
+                print(frame.f_code.co_name, end=' ')
+            print(flag, end=' ')
+            for list in lists:
+                print(*list, end=' ')
+            if flag == '>':
+                print()
+
+    def _dump_tex(self) -> None:
+        if Opt.DEBUG_TEX in self.options:
+            print(self._tex.tex_string)
+            print(len(self._tokens), 'tokens:', *self._tokens)
+            print(len(self._tex[0]), 'glyphs')
+            print()
+
     def _get_colour(self, symbols: List[Symbol]) -> ManimColor:
         return symbols[0].pen if symbols else self._painter.get_colour(Pen.FG)
 
@@ -364,21 +382,3 @@ class Painter():
     def _set_colour(symbols: List[Symbol], colour: ManimColor) -> None:
         for symbol in symbols:
             symbol.pen = colour
-
-    def _dump_symbols(self, flag: str, *lists: List[Symbol]) -> None:
-        if Opt.DEBUG_SYMBOLS in self.options:
-            frame = currentframe().f_back
-            if flag == '<':
-                print(frame.f_code.co_name, end=' ')
-            print(flag, end=' ')
-            for list in lists:
-                print(*list, end=' ')
-            if flag == '>':
-                print()
-
-    def _dump_tex(self) -> None:
-        if Opt.DEBUG_TEX in self.options:
-            print(self._tex.tex_string)
-            print(len(self._tokens), 'tokens:', *self._tokens)
-            print(len(self._tex[0]), 'glyphs')
-            print()
