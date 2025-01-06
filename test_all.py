@@ -102,7 +102,11 @@ class TestAll(BaseScene):
                     self.remove(labels)
                 caption = f'Page {page + 2} of {pages}'
 
-        #self.options = self.options | Opt.DEBUG_LABELS | Opt.DEBUG_SYMBOLS
+        #self.options = self.options | Opt.DEBUG_COLOURS
+        #self.options = self.options | Opt.DEBUG_LABELS
+        self.options = self.options | Opt.DEBUG_NOPAINT
+        #self.options = self.options | Opt.DEBUG_SYMBOLS
+        #self.options = self.options | Opt.DEBUG_TEX
 
         #show_group("Greek and Hebrew Letters", SYM_GREEK, flip=True)
         #show_group("Mathematical constructions", EXP_MATH, cols=3)
