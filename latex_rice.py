@@ -794,46 +794,48 @@ EXP_ACCENT = [
     r'\tilde{a}', r'\vec{a}', r'\Tilde{\Tilde{A}}', r'\Vec{\Vec{A}}',
 ]
 EXP_DELIM = [
-
+    *[fr'{text[0]}{delim[0]} {text[1]} {text[2]}{delim[1]}_0^1' 
+        for text in [
+            (r'\big', 'x', r'\big'), 
+            (r'\bigl', 'x', r'\bigr'), 
+            (r'\Big', 'x', r'\Big'), 
+            (r'\Bigl', 'x', r'\Bigr'), 
+            (r'\bigg', 'x', r'\bigg'), 
+            (r'\biggl', 'x', r'\biggr'), 
+            (r'\Bigg', 'x', r'\Bigg'), 
+            (r'\Biggl', 'x', r'\Biggr'), 
+        ]
+        for delim in [
+            ('(', ')'), 
+            ('[', ']'),
+            (r'\{', r'\}'), 
+            (r'\langle', r'\rangle'),
+            ('|', '|'), 
+            (r'\|', r'\|'),
+            (r'\lceil', r'\rceil'), 
+            (r'\lfloor', r'\rfloor'),
+            ('/', '/'), 
+            (r'\backslash', r'\backslash'),
+            (r'\uparrow', r'\uparrow'),
+            (r'\updownarrow', r'\updownarrow'),
+            (r'\downarrow', r'\downarrow'), 
+            (r'\Uparrow', r'\Uparrow'),
+            (r'\Updownarrow', r'\Updownarrow'),
+            (r'\Downarrow', r'\Downarrow'),
+            (r'\bracevert', r'\bracevert'),
+            (r'\lgroup', r'\rgroup'),
+            (r'\lmoustache', r'\rmoustache'),
+            (r'\rmoustache', r'\lmoustache'),
+        ]
+    ],
     r'\left\Updownarrow x \right\Uparrow',
     r'\left\Updownarrow\frac{x}{y}\right\Uparrow',
     r'\left\Updownarrow\frac{\left\Updownarrow x \right\Uparrow}{\left\Updownarrow x \right\Uparrow}\right\Uparrow',
     r'\left\Updownarrow\frac{\left\Updownarrow \frac{x}{y} \right\Uparrow}{\left\Updownarrow \frac{x}{y} \right\Uparrow}\right\Uparrow',
-
-#    *[fr'{text[0]}{delim[0]} {text[1]} {text[2]}{delim[1]}_0^1' 
-#        for text in [
-#            (r'\big', 'x', r'\big'), 
-#            (r'\bigl', 'x', r'\bigr'), 
-#            (r'\Big', 'x', r'\Big'), 
-#            (r'\Bigl', 'x', r'\Bigr'), 
-#            (r'\bigg', 'x', r'\bigg'), 
-#            (r'\biggl', 'x', r'\biggr'), 
-#            (r'\Bigg', 'x', r'\Bigg'), 
-#            (r'\Biggl', 'x', r'\Biggr'), 
-#        ]
-#        for delim in [
-#            ('(', ')'), 
-#            ('[', ']'),
-#            (r'\{', r'\}'), 
-#            (r'\langle', r'\rangle'),
-#            ('|', '|'), 
-#            (r'\|', r'\|'),
-#            (r'\lceil', r'\rceil'), 
-#            (r'\lfloor', r'\rfloor'),
-#            ('/', '/'), 
-#            (r'\backslash', r'\backslash'),
-#            (r'\uparrow', r'\uparrow'),
-#            (r'\updownarrow', r'\updownarrow'),
-#            (r'\downarrow', r'\downarrow'), 
-#            (r'\Uparrow', r'\Uparrow'),
-#            (r'\Updownarrow', r'\Updownarrow'),
-#            (r'\Downarrow', r'\Downarrow'),
-#            (r'\bracevert', r'\bracevert'),
-#            (r'\lgroup', r'\rgroup'),
-#            (r'\lmoustache', r'\rmoustache'),
-#            (r'\rmoustache', r'\lmoustache'),
-#        ]
-#    ]
+    r'\Updownarrow x \Uparrow',
+    r'\Updownarrow\frac{x}{y}\Uparrow',
+    r'\Updownarrow\frac{\Updownarrow x \Uparrow}{\Updownarrow x \Uparrow}\Uparrow',
+    r'\Updownarrow\frac{\Updownarrow \frac{x}{y} \Uparrow}{\Updownarrow \frac{x}{y} \Uparrow}\Uparrow',
 ]
 EXP_FONT = [
     r'\displaystyle \int f^{-1}(x-x_a)\,dx}',

@@ -98,7 +98,6 @@ class BaseScene(VoiceoverScene):
         return matrix
 
     def make_tex(self, text: str) -> MathTex:
-        print(text)
         tex: MathTex = MathTex(text)
         self._paint_tex(tex)
         return tex

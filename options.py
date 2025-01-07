@@ -40,10 +40,10 @@ class Opt(Flag):
     """Skip painting glyphs."""
 
     DEBUG_SYMBOLS = auto()
-    """Print Symbols before & after."""
+    """Show Symbols before & after."""
 
     DEBUG_TEX = auto()
-    """Print MathTex structure."""
+    """Show MathTex structure."""
 
     SHIFT = SUB | SUPER
     SYM = MATH | ACCENT

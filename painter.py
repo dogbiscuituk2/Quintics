@@ -241,9 +241,7 @@ class Painter():
                     pen = symbol.pen
                 colour = self.get_colour(pen)
                 for index in range(start, stop):
-
                     if index >= 0 and index < len(glyphs):
-
                         glyph = glyphs[index]
                         glyph.set_color(colour)
     
@@ -352,77 +350,38 @@ class Painter():
     def _paint_size(self, token: str) -> List[Symbol]:
         '''
         Paint a delimiter symbol correctly, when the symbol is preceded by a 
-        size modifier.
+        static or dynamic size modifier.
 
-        token: The size modifier, e.g. '\\big', '\\Bigg'.
+        token: The size modifier, e.g. '\\left', '\\big', '\\Bigg'.
         '''
+
+        def _get_gap(left_index: int, right_index: int) -> int:
+            left = self._tokens[left_index]
+            right = self._tokens[right_index]
+            s = self._text
+            snip = s[0:left.start] + s[left.end:right.start] + s[right.end:]
+            return 1 + (len(self._tex[0]) - len(MathTex(snip)[0])) // 2
+
+        token_index = self._token_index
         self._accept(token)
         delim = self._pop
-
-        # outer='\\left\\Updownarrow x \\right\\Uparrow' 
-        # inner='\\Updownarrow x \\right'
-
-        # index_L=11 index_R=14 
-        # outer='\\left\\Updownarrow x \\right\\Uparrow' 
-        # inner='\\Updownarrow x \\Uparrow'
-
-        # index_L=0 index_R=17 outer='\\left\\Updownarrow\\frac{\\left\\Updownarrow x \\right\\Uparrow}{\\left\\Updownarrow x \\right\\Uparrow}\\right\\Uparrow' inner='\\Updownarrow\\frac{\\left\\Updownarrow x \\right\\Uparrow}{\\left\\Updownarrow x \\right\\Uparrow}\\Uparrow'
-        # \left\Updownarrow\frac{\left\Updownarrow \frac{x}{y} \right\Uparrow}{\left\Updownarrow \frac{x}{y} \right\Uparrow}\right\Uparrow
-        # index_L=0 index_R=29 outer='\\left\\Updownarrow\\frac{\\left\\Updownarrow \\frac{x}{y} \\right\\Uparrow}{\\left\\Updownarrow \\frac{x}{y} \\right\\Uparrow}\\right\\Uparrow' inner='\\Updownarrow\\frac{\\left\\Updownarrow \\frac{x}{y} \\right\\Uparrow}{\\left\\Updownarrow \\frac{x}{y} \\right\\Uparrow}\\Uparrow'
-        # index_L=4 index_R=13 outer='\\left\\Updownarrow \\frac{x}{y} \\right\\Uparrow' inner='\\Updownarrow \\frac{x}{y} \\Uparrow'
-        # index_L=4 index_R=13 outer='\\left\\Updownarrow \\frac{x}{y} \\right\\Uparrow' inner='\\Updownarrow \\frac{x}{y} \\Uparrow'
-        # index_L=17 index_R=26 outer='\\left\\Updownarrow \\frac{x}{y} \\right\\Uparrow' inner='\\Updownarrow \\frac{x}{y} \\Uparrow'
-        # index_L=17 index_R=26 outer='\\left\\Updownarrow \\frac{x}{y} \\right\\Uparrow' inner='\\Updownarrow \\frac{x}{y} \\Uparrow'
-
-        # index_L=0 index_R=29 
-        # outer='\\left\\Updownarrow\\frac{\\left\\Updownarrow \\frac{x}{y} \\right\\Uparrow}{\\left\\Updownarrow \\frac{x}{y} \\right\\Uparrow}\\right\\Uparrow' 
-        # inner='\\Updownarrow\\frac{\\left\\Updownarrow \\frac{x}{y} \\right\\Uparrow}{\\left\\Updownarrow \\frac{x}{y} \\right\\Uparrow}\\Uparrow'
-
-        match token:
-            case r'\left':
-                index_L = self._token_index - 2;
-                index_R = self._get_index_R(index_L)
-
-                start = self._tokens[index_L].start
-                end = self._tokens[index_R + 1].end
-                outer = self._text[start:end]
-
-                start = self._tokens[index_L].end
-                end = self._tokens[index_R].start
-                inner = self._text[start:end] + self._tokens[index_R + 1].string
-
-                overhead = len(MathTex(outer)[0]) - len(MathTex(inner)[0])
-                print(f'{index_L=} {index_R=} {outer=} {inner=} {overhead=}')
-
-            case r'\right':
-                index_R = self._token_index - 2;
-                index_L = self._get_index_L(index_R)
-
-                start = self._tokens[index_L].start
-                end = self._tokens[index_R + 1].end
-                outer = self._text[start:end]
-
-                start = self._tokens[index_L].end
-                end = self._tokens[index_R].start
-                inner = self._text[start:end] + self._tokens[index_R + 1].string
-
-                overhead = len(MathTex(outer)[0]) - len(MathTex(inner)[0])
-                print(f'{index_L=} {index_R=} {outer=} {inner=} {overhead=}')
-
         tokens = f'{token}{delim}'
         symbol = Symbol(
-            token_index=self._token_index - 2,
+            token_index=token_index,
             token_count=2,
             glyph_index=self._glyph_index,
             glyph_count=1,
             pen=self._get_token_pen(delim),
             tokens = tokens)
-        tex = MathTex(tokens)
-        glyphs = tex[0]
-        glyph_count = len(glyphs)
-
-        symbol.glyph_count = glyph_count
-        self._glyph_index += glyph_count
+        match token:
+            case r'\left': # Dynamic
+                gap = _get_gap(token_index, self._get_index_R(token_index))
+            case r'\right': # Dynamic
+                gap = _get_gap(self._get_index_L(token_index), token_index)
+            case _: # Static
+                gap = len(MathTex(tokens)[0])
+        symbol.glyph_count = gap
+        self._glyph_index += gap
         return [symbol]
 
     def _paint_sqrt(self) -> List[Symbol]:
