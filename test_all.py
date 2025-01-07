@@ -87,7 +87,7 @@ class TestAll(BaseScene):
                 grid.remove(
                     *grid.get_horizontal_lines(), 
                     *grid.get_vertical_lines())
-                grid.scale(min(14 / grid.width, 8 / grid.height))
+                grid.scale(min(14 / grid.width, 8 / grid.height) * 0.95)
                 labels = VGroup()
                 if Opt.DEBUG_LABELS in self.options:
                     for line in lines:
@@ -104,7 +104,7 @@ class TestAll(BaseScene):
 
         #self.options = self.options | Opt.DEBUG_COLOURS
         #self.options = self.options | Opt.DEBUG_LABELS
-        self.options = self.options | Opt.DEBUG_NOPAINT
+        #self.options = self.options | Opt.DEBUG_NOPAINT
         #self.options = self.options | Opt.DEBUG_SYMBOLS
         #self.options = self.options | Opt.DEBUG_TEX
 

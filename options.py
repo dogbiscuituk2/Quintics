@@ -12,17 +12,39 @@ the Pen used for background fill.
 from enum import Flag, auto
 
 class Opt(Flag):
-    NONE          = 0
-    SUB           = auto() # 'x_1': 1 matches x.
-    SUPER         = auto() # 'x^2': 2 matches x.
-    DIFF          = auto() # r'\frac{d^2x}{dy^2}': d,\partial match x,y.
-    MATH          = auto() # r'\overbrace{x}': brace matches x.
-    ACCENT        = auto() # r'acute{e}': accent matches letter.
-    DEBUG_COLOURS = auto() # override all colours & assign sequentially.
-    DEBUG_LABELS  = auto() # show index_labels for each MathTex/Text.
-    DEBUG_NOPAINT = auto() # skip painting glyphs.
-    DEBUG_SYMBOLS = auto() # print Symbols before & after.
-    DEBUG_TEX     = auto() # print MathTex structure.
-    SHIFT         = SUB | SUPER
-    SYM           = MATH | ACCENT
-    DEFAULT       = SHIFT | DIFF | SYM # everything except AUTO, DEBUG.
+
+    NONE = 0
+
+    SUB = auto()
+    """Subscripts. In 'x_1', the colour of '1' matches 'x'."""
+
+    SUPER = auto()
+    """Superscripts. In 'x^2', the colour of '2' matches 'x'."""
+
+    DIFF = auto()
+    """Differentials. In 'dx', the colour of 'd' matches 'x'."""
+
+    MATH = auto()
+    """Example: in '\\overbrace{x}', the brace colour matches 'x'."""
+
+    ACCENT = auto()
+    """Example: in '\\acute{e}', the accent colour matches 'e'."""
+
+    DEBUG_COLOURS = auto()
+    """Override all colours & assign sequential ones cyclically."""
+
+    DEBUG_LABELS = auto()
+    """Show index_labels for each MathTex or Text."""
+
+    DEBUG_NOPAINT = auto()
+    """Skip painting glyphs."""
+
+    DEBUG_SYMBOLS = auto()
+    """Print Symbols before & after."""
+
+    DEBUG_TEX = auto()
+    """Print MathTex structure."""
+
+    SHIFT = SUB | SUPER
+    SYM = MATH | ACCENT
+    DEFAULT = SHIFT | DIFF | SYM

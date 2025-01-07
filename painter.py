@@ -13,11 +13,13 @@ colours to the glyphs in a MathTex object.
 
 from inspect import currentframe
 from latex_rice import *
+from latex_token import Token
 from manim import *
 from options import Opt
 from pens import *
 import re
 from symbol import Symbol
+from typing import Generator, Tuple
 
 class Painter():
 
@@ -77,12 +79,22 @@ class Painter():
 
         tex: The MathTex object to be painted.
         """
-        PAT_TOKEN = r"\\{|\\}|\\\||\\left\.|\\right\.|\\[A-Za-z]+|\\\\|\\\,|[^&\s]"
+        # r'\left.', r'\right.' not implemented.
+        self._tokens = []
+        PAT_TOKEN = r"\\{|\\}|\\\||\\[A-Za-z]+|\\\\|\\\,|[^&\s]"
         self._tex = tex
         text = tex.tex_string
         if not text:
             return
-        self._tokens = re.findall(PAT_TOKEN, text)
+        self._text = text
+        for match in re.finditer(PAT_TOKEN, text):
+            span = match.span()
+            start = span[0]
+            end = span[1]
+            length = end - start
+            string = text[start:end]
+            token = Token(start=start, length=length, string=string)
+            self._tokens.append(token)
         self._token_index = 0
         self._glyph_index = 0
         self._dump_tex()
@@ -117,7 +129,8 @@ class Painter():
 
     _colour_map: List[tuple[re.Pattern[str], int]] = []
     _tex: MathTex
-    _tokens: List[str] = []
+    _text: str
+    _tokens: List[Token] = []
     _token_index: int
     _glyph_index: int
 
@@ -136,7 +149,7 @@ class Painter():
     @property
     def _peek(self) -> str:
         index = self._token_index
-        return self._tokens[index] if self._more else ''
+        return self._tokens[index].string if self._more else ''
     
     @property
     def _pop(self) -> str:
@@ -179,9 +192,24 @@ class Painter():
     def _get_glyph_count(symbols: List[Symbol]) -> int:
         return sum(symbol.glyph_count for symbol in symbols)
 
+    def _get_index_L(self, index_R: int) -> int:
+        return list(filter(lambda p: p[1] == index_R, self._get_parens()))[0][0]
+
+    def _get_index_R(self, index_L: int) -> int:
+        return list(filter(lambda p: p[0] == index_L, self._get_parens()))[0][1]
+
     def _get_next_pen(self, pen: Pen) -> Pen:
         pen = Pen(pen.value + 1) if pen.value < 21 else Pen(0)
         return pen if pen != self._back_pen else self._get_next_pen(pen)
+
+    def _get_parens(self) -> Generator[Tuple[int, int], None, None]:
+        lefts = []
+        for index, token in enumerate(self._tokens):
+            match token.string:
+                case r'\left':
+                    lefts.append(index)
+                case r'\right':
+                    yield (lefts.pop(), index)
 
     @staticmethod
     def _get_tex_length(token: str) -> int:
@@ -207,11 +235,17 @@ class Painter():
             start = symbol.glyph_index
             stop = start + symbol.glyph_count
             if stop > start:
-                pen = self._get_next_pen(pen) if Opt.DEBUG_COLOURS in self.options else symbol.pen
+                if Opt.DEBUG_COLOURS in self.options:
+                    pen = self._get_next_pen(pen)
+                else:
+                    pen = symbol.pen
                 colour = self.get_colour(pen)
                 for index in range(start, stop):
-                    glyph = glyphs[index]
-                    glyph.set_color(colour)
+
+                    if index >= 0 and index < len(glyphs):
+
+                        glyph = glyphs[index]
+                        glyph.set_color(colour)
     
     def _paint_aggregate(self, prototype: str) -> List[Symbol]:
         g1 = self._paint_symbol()
@@ -324,6 +358,57 @@ class Painter():
         '''
         self._accept(token)
         delim = self._pop
+
+        # outer='\\left\\Updownarrow x \\right\\Uparrow' 
+        # inner='\\Updownarrow x \\right'
+
+        # index_L=11 index_R=14 
+        # outer='\\left\\Updownarrow x \\right\\Uparrow' 
+        # inner='\\Updownarrow x \\Uparrow'
+
+        # index_L=0 index_R=17 outer='\\left\\Updownarrow\\frac{\\left\\Updownarrow x \\right\\Uparrow}{\\left\\Updownarrow x \\right\\Uparrow}\\right\\Uparrow' inner='\\Updownarrow\\frac{\\left\\Updownarrow x \\right\\Uparrow}{\\left\\Updownarrow x \\right\\Uparrow}\\Uparrow'
+        # \left\Updownarrow\frac{\left\Updownarrow \frac{x}{y} \right\Uparrow}{\left\Updownarrow \frac{x}{y} \right\Uparrow}\right\Uparrow
+        # index_L=0 index_R=29 outer='\\left\\Updownarrow\\frac{\\left\\Updownarrow \\frac{x}{y} \\right\\Uparrow}{\\left\\Updownarrow \\frac{x}{y} \\right\\Uparrow}\\right\\Uparrow' inner='\\Updownarrow\\frac{\\left\\Updownarrow \\frac{x}{y} \\right\\Uparrow}{\\left\\Updownarrow \\frac{x}{y} \\right\\Uparrow}\\Uparrow'
+        # index_L=4 index_R=13 outer='\\left\\Updownarrow \\frac{x}{y} \\right\\Uparrow' inner='\\Updownarrow \\frac{x}{y} \\Uparrow'
+        # index_L=4 index_R=13 outer='\\left\\Updownarrow \\frac{x}{y} \\right\\Uparrow' inner='\\Updownarrow \\frac{x}{y} \\Uparrow'
+        # index_L=17 index_R=26 outer='\\left\\Updownarrow \\frac{x}{y} \\right\\Uparrow' inner='\\Updownarrow \\frac{x}{y} \\Uparrow'
+        # index_L=17 index_R=26 outer='\\left\\Updownarrow \\frac{x}{y} \\right\\Uparrow' inner='\\Updownarrow \\frac{x}{y} \\Uparrow'
+
+        # index_L=0 index_R=29 
+        # outer='\\left\\Updownarrow\\frac{\\left\\Updownarrow \\frac{x}{y} \\right\\Uparrow}{\\left\\Updownarrow \\frac{x}{y} \\right\\Uparrow}\\right\\Uparrow' 
+        # inner='\\Updownarrow\\frac{\\left\\Updownarrow \\frac{x}{y} \\right\\Uparrow}{\\left\\Updownarrow \\frac{x}{y} \\right\\Uparrow}\\Uparrow'
+
+        match token:
+            case r'\left':
+                index_L = self._token_index - 2;
+                index_R = self._get_index_R(index_L)
+
+                start = self._tokens[index_L].start
+                end = self._tokens[index_R + 1].end
+                outer = self._text[start:end]
+
+                start = self._tokens[index_L].end
+                end = self._tokens[index_R].start
+                inner = self._text[start:end] + self._tokens[index_R + 1].string
+
+                overhead = len(MathTex(outer)[0]) - len(MathTex(inner)[0])
+                print(f'{index_L=} {index_R=} {outer=} {inner=} {overhead=}')
+
+            case r'\right':
+                index_R = self._token_index - 2;
+                index_L = self._get_index_L(index_R)
+
+                start = self._tokens[index_L].start
+                end = self._tokens[index_R + 1].end
+                outer = self._text[start:end]
+
+                start = self._tokens[index_L].end
+                end = self._tokens[index_R].start
+                inner = self._text[start:end] + self._tokens[index_R + 1].string
+
+                overhead = len(MathTex(outer)[0]) - len(MathTex(inner)[0])
+                print(f'{index_L=} {index_R=} {outer=} {inner=} {overhead=}')
+
         tokens = f'{token}{delim}'
         symbol = Symbol(
             token_index=self._token_index - 2,
@@ -335,7 +420,8 @@ class Painter():
         tex = MathTex(tokens)
         glyphs = tex[0]
         glyph_count = len(glyphs)
-        symbol.glyph_count = len(glyphs)
+
+        symbol.glyph_count = glyph_count
         self._glyph_index += glyph_count
         return [symbol]
 
