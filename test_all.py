@@ -110,7 +110,8 @@ class TestAll(BaseScene):
 
         show_group("Greek and Hebrew Letters", SYM_GREEK, flip=True)
         show_group("Mathematical constructions", EXP_MATH, cols=3)
-        show_group("Delimiters", EXP_DELIM, rows=10, flip=False)
+        show_group("Static delimiters", EXP_DELIM_STATIC, rows=10, flip=True)
+        show_group("Dynamic delimiters", EXP_DELIM_DYNAMIC, cols = 1)
         show_group("Integrals", EXP_INT, 1)
         show_group("Variable sized symbols", SYM_LARGE)
         show_group("Standard function names", SYM_FUNC, flip=True)

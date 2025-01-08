@@ -793,7 +793,7 @@ EXP_ACCENT = [
     r'\grave{a}', r'\hat{a}', r'\Grave{\Grave{A}}', r'\Hat{\Hat{A}}',
     r'\tilde{a}', r'\vec{a}', r'\Tilde{\Tilde{A}}', r'\Vec{\Vec{A}}',
 ]
-EXP_DELIM = [
+EXP_DELIM_STATIC = [
     *[fr'{text[0]}{delim[0]} {text[1]} {text[2]}{delim[1]}_0^1' 
         for text in [
             (r'\big', 'x', r'\big'), 
@@ -827,7 +827,9 @@ EXP_DELIM = [
             (r'\lmoustache', r'\rmoustache'),
             (r'\rmoustache', r'\lmoustache'),
         ]
-    ],
+    ]
+]
+EXP_DELIM_DYNAMIC = [
     r'\left\Updownarrow x \right\Uparrow',
     r'\left\Updownarrow\frac{x}{y}\right\Uparrow',
     r'\left\Updownarrow\frac{\left\Updownarrow x \right\Uparrow}{\left\Updownarrow x \right\Uparrow}\right\Uparrow',
