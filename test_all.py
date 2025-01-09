@@ -64,6 +64,9 @@ class TestAll(BaseScene):
                     while len(line) // 2 < cols:
                         add_tex(line, '')
 
+            def dump():
+                print(list(x.height for x in self.mobjects))
+
             count = len(strings)
             if count < 1:
                 return
@@ -89,36 +92,34 @@ class TestAll(BaseScene):
                     *grid.get_vertical_lines())
                 grid.scale(min(14 / grid.width, 8 / grid.height) * 0.95)
                 labels = VGroup()
-                if Opt.DEBUG_LABELS in self.options:
-                    for line in lines:
-                        for item in line:
-                            if len(item) > 0:
-                                labels.add(index_labels(item[0]))
                 with self.say(caption):
-                    self.add(labels)
                     self.play(FadeIn(grid))
+                    if Opt.DEBUG_LABELS in self.options:
+                        labels = self.get_labels()
+                        self.play(FadeIn(labels))
                     self.wait(5)
+                    if Opt.DEBUG_LABELS in self.options:
+                        self.play(FadeOut(labels))
                     self.play(FadeOut(grid))
-                    self.remove(labels)
                 caption = f'Page {page + 2} of {pages}'
 
         #self.options = self.options | Opt.DEBUG_COLOURS
-        #self.options = self.options | Opt.DEBUG_LABELS
+        self.options = self.options | Opt.DEBUG_LABELS
         #self.options = self.options | Opt.DEBUG_NOPAINT
         #self.options = self.options | Opt.DEBUG_SYMBOLS
         #self.options = self.options | Opt.DEBUG_TEX
 
         show_group("Greek and Hebrew Letters", SYM_GREEK, flip=True)
         show_group("Mathematical constructions", EXP_MATH, cols=3)
-        show_group("Static delimiters", EXP_DELIM_STATIC, rows=10, flip=True)
-        show_group("Dynamic delimiters", EXP_DELIM_DYNAMIC, cols = 1)
+        #show_group("Static delimiters", EXP_DELIM_STATIC, rows=10, flip=True)
+        #show_group("Dynamic delimiters", EXP_DELIM_DYNAMIC, cols = 1)
         show_group("Integrals", EXP_INT, 1)
         show_group("Variable sized symbols", SYM_LARGE)
-        show_group("Standard function names", SYM_FUNC, flip=True)
-        show_group("Binary operation and relation symbols", SYM_OPS, 5)
-        show_group("Arrow symbols", SYM_ARROW)
-        show_group("Miscellaneous symbols", SYM_MISC)
-        show_group("Math mode accents", EXP_ACCENT)
-        show_group("Other styles - math mode only", EXP_STYLE, 1)
-        show_group("Font sizes", EXP_FONT, 1)
-        show_group("All symbols", SYM_ALL, flip=True)
+        #show_group("Standard function names", SYM_FUNC, flip=True)
+        #show_group("Binary operation and relation symbols", SYM_OPS, 5)
+        #show_group("Arrow symbols", SYM_ARROW)
+        #show_group("Miscellaneous symbols", SYM_MISC)
+        #show_group("Math mode accents", EXP_ACCENT)
+        #show_group("Other styles - math mode only", EXP_STYLE, 1)
+        #show_group("Font sizes", EXP_FONT, 1)
+        #show_group("All symbols", SYM_ALL, flip=True)
