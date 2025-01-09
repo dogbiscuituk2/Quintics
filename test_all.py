@@ -10,6 +10,7 @@ form, coloured according to the colour map.
 """
 
 from base_scene import BaseScene
+from index_labels import get_labels
 from latex_rice import *
 from painter import *
 
@@ -93,14 +94,11 @@ class TestAll(BaseScene):
                 grid.scale(min(14 / grid.width, 8 / grid.height) * 0.95)
                 labels = VGroup()
                 with self.say(caption):
-                    self.play(FadeIn(grid))
                     if Opt.DEBUG_LABELS in self.options:
-                        labels = self.get_labels()
-                        self.play(FadeIn(labels))
+                        labels = get_labels(grid)
+                    self.play(FadeIn(grid, labels))
                     self.wait(5)
-                    if Opt.DEBUG_LABELS in self.options:
-                        self.play(FadeOut(labels))
-                    self.play(FadeOut(grid))
+                    self.play(FadeOut(grid, labels))
                 caption = f'Page {page + 2} of {pages}'
 
         #self.options = self.options | Opt.DEBUG_COLOURS
@@ -111,15 +109,15 @@ class TestAll(BaseScene):
 
         show_group("Greek and Hebrew Letters", SYM_GREEK, flip=True)
         show_group("Mathematical constructions", EXP_MATH, cols=3)
-        #show_group("Static delimiters", EXP_DELIM_STATIC, rows=10, flip=True)
-        #show_group("Dynamic delimiters", EXP_DELIM_DYNAMIC, cols = 1)
+        show_group("Static delimiters", EXP_DELIM_STATIC, rows=10, flip=True)
+        show_group("Dynamic delimiters", EXP_DELIM_DYNAMIC, cols = 1)
         show_group("Integrals", EXP_INT, 1)
         show_group("Variable sized symbols", SYM_LARGE)
-        #show_group("Standard function names", SYM_FUNC, flip=True)
-        #show_group("Binary operation and relation symbols", SYM_OPS, 5)
-        #show_group("Arrow symbols", SYM_ARROW)
-        #show_group("Miscellaneous symbols", SYM_MISC)
-        #show_group("Math mode accents", EXP_ACCENT)
-        #show_group("Other styles - math mode only", EXP_STYLE, 1)
-        #show_group("Font sizes", EXP_FONT, 1)
-        #show_group("All symbols", SYM_ALL, flip=True)
+        show_group("Standard function names", SYM_FUNC, flip=True)
+        show_group("Binary operation and relation symbols", SYM_OPS, 5)
+        show_group("Arrow symbols", SYM_ARROW)
+        show_group("Miscellaneous symbols", SYM_MISC)
+        show_group("Math mode accents", EXP_ACCENT)
+        show_group("Other styles - math mode only", EXP_STYLE, 1)
+        show_group("Font sizes", EXP_FONT, 1)
+        show_group("All symbols", SYM_ALL, flip=True)

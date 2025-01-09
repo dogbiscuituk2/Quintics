@@ -82,24 +82,6 @@ class BaseScene(VoiceoverScene):
     def get_colour(self, pen: Pen) -> ManimColor:
         return self._painter.get_colour(pen)
 
-    def get_labels(self) -> VGroup:
-        return self.get_labels()
-
-    def get_labels(self, *objs: Mobject) -> VGroup:
-        self._labels.submobjects.clear()
-
-        def _add(parent: Mobject) -> None:
-            if isinstance(parent, SVGMobject):
-                self._labels.add(index_labels(parent))
-            if isinstance(parent, VMobject):
-                for child in parent.submobjects:
-                    _add(child)
-
-        for obj in self.mobjects:
-            _add(obj)
-        print(len(self._labels))
-        return self._labels
-
     def make_matrix(
             self,
             matrix: List[List[str]],
@@ -137,7 +119,6 @@ class BaseScene(VoiceoverScene):
 #region Private Implementation
 
     _boxes = None
-    _labels = VGroup()
     _painter: Painter
     
     def _paint_tex(self, tex: MathTex) -> None:

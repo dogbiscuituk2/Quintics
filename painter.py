@@ -72,7 +72,7 @@ class Painter():
         Returns: The colour associated with the given pen.
         """
         return PALETTE_BRIGHT[pen.value]
-        
+    
     def paint_tex(self, tex: MathTex) -> None:
         """
         Apply colours to the glyphs in the given MathTex object.
