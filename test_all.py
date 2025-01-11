@@ -65,9 +65,6 @@ class TestAll(BaseScene):
                     while len(line) // 2 < cols:
                         add_tex(line, '')
 
-            def dump():
-                print(list(x.height for x in self.mobjects))
-
             count = len(strings)
             if count < 1:
                 return
@@ -94,7 +91,7 @@ class TestAll(BaseScene):
                 grid.scale(min(14 / grid.width, 8 / grid.height) * 0.95)
                 screen = VGroup(grid)
                 if Opt.DEBUG_LABELS in self.options:
-                    screen.add(get_labels(grid))
+                    screen.add(get_labels([SingleStringMathTex], grid))
                 with self.say(caption):
                     self.play(FadeIn(screen))
                     self.wait(5)
