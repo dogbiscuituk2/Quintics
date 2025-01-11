@@ -39,6 +39,9 @@ class Opt(Flag):
     DEBUG_NOPAINT = auto()
     """Skip painting glyphs."""
 
+    DEBUG_SILENT = auto()
+    """Mute all voiceover calls."""
+
     DEBUG_SYMBOLS = auto()
     """Show Symbols before & after."""
 

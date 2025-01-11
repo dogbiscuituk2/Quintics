@@ -92,18 +92,19 @@ class TestAll(BaseScene):
                     *grid.get_horizontal_lines(), 
                     *grid.get_vertical_lines())
                 grid.scale(min(14 / grid.width, 8 / grid.height) * 0.95)
-                labels = VGroup()
+                screen = VGroup(grid)
+                if Opt.DEBUG_LABELS in self.options:
+                    screen.add(get_labels(grid))
                 with self.say(caption):
-                    if Opt.DEBUG_LABELS in self.options:
-                        labels = get_labels(grid)
-                    self.play(FadeIn(grid, labels))
+                    self.play(FadeIn(screen))
                     self.wait(5)
-                    self.play(FadeOut(grid, labels))
+                    self.play(FadeOut(screen))
                 caption = f'Page {page + 2} of {pages}'
 
         #self.options = self.options | Opt.DEBUG_COLOURS
         self.options = self.options | Opt.DEBUG_LABELS
         #self.options = self.options | Opt.DEBUG_NOPAINT
+        #self.options = self.options | Opt.DEBUG_SILENT
         #self.options = self.options | Opt.DEBUG_SYMBOLS
         #self.options = self.options | Opt.DEBUG_TEX
 

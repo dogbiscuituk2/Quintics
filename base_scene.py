@@ -14,6 +14,7 @@ The BaseScene class is a subclass of the Manim Scene class and the Manim
 VoiceoverScene class.
 """
 
+import contextlib
 from inspect import currentframe
 from manim import *
 from manim_voiceover import VoiceoverScene
@@ -110,6 +111,8 @@ class BaseScene(VoiceoverScene):
         while frame.f_code.co_name != 'construct':
             frame = frame.f_back
         print(f"{frame.f_lineno}: {text}")
+        if Opt.DEBUG_SILENT in self.options:
+            return contextlib.suppress()
         # Specify language & disable language check to avoid GTTS bugs.
         return self.voiceover(text, lang='en', lang_check=False)
     
