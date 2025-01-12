@@ -114,7 +114,9 @@ class TestAll(BaseScene):
         show_group("Dynamic delimiters", EXP_DELIM_DYNAMIC, cols = 1)
         show_group("Integrals", EXP_INT, 1)
         show_group("Variable sized symbols", SYM_LARGE)
+        #self.options |= Opt.DEBUG_LABELS
         show_group("Standard function names", SYM_FUNC, flip=True)
+        #self.options &= ~Opt.DEBUG_LABELS
         show_group("Binary operation and relation symbols", SYM_OPS, 5)
         show_group("Arrow symbols", SYM_ARROW)
         show_group("Miscellaneous symbols", SYM_MISC)
