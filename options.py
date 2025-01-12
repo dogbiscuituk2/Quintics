@@ -33,11 +33,14 @@ class Opt(Flag):
     DEBUG_COLOURS = auto()
     """Override all colours & assign sequential ones cyclically."""
 
+    DEBUG_FAST = auto()
+    """Skip animations."""
+
     DEBUG_LABELS = auto()
     """Show index_labels for each MathTex or Text."""
 
     DEBUG_NOPAINT = auto()
-    """Skip painting glyphs."""
+    """Skip the re-painting of glyphs."""
 
     DEBUG_SILENT = auto()
     """Mute all voiceover calls."""

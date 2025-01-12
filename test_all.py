@@ -91,7 +91,7 @@ class TestAll(BaseScene):
                 grid.scale(min(14 / grid.width, 8 / grid.height) * 0.95)
                 screen = VGroup(grid)
                 if Opt.DEBUG_LABELS in self.options:
-                    screen.add(get_labels([SingleStringMathTex], grid))
+                    screen.add(get_ssmt_labels(grid))
                 with self.say(caption):
                     self.play(FadeIn(screen))
                     self.wait(5)
@@ -105,17 +105,17 @@ class TestAll(BaseScene):
         #self.options = self.options | Opt.DEBUG_SYMBOLS
         #self.options = self.options | Opt.DEBUG_TEX
 
-        #show_group("Greek and Hebrew Letters", SYM_GREEK, flip=True)
+        show_group("Greek and Hebrew Letters", SYM_GREEK, flip=True)
         show_group("Mathematical constructions", EXP_MATH, cols=3)
         #show_group("Static delimiters", EXP_DELIM_STATIC, rows=10, flip=True)
         #show_group("Dynamic delimiters", EXP_DELIM_DYNAMIC, cols = 1)
-        #show_group("Integrals", EXP_INT, 1)
-        #show_group("Variable sized symbols", SYM_LARGE)
-        #show_group("Standard function names", SYM_FUNC, flip=True)
+        show_group("Integrals", EXP_INT, 1)
+        show_group("Variable sized symbols", SYM_LARGE)
+        show_group("Standard function names", SYM_FUNC, flip=True)
         #show_group("Binary operation and relation symbols", SYM_OPS, 5)
         #show_group("Arrow symbols", SYM_ARROW)
         #show_group("Miscellaneous symbols", SYM_MISC)
-        #show_group("Math mode accents", EXP_ACCENT)
+        show_group("Math mode accents", EXP_ACCENT)
         #show_group("Other styles - math mode only", EXP_STYLE, 1)
         #show_group("Font sizes", EXP_FONT, 1)
         #show_group("All symbols", SYM_ALL, flip=True)
