@@ -98,29 +98,39 @@ class TestAll(BaseScene):
                     self.play(FadeOut(screen))
                 caption = f'Page {page + 2} of {pages}'
 
-        self.add_options(Opt.NONE
-            #| Opt.DEBUG_COLOURS
-            #| Opt.DEBUG_FAST
-            #| Opt.DEBUG_LABELS
-            #| Opt.DEBUG_NOPAINT
-            #| Opt.DEBUG_SILENT
-            #| Opt.DEBUG_SYMBOLS
-            #| Opt.DEBUG_TEX
-        )
+        #self.options |= Opt.DEBUG_COLOURS
+        #self.options |= Opt.DEBUG_FAST
+        #self.options |= Opt.DEBUG_LABELS
+        #self.options |= Opt.DEBUG_NOPAINT
+        #self.options |= Opt.DEBUG_SILENT
+        #self.options |= Opt.DEBUG_SYMBOLS
+        #self.options |= Opt.DEBUG_TEX
 
         show_group("Greek and Hebrew Letters", SYM_GREEK, flip=True)
-        show_group("Mathematical constructions", EXP_MATH, cols=3)
-        show_group("Static delimiters", EXP_DELIM_STATIC, cols=2, rows=10, flip=True)
-        show_group("Dynamic delimiters", EXP_DELIM_DYNAMIC, cols = 1)
-        show_group("Integrals", EXP_INT, 1)
-        show_group("Variable sized symbols", SYM_LARGE)
-        #self.options |= Opt.DEBUG_LABELS
-        show_group("Standard function names", SYM_FUNC, flip=True)
+        #show_group("Mathematical constructions", EXP_MATH, cols=3)
+        #show_group("Static delimiters", EXP_DELIM_STATIC, cols=2, rows=10, flip=True)
+        #show_group("Dynamic delimiters", EXP_DELIM_DYNAMIC, cols = 1)
+        #show_group("Integrals", EXP_INT, 1)
+        #show_group("Variable sized symbols", SYM_LARGE)
+        #show_group("Standard function names", SYM_FUNC, flip=True)
+        #show_group("Binary operation and relation symbols", SYM_OPS, 5)
+        #show_group("Arrow symbols", SYM_ARROW)
+        #show_group("Miscellaneous symbols", SYM_MISC)
+        #show_group("Math mode accents", EXP_ACCENT)
+        #show_group("Other styles - math mode only", EXP_STYLE, 1)
+        #show_group("Font sizes", EXP_FONT, 1)
+        #show_group("All symbols", SYM_ALL, flip=True)
+
+        #self.options &= ~Opt.DEBUG_COLOURS
+        #self.options &= ~Opt.DEBUG_FAST
         #self.options &= ~Opt.DEBUG_LABELS
-        show_group("Binary operation and relation symbols", SYM_OPS, 5)
-        show_group("Arrow symbols", SYM_ARROW)
-        show_group("Miscellaneous symbols", SYM_MISC)
-        show_group("Math mode accents", EXP_ACCENT)
-        show_group("Other styles - math mode only", EXP_STYLE, 1)
-        show_group("Font sizes", EXP_FONT, 1)
-        show_group("All symbols", SYM_ALL, flip=True)
+        #self.options &= ~Opt.DEBUG_NOPAINT
+        #self.options &= ~Opt.DEBUG_SILENT
+        #self.options &= ~Opt.DEBUG_SYMBOLS
+        #self.options &= ~Opt.DEBUG_TEX
+
+
+if __name__=="__main__":
+    with tempconfig({"quality": "medium_quality", "disable_caching": True}):
+        scene = TestAll()
+        scene.render()
