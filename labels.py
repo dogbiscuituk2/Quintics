@@ -4,36 +4,23 @@
 from manim import *
 from typing import Type
 
-def get_labels(types: List[Type], *objs: Mobject) -> VGroup:
+def get_labels(*objs: VMobject) -> VGroup:
     """
-    Get index_labels for objects of given type(s). 
+    Get index_labels for children of MathTex objects.
 
     Parameters:
-    types (List[Type]): List of types to check against.
-    If it matches a supplied Type, its index_labels are added to the output.
-    And then, if it's a VMobject, its submobjects are traversed recursively.
+    objs: the VMobject instances to be traversed recursively. For each MathTex 
+    object found, the index_labels of its children are added to the output. 
 
     Returns:
-    VGroup: A VGroup containing the index_labels of the matching objects.
-
-    Reminder: Some of the types likely to be encountered during algebraic 
-    animations include the following (where -> points to a subclass):
-
-    Mobject
-    -> VMobject
-       -> VMobjectFromSVGPath
-       -> VGroup -> Table -> MobjectTable
-       -> Polygram -> Polygon -> Rectangle
-       -> SVGMobject
-          -> Text
-          -> SingleStringMathTex -> MathTex
+    VGroup: A VGroup containing the index_labels of all matching objects.
     """
     labels = VGroup()
 
-    def add(parent: Mobject) -> None:
-        if type(parent) in types:
-            parent_labels = index_labels(parent)
-            labels.add(parent_labels)
+    def add(parent: VMobject) -> None:
+        if type(parent) == MathTex:
+            for child in parent.submobjects:
+                labels.add(index_labels(child))
         if isinstance(parent, VMobject):
             for child in parent.submobjects:
                 add(child)
@@ -41,20 +28,3 @@ def get_labels(types: List[Type], *objs: Mobject) -> VGroup:
     for obj in objs:
         add(obj)
     return labels
-
-# TODO: add operation to include only index_labels for objects whose immediate parent is a MathTex.
-
-def get_ssmt_labels(*objs: Mobject) -> VGroup:
-    """
-    Get index_labels for SingleStringMathTex objects. 
-
-    Parameters:
-    objs (Mobject): the supplied objects. Each is checked for its Type.
-    If it's a SingleStringMathTex, its index_labels are added to the output.
-    And then, if it's a VMobject, its submobjects are traversed recursively.
-
-    Returns:
-    VGroup: A VGroup containing the index_labels of all SingleStringMathTex 
-    objects found.
-    """
-    return get_labels([SingleStringMathTex], *objs)

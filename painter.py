@@ -53,8 +53,6 @@ class Painter():
         self._token_index = 0
         self._glyph_index = 0
 
-    options: Opt
-
     @property
     def back_colour(self) -> ManimColor:
         return self.get_colour(self._back_pen)
@@ -62,6 +60,14 @@ class Painter():
     @property
     def fore_colour(self) -> ManimColor:
         return self.get_colour(self._fore_pen)
+
+    @property
+    def options(self) -> Opt:
+        return self._options
+    
+    @options.setter
+    def options(self, value: Opt) -> None:
+        self._options = value
     
     def get_colour(self, pen: Pen) -> ManimColor:
         """
@@ -128,6 +134,7 @@ class Painter():
         self._colour_map = [[re.compile(m[0]), m[1]] for m in colour_map]
 
     _colour_map: List[tuple[re.Pattern[str], int]] = []
+    _options: Opt
     _tex: MathTex
     _text: str
     _tokens: List[Token] = []
