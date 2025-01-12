@@ -42,6 +42,8 @@ def get_labels(types: List[Type], *objs: Mobject) -> VGroup:
         add(obj)
     return labels
 
+# TODO: add operation to include only index_labels for objects whose immediate parent is a MathTex.
+
 def get_ssmt_labels(*objs: Mobject) -> VGroup:
     """
     Get index_labels for SingleStringMathTex objects. 
