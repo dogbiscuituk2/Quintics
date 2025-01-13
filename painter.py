@@ -48,6 +48,7 @@ class Painter():
             (r'\\frac', Pen.GREEN),
             (r'\\sqrt|\\lim', Pen.ORANGE),
         ]
+        self._sticky = False
         self._tex = None
         self._tokens = []
         self._token_index = 0
@@ -135,6 +136,8 @@ class Painter():
 
     _colour_map: List[tuple[re.Pattern[str], int]] = []
     _options: Opt
+    _pen: Pen
+    _sticky: bool # Subscripted or superscripted atom reuses previous colour.
     _tex: MathTex
     _text: str
     _tokens: List[Token] = []
@@ -287,6 +290,13 @@ class Painter():
         return g1 + g2 + g3
 
     def _paint_atom(self) -> List[Symbol]:
+
+        def paint_sub_super():
+            self._sticky = Opt.SUBSUPER in self.options
+            symbols = self._paint_shift(token)
+            self._sticky = False
+            return symbols
+
         token = self._peek
         if re.match(PAT_INT, token):
             return self._paint_aggregate(prototype = r'\int')
@@ -305,9 +315,9 @@ class Painter():
                 result = self._paint_string('{', '}')
                 return result
             case '_':
-                return self._paint_shift(token)
+                return paint_sub_super()
             case '^':
-                return self._paint_shift(token)
+                return paint_sub_super()
             case _:
                 return self._paint_token(token)
 
@@ -418,13 +428,14 @@ class Painter():
     def _paint_token(self, token: str) -> List[Symbol]:
         token_count = 1
         glyph_count = self._get_tex_length(token)
-        pen = self._get_token_pen(token)
+        if not self._sticky:
+            self._pen = self._get_token_pen(token)
         symbols = [Symbol(
             token_index = self._token_index,
             token_count = token_count,
             glyph_index = self._glyph_index,
             glyph_count = glyph_count,
-            pen = pen,
+            pen = self._pen,
             tokens = token)]
         self._token_index += token_count
         self._glyph_index += glyph_count

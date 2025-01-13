@@ -15,20 +15,17 @@ class Opt(Flag):
 
     NONE = 0
 
-    SUB = auto()
-    """Subscripts. In 'x_1', the colour of '1' matches 'x'."""
-
-    SUPER = auto()
-    """Superscripts. In 'x^2', the colour of '2' matches 'x'."""
+    SUBSUPER = auto()
+    """Subscript/Superscript. In x_2^3, the colour of 2 & 3 matches x."""
 
     DIFF = auto()
-    """Differentials. In 'dx', the colour of 'd' matches 'x'."""
+    """Differentials. In dx, the colour of d matches x."""
 
     MATH = auto()
-    """Example: in '\\overbrace{x}', the brace colour matches 'x'."""
+    """Example: in \\overbrace{x}, the brace colour matches x."""
 
     ACCENT = auto()
-    """Example: in '\\acute{e}', the accent colour matches 'e'."""
+    """Example: in \\acute{e}, the accent colour matches e."""
 
     DEBUG_COLOURS = auto()
     """Override all colours & assign sequential ones cyclically."""
@@ -51,6 +48,5 @@ class Opt(Flag):
     DEBUG_TEX = auto()
     """Show MathTex structure."""
 
-    SHIFT = SUB | SUPER
     SYM = MATH | ACCENT
-    DEFAULT = SHIFT | DIFF | SYM
+    DEFAULT = SUBSUPER | DIFF | SYM
