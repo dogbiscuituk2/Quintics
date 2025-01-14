@@ -781,7 +781,6 @@ PAT_MISC = make_pattern(SYM_MISC)
 PAT_OPS = make_pattern(SYM_OPS)
 PAT_SIZE = make_pattern(SYM_SIZE)
 
-PAT_MOD = make_pattern(SYM_MATH + SYM_ACCENT)
 PAT_ALL = make_pattern(SYM_ALL)
 
 # Test expressions

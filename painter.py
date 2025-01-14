@@ -255,6 +255,13 @@ class Painter():
                         glyph = glyphs[index]
                         glyph.set_color(colour)
     
+    def _paint_accent(self, token: str) -> List[Symbol]:
+        g1 = self._paint_symbol()
+        g2 = self._paint_atom() if self._more else []
+        if Opt.ACCENT in self.options:
+            g1[0].pen = g2[0].pen
+        return g1 + g2
+    
     def _paint_aggregate(self, prototype: str) -> List[Symbol]:
         g1 = self._paint_symbol()
         g2 = self._paint_shift('_')
@@ -302,8 +309,10 @@ class Painter():
             return self._paint_aggregate(prototype = r'\int')
         if re.match(PAT_LARGE, token):
             return self._paint_aggregate(prototype = r'\sum')
-        if re.match(PAT_MOD, token):
-            return self._paint_group(token)
+        if re.match(PAT_ACCENT, token):
+            return self._paint_accent(token)
+        if re.match(PAT_MATH, token):
+            return self._paint_math(token)
         if re.match(PAT_SIZE, token):
             return self._paint_size(token)
         match token:
@@ -333,7 +342,7 @@ class Painter():
         self._dump_symbols('>', g1, g2, g3)
         return g2 + g1 + g3
     
-    def _paint_group(self, token: str) -> List[Symbol]:
+    def _paint_math(self, token: str) -> List[Symbol]:
         extra = 4 if token.endswith('brace') else 2 if token.endswith('arrow') else 1
         flip = token not in [r'\underline', r'\underbrace']
         g1 = self._paint_symbol()
