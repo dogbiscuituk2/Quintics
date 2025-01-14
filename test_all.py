@@ -106,8 +106,6 @@ class TestAll(BaseScene):
         #self.options |= Opt.DEBUG_SYMBOLS
         #self.options |= Opt.DEBUG_TEX
 
-        self.options &= ~Opt.SUBSUPER
-
         show_group("Scratchpad", [r'x_{n-1}^{y+2}'])
         show_group("Greek and Hebrew Letters", SYM_GREEK, flip=True)
         #show_group("Mathematical constructions", EXP_MATH, cols=3)
