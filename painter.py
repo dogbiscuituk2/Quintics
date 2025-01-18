@@ -21,6 +21,9 @@ import re
 from symbol import Symbol
 from typing import Generator, Tuple
 
+def get_glyph_count(symbols: List[Symbol]) -> int:
+    return sum(symbol.glyph_count for symbol in symbols)
+
 class Painter():
 
     def __init__(self, options: Opt = Opt.DEFAULT):
@@ -198,10 +201,6 @@ class Painter():
     def _get_colour(self, symbols: List[Symbol]) -> ManimColor:
         return symbols[0].pen if symbols else self._painter.get_colour(Pen.FG)
 
-    @staticmethod
-    def _get_glyph_count(symbols: List[Symbol]) -> int:
-        return sum(symbol.glyph_count for symbol in symbols)
-
     def _get_index_L(self, index_R: int) -> int:
         return list(filter(lambda p: p[1] == index_R, self._get_parens()))[0][0]
 
@@ -258,8 +257,15 @@ class Painter():
     def _paint_accent(self, token: str) -> List[Symbol]:
         g1 = self._paint_symbol()
         g2 = self._paint_atom() if self._more else []
+        self._dump_symbols('<', g1, g2)
+        start = g1[0].token_index
+        end = g2[-1].token_index + g2[-1].token_count
+        n2 = len(MathTex(' '.join(self._tokens[start:end]))[0])
+
+
         if Opt.ACCENT in self.options:
             g1[0].pen = g2[0].pen
+        self._dump_symbols('>', g1, g2)
         return g1 + g2
     
     def _paint_aggregate(self, prototype: str) -> List[Symbol]:
@@ -267,9 +273,9 @@ class Painter():
         g2 = self._paint_shift('_')
         g3 = self._paint_shift('^')
         self._dump_symbols('<', g1, g2, g3)
-        n1 = self._get_glyph_count(g1)
-        n2 = self._get_glyph_count(g2)
-        n3 = self._get_glyph_count(g3)
+        n1 = get_glyph_count(g1)
+        n2 = get_glyph_count(g2)
+        n3 = get_glyph_count(g3)
         match prototype:
             case r'\int':
                 # Expressions in the "\int" family are rendered with the 
@@ -335,8 +341,8 @@ class Painter():
         g2 = self._paint_atom()
         g3 = self._paint_atom()
         self._dump_symbols('<', g1, g2, g3)
-        n1 = self._get_glyph_count(g1)
-        n2 = self._get_glyph_count(g2)
+        n1 = get_glyph_count(g1)
+        n2 = get_glyph_count(g2)
         self._adjust(g1, n2)
         self._adjust(g2, -n1)
         self._dump_symbols('>', g1, g2, g3)
@@ -348,14 +354,14 @@ class Painter():
         g1 = self._paint_symbol()
         g2 = self._paint_atom() if self._more else []
         self._dump_symbols('<', g1, g2)
-        n1 = self._get_glyph_count(g1)
-        n2 = self._get_glyph_count(g2)
+        n1 = get_glyph_count(g1)
+        n2 = get_glyph_count(g2)
         if n1 < 1:
-            g1[0].glyph_index = g2[0].glyph_index + self._get_glyph_count(g2)
+            g1[0].glyph_index = g2[0].glyph_index + get_glyph_count(g2)
             g1[0].glyph_count = extra
             if flip:
-                n1 = self._get_glyph_count(g1)
-                n2 = self._get_glyph_count(g2)
+                n1 = get_glyph_count(g1)
+                n2 = get_glyph_count(g2)
                 self._adjust(g1, -n2)
                 self._adjust(g2, +n1)
         self._dump_symbols('>', g1, g2)
