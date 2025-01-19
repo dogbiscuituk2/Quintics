@@ -13,24 +13,94 @@ VMobject has a list of child VMobjects called submobjects.
 """
 
 from manim import *
+import re
+
+PAT_TOKEN = re.compile(r"\\{|\\}|\\\||\\[A-Za-z]+|\\\\|\\\,|[^&\s]")
+
+def get_glyph_count(*args: str) -> int:
+    return sum(map(len, MathTex(*args)))
 
 class Parser():
 
+    glyph_count: int
+    glyph_index: int
+    tex: SingleStringMathTex
+    token_count: int
+    token_index: int
+    tokens: List[str] = []
+
+    @property
+    def more(self) -> bool:
+        return self.token_index < self.token_count
+    
+    @property
+    def peek(self) -> str:
+        return self.tokens[self.token_index] if self.more else ''
+    
+    @property
+    def pop(self) -> str:
+        token = self.peek
+        self.skip
+        return token
+    
+    @property
+    def skip(self) -> None:
+        if self.more:
+            self.token_index += 1
+    
+    def accept(self, token: str) -> None:
+        if self.peek != token:
+            pass
+        self.skip
+
     def parse(self, root: Mobject) -> None:
+        self.parse_node(root)
 
-        def parse_ssmt(tex: SingleStringMathTex) -> None:
-            print(type(tex).__name__, len(tex))
+    def parse_node(self, parent: Mobject) -> None:
+        if type(parent) is SingleStringMathTex:
+            self.parse_ssmt(parent)
+        elif isinstance(parent, VMobject):
+            for child in parent.submobjects:
+                self.parse_node(child)
 
-        def parse_node(parent: Mobject) -> None:
-            if type(parent) is SingleStringMathTex:
-                parse_ssmt(parent)
-            elif isinstance(parent, VMobject):
-                for child in parent.submobjects:
-                    parse_node(child)
+    def parse_ssmt(self, tex: SingleStringMathTex) -> None:
+        self.tex = tex
+        self.glyph_count = len(tex)
+        self.glyph_index = 0
+        self.tokens.clear()
+        self.tokens.extend(re.findall(PAT_TOKEN, tex.tex_string))
+        self.token_count = len(self.tokens)
+        self.token_index = 0
+        print(f'{self.token_count} tokens, {self.glyph_count} glyphs.')
+        while self.more:
+            self.parse_unit()
+        print(f'{self.glyph_index} glyphs painted.')
 
-        parse_node(root)
+    def parse_subsequence(self) -> None:
+        while self.more and self.peek != '}':
+            self.parse_unit()
+
+    def parse_subsuper(self) -> None:
+        self.skip
+        return self.parse_unit()
+
+    def parse_unit(self) -> None:
+        match self.peek:
+            case '{':
+                self.skip
+                self.parse_subsequence()
+                self.accept('}')
+            case '_':
+                self.parse_subsuper()
+            case '^':
+                self.parse_subsuper()
+            case _:
+                self.glyph_index += get_glyph_count(self.peek)
+                self.skip
 
 if __name__ == '__main__':
     parser = Parser()
-    tex = MathTex('x=1', 'y=2')
+    s = [r'\arcsin x_1^2', r'\arccos y_3^4']
+    tex = MathTex(*s)
+    print ('Total glyph count:', get_glyph_count(*s))
     parser.parse(tex)

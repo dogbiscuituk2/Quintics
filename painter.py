@@ -98,6 +98,7 @@ class Painter():
             return
         self._text = text
         for match in re.finditer(PAT_TOKEN, text):
+            print(match)
             span = match.span()
             start = span[0]
             end = span[1]
