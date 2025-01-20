@@ -15,6 +15,8 @@ VMobject has a list of child VMobjects called submobjects.
 from manim import *
 import re
 
+from latex_rice import *
+
 PAT_TOKEN = re.compile(r"\\{|\\}|\\\||\\[A-Za-z]+|\\\\|\\\,|[^&\s]")
 
 def get_glyph_count(*args: str) -> int:
@@ -55,6 +57,15 @@ class Parser():
 
     def parse(self, root: Mobject) -> None:
         self.parse_node(root)
+    
+    def parse_accent(self) -> None:
+        pass
+    
+    def parse_aggregate(self, prototype: str) -> None:
+        pass
+    
+    def parse_math(self) -> None:
+        pass
 
     def parse_node(self, parent: Mobject) -> None:
         if type(parent) is SingleStringMathTex:
@@ -62,6 +73,9 @@ class Parser():
         elif isinstance(parent, VMobject):
             for child in parent.submobjects:
                 self.parse_node(child)
+    
+    def parse_size(self) -> None:
+        pass
 
     def parse_ssmt(self, tex: SingleStringMathTex) -> None:
         self.tex = tex
@@ -85,6 +99,17 @@ class Parser():
         return self.parse_unit()
 
     def parse_unit(self) -> None:
+        token = self.peek
+        if re.match(PAT_INT, token):
+            return self.parse_aggregate(prototype = r'\int')
+        if re.match(PAT_LARGE, token):
+            return self.parse_aggregate(prototype = r'\sum')
+        if re.match(PAT_ACCENT, token):
+            return self.parse_accent()
+        if re.match(PAT_MATH, token):
+            return self.parse_math()
+        if re.match(PAT_SIZE, token):
+            return self.parse_size()
         match self.peek:
             case '{':
                 self.skip
