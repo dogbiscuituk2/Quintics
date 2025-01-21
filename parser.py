@@ -64,6 +64,9 @@ class Parser():
     def parse_aggregate(self, prototype: str) -> None:
         pass
     
+    def parse_frac(self) -> None:
+        pass
+    
     def parse_math(self) -> None:
         pass
 
@@ -75,6 +78,9 @@ class Parser():
                 self.parse_node(child)
     
     def parse_size(self) -> None:
+        pass
+    
+    def parse_sqrt(self) -> None:
         pass
 
     def parse_ssmt(self, tex: SingleStringMathTex) -> None:
@@ -111,6 +117,10 @@ class Parser():
         if re.match(PAT_SIZE, token):
             return self.parse_size()
         match self.peek:
+            case r'\frac':
+                return self.parse_frac()
+            case r'\sqrt':
+                return self.parse_sqrt()
             case '{':
                 self.skip
                 self.parse_subsequence()
