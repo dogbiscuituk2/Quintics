@@ -12,24 +12,30 @@ Mobject
 VMobject has a list of child VMobjects called submobjects.
 """
 
+from inspect import currentframe
 from manim import *
 import re
 
 from latex_rice import *
 from latex_token import Token
+from options import Opt
 from pens import Pen
 from symbol import Symbol
 
 PAT_TOKEN = re.compile(r"\\{|\\}|\\\||\\[A-Za-z]+|\\\\|\\\,|[^&\s]")
 
 def get_glyph_count(*args: str) -> int:
-    return sum(map(len, MathTex(*args)))
+    try:
+        return sum(map(len, MathTex(*args)))
+    except:
+        return 0
 
 class Parser():
 
     colour_map: List[tuple[re.Pattern[str], int]] = []
     glyph_count: int
     glyph_index: int
+    _options: Opt
     pen: Pen = Pen.BLACK
     sticky: bool = False # Subscripted or superscripted unit reuses previous colour.
     tex: SingleStringMathTex
@@ -44,6 +50,14 @@ class Parser():
     @property
     def more(self) -> bool:
         return self.token_index < self.token_count
+
+    @property
+    def options(self) -> Opt:
+        return self._options
+    
+    @options.setter
+    def options(self, value: Opt) -> None:
+        self._options = value
     
     @property
     def peek(self) -> str:
@@ -65,6 +79,17 @@ class Parser():
             pass
         self.skip
 
+    def dump_symbols(self, flag: str, *lists: List[Symbol]) -> None:
+        if Opt.DEBUG_SYMBOLS in self.options:
+            frame = currentframe().f_back
+            if flag == '<':
+                print(frame.f_code.co_name, end=' ')
+            print(flag, end=' ')
+            for list in lists:
+                print(*list, end=' ')
+            if flag == '>':
+                print()
+
     def get_token_pen(self, token: str) -> Pen:
         for map in self.colour_map:
             if (re.match(map[0], token)):
@@ -81,9 +106,16 @@ class Parser():
         pass
     
     def parse_frac(self) -> List[Token]:
-        self.skip
-        
-        pass
+        g1 = self.parse_token()
+        g2 = self.parse_unit()
+        g3 = self.parse_unit()
+        self.dump_symbols('<', g1, g2, g3)
+        n1 = get_glyph_count(g1)
+        n2 = get_glyph_count(g2)
+        self.adjust(g1, n2)
+        self.adjust(g2, -n1)
+        self.dump_symbols('>', g1, g2, g3)
+        return g2 + g1 + g3
     
     def parse_math(self) -> List[Token]:
         pass
@@ -169,7 +201,8 @@ class Parser():
 
 if __name__ == '__main__':
     parser = Parser()
-    s = [r'\arcsin x_1^2', r'\arccos y_3^4']
+    #s = [r'\frac{\arcsin x_1^2}{\arccos y_3^4}']
+    s = [r'\frac{1}{2}']
     tex = MathTex(*s)
     print ('Total glyph count:', get_glyph_count(*s))
     parser.parse(tex)
