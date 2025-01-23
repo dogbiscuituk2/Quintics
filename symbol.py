@@ -25,7 +25,6 @@ class Symbol():
     glyph_index: int
     glyph_count: int
     pen: Pen
-    tokens: str
 
     def __init__(
             self,
@@ -33,17 +32,12 @@ class Symbol():
             token_count: int,
             glyph_index: int,
             glyph_count: int,
-            pen: Pen,
-            tokens: str) -> None:
+            pen: Pen) -> None:
         self.token_index = token_index
         self.token_count = token_count
         self.glyph_index = glyph_index
         self.glyph_count = glyph_count
         self.pen = pen
-        self.tokens = tokens
-
-    def __str__(self) -> str:
-        return f'({self._token_range} {self._glyph_range} {self.pen.name} {self.tokens})'
 
     @property
     def _glyph_range(self) -> str:
