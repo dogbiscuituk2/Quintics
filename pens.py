@@ -16,6 +16,7 @@ requiring 10 colours, you might use the first 10 "Pen"s from the enumeration.
 """
 
 from enum import Enum, auto
+from typing import List
 from manim import *
 
 class Pen(Enum):

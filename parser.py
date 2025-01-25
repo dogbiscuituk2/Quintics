@@ -1,17 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-"""
-Mobject
- +- VMobject
-    +- SVGMobject
-       +- Text
-       +- SingleStringMathTex
-          +- MathTex
-
-VMobject has a list of child VMobjects called submobjects.
-"""
-
 from inspect import currentframe
 from manim import *
 import re
@@ -24,6 +13,10 @@ from symbol import Symbol
 
 PAT_TOKEN = re.compile(r"\\{|\\}|\\\||\\[A-Za-z]+|\\\\|\\\,|[^&\s]")
 
+def adjust(symbols: List[Symbol], delta: int) -> None:
+    for symbol in symbols:
+        symbol.glyph_index += delta
+
 def get_glyph_count(*args: str) -> int:
     try:
         return sum(map(len, MathTex(*args)))
@@ -35,7 +28,7 @@ class Parser():
     colour_map: List[tuple[re.Pattern[str], int]] = []
     glyph_count: int
     glyph_index: int
-    _options: Opt
+    options: Opt = Opt.DEFAULT
     pen: Pen = Pen.BLACK
     sticky: bool = False # Subscripted or superscripted unit reuses previous colour.
     tex: SingleStringMathTex
@@ -51,13 +44,13 @@ class Parser():
     def more(self) -> bool:
         return self.token_index < self.token_count
 
-    @property
-    def options(self) -> Opt:
-        return self._options
+    #@property
+    #def options(self) -> Opt:
+    #    return self._options
     
-    @options.setter
-    def options(self, value: Opt) -> None:
-        self._options = value
+    #@options.setter
+    #def options(self, value: Opt) -> None:
+    #    self._options = value
     
     @property
     def peek(self) -> str:
@@ -112,8 +105,8 @@ class Parser():
         self.dump_symbols('<', g1, g2, g3)
         n1 = get_glyph_count(g1)
         n2 = get_glyph_count(g2)
-        self.adjust(g1, n2)
-        self.adjust(g2, -n1)
+        adjust(g1, n2)
+        adjust(g2, -n1)
         self.dump_symbols('>', g1, g2, g3)
         return g2 + g1 + g3
     
@@ -161,7 +154,7 @@ class Parser():
         glyph_count = get_glyph_count(token)
         if not self.sticky:
             self.pen = self.get_token_pen(token)
-        symbols = [Symbol(
+        result = [Symbol(
             token_index = self.token_index,
             token_count = 1,
             glyph_index = self.glyph_index,
@@ -169,7 +162,7 @@ class Parser():
             pen = self.pen)]
         self.skip
         self.glyph_index += glyph_count
-        return symbols
+        return result
 
     def parse_unit(self) -> List[Token]:
         token = self.peek
@@ -201,6 +194,7 @@ class Parser():
 
 if __name__ == '__main__':
     parser = Parser()
+    parser.options |= Opt.DEBUG_SYMBOLS
     #s = [r'\frac{\arcsin x_1^2}{\arccos y_3^4}']
     s = [r'\frac{1}{2}']
     tex = MathTex(*s)

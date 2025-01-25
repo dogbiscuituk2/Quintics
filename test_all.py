@@ -103,14 +103,14 @@ class TestAll(BaseScene):
         #self.options |= Opt.DEBUG_LABELS
         #self.options |= Opt.DEBUG_NOPAINT
         #self.options |= Opt.DEBUG_SILENT
-        self.options |= Opt.DEBUG_SYMBOLS
+        #self.options |= Opt.DEBUG_SYMBOLS
         #self.options |= Opt.DEBUG_TEX
 
-        show_group("Scratchpad", [r'x_{n-1}^{y+2}'])
+        #show_group("Scratchpad", [r'x_{n-1}^{y+2}'])
         #show_group("Greek and Hebrew Letters", SYM_GREEK, flip=True)
         #show_group("Mathematical constructions", EXP_MATH, cols=3)
         #show_group("Static delimiters", EXP_DELIM_STATIC, cols=2, rows=10, flip=True)
-        #show_group("Dynamic delimiters", EXP_DELIM_DYNAMIC, cols = 1)
+        show_group("Dynamic delimiters", EXP_DELIM_DYNAMIC, cols = 1)
         #show_group("Integrals", EXP_INT, 1)
         #show_group("Variable sized symbols", SYM_LARGE)
         #show_group("Standard function names", SYM_FUNC, flip=True)

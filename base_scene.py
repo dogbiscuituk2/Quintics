@@ -87,7 +87,7 @@ class BaseScene(VoiceoverScene):
                 scale_factor=2))
 
     def get_colour(self, pen: Pen) -> ManimColor:
-        return self._painter.get_colour(pen)
+        return self._painter.get_pen_colour(pen)
 
     def make_matrix(
             self,
@@ -131,6 +131,6 @@ class BaseScene(VoiceoverScene):
     _painter: Painter
     
     def _paint_tex(self, tex: MathTex) -> None:
-        self._painter.paint_tex(tex)
+        self._painter.paint(tex)
 
 #endregion
