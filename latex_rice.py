@@ -831,12 +831,12 @@ EXP_DELIM_STATIC = [
 EXP_DELIM_DYNAMIC = [
     r'\left\Updownarrow x \right\Uparrow',
     r'\left\Updownarrow\frac{x}{y}\right\Uparrow',
-    r'\left\Updownarrow\frac{\left\Updownarrow x \right\Uparrow}{\left\Updownarrow x \right\Uparrow}\right\Uparrow',
-    r'\left\Updownarrow\frac{\left\Updownarrow \frac{x}{y} \right\Uparrow}{\left\Updownarrow \frac{x}{y} \right\Uparrow}\right\Uparrow',
-    r'\Updownarrow x \Uparrow',
-    r'\Updownarrow\frac{x}{y}\Uparrow',
-    r'\Updownarrow\frac{\Updownarrow x \Uparrow}{\Updownarrow x \Uparrow}\Uparrow',
-    r'\Updownarrow\frac{\Updownarrow \frac{x}{y} \Uparrow}{\Updownarrow \frac{x}{y} \Uparrow}\Uparrow',
+    #r'\left\Updownarrow\frac{\left\Updownarrow x \right\Uparrow}{\left\Updownarrow x \right\Uparrow}\right\Uparrow',
+    #r'\left\Updownarrow\frac{\left\Updownarrow \frac{x}{y} \right\Uparrow}{\left\Updownarrow \frac{x}{y} \right\Uparrow}\right\Uparrow',
+    #r'\Updownarrow x \Uparrow',
+    #r'\Updownarrow\frac{x}{y}\Uparrow',
+    #r'\Updownarrow\frac{\Updownarrow x \Uparrow}{\Updownarrow x \Uparrow}\Uparrow',
+    #r'\Updownarrow\frac{\Updownarrow \frac{x}{y} \Uparrow}{\Updownarrow \frac{x}{y} \Uparrow}\Uparrow',
 ]
 EXP_FONT = [
     r'\displaystyle \int f^{-1}(x-x_a)\,dx}',

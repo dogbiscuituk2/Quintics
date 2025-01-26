@@ -47,10 +47,6 @@ def get_tex_length(token: str) -> int:
         return len(MathTex(token)[0])
     except Exception:
         return 0
-        
-#def _set_colour(symbols: List[Symbol], colour: ManimColor) -> None:
-#    for symbol in symbols:
-#        symbol.pen = colour
 
 class Painter():
 
@@ -131,11 +127,11 @@ class Painter():
         """
         self.paint_node(root)
 
-    def paint_node(self, parent: Mobject) -> None:
-        if type(parent) is SingleStringMathTex:
-            self.paint_ssmt(parent)
-        elif isinstance(parent, VMobject):
-            for child in parent.submobjects:
+    def paint_node(self, node: Mobject) -> None:
+        if type(node) is SingleStringMathTex:
+            self.paint_ssmt(node)
+        elif isinstance(node, VMobject):
+            for child in node.submobjects:
                 self.paint_node(child)
 
     def paint_ssmt(self, tex: SingleStringMathTex) -> None:
@@ -159,12 +155,27 @@ class Painter():
             string = text[start:end]
             token = Token(start=start, length=length, string=string)
             self.tokens.append(token)
-        self._token_count = len(self.tokens)
         self.token_index = 0
         self.glyph_index = 0
-        if Opt.DEBUG_NOPAINT not in self.options:
-            while self.more:
-                self.paint_unit()
+        if Opt.DEBUG_NOPAINT in self.options:
+            return
+        while self.more:
+            symbols = self.paint_unit()
+            glyphs = self.tex
+            pen = self.back_pen
+            for symbol in symbols:
+                start = symbol.glyph_index
+                stop = start + symbol.glyph_count
+                if stop > start:
+                    if Opt.DEBUG_COLOURS in self.options:
+                        pen = self.get_next_pen(pen)
+                    else:
+                        pen = symbol.pen
+                    colour = self.get_pen_colour(pen)
+                    for index in range(start, stop):
+                        if index >= 0 and index < len(glyphs):
+                            glyph = glyphs[index]
+                            glyph.set_color(colour)
 
     def set_colour_map(self, colour_map: List[tuple[str, int]]) -> None:
         """
@@ -265,24 +276,6 @@ class Painter():
             if (re.match(map[0], token)):
                 return map[1]
         return self.fore_pen
-
-    def _paint(self) -> None:
-        symbols = self.paint_string()
-        glyphs = self.tex
-        pen = self.back_pen
-        for symbol in symbols:
-            start = symbol.glyph_index
-            stop = start + symbol.glyph_count
-            if stop > start:
-                if Opt.DEBUG_COLOURS in self.options:
-                    pen = self.get_next_pen(pen)
-                else:
-                    pen = symbol.pen
-                colour = self.get_pen_colour(pen)
-                for index in range(start, stop):
-                    if index >= 0 and index < len(glyphs):
-                        glyph = glyphs[index]
-                        glyph.set_color(colour)
     
     def _paint_accent(self, token: str) -> List[Symbol]:
         g1 = self.paint_symbol()
