@@ -40,7 +40,7 @@ class Symbol():
         self.pen = pen
 
     def __str__(self) -> str:
-        return f'{self._token_range} {self._glyph_range} {self.pen}'
+        return f'{self._token_range} {self._glyph_range} {self.pen.name}'
 
     @property
     def _glyph_range(self) -> str:

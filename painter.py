@@ -51,39 +51,16 @@ def get_tex_length(token: str) -> int:
 class Painter():
 
     colour_map: List[tuple[re.Pattern[str], int]] = []
-    _options: Opt
+    glyph_index: int
+    opt: Opt
     pen: Pen
-    sticky: bool # Subscripted or superscripted atom reuses previous colour.
+    sticky: bool # Subscripted or superscripted unit reuses previous colour.
     tex: MathTex
     text: str
-    tokens: List[Token] = []
     token_index: int
-    glyph_index: int
+    tokens: List[Token] = []
 
     def __init__(self, options: Opt = Opt.DEFAULT):
-        self.colour_map = [
-            ('FG', Pen.GREY),
-            ('BG', Pen.BLACK),
-            #('oO|', Pen.BLACK),
-            (r'[a-eA-E]|\\alpha|\\beta|\\gamma|\\delta|\\epsilon', Pen.RED),
-            ('[f-h]', Pen.ORANGE),
-            ('[i-n]', Pen.YELLOW),
-            ('[p-s]', Pen.GREEN),
-            ('[u-w]', Pen.CYAN),
-            ('[x-z]', Pen.BLUE),
-            (PAT_GREEK, Pen.ORANGE),
-            (PAT_MATH, Pen.YELLOW),
-            (PAT_DELIM, Pen.GREEN),
-            (PAT_INT, Pen.MAGENTA),
-            (PAT_LARGE, Pen.MAGENTA),
-            (PAT_FUNC, Pen.YELLOW),
-            (PAT_OPS, Pen.GREEN),
-            (PAT_ARROW, Pen.BLUE),
-            (PAT_MISC, Pen.CYAN),
-            (PAT_ACCENT, Pen.YELLOW),
-            (r'\\frac', Pen.GREEN),
-            (r'\\sqrt|\\lim', Pen.ORANGE),
-        ]
         self.options = options
         self.pen = Pen.GREY
         self.sticky = False
@@ -103,11 +80,11 @@ class Painter():
 
     @property
     def options(self) -> Opt:
-        return self._options
+        return self.opt
     
     @options.setter
     def options(self, value: Opt) -> None:
-        self._options = value
+        self.opt = value
     
     def get_pen_colour(self, pen: Pen) -> ManimColor:
         """
@@ -117,7 +94,7 @@ class Painter():
         
         Returns: The colour associated with the given pen.
         """
-        return PALETTE_BRIGHT[pen.value]
+        return PALETTE_SASHA[pen.value]
     
     def paint(self, root: Mobject) -> None:
         """
@@ -147,6 +124,7 @@ class Painter():
         if not text:
             return
         self.text = text
+        self.tokens.clear()
         for match in re.finditer(PAT_TOKEN, text):
             span = match.span()
             start = span[0]
@@ -275,7 +253,13 @@ class Painter():
         for map in self.colour_map:
             if (re.match(map[0], token)):
                 return map[1]
-        return self.fore_pen
+        match token:
+            case 'FG':
+                return Pen.WHITE
+            case 'BG':
+                return Pen.BLACK
+            case _:
+                return Pen.GREY
     
     def _paint_accent(self, token: str) -> List[Symbol]:
         g1 = self.paint_symbol()
@@ -358,7 +342,7 @@ class Painter():
 
     def paint_shift(self, token: str) -> List[Symbol]:
         '''
-        If the current token is either '_' or '^' then return the next atom,
+        If the current token is either '_' or '^' then return the next unit,
         otherwise return the empty list.
 
         token: The expected token, this will be either '_' or '^'.

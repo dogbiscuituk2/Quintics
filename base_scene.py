@@ -49,12 +49,6 @@ class BaseScene(VoiceoverScene):
     @options.setter
     def options(self, value: Opt) -> None:
         self._painter.options = value
-    
-    def add_options(self, value: Opt) -> None:
-        self.options |= value
-    
-    def remove_options(self, value: Opt) -> None:
-        self.options &= ~value
 
     def box(self, *args: VMobject) -> Polygon:
         b = self.box_make(*args)

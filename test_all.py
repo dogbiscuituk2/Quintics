@@ -98,6 +98,30 @@ class TestAll(BaseScene):
                     self.play(FadeOut(screen))
                 caption = f'Page {page + 2} of {pages}'
 
+        self.set_colour_map([
+            ('FG', Pen.GREY),
+            ('BG', Pen.BLACK),
+            #('oO|', Pen.BLACK),
+            (r'[a-eA-E]|\\alpha|\\beta|\\gamma|\\delta|\\epsilon', Pen.RED),
+            ('[f-h]', Pen.ORANGE),
+            ('[i-n]', Pen.YELLOW),
+            ('[p-s]', Pen.GREEN),
+            ('[t-w]', Pen.CYAN),
+            ('[x-z]', Pen.BLUE),
+            (PAT_GREEK, Pen.ORANGE),
+            (PAT_MATH, Pen.YELLOW),
+            (PAT_DELIM, Pen.GREEN),
+            (PAT_INT, Pen.MAGENTA),
+            (PAT_LARGE, Pen.MAGENTA),
+            (PAT_FUNC, Pen.YELLOW),
+            (PAT_OPS, Pen.GREEN),
+            (PAT_ARROW, Pen.BLUE),
+            (PAT_MISC, Pen.CYAN),
+            (PAT_ACCENT, Pen.YELLOW),
+            (r'\\frac', Pen.GREEN),
+            (r'\\sqrt|\\lim', Pen.ORANGE),
+        ])
+
         #self.options |= Opt.DEBUG_COLOURS
         #self.options |= Opt.DEBUG_FAST
         #self.options |= Opt.DEBUG_LABELS
@@ -106,15 +130,8 @@ class TestAll(BaseScene):
         self.options |= Opt.DEBUG_SYMBOLS
         #self.options |= Opt.DEBUG_TEX
 
-        show_group(
-            "Scratchpad", 
-            [
-                r'x_{n-1}^{y+2}',
-                r'\arcsin u^2',
-                r'\arcsin{u^2}',
-            ])
-
-        #show_group("Greek and Hebrew Letters", SYM_GREEK, flip=True)
+        #show_group("Scratchpad", [r'a_1 + f^2 + i_3 + p^4 * t_5 / x^6'])
+        show_group("Greek and Hebrew Letters", SYM_GREEK, flip=True)
         #show_group("Mathematical constructions", EXP_MATH, cols=3)
         #show_group("Static delimiters", EXP_DELIM_STATIC, cols=2, rows=10, flip=True)
 
