@@ -29,7 +29,7 @@ class Pen(Enum):
     ORANGE   = auto()
     PURPLE   = auto()
     CYAN     = auto()
-    MAGENTA  = auto()
+    MAGENTA= auto()
     LIME     = auto()
     PINK     = auto()
     TEAL     = auto()

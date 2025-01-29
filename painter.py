@@ -216,7 +216,8 @@ class Painter():
                 print(frame.f_code.co_name, end=' ')
             print(flag, end=' ')
             for list in lists:
-                print(*list, end=' ')
+                if list:
+                    print(*list, end=' ')
             if flag == '>':
                 print()
 
