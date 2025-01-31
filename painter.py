@@ -35,6 +35,9 @@ PAT_TOKEN = r"\\{|\\}|\\\||\\[A-Za-z]+|\\\\|\\\,|[^&\s]"
 def adjust(symbols: List[Symbol], delta: int) -> None:
     for symbol in symbols:
         symbol.glyph_index += delta
+            
+def concat_tokens(tokens: List[Token]) -> str:
+    return ' '.join([token.string for token in tokens])
 
 def get_glyph_count(symbols: List[Symbol]) -> int:
     return sum(symbol.glyph_count for symbol in symbols)
@@ -267,10 +270,13 @@ class Painter():
         g2 = self.paint_unit() if self.more else []
         self.dump_symbols('<', g1, g2)
         start = g1[0].token_index
-        end = g2[-1].token_index + g2[-1].token_count
-
-        #n2 = len(MathTex(' '.join(self._tokens[start:end]))[0])
-
+        end = self.token_index
+        string = concat_tokens(self.tokens[start:end])
+        n1 = get_glyph_count(g1)
+        n2 = get_glyph_count(g2)
+        extra = len(MathTex(string)[0])-(n1+n2)
+        g1[0].glyph_count += extra
+        adjust(g2, extra)
         if Opt.ACCENT in self.options:
             g1[0].pen = g2[0].pen
         self.dump_symbols('>', g1, g2)
@@ -464,9 +470,12 @@ class Painter():
                 return self.paint_token(token)
 
 if __name__ == '__main__':
+    config.verbosity = "CRITICAL"
     painter = Painter()
     painter.options |= Opt.DEBUG_SYMBOLS
     #s = [r'\frac{\arcsin x_1^2}{\arccos y_3^4}']
-    s = [r'\frac{1}{2}']
-    tex = MathTex(*s)
-    painter.paint(tex)
+    #s = [r'\frac{1}{2}']
+    #tex = MathTex(*s)
+    #painter.paint(tex)
+    for s in SYM_ACCENT:
+        print(get_tex_length(s), s)
