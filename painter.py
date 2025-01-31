@@ -372,7 +372,6 @@ class Painter():
             right = self.tokens[right_index]
             s = self.text
             snip = s[0:left.start] + s[left.end:right.start] + s[right.end:]
-            #return 1 + (len(self.tex[0]) - len(MathTex(snip)[0])) // 2
             return 1 + (len(self.tex) - len(MathTex(snip)[0])) // 2
 
         token_index = self.token_index
