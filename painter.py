@@ -53,7 +53,7 @@ def get_tex_length(token: str) -> int:
 
 class Painter():
 
-    colour_map: List[tuple[re.Pattern[str], int]] = []
+    colour_map: List[tuple[re.Pattern[str], Pen]] = []
     glyph_index: int
     opt: Opt
     pen: Pen
@@ -158,7 +158,7 @@ class Painter():
                             glyph = glyphs[index]
                             glyph.set_color(colour)
 
-    def set_colour_map(self, colour_map: List[tuple[str, int]]) -> None:
+    def set_colour_map(self, colour_map: List[tuple[str, Pen]]) -> None:
         """
         Set the colour map to be used by the painter.
         

@@ -29,7 +29,7 @@ class Pen(Enum):
     ORANGE   = auto()
     PURPLE   = auto()
     CYAN     = auto()
-    MAGENTA= auto()
+    MAGENTA  = auto()
     LIME     = auto()
     PINK     = auto()
     TEAL     = auto()
@@ -67,6 +67,7 @@ PALETTE_BRIGHT: List[ManimColor] = [
     0x1f1fff, # navy
     0xa9a9a9, # grey
 ]
+
 PALETTE_SASHA: List[ManimColor] = [
     0x000000, # black
     0xffffff, # white
@@ -91,9 +92,11 @@ PALETTE_SASHA: List[ManimColor] = [
     0x000075, # navy
     0xa9a9a9, # grey
 ]
+
 PALETTE_BLACK_ON_WHITE: List[ManimColor] = [
     BLACK, WHITE, *[BLACK for _ in range(20)]
 ]
+
 PALETTE_WHITE_ON_BLACK: List[ManimColor] = [
     BLACK, WHITE, *[WHITE for _ in range(20)]
 ]

@@ -47,32 +47,38 @@ SYM_GREEK = [
     r'\varsigma', r'\varphi', r'\digamma', '', 
     r'\aleph', r'\beth', r'\gimel', r'\daleth',
 ]
+
 SYM_MATH = [
     r'\overline', r'\overrightarrow',
     r'\underline', r'\overleftarrow',
     r'\widehat', r'\overbrace',
     r'\widetilde', r'\underbrace',
 ]
+
 SYM_SIZE = [
     r'\left', r'\right', r'\left.', r'\right.',
     r'\big', r'\Big', r'\bigg', r'\Bigg',
     r'\bigl', r'\Bigl', r'\biggl', r'\Biggl',
     r'\bigr', r'\Bigr', r'\biggr', r'\Biggr',
 ]
+
 SYM_DELIM = [
     '|', r'\{', r'\lfloor', '/', r'\Uparrow', r'\llcorner',
     r'\vert', r'\}', r'\rfloor', r'\backslash', r'\uparrow', r'\lrcorner',
     r'\|', r'\langle', r'\lceil', '[', r'\Downarrow', r'\ulcorner',
     r'\Vert', r'\rangle', r'\rceil', ']', r'\downarrow', r'\urcorner',
 ]
+
 SYM_INT = [
     r'\int', r'\iint', r'\iiint', r'\iiiint', r'\idotsint', r'\oint',
 ]
+
 SYM_LARGE = [ # Displayed formulae show larger version.
     r'\sum', r'\biguplus', r'\bigoplus', r'\bigvee',
     r'\prod', r'\bigcap', r'\bigotimes', r'\bigwedge',
     r'\coprod', r'\bigcup', r'\bigodot', r'\bigsqcup',
 ]
+
 SYM_FUNC = [ # Should appear in Roman, not Italic.
     r'\arccos', r'\arcsin', r'\arctan', r'\arg',
     r'\cos', r'\cosh', r'\cot', r'\coth',
@@ -83,6 +89,7 @@ SYM_FUNC = [ # Should appear in Roman, not Italic.
     r'\min', r'\Pr', r'\sec', r'\sin',
     r'\sinh', r'\sup', r'\tan', r'\tanh',
 ]
+
 SYM_OPS = [
     r'\ast', r'\pm', r'\cap', r'\lhd',
     r'\star', r'\mp', r'\cup', r'\rhd',
@@ -140,6 +147,7 @@ SYM_OPS = [
     r'\ntriangleright', r'\lnsim', r'\gnsim', r'\varsupsetneqq',
     r'\ntrianglerighteq', r'\lvertneqq', r'\gvertneqq', '',
 ]
+
 SYM_ARROW = [
     r'\leftarrow', r'\rightarrow', r'\leftrightarrow', r'\uparrow',
     r'\nleftarrow', r'\nrightarrow', r'\nleftrightarrow', r'\downarrow',
@@ -159,6 +167,7 @@ SYM_ARROW = [
     r'\circlearrowleft', r'\circlearrowright', r'\Lsh', r'\Rsh',
     r'\nearrow', r'\searrow', r'\swarrow', r'\nwarrow',
 ]
+
 SYM_MISC = [
     r'\infty', r'\forall', r'\Bbbk', r'\wp',
     r'\nabla', r'\exists', r'\bigstar', r'\angle',
@@ -175,6 +184,7 @@ SYM_MISC = [
     r'\Im', r'\flat', r'\square', r'\backprime',
     r'\Re', r'\natural', r'\surd', r'\circledS',
 ]
+
 SYM_ACCENT = [
     r'\acute', r'\bar', r'\Acute', r'\Bar',
     r'\breve', r'\check', r'\Breve', r'\Check',
@@ -792,6 +802,7 @@ EXP_ACCENT = [
     r'\grave{a}', r'\hat{a}', r'\Grave{\Grave{A}}', r'\Hat{\Hat{A}}',
     r'\tilde{a}', r'\vec{a}', r'\Tilde{\Tilde{A}}', r'\Vec{\Vec{A}}',
 ]
+
 EXP_DELIM_STATIC = [
     *[fr'{text[0]}{delim[0]} {text[1]} {text[2]}{delim[1]}_0^1' 
         for text in [
@@ -828,22 +839,32 @@ EXP_DELIM_STATIC = [
         ]
     ]
 ]
+
 EXP_DELIM_DYNAMIC = [
+    r'\Updownarrow x \Uparrow',
+    r'\Updownarrow\frac{x}{y}\Uparrow',
+
+    r'''\Updownarrow\frac{\Updownarrow x \Uparrow}
+{\Updownarrow x \Uparrow}\Uparrow''',
+    r'''\Updownarrow\frac{\Updownarrow \frac{x}{y} \Uparrow}
+{\Updownarrow \frac{x}{y} \Uparrow}\Uparrow''',
+
     r'\left\Updownarrow x \right\Uparrow',
     r'\left\Updownarrow\frac{x}{y}\right\Uparrow',
-    #r'\left\Updownarrow\frac{\left\Updownarrow x \right\Uparrow}{\left\Updownarrow x \right\Uparrow}\right\Uparrow',
-    #r'\left\Updownarrow\frac{\left\Updownarrow \frac{x}{y} \right\Uparrow}{\left\Updownarrow \frac{x}{y} \right\Uparrow}\right\Uparrow',
-    #r'\Updownarrow x \Uparrow',
-    #r'\Updownarrow\frac{x}{y}\Uparrow',
-    #r'\Updownarrow\frac{\Updownarrow x \Uparrow}{\Updownarrow x \Uparrow}\Uparrow',
-    #r'\Updownarrow\frac{\Updownarrow \frac{x}{y} \Uparrow}{\Updownarrow \frac{x}{y} \Uparrow}\Uparrow',
+
+    r'''\left\Updownarrow\frac{\left\Updownarrow x \right\Uparrow}
+{\left\Updownarrow x \right\Uparrow}\right\Uparrow''',
+    r'''\left\Updownarrow\frac{\left\Updownarrow \frac{x}{y} \right\Uparrow}
+{\left\Updownarrow \frac{x}{y} \right\Uparrow}\right\Uparrow''',
 ]
+
 EXP_FONT = [
     r'\displaystyle \int f^{-1}(x-x_a)\,dx}',
     r'\textstyle \int f^{-1}(x-x_a)\,dx}',
     r'\scriptstyle \int f^{-1}(x-x_a)\,dx}',
     r'\scriptscriptstyle \int f^{-1}(x-x_a)\,dx}',
 ]
+
 EXP_INT = [
     r'\int_0^1 x\,dx', 
     r'\iint_{x=0,y=0}^{x=1,y=1} xy\,dy\,dx', 
@@ -852,12 +873,14 @@ EXP_INT = [
     r'\idotsint x_0x_1x_2\,...\,x_n\,dx_0\,dx_1\,dx_2\,...\,dx_n', 
     r'\oint_0^{2\pi}f(\theta)\,d\theta',
 ]
+
 EXP_MATH = [
     r'\frac{x}{y}', r'\overline{ax}', r'\overrightarrow{ax}',
     "f'(x)", r'\underline{ax}', r'\overleftarrow{ax}',
     r'\sqrt{ax}', r'\widehat{ax}', r'\overbrace{ax}',
     r'\sqrt[n]{ax}', r'\widetilde{ax}', r'\underbrace{ax}',
 ]
+
 EXP_STYLE = [
     r'\mathcal{ABCDEFGHIJKLMNOPQRSTUVWXYZ}',
     r'\mathbb{ABCDEFGHIJKLMNOPQRSTUVWXYZ}',
