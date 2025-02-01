@@ -47,7 +47,7 @@ def get_tex_length(token: str) -> int:
         case r'\frac':
             return 1
     try:
-        return len(MathTex(token)[0])
+        return len(SingleStringMathTex(token))
     except Exception:
         return 0
 
@@ -74,12 +74,12 @@ class Painter():
         self.glyph_index = 0
 
     @property
-    def back_colour(self) -> ManimColor:
-        return self.get_pen_colour(self.back_pen)
+    def bg_ink(self) -> ManimColor:
+        return self.get_ink(self.back_pen)
 
     @property
-    def fore_colour(self) -> ManimColor:
-        return self.get_pen_colour(self.fore_pen)
+    def fb_ink(self) -> ManimColor:
+        return self.get_ink(self.fore_pen)
 
     @property
     def options(self) -> Opt:
@@ -89,7 +89,7 @@ class Painter():
     def options(self, value: Opt) -> None:
         self.opt = value
     
-    def get_pen_colour(self, pen: Pen) -> ManimColor:
+    def get_ink(self, pen: Pen) -> ManimColor:
         """
         Return the colour associated with the given pen.
         
@@ -152,7 +152,7 @@ class Painter():
                         pen = self.get_next_pen(pen)
                     else:
                         pen = symbol.pen
-                    colour = self.get_pen_colour(pen)
+                    colour = self.get_ink(pen)
                     for index in range(start, stop):
                         if index >= 0 and index < len(glyphs):
                             glyph = glyphs[index]
@@ -272,16 +272,14 @@ class Painter():
         start = g1[0].token_index
         end = self.token_index
         string = concat_tokens(self.tokens[start:end])
-        n1 = get_glyph_count(g1)
-        n2 = get_glyph_count(g2)
-        extra = len(MathTex(string)[0])-(n1+n2)
+        extra = get_tex_length(string) - get_glyph_count(g1 + g2)
         g1[0].glyph_count += extra
         adjust(g2, extra)
         if Opt.ACCENT in self.options:
             g1[0].pen = g2[0].pen
         self.dump_symbols('>', g1, g2)
         return g1 + g2
-    
+
     def _paint_aggregate(self, prototype: str) -> List[Symbol]:
         g1 = self.paint_symbol()
         g2 = self.paint_shift('_')
@@ -372,7 +370,7 @@ class Painter():
             right = self.tokens[right_index]
             s = self.text
             snip = s[0:left.start] + s[left.end:right.start] + s[right.end:]
-            return 1 + (len(self.tex) - len(MathTex(snip)[0])) // 2
+            return 1 + (len(self.tex) - get_tex_length(snip)) // 2
 
         token_index = self.token_index
         self.accept(token)
@@ -390,7 +388,7 @@ class Painter():
             case r'\right': # Dynamic
                 gap = _get_gap(self.get_index_L(token_index), token_index)
             case _: # Static
-                gap = len(MathTex(tokens)[0])
+                gap = get_tex_length(tokens)
         symbol.glyph_count = gap
         self.glyph_index += gap
         return [symbol]

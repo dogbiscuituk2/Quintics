@@ -36,11 +36,11 @@ class BaseScene(VoiceoverScene):
 
     @property
     def back_colour(self) -> ManimColor:
-        return self._painter.back_colour
+        return self._painter.bg_ink
 
     @property
     def fore_colour(self) -> ManimColor:
-        return self._painter.fore_colour
+        return self._painter.fb_ink
     
     @property
     def options(self) -> Opt:
@@ -81,7 +81,7 @@ class BaseScene(VoiceoverScene):
                 scale_factor=2))
 
     def get_colour(self, pen: Pen) -> ManimColor:
-        return self._painter.get_pen_colour(pen)
+        return self._painter.get_ink(pen)
 
     def make_matrix(
             self,
