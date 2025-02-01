@@ -7,7 +7,7 @@ class Poly_11_Linear(BaseScene):
     def construct(self):
         self.init()
 
-        self.set_colour_map((
+        self.set_pens((
             ('[a-e]', green),
             ('h', orange),
             ('[p-s]', yellow),

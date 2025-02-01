@@ -53,10 +53,10 @@ def get_tex_length(token: str) -> int:
 
 class Painter():
 
-    colour_map: List[tuple[re.Pattern[str], Pen]] = []
     glyph_index: int
     opt: Opt
     pen: Pen
+    pens: List[tuple[re.Pattern[str], Pen]] = []
     sticky: bool # Subscripted or superscripted unit reuses previous colour.
     tex: MathTex
     text: str
@@ -158,15 +158,15 @@ class Painter():
                             glyph = glyphs[index]
                             glyph.set_color(colour)
 
-    def set_colour_map(self, colour_map: List[tuple[str, Pen]]) -> None:
+    def set_pens(self, pens: List[tuple[str, Pen]]) -> None:
         """
         Set the colour map to be used by the painter.
         
-        colour_map: A List of tuples, each containing a regular expression 
-        pattern and a pen index.
+        pens: A List of tuples, each containing a regular expression 
+        pattern and a Pen.
         
         Example:
-        painter.set_colour_map((
+        painter.set_pens((
             (r'\\alpha', Pen.RED),
             (r'\\beta', Pen.GREEN),
             (r'\\gamma', Pen.BLUE)))
@@ -182,7 +182,7 @@ class Painter():
         The pattern is used to match the token of a glyph, and the Pen is used 
         to determine the colour of the glyph.
         """
-        self.colour_map = [[re.compile(m[0]), m[1]] for m in colour_map]
+        self.pens = [[re.compile(m[0]), m[1]] for m in pens]
 
     @property
     def back_pen(self) -> Pen:
@@ -254,7 +254,7 @@ class Painter():
                     yield (lefts.pop(), index)
 
     def get_token_pen(self, token: str) -> Pen:
-        for map in self.colour_map:
+        for map in self.pens:
             if (re.match(map[0], token)):
                 return map[1]
         match token:

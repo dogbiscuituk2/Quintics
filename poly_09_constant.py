@@ -6,7 +6,7 @@ class Poly_09_Constant(BaseScene):
     def construct(self):
         self.init()
 
-        self.set_colour_map((
+        self.set_pens((
             #('[Oo|]', ghost),
             (r'\\frac', red),
             (r'\\sqrt', orange),

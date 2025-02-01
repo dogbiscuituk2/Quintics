@@ -98,7 +98,7 @@ class TestAll(BaseScene):
                     self.play(FadeOut(screen))
                 caption = f'Page {page + 2} of {pages}'
 
-        self.set_colour_map([
+        self.set_pens([
             ('FG', Pen.GREY),
             ('BG', Pen.BLACK),
             #('oO|', Pen.BLACK),

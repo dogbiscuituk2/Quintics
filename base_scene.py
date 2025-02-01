@@ -116,8 +116,8 @@ class BaseScene(VoiceoverScene):
         # Specify language & disable language check to avoid GTTS bugs.
         return self.voiceover(text, lang='en', lang_check=False)
     
-    def set_colour_map(self, map: List[tuple[str, Pen]]) -> None:
-        self._painter.set_colour_map(map)
+    def set_pens(self, map: List[tuple[str, Pen]]) -> None:
+        self._painter.set_pens(map)
 
 #region Private Implementation
 
