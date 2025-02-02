@@ -17,10 +17,10 @@ class Poly_09_Constant(BaseScene):
             ('y', magenta),
             ('z', cyan)))
 
-        E1z = self.make_tex(r'y=\sum_{i=0}^{0}a_ix^i=a_0=0')
+        E1z = self.make_ssmt(r'y=\sum_{i=0}^{0}a_ix^i=a_0=0')
         E1y = MathTex(r'Degree=n=0').set_color(self.get_text_colour())
         E1y.next_to(E1z, DOWN)
-        E1b = self.make_tex(r'a_n\neq{0}')
+        E1b = self.make_ssmt(r'a_n\neq{0}')
         E1b.next_to(E1y, DOWN)
 
         with self.say("The degree zero polynomial has no roots."):

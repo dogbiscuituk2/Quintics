@@ -15,9 +15,9 @@ class Poly_41_Quartic(BaseScene):
             ('y', magenta),
             ('z', cyan)))
 
-        E1z = self.make_tex(r'y=\sum_{i=0}^{4}a_ix^i=0')
+        E1z = self.make_ssmt(r'y=\sum_{i=0}^{4}a_ix^i=0')
         E1y = MathTex(r'Degree=n=4').set_color(self.get_text_colour())
-        E1b = self.make_tex(r'y=x^4+ax^3+bx^2+cx+d')
+        E1b = self.make_ssmt(r'y=x^4+ax^3+bx^2+cx+d')
 
         G = VGroup(E1z, E1y, E1b).arrange(DOWN)
 

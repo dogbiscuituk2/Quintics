@@ -15,13 +15,13 @@ class Poly_11_Linear(BaseScene):
             ('y', magenta),
             ('z', cyan)))
 
-        E1z = self.make_tex(r'y=\sum_{i=0}^{1}a_ix^i=0')
+        E1z = self.make_ssmt(r'y=\sum_{i=0}^{1}a_ix^i=0')
         E1y = MathTex(r'Degree=n=1').set_color(self.get_text_colour())
         E1y.next_to(E1z, DOWN)
-        E1b = self.make_tex(r'a_1x+a_0=0').next_to(E1y, DOWN)
-        E1c = self.make_tex(r'a_1x=-a_0').next_to(E1y, DOWN)
-        E1d = self.make_tex(r'x=-a_0/a_1').next_to(E1y, DOWN)
-        E1e = self.make_tex(r'x_1=-a_0/a_1').next_to(E1y, DOWN)
+        E1b = self.make_ssmt(r'a_1x+a_0=0').next_to(E1y, DOWN)
+        E1c = self.make_ssmt(r'a_1x=-a_0').next_to(E1y, DOWN)
+        E1d = self.make_ssmt(r'x=-a_0/a_1').next_to(E1y, DOWN)
+        E1e = self.make_ssmt(r'x_1=-a_0/a_1').next_to(E1y, DOWN)
 
         with self.say(
             """

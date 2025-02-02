@@ -14,8 +14,10 @@ from labels import *
 from latex_rice import *
 from painter import *
 
+config.background_color = BLACK
+
 class TestAll(BaseScene):
-\
+
     def __init__(self):
         BaseScene.__init__(self)
 
@@ -47,7 +49,7 @@ class TestAll(BaseScene):
                     add_tex(lines[row], item)
 
                 def add_tex(line: List[SVGMobject], item: str) -> None:
-                    line.append(self.make_tex(item))
+                    line.append(self.make_ssmt(item))
                     line.append(self.make_text(item))
 
                 try:
@@ -98,10 +100,11 @@ class TestAll(BaseScene):
                     self.play(FadeOut(screen))
                 caption = f'Page {page + 2} of {pages}'
 
+        self.set_palette(PALETTE_SASHA)
+
         self.set_pens([
             ('FG', Pen.GREY),
-            ('BG', Pen.BLACK),
-            #('oO|', Pen.BLACK),
+            #('oO|', Pen.BACKGROUND),
             (r'[a-eA-E]|\\alpha|\\beta|\\gamma|\\delta|\\epsilon', Pen.RED),
             ('[f-h]', Pen.ORANGE),
             ('[i-n]', Pen.YELLOW),
@@ -131,22 +134,22 @@ class TestAll(BaseScene):
         #self.options |= Opt.DEBUG_TEX
 
         show_group("Scratchpad", [r'a_1 + f^2 + i_3 + p^4 * t_5 / x^6'])
-        show_group("Greek and Hebrew Letters", SYM_GREEK, flip=True)
+        #show_group("Greek and Hebrew Letters", SYM_GREEK, flip=True)
         show_group("Mathematical constructions", EXP_MATH, cols=3)
-        show_group("Static delimiters", EXP_DELIM_STATIC, cols=2, rows=10, flip=True)
-        show_group("Dynamic delimiters", EXP_DELIM_DYNAMIC, cols = 1)
+        #show_group("Static delimiters", EXP_DELIM_STATIC, cols=2, rows=10, flip=True)
+        #show_group("Dynamic delimiters", EXP_DELIM_DYNAMIC, cols = 1)
 
         show_group("Integrals", EXP_INT, 1)
         show_group("Variable sized symbols", SYM_LARGE)
         show_group("Standard function names", SYM_FUNC, flip=True)
-        show_group("Binary operation and relation symbols", SYM_OPS, 5)
-        show_group("Arrow symbols", SYM_ARROW)
+        #show_group("Binary operation and relation symbols", SYM_OPS, 5)
+        #show_group("Arrow symbols", SYM_ARROW)
 
-        show_group("Miscellaneous symbols", SYM_MISC)
-        show_group("Math mode accents", EXP_ACCENT)
-        show_group("Other styles - math mode only", EXP_STYLE, 1)
-        show_group("Font sizes", EXP_FONT, 1)
-        show_group("All symbols", SYM_ALL, flip=True)
+        #show_group("Miscellaneous symbols", SYM_MISC)
+        #show_group("Math mode accents", EXP_ACCENT)
+        #show_group("Other styles - math mode only", EXP_STYLE, 1)
+        #show_group("Font sizes", EXP_FONT, 1)
+        #show_group("All symbols", SYM_ALL, flip=True)
 
         #self.options &= ~Opt.DEBUG_COLOURS
         #self.options &= ~Opt.DEBUG_FAST

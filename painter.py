@@ -35,6 +35,11 @@ PAT_TOKEN = r"\\{|\\}|\\\||\\[A-Za-z]+|\\\\|\\\,|[^&\s]"
 def adjust(symbols: List[Symbol], delta: int) -> None:
     for symbol in symbols:
         symbol.glyph_index += delta
+
+def permute(*lists: List[Symbol]) -> None: # TODO: use it!
+    deltas = [lists[i+1][0].glyph_index - lists[i][0].glyph_index for i in range(len(lists))]
+    for i, list in enumerate(lists):
+        adjust(list, deltas[i])
             
 def concat_tokens(tokens: List[Token]) -> str:
     return ' '.join([token.string for token in tokens])
@@ -55,6 +60,7 @@ class Painter():
 
     glyph_index: int
     opt: Opt
+    palette: List[ManimColor] = PALETTE_SASHA
     pen: Pen
     pens: List[tuple[re.Pattern[str], Pen]] = []
     sticky: bool # Subscripted or superscripted unit reuses previous colour.
@@ -74,12 +80,12 @@ class Painter():
         self.glyph_index = 0
 
     @property
-    def bg_ink(self) -> ManimColor:
-        return self.get_ink(self.back_pen)
+    def ink_bg(self) -> ManimColor:
+        return config.background_color
 
     @property
-    def fb_ink(self) -> ManimColor:
-        return self.get_ink(self.fore_pen)
+    def ink_fg(self) -> ManimColor:
+        return self.get_ink(self.pen_fg)
 
     @property
     def options(self) -> Opt:
@@ -97,7 +103,7 @@ class Painter():
         
         Returns: The colour associated with the given pen.
         """
-        return PALETTE_SASHA[pen.value]
+        return self.palette[pen.value] if pen.value >= 0 else self.ink_bg
     
     def paint(self, root: Mobject) -> None:
         """
@@ -143,13 +149,13 @@ class Painter():
         while self.more:
             symbols = self.paint_unit()
             glyphs = self.tex
-            pen = self.back_pen
+            pen = Pen.BACKGROUND
             for symbol in symbols:
                 start = symbol.glyph_index
                 stop = start + symbol.glyph_count
                 if stop > start:
                     if Opt.DEBUG_COLOURS in self.options:
-                        pen = self.get_next_pen(pen)
+                        pen = Pen(pen.value + 1) if pen.value < 21 else Pen(0)
                     else:
                         pen = symbol.pen
                     colour = self.get_ink(pen)
@@ -157,6 +163,15 @@ class Painter():
                         if index >= 0 and index < len(glyphs):
                             glyph = glyphs[index]
                             glyph.set_color(colour)
+
+    def set_palette(self, palette: List[ManimColor]) -> None:
+        """
+        Set the palette of colours to be used by the painter.
+        
+        palette: A list of colours to be used by the painter.
+        """
+        self.palette = palette
+
 
     def set_pens(self, pens: List[tuple[str, Pen]]) -> None:
         """
@@ -185,14 +200,6 @@ class Painter():
         self.pens = [[re.compile(m[0]), m[1]] for m in pens]
 
     @property
-    def back_pen(self) -> Pen:
-        return self.get_token_pen('BG')
-
-    @property
-    def fore_pen(self) -> Pen:
-        return self.get_token_pen('FG')
-
-    @property
     def more(self) -> bool:
         return self.token_index < len(self.tokens)
 
@@ -200,6 +207,10 @@ class Painter():
     def peek(self) -> str:
         index = self.token_index
         return self.tokens[index].string if self.more else ''
+
+    @property
+    def pen_fg(self) -> Pen:
+        return self.get_token_pen('FG')
     
     @property
     def pop(self) -> str:
@@ -240,10 +251,6 @@ class Painter():
     def get_index_R(self, index_L: int) -> int:
         return list(filter(lambda p: p[0] == index_L, self.get_parens()))[0][1]
 
-    def get_next_pen(self, pen: Pen) -> Pen:
-        pen = Pen(pen.value + 1) if pen.value < 21 else Pen(0)
-        return pen if pen != self.back_pen else self.get_next_pen(pen)
-
     def get_parens(self) -> Generator[Tuple[int, int], None, None]:
         lefts = []
         for index, token in enumerate(self.tokens):
@@ -257,15 +264,9 @@ class Painter():
         for map in self.pens:
             if (re.match(map[0], token)):
                 return map[1]
-        match token:
-            case 'FG':
-                return Pen.WHITE
-            case 'BG':
-                return Pen.BLACK
-            case _:
-                return Pen.GREY
+        return Pen.WHITE
     
-    def _paint_accent(self, token: str) -> List[Symbol]:
+    def paint_accent(self) -> List[Symbol]:
         g1 = self.paint_symbol()
         g2 = self.paint_unit() if self.more else []
         self.dump_symbols('<', g1, g2)
@@ -280,7 +281,7 @@ class Painter():
         self.dump_symbols('>', g1, g2)
         return g1 + g2
 
-    def _paint_aggregate(self, prototype: str) -> List[Symbol]:
+    def paint_aggregate(self, prototype: str) -> List[Symbol]:
         g1 = self.paint_symbol()
         g2 = self.paint_shift('_')
         g3 = self.paint_shift('^')
@@ -365,7 +366,7 @@ class Painter():
         token: The size modifier, e.g. '\\left', '\\big', '\\Bigg'.
         '''
 
-        def _get_gap(left_index: int, right_index: int) -> int:
+        def get_gap(left_index: int, right_index: int) -> int:
             left = self.tokens[left_index]
             right = self.tokens[right_index]
             s = self.text
@@ -384,9 +385,9 @@ class Painter():
             pen=self.get_token_pen(delim))
         match token:
             case r'\left': # Dynamic
-                gap = _get_gap(token_index, self.get_index_R(token_index))
+                gap = get_gap(token_index, self.get_index_R(token_index))
             case r'\right': # Dynamic
-                gap = _get_gap(self.get_index_L(token_index), token_index)
+                gap = get_gap(self.get_index_L(token_index), token_index)
             case _: # Static
                 gap = get_tex_length(tokens)
         symbol.glyph_count = gap
@@ -442,11 +443,11 @@ class Painter():
 
         token = self.peek
         if re.match(PAT_INT, token):
-            return self._paint_aggregate(prototype = r'\int')
+            return self.paint_aggregate(prototype = r'\int')
         if re.match(PAT_LARGE, token):
-            return self._paint_aggregate(prototype = r'\sum')
+            return self.paint_aggregate(prototype = r'\sum')
         if re.match(PAT_ACCENT, token):
-            return self._paint_accent(token)
+            return self.paint_accent()
         if re.match(PAT_MATH, token):
             return self.paint_math(token)
         if re.match(PAT_SIZE, token):

@@ -3,10 +3,6 @@
 
 """
 Options class for Painter.
-
-Opt.DEBUG causes all glyph colours to be replaced with those corresponding to 
-the Pens enum, repeatedly cycling from first to last as necessary, but omitting 
-the Pen used for background fill.
 """
 
 from enum import Flag, auto
@@ -18,9 +14,6 @@ class Opt(Flag):
     SUBSUPER = auto()
     """Subscript/Superscript. In x_2^3, the colour of 2 & 3 matches x."""
 
-    DIFF = auto()
-    """Differentials. In dx, the colour of d matches x."""
-
     MATH = auto()
     """Example: in \\overbrace{x}, the brace colour matches x."""
 
@@ -28,7 +21,7 @@ class Opt(Flag):
     """Example: in \\acute{e}, the accent colour matches e."""
 
     DEBUG_COLOURS = auto()
-    """Override all colours & assign sequential ones cyclically."""
+    """Cyclically override all colours."""
 
     DEBUG_FAST = auto()
     """Skip animations."""
@@ -49,4 +42,4 @@ class Opt(Flag):
     """Show MathTex structure."""
 
     SYM = MATH | ACCENT
-    DEFAULT = SUBSUPER | DIFF | SYM
+    DEFAULT = SUBSUPER | SYM

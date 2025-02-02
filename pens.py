@@ -20,28 +20,29 @@ from typing import List
 from manim import *
 
 class Pen(Enum):
-    BLACK    = 0
-    WHITE    = auto()
-    RED      = auto()
-    GREEN    = auto()
-    YELLOW   = auto()
-    BLUE     = auto()
-    ORANGE   = auto()
-    PURPLE   = auto()
-    CYAN     = auto()
-    MAGENTA  = auto()
-    LIME     = auto()
-    PINK     = auto()
-    TEAL     = auto()
-    LAVENDER = auto()
-    BROWN    = auto()
-    BEIGE    = auto()
-    MAROON   = auto()
-    MINT     = auto()
-    OLIVE    = auto()
-    APRICOT  = auto()
-    NAVY     = auto()
-    GREY     = auto()
+    BACKGROUND  = -1
+    BLACK       = auto()
+    WHITE       = auto()
+    RED         = auto()
+    GREEN       = auto()
+    YELLOW      = auto()
+    BLUE        = auto()
+    ORANGE      = auto()
+    PURPLE      = auto()
+    CYAN        = auto()
+    MAGENTA     = auto()
+    LIME        = auto()
+    PINK        = auto()
+    TEAL        = auto()
+    LAVENDER    = auto()
+    BROWN       = auto()
+    BEIGE       = auto()
+    MAROON      = auto()
+    MINT        = auto()
+    OLIVE       = auto()
+    APRICOT     = auto()
+    NAVY        = auto()
+    GREY        = auto()
 
 PALETTE_BRIGHT: List[ManimColor] = [
     0x000000, # black
@@ -93,10 +94,5 @@ PALETTE_SASHA: List[ManimColor] = [
     0xa9a9a9, # grey
 ]
 
-PALETTE_BLACK_ON_WHITE: List[ManimColor] = [
-    BLACK, WHITE, *[BLACK for _ in range(20)]
-]
-
-PALETTE_WHITE_ON_BLACK: List[ManimColor] = [
-    BLACK, WHITE, *[WHITE for _ in range(20)]
-]
+PALETTE_BLACK: List[ManimColor] = [*[BLACK for _ in range(22)]]
+PALETTE_WHITE: List[ManimColor] = [*[WHITE for _ in range(22)]]

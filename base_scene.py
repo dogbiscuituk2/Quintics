@@ -23,24 +23,26 @@ from latex_rice import *
 from options import Opt
 from painter import *
 
+config.background_color = BLACK
 config.max_files_cached = 999
 config.verbosity = "CRITICAL"
 
 class BaseScene(VoiceoverScene):
 
-    def __init__(self, options: Opt = Opt.DEFAULT):
+    def __init__(self):
         VoiceoverScene.__init__(self)
+
+    def setup(self):
         self.set_speech_service(GTTSService())
-        self._painter = Painter(options)
-        config.background_color = self.back_colour
+        self._painter = Painter()
 
     @property
-    def back_colour(self) -> ManimColor:
-        return self._painter.bg_ink
+    def ink_bg(self) -> ManimColor:
+        return self._painter.ink_bg
 
     @property
-    def fore_colour(self) -> ManimColor:
-        return self._painter.fb_ink
+    def ink_fg(self) -> ManimColor:
+        return self._painter.ink_fg
     
     @property
     def options(self) -> Opt:
@@ -81,7 +83,7 @@ class BaseScene(VoiceoverScene):
                 scale_factor=2))
 
     def get_colour(self, pen: Pen) -> ManimColor:
-        return self._painter.get_ink(pen)
+        return self._painter.get_ink(pen) if pen.value >= 0 else self.ink_bg
 
     def make_matrix(
             self,
@@ -92,19 +94,19 @@ class BaseScene(VoiceoverScene):
         cols: int = len(matrix[0])
         strings: List[str] = [[t for t in row] for row in matrix]
         matrix: Matrix = Matrix(strings, bracket_h_buff = margin, h_buff = padding)
-        matrix.set_color(self.fore_colour)
+        matrix.set_color(self.ink_fg)
         for row in range(rows):
             for col in range(cols):
-                self._paint_tex(matrix[0][row * cols + col])
+                self.paint(matrix[0][row * cols + col])
         return matrix
 
-    def make_tex(self, text: str) -> MathTex:
-        tex: MathTex = MathTex(text)
-        self._paint_tex(tex)
-        return tex
+    def make_ssmt(self, text: str) -> SingleStringMathTex:
+        ssmt: SingleStringMathTex = SingleStringMathTex(text)
+        self.paint(ssmt)
+        return ssmt
 
     def make_text(self, text: str, *args, **kwargs) -> Text:
-        return Text(text, font_size=30, color=self.fore_colour, *args, **kwargs)
+        return Text(text, font_size=30, color=self.ink_fg, *args, **kwargs)
 
     def say(self, text: str):
         frame = currentframe()
@@ -116,6 +118,9 @@ class BaseScene(VoiceoverScene):
         # Specify language & disable language check to avoid GTTS bugs.
         return self.voiceover(text, lang='en', lang_check=False)
     
+    def set_palette(self, palette: dict[str, ManimColor]) -> None:
+        self._painter.set_palette(palette)
+    
     def set_pens(self, map: List[tuple[str, Pen]]) -> None:
         self._painter.set_pens(map)
 
@@ -124,7 +129,7 @@ class BaseScene(VoiceoverScene):
     _boxes = None
     _painter: Painter
     
-    def _paint_tex(self, tex: MathTex) -> None:
-        self._painter.paint(tex)
+    def paint(self, mob: Mobject) -> None:
+        self._painter.paint(mob)
 
 #endregion
