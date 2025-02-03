@@ -35,23 +35,6 @@ PAT_TOKEN = r"\\{|\\}|\\\||\\[A-Za-z]+|\\\\|\\\,|[^&\s]"
 def adjust(symbols: List[Symbol], delta: int) -> None:
     for symbol in symbols:
         symbol.glyph_index += delta
-
-def make_pen(pattern: str, pen: Pen) -> tuple[str, Pen]:
-    """
-    Create a new pen to be used by the painter.
-    
-    pattern: A regular expression pattern used to match the token of a glyph.
-    
-    pen: The pen to be used to determine the colour of the glyph.
-    
-    Returns: A tuple containing the pattern and the pen.
-    """
-    return ([re.compile(pattern), pen])
-
-def permute(*lists: List[Symbol]) -> None: # TODO: use it!
-    deltas = [lists[i+1][0].glyph_index - lists[i][0].glyph_index for i in range(len(lists))]
-    for i, list in enumerate(lists):
-        adjust(list, deltas[i])
             
 def concat_tokens(token_list: List[Token]) -> str:
     return ' '.join([token.string for token in token_list])
@@ -68,6 +51,18 @@ def get_tex_length(token: str) -> int:
     except Exception:
         return 0
 
+def make_pen(pattern: str, pen: Pen) -> tuple[str, Pen]:
+    """
+    Create a new pen to be used by the painter.
+    
+    pattern: A regular expression pattern used to match the token of a glyph.
+    
+    pen: The pen to be used to determine the colour of the glyph.
+    
+    Returns: A tuple containing the pattern and the pen.
+    """
+    return ([re.compile(pattern), pen])
+
 class Painter():
 
     opt: Opt = Opt.DEFAULT
@@ -75,7 +70,6 @@ class Painter():
     pen: Pen = Pen.BACKGROUND
     pens: List[tuple[re.Pattern[str], Pen]] = []
     sticky: bool = False # Subscripted or superscripted unit reuses previous colour.
-    text: str = ''
 
     glyph_index: int = 0
     token_index: int = 0
@@ -86,7 +80,7 @@ class Painter():
 
     @property
     def ink_fg(self) -> ManimColor:
-        return self.get_ink(self.pen_fg)
+        return self.get_ink(self.get_pen('FG'))
 
     @property
     def options(self) -> Opt:
@@ -105,6 +99,12 @@ class Painter():
         Returns: The colour associated with the given pen.
         """
         return self.palette[pen.value] if pen.value >= 0 else self.ink_bg
+
+    def get_pen(self, token: str) -> Pen:
+        for map in self.pens:
+            if (re.match(map[0], token)):
+                return map[1]
+        return Pen.WHITE
     
     def paint(self, root: Mobject) -> None:
         """
@@ -285,8 +285,7 @@ class Painter():
                 def get_gap(left: int, right: int) -> int:
                     token_L = tokens[left]
                     token_R = tokens[right]
-                    s = self.text
-                    snip = s[0:token_L.start] + s[token_L.end:token_R.start] + s[token_R.end:]
+                    snip = text[0:token_L.start] + text[token_L.end:token_R.start] + text[token_R.end:]
                     return 1 + (len(tex) - get_tex_length(snip)) // 2
 
                 token_index = self.token_index
@@ -298,7 +297,7 @@ class Painter():
                     token_count=2,
                     glyph_index=self.glyph_index,
                     glyph_count=1,
-                    pen=self.get_token_pen(delim))
+                    pen=self.get_pen(delim))
                 match token:
                     case r'\left': # Dynamic
                         gap = get_gap(token_index, get_right(token_index))
@@ -338,7 +337,7 @@ class Painter():
                 token_count = 1
                 glyph_count = get_tex_length(token)
                 if not self.sticky:
-                    self.pen = self.get_token_pen(token)
+                    self.pen = self.get_pen(token)
                 symbols = [Symbol(
                     token_index = self.token_index,
                     token_count = token_count,
@@ -377,10 +376,9 @@ class Painter():
 
         tokens: List[Token] = []
 
-        text = tex.tex_string
+        text: str = tex.tex_string
         if not text:
             return
-        self.text = text
         tokens.clear()
         for match in re.finditer(PAT_TOKEN, text):
             span = match.span()
@@ -419,20 +417,6 @@ class Painter():
         """
         self.palette = palette
 
-    def get_token_pen(self, token: str) -> Pen:
-        for map in self.pens:
-            if (re.match(map[0], token)):
-                return map[1]
-        return Pen.WHITE
-
-    def remove_pen(self, pattern: str) -> None:
-        """
-        Remove a pen from the colour map.
-        
-        pattern: The regular expression pattern used to match the token of a glyph.
-        """
-        self.pens = [p for p in self.pens if p[0].pattern != pattern]
-
     def set_pens(self, pens: List[tuple[str, Pen]]) -> None:
         """
         Set the colour map to be used by the painter.
@@ -458,10 +442,6 @@ class Painter():
         to determine the colour of the glyph.
         """
         self.pens = [make_pen(p[0], p[1]) for p in pens]
-
-    @property
-    def pen_fg(self) -> Pen:
-        return self.get_token_pen('FG')
 
 if __name__ == '__main__':
     config.verbosity = "CRITICAL"
