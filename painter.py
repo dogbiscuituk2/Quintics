@@ -53,8 +53,8 @@ def permute(*lists: List[Symbol]) -> None: # TODO: use it!
     for i, list in enumerate(lists):
         adjust(list, deltas[i])
             
-def concat_tokens(tokens: List[Token]) -> str:
-    return ' '.join([token.string for token in tokens])
+def concat_tokens(token_list: List[Token]) -> str:
+    return ' '.join([token.string for token in token_list])
 
 def get_glyph_count(symbols: List[Symbol]) -> int:
     return sum(symbol.glyph_count for symbol in symbols)
@@ -76,7 +76,6 @@ class Painter():
     pens: List[tuple[re.Pattern[str], Pen]] = []
     sticky: bool = False # Subscripted or superscripted unit reuses previous colour.
     text: str = ''
-    tokens: List[Token] = []
 
     glyph_index: int = 0
     token_index: int = 0
@@ -132,7 +131,7 @@ class Painter():
         """
 
         def more() -> bool:
-            return self.token_index < len(self.tokens)
+            return self.token_index < len(tokens)
 
         def paint_unit() -> List[Symbol]:
 
@@ -143,7 +142,7 @@ class Painter():
             
             def peek() -> str:
                 index = self.token_index
-                return self.tokens[index].string if more() else ''
+                return tokens[index].string if more() else ''
             
             def pop() -> str:
                 token = peek()
@@ -168,7 +167,7 @@ class Painter():
                 dump_symbols('<', g1, g2)
                 start = g1[0].token_index
                 end = self.token_index
-                string = concat_tokens(self.tokens[start:end])
+                string = concat_tokens(tokens[start:end])
                 extra = get_tex_length(string) - get_glyph_count(g1 + g2)
                 g1[0].glyph_count += extra
                 adjust(g2, extra)
@@ -276,7 +275,7 @@ class Painter():
 
                 def get_parens() -> Generator[Tuple[int, int], None, None]:
                     lefts = []
-                    for index, token in enumerate(self.tokens):
+                    for index, token in enumerate(tokens):
                         match token.string:
                             case r'\left':
                                 lefts.append(index)
@@ -284,8 +283,8 @@ class Painter():
                                 yield (lefts.pop(), index)
 
                 def get_gap(left: int, right: int) -> int:
-                    token_L = self.tokens[left]
-                    token_R = self.tokens[right]
+                    token_L = tokens[left]
+                    token_R = tokens[right]
                     s = self.text
                     snip = s[0:token_L.start] + s[token_L.end:token_R.start] + s[token_R.end:]
                     return 1 + (len(tex) - get_tex_length(snip)) // 2
@@ -376,11 +375,13 @@ class Painter():
                 case _:
                     return paint_token(token)
 
+        tokens: List[Token] = []
+
         text = tex.tex_string
         if not text:
             return
         self.text = text
-        self.tokens.clear()
+        tokens.clear()
         for match in re.finditer(PAT_TOKEN, text):
             span = match.span()
             start = span[0]
@@ -388,7 +389,7 @@ class Painter():
             length = end - start
             string = text[start:end]
             token = Token(start=start, length=length, string=string)
-            self.tokens.append(token)
+            tokens.append(token)
         self.token_index = 0
         self.glyph_index = 0
         if Opt.DEBUG_NOPAINT in self.options:
