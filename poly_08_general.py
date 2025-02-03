@@ -28,11 +28,11 @@ class Poly_08_General(BaseScene):
             self.play(Create(F1))
 
         with self.say("It has degree n, where n is the highest power of x present."):
-            self.flash(F1[0][10])
+            self.flash(F1[9])
             F2 = MathTex(r'Degree=n').set_color(self.ink_fg)
             F2.next_to(F1, DOWN)
             self.play(Create(F2))
-            self.flash(F1[0][3])
+            self.flash(F1[2])
 
         with self.say("Note that this means a n is nonzero."):
             F3 = self.make_ssmt(r'a_n\neq{0}')
@@ -43,13 +43,17 @@ class Poly_08_General(BaseScene):
             F4 = self.make_ssmt(r'y=a_nx^n+a_{n-1}x^{n-1}+a_{n-2}x^{n-2}+...+a_1x+a_0')
             arc = {"path_arc": PI}
             self.play(
-                TransformByGlyphMap(F1, F4,
-                    ([2,3,4,5,6], ShrinkToCenter),
-                    ([7], [2,7,16,29,33], arc),
-                    ([8], [3,8,9,10,17,18,19,30,34], arc),
-                    ([9], [4,11,20,31], arc),
-                    ([10], [5,12,13,14,21,22,23], arc),
-                    (GrowFromCenter, [6,15,24,25,26,27,28,32])), run_time=2)
+                TransformByGlyphMap(F1, F4))
+                    #([2,3,4,5,6], ShrinkToCenter),
+                    #([7], [2,7,16,29,33], arc),
+                    #([8], [3,8,9,10,17,18,19,30,34], arc),
+                    #([9], [4,11,20,31], arc),
+                    #([10], [5,12,13,14,21,22,23], arc),
+                    #(GrowFromCenter, [6,15,24,25,26,27,28,32])), 
+                    #run_time=2)
+
+        self.wait(10)
+        return
             
         with self.say("It has n roots, or values of x, for which y is zero."):            
             F5 = self.make_ssmt(r'y=a_nx^n+a_{n-1}x^{n-1}+a_{n-2}x^{n-2}+...+a_1x+a_0=0')

@@ -36,6 +36,18 @@ def adjust(symbols: List[Symbol], delta: int) -> None:
     for symbol in symbols:
         symbol.glyph_index += delta
 
+def make_pen(pattern: str, pen: Pen) -> tuple[str, Pen]:
+    """
+    Create a new pen to be used by the painter.
+    
+    pattern: A regular expression pattern used to match the token of a glyph.
+    
+    pen: The pen to be used to determine the colour of the glyph.
+    
+    Returns: A tuple containing the pattern and the pen.
+    """
+    return ([re.compile(pattern), pen])
+
 def permute(*lists: List[Symbol]) -> None: # TODO: use it!
     deltas = [lists[i+1][0].glyph_index - lists[i][0].glyph_index for i in range(len(lists))]
     for i, list in enumerate(lists):
@@ -172,12 +184,37 @@ class Painter():
         """
         self.palette = palette
 
+#region Pens
+
+    def add_pen(self, pattern: str, pen: Pen) -> None:
+        """
+        Add a new pen to the colour map.
+        
+        pattern: A regular expression pattern used to match the token of a glyph.
+        
+        pen: The pen to be used to determine the colour of the glyph.
+        """
+        self.pens.insert(0, make_pen(pattern, pen))
+
+    def get_token_pen(self, token: str) -> Pen:
+        for map in self.pens:
+            if (re.match(map[0], token)):
+                return map[1]
+        return Pen.WHITE
+
+    def remove_pen(self, pattern: str) -> None:
+        """
+        Remove a pen from the colour map.
+        
+        pattern: The regular expression pattern used to match the token of a glyph.
+        """
+        self.pens = [p for p in self.pens if p[0].pattern != pattern]
 
     def set_pens(self, pens: List[tuple[str, Pen]]) -> None:
         """
         Set the colour map to be used by the painter.
         
-        pens: A List of tuples, each containing a regular expression 
+        pens: A List of tuples, each comprising a regular expression 
         pattern and a Pen.
         
         Example:
@@ -197,7 +234,9 @@ class Painter():
         The pattern is used to match the token of a glyph, and the Pen is used 
         to determine the colour of the glyph.
         """
-        self.pens = [[re.compile(m[0]), m[1]] for m in pens]
+        self.pens = [make_pen(p[0], p[1]) for p in pens]
+
+#endregion
 
     @property
     def more(self) -> bool:
@@ -245,27 +284,6 @@ class Painter():
     def get_colour(self, symbols: List[Symbol]) -> ManimColor:
         return symbols[0].pen if symbols else self._painter.get_colour(Pen.FG)
 
-    def get_index_L(self, index_R: int) -> int:
-        return list(filter(lambda p: p[1] == index_R, self.get_parens()))[0][0]
-
-    def get_index_R(self, index_L: int) -> int:
-        return list(filter(lambda p: p[0] == index_L, self.get_parens()))[0][1]
-
-    def get_parens(self) -> Generator[Tuple[int, int], None, None]:
-        lefts = []
-        for index, token in enumerate(self.tokens):
-            match token.string:
-                case r'\left':
-                    lefts.append(index)
-                case r'\right':
-                    yield (lefts.pop(), index)
-
-    def get_token_pen(self, token: str) -> Pen:
-        for map in self.pens:
-            if (re.match(map[0], token)):
-                return map[1]
-        return Pen.WHITE
-    
     def paint_accent(self) -> List[Symbol]:
         g1 = self.paint_symbol()
         g2 = self.paint_unit() if self.more else []
@@ -366,11 +384,26 @@ class Painter():
         token: The size modifier, e.g. '\\left', '\\big', '\\Bigg'.
         '''
 
-        def get_gap(left_index: int, right_index: int) -> int:
-            left = self.tokens[left_index]
-            right = self.tokens[right_index]
+        def get_left(right: int) -> int:
+            return list(filter(lambda p: p[1] == right, get_parens()))[0][0]
+    
+        def get_right(left: int) -> int:
+            return list(filter(lambda p: p[0] == left, get_parens()))[0][1]
+
+        def get_parens() -> Generator[Tuple[int, int], None, None]:
+            lefts = []
+            for index, token in enumerate(self.tokens):
+                match token.string:
+                    case r'\left':
+                        lefts.append(index)
+                    case r'\right':
+                        yield (lefts.pop(), index)
+
+        def get_gap(left: int, right: int) -> int:
+            token_L = self.tokens[left]
+            token_R = self.tokens[right]
             s = self.text
-            snip = s[0:left.start] + s[left.end:right.start] + s[right.end:]
+            snip = s[0:token_L.start] + s[token_L.end:token_R.start] + s[token_R.end:]
             return 1 + (len(self.tex) - get_tex_length(snip)) // 2
 
         token_index = self.token_index
@@ -385,9 +418,9 @@ class Painter():
             pen=self.get_token_pen(delim))
         match token:
             case r'\left': # Dynamic
-                gap = get_gap(token_index, self.get_index_R(token_index))
+                gap = get_gap(token_index, get_right(token_index))
             case r'\right': # Dynamic
-                gap = get_gap(self.get_index_L(token_index), token_index)
+                gap = get_gap(get_left(token_index), token_index)
             case _: # Static
                 gap = get_tex_length(tokens)
         symbol.glyph_count = gap
