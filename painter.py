@@ -363,6 +363,12 @@ class Painter():
             self.dump_symbols('>', g1, g2)
             return g1 + g2
 
+        def paint_script():
+            self.sticky = Opt.SUBSUPER in self.options
+            symbols = paint_shift(token)
+            self.sticky = False
+            return symbols
+
         def paint_shift(token: str) -> List[Symbol]:
             '''
             If the current token is either '_' or '^' then return the next unit,
@@ -446,12 +452,6 @@ class Painter():
             if end:
                 accept(end)
             return symbols
-
-        def paint_sub_super():
-            self.sticky = Opt.SUBSUPER in self.options
-            symbols = paint_shift(token)
-            self.sticky = False
-            return symbols
     
         def paint_symbol() -> List[Symbol]:
             return paint_token(self.peek)
@@ -491,9 +491,9 @@ class Painter():
                 result = paint_string('{', '}')
                 return result
             case '_':
-                return paint_sub_super()
+                return paint_script()
             case '^':
-                return paint_sub_super()
+                return paint_script()
             case _:
                 return paint_token(token)
 
