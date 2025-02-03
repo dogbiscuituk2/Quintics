@@ -256,11 +256,6 @@ class Painter():
         token = self.peek
         self.token_index += 1
         return token
-
-    def accept(self, token: str) -> None:
-        if (self.peek != token):
-            pass
-        self.token_index += 1
     
     def dump_symbols(self, flag: str, *lists: List[Symbol]) -> None:
         if Opt.DEBUG_SYMBOLS in self.options:
@@ -281,104 +276,15 @@ class Painter():
             print(len(self.tex), 'glyphs')
             print()
 
-    def get_colour(self, symbols: List[Symbol]) -> ManimColor:
-        return symbols[0].pen if symbols else self._painter.get_colour(Pen.FG)
-
-    def paint_shift(self, token: str) -> List[Symbol]:
-        '''
-        If the current token is either '_' or '^' then return the next unit,
-        otherwise return the empty list.
-
-        token: The expected token, this will be either '_' or '^'.
-        '''
-        if self.peek == token:
-            self.accept(token)
-            return self.paint_unit()
-        return []
-
-    def paint_size(self, token: str) -> List[Symbol]:
-        '''
-        Paint a delimiter symbol correctly, when the symbol is preceded by a 
-        static or dynamic size modifier.
-
-        token: The size modifier, e.g. '\\left', '\\big', '\\Bigg'.
-        '''
-
-        def get_left(right: int) -> int:
-            return list(filter(lambda p: p[1] == right, get_parens()))[0][0]
-    
-        def get_right(left: int) -> int:
-            return list(filter(lambda p: p[0] == left, get_parens()))[0][1]
-
-        def get_parens() -> Generator[Tuple[int, int], None, None]:
-            lefts = []
-            for index, token in enumerate(self.tokens):
-                match token.string:
-                    case r'\left':
-                        lefts.append(index)
-                    case r'\right':
-                        yield (lefts.pop(), index)
-
-        def get_gap(left: int, right: int) -> int:
-            token_L = self.tokens[left]
-            token_R = self.tokens[right]
-            s = self.text
-            snip = s[0:token_L.start] + s[token_L.end:token_R.start] + s[token_R.end:]
-            return 1 + (len(self.tex) - get_tex_length(snip)) // 2
-
-        token_index = self.token_index
-        self.accept(token)
-        delim = self.pop
-        tokens = f'{token}{delim}'
-        symbol = Symbol(
-            token_index=token_index,
-            token_count=2,
-            glyph_index=self.glyph_index,
-            glyph_count=1,
-            pen=self.get_token_pen(delim))
-        match token:
-            case r'\left': # Dynamic
-                gap = get_gap(token_index, get_right(token_index))
-            case r'\right': # Dynamic
-                gap = get_gap(get_left(token_index), token_index)
-            case _: # Static
-                gap = get_tex_length(tokens)
-        symbol.glyph_count = gap
-        self.glyph_index += gap
-        return [symbol]
-    
-    def paint_string(self, begin: str = '', end: str = '') -> List[Symbol]:
-        if begin:
-            self.accept(begin)
-        symbols = []
-        while self.more and self.peek != end:
-            symbols += self.paint_unit()
-        if end:
-            self.accept(end)
-        return symbols
-    
-    def paint_symbol(self) -> List[Symbol]:
-        return self.paint_token(self.peek)
-    
-    def paint_token(self, token: str) -> List[Symbol]:
-        token_count = 1
-        glyph_count = get_tex_length(token)
-        if not self.sticky:
-            self.pen = self.get_token_pen(token)
-        symbols = [Symbol(
-            token_index = self.token_index,
-            token_count = token_count,
-            glyph_index = self.glyph_index,
-            glyph_count = glyph_count,
-            pen = self.pen)]
-        self.token_index += token_count
-        self.glyph_index += glyph_count
-        return symbols
-
     def paint_unit(self) -> List[Symbol]:
 
+        def accept(token: str) -> None:
+            if (self.peek != token):
+                pass
+            self.token_index += 1
+
         def paint_accent() -> List[Symbol]:
-            g1 = self.paint_symbol()
+            g1 = paint_symbol()
             g2 = self.paint_unit() if self.more else []
             self.dump_symbols('<', g1, g2)
             start = g1[0].token_index
@@ -393,9 +299,9 @@ class Painter():
             return g1 + g2
 
         def paint_aggregate(prototype: str) -> List[Symbol]:
-            g1 = self.paint_symbol()
-            g2 = self.paint_shift('_')
-            g3 = self.paint_shift('^')
+            g1 = paint_symbol()
+            g2 = paint_shift('_')
+            g3 = paint_shift('^')
             self.dump_symbols('<', g1, g2, g3)
             n1 = get_glyph_count(g1)
             n2 = get_glyph_count(g2)
@@ -427,7 +333,7 @@ class Painter():
             return g1 + g2 + g3
 
         def paint_frac() -> List[Symbol]:
-            g1 = self.paint_symbol()
+            g1 = paint_symbol()
             g2 = self.paint_unit()
             g3 = self.paint_unit()
             self.dump_symbols('<', g1, g2, g3)
@@ -441,7 +347,7 @@ class Painter():
         def paint_math(token: str) -> List[Symbol]:
             extra = 4 if token.endswith('brace') else 2 if token.endswith('arrow') else 1
             flip = token not in [r'\underline', r'\underbrace']
-            g1 = self.paint_symbol()
+            g1 = paint_symbol()
             g2 = self.paint_unit() if self.more else []
             self.dump_symbols('<', g1, g2)
             n1 = get_glyph_count(g1)
@@ -457,21 +363,112 @@ class Painter():
             self.dump_symbols('>', g1, g2)
             return g1 + g2
 
+        def paint_shift(token: str) -> List[Symbol]:
+            '''
+            If the current token is either '_' or '^' then return the next unit,
+            otherwise return the empty list.
+
+            token: The expected token, this will be either '_' or '^'.
+            '''
+            if self.peek == token:
+                accept(token)
+                return self.paint_unit()
+            return []
+
+        def paint_size(token: str) -> List[Symbol]:
+            '''
+            Paint a delimiter symbol correctly, when the symbol is preceded by a 
+            static or dynamic size modifier.
+
+            token: The size modifier, e.g. '\\left', '\\big', '\\Bigg'.
+            '''
+
+            def get_left(right: int) -> int:
+                return list(filter(lambda p: p[1] == right, get_parens()))[0][0]
+        
+            def get_right(left: int) -> int:
+                return list(filter(lambda p: p[0] == left, get_parens()))[0][1]
+
+            def get_parens() -> Generator[Tuple[int, int], None, None]:
+                lefts = []
+                for index, token in enumerate(self.tokens):
+                    match token.string:
+                        case r'\left':
+                            lefts.append(index)
+                        case r'\right':
+                            yield (lefts.pop(), index)
+
+            def get_gap(left: int, right: int) -> int:
+                token_L = self.tokens[left]
+                token_R = self.tokens[right]
+                s = self.text
+                snip = s[0:token_L.start] + s[token_L.end:token_R.start] + s[token_R.end:]
+                return 1 + (len(self.tex) - get_tex_length(snip)) // 2
+
+            token_index = self.token_index
+            accept(token)
+            delim = self.pop
+            tokens = f'{token}{delim}'
+            symbol = Symbol(
+                token_index=token_index,
+                token_count=2,
+                glyph_index=self.glyph_index,
+                glyph_count=1,
+                pen=self.get_token_pen(delim))
+            match token:
+                case r'\left': # Dynamic
+                    gap = get_gap(token_index, get_right(token_index))
+                case r'\right': # Dynamic
+                    gap = get_gap(get_left(token_index), token_index)
+                case _: # Static
+                    gap = get_tex_length(tokens)
+            symbol.glyph_count = gap
+            self.glyph_index += gap
+            return [symbol]
+
         def paint_sqrt() -> List[Symbol]:
-            g1 = self.paint_symbol()
+            g1 = paint_symbol()
             if self.peek == '[':
                 colour = g1[0].pen
-                g2 = self.paint_string('[', ']')
+                g2 = paint_string('[', ']')
                 for symbol in g2:
                     symbol.pen = colour
                 g1 += g2
             g3 = self.paint_unit() if self.more else []
             return g1 + g3
+    
+        def paint_string(begin: str = '', end: str = '') -> List[Symbol]:
+            if begin:
+                accept(begin)
+            symbols = []
+            while self.more and self.peek != end:
+                symbols += self.paint_unit()
+            if end:
+                accept(end)
+            return symbols
 
         def paint_sub_super():
             self.sticky = Opt.SUBSUPER in self.options
-            symbols = self.paint_shift(token)
+            symbols = paint_shift(token)
             self.sticky = False
+            return symbols
+    
+        def paint_symbol() -> List[Symbol]:
+            return paint_token(self.peek)
+    
+        def paint_token(token: str) -> List[Symbol]:
+            token_count = 1
+            glyph_count = get_tex_length(token)
+            if not self.sticky:
+                self.pen = self.get_token_pen(token)
+            symbols = [Symbol(
+                token_index = self.token_index,
+                token_count = token_count,
+                glyph_index = self.glyph_index,
+                glyph_count = glyph_count,
+                pen = self.pen)]
+            self.token_index += token_count
+            self.glyph_index += glyph_count
             return symbols
 
         token = self.peek
@@ -484,21 +481,21 @@ class Painter():
         if re.match(PAT_MATH, token):
             return paint_math(token)
         if re.match(PAT_SIZE, token):
-            return self.paint_size(token)
+            return paint_size(token)
         match token:
             case r'\frac':
                 return paint_frac()
             case r'\sqrt':
                 return paint_sqrt()
             case '{':
-                result = self.paint_string('{', '}')
+                result = paint_string('{', '}')
                 return result
             case '_':
                 return paint_sub_super()
             case '^':
                 return paint_sub_super()
             case _:
-                return self.paint_token(token)
+                return paint_token(token)
 
 if __name__ == '__main__':
     config.verbosity = "CRITICAL"
