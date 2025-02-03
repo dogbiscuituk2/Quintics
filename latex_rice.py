@@ -874,6 +874,12 @@ EXP_INT = [
     r'\oint_0^{2\pi}f(\theta)\,d\theta',
 ]
 
+EXP_LARGE = [ # Displayed formulae show larger version.
+    r'\sum_{{i=0}}^9', r'\biguplus_{i=0}^9', r'\bigoplus_{i=0}^9', r'\bigvee_{i=0}^9',
+    r'\prod_{i=0}^9', r'\bigcap_{i=0}^9', r'\bigotimes_{i=0}^9', r'\bigwedge_{i=0}^9',
+    r'\coprod_{i=0}^9', r'\bigcup_{i=0}^9', r'\bigodot_{i=0}^9', r'\bigsqcup_{i=0}^9',
+]
+
 EXP_MATH = [
     r'\frac{x}{y}', r'\overline{ax}', r'\overrightarrow{ax}',
     "f'(x)", r'\underline{ax}', r'\overleftarrow{ax}',

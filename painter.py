@@ -284,86 +284,6 @@ class Painter():
     def get_colour(self, symbols: List[Symbol]) -> ManimColor:
         return symbols[0].pen if symbols else self._painter.get_colour(Pen.FG)
 
-    def paint_accent(self) -> List[Symbol]:
-        g1 = self.paint_symbol()
-        g2 = self.paint_unit() if self.more else []
-        self.dump_symbols('<', g1, g2)
-        start = g1[0].token_index
-        end = self.token_index
-        string = concat_tokens(self.tokens[start:end])
-        extra = get_tex_length(string) - get_glyph_count(g1 + g2)
-        g1[0].glyph_count += extra
-        adjust(g2, extra)
-        if Opt.ACCENT in self.options:
-            g1[0].pen = g2[0].pen
-        self.dump_symbols('>', g1, g2)
-        return g1 + g2
-
-    def paint_aggregate(self, prototype: str) -> List[Symbol]:
-        g1 = self.paint_symbol()
-        g2 = self.paint_shift('_')
-        g3 = self.paint_shift('^')
-        self.dump_symbols('<', g1, g2, g3)
-        n1 = get_glyph_count(g1)
-        n2 = get_glyph_count(g2)
-        n3 = get_glyph_count(g3)
-        match prototype:
-            case r'\int':
-                # Expressions in the "\int" family are rendered with the 
-                # integral sign(s) first on the left, then the upper and lower 
-                # bounds (in that order) in the middle, and finally the 
-                # integrand on the right. Note that the bounds rendering order
-                # is the opposite of their occurrence order in the text,
-                # necessitating the following adjustments.
-                adjust(g2, n3)
-                adjust(g3, -n2)
-            case r'\sum':
-                # Expressions in the "\sum" family are rendered with the upper
-                # bounds, summation sign, and lower bounds, stacked vertically 
-                # (in that order), followed by the summand on the right. Note
-                # that all three items in the vertical stack require adjustment 
-                # because their rendering order is completely different from 
-                # their occurrence order in the text.
-                adjust(g3, -(n1+n2))
-                adjust(g1, n3)
-                adjust(g2, n3)
-            case _:
-                # All other aggregates are rendered as-is.
-                pass
-        self.dump_symbols('>', g1, g2, g3)
-        return g1 + g2 + g3
-
-    def paint_frac(self) -> List[Symbol]:
-        g1 = self.paint_symbol()
-        g2 = self.paint_unit()
-        g3 = self.paint_unit()
-        self.dump_symbols('<', g1, g2, g3)
-        n1 = get_glyph_count(g1)
-        n2 = get_glyph_count(g2)
-        adjust(g1, n2)
-        adjust(g2, -n1)
-        self.dump_symbols('>', g1, g2, g3)
-        return g2 + g1 + g3
-    
-    def paint_math(self, token: str) -> List[Symbol]:
-        extra = 4 if token.endswith('brace') else 2 if token.endswith('arrow') else 1
-        flip = token not in [r'\underline', r'\underbrace']
-        g1 = self.paint_symbol()
-        g2 = self.paint_unit() if self.more else []
-        self.dump_symbols('<', g1, g2)
-        n1 = get_glyph_count(g1)
-        n2 = get_glyph_count(g2)
-        if n1 < 1:
-            g1[0].glyph_index = g2[0].glyph_index + get_glyph_count(g2)
-            g1[0].glyph_count = extra
-            if flip:
-                n1 = get_glyph_count(g1)
-                n2 = get_glyph_count(g2)
-                adjust(g1, -n2)
-                adjust(g2, +n1)
-        self.dump_symbols('>', g1, g2)
-        return g1 + g2
-
     def paint_shift(self, token: str) -> List[Symbol]:
         '''
         If the current token is either '_' or '^' then return the next unit,
@@ -426,17 +346,6 @@ class Painter():
         symbol.glyph_count = gap
         self.glyph_index += gap
         return [symbol]
-
-    def paint_sqrt(self) -> List[Symbol]:
-        g1 = self.paint_symbol()
-        if self.peek == '[':
-            colour = g1[0].pen
-            g2 = self.paint_string('[', ']')
-            for symbol in g2:
-                symbol.pen = colour
-            g1 += g2
-        g3 = self.paint_unit() if self.more else []
-        return g1 + g3
     
     def paint_string(self, begin: str = '', end: str = '') -> List[Symbol]:
         if begin:
@@ -468,6 +377,97 @@ class Painter():
 
     def paint_unit(self) -> List[Symbol]:
 
+        def paint_accent() -> List[Symbol]:
+            g1 = self.paint_symbol()
+            g2 = self.paint_unit() if self.more else []
+            self.dump_symbols('<', g1, g2)
+            start = g1[0].token_index
+            end = self.token_index
+            string = concat_tokens(self.tokens[start:end])
+            extra = get_tex_length(string) - get_glyph_count(g1 + g2)
+            g1[0].glyph_count += extra
+            adjust(g2, extra)
+            if Opt.ACCENT in self.options:
+                g1[0].pen = g2[0].pen
+            self.dump_symbols('>', g1, g2)
+            return g1 + g2
+
+        def paint_aggregate(prototype: str) -> List[Symbol]:
+            g1 = self.paint_symbol()
+            g2 = self.paint_shift('_')
+            g3 = self.paint_shift('^')
+            self.dump_symbols('<', g1, g2, g3)
+            n1 = get_glyph_count(g1)
+            n2 = get_glyph_count(g2)
+            n3 = get_glyph_count(g3)
+            match prototype:
+                case r'\int':
+                    # Expressions in the "\int" family are rendered with the 
+                    # integral sign(s) first on the left, then the upper and lower 
+                    # bounds (in that order) in the middle, and finally the 
+                    # integrand on the right. Note that the bounds rendering order
+                    # is the opposite of their occurrence order in the text,
+                    # necessitating the following adjustments.
+                    adjust(g2, n3)
+                    adjust(g3, -n2)
+                case r'\sum':
+                    # Expressions in the "\sum" family are rendered with the upper
+                    # bounds, summation sign, and lower bounds, stacked vertically 
+                    # (in that order), followed by the summand on the right. Note
+                    # that all three items in the vertical stack require adjustment 
+                    # because their rendering order is completely different from 
+                    # their occurrence order in the text.
+                    adjust(g3, -(n1+n2))
+                    adjust(g1, n3)
+                    adjust(g2, n3)
+                case _:
+                    # All other aggregates are rendered as-is.
+                    pass
+            self.dump_symbols('>', g1, g2, g3)
+            return g1 + g2 + g3
+
+        def paint_frac() -> List[Symbol]:
+            g1 = self.paint_symbol()
+            g2 = self.paint_unit()
+            g3 = self.paint_unit()
+            self.dump_symbols('<', g1, g2, g3)
+            n1 = get_glyph_count(g1)
+            n2 = get_glyph_count(g2)
+            adjust(g1, n2)
+            adjust(g2, -n1)
+            self.dump_symbols('>', g1, g2, g3)
+            return g2 + g1 + g3
+    
+        def paint_math(token: str) -> List[Symbol]:
+            extra = 4 if token.endswith('brace') else 2 if token.endswith('arrow') else 1
+            flip = token not in [r'\underline', r'\underbrace']
+            g1 = self.paint_symbol()
+            g2 = self.paint_unit() if self.more else []
+            self.dump_symbols('<', g1, g2)
+            n1 = get_glyph_count(g1)
+            n2 = get_glyph_count(g2)
+            if n1 < 1:
+                g1[0].glyph_index = g2[0].glyph_index + get_glyph_count(g2)
+                g1[0].glyph_count = extra
+                if flip:
+                    n1 = get_glyph_count(g1)
+                    n2 = get_glyph_count(g2)
+                    adjust(g1, -n2)
+                    adjust(g2, +n1)
+            self.dump_symbols('>', g1, g2)
+            return g1 + g2
+
+        def paint_sqrt() -> List[Symbol]:
+            g1 = self.paint_symbol()
+            if self.peek == '[':
+                colour = g1[0].pen
+                g2 = self.paint_string('[', ']')
+                for symbol in g2:
+                    symbol.pen = colour
+                g1 += g2
+            g3 = self.paint_unit() if self.more else []
+            return g1 + g3
+
         def paint_sub_super():
             self.sticky = Opt.SUBSUPER in self.options
             symbols = self.paint_shift(token)
@@ -476,20 +476,20 @@ class Painter():
 
         token = self.peek
         if re.match(PAT_INT, token):
-            return self.paint_aggregate(prototype = r'\int')
+            return paint_aggregate(prototype = r'\int')
         if re.match(PAT_LARGE, token):
-            return self.paint_aggregate(prototype = r'\sum')
+            return paint_aggregate(prototype = r'\sum')
         if re.match(PAT_ACCENT, token):
-            return self.paint_accent()
+            return paint_accent()
         if re.match(PAT_MATH, token):
-            return self.paint_math(token)
+            return paint_math(token)
         if re.match(PAT_SIZE, token):
             return self.paint_size(token)
         match token:
             case r'\frac':
-                return self.paint_frac()
+                return paint_frac()
             case r'\sqrt':
-                return self.paint_sqrt()
+                return paint_sqrt()
             case '{':
                 result = self.paint_string('{', '}')
                 return result
