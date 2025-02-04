@@ -118,8 +118,8 @@ class BaseScene(VoiceoverScene):
         # Specify language & disable language check to avoid GTTS bugs.
         return self.voiceover(text, lang='en', lang_check=False)
     
-    def set_palette(self, palette: dict[str, ManimColor]) -> None:
-        self._painter.set_palette(palette)
+    def set_inks(self, inks: dict[str, ManimColor]) -> None:
+        self._painter.set_inks(inks)
     
     def set_pens(self, map: List[tuple[str, Pen]]) -> None:
         self._painter.set_pens(map)

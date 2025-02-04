@@ -100,7 +100,7 @@ class TestAll(BaseScene):
                     self.play(FadeOut(screen))
                 caption = f'Page {page + 2} of {pages}'
 
-        self.set_palette(PALETTE_SASHA)
+        self.set_inks(PALETTE_SASHA)
 
         self.set_pens([
             ('FG', Pen.GREY),

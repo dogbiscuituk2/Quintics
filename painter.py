@@ -392,13 +392,13 @@ class Painter():
 
         paint_node(root)
 
-    def set_palette(self, palette: List[ManimColor]) -> None:
+    def set_inks(self, inks: List[ManimColor]) -> None:
         """
         Set the palette of colours to be used by the painter.
         
         palette: A list of colours to be used by the painter.
         """
-        self.palette = palette
+        self.palette = inks
 
     def set_pens(self, pens: List[tuple[str, Pen]]) -> None:
         """
@@ -415,14 +415,6 @@ class Painter():
 
         The above example will set the colour of the glyphs representing the 
         Greek letters alpha, beta, gamma to red, green, blue respectively.
-
-        The colour map is used to determine the colour of a glyph based on the 
-        token that it represents.
-
-        The colour map is a list of tuples, each having a regular expression 
-        pattern and a Pen. 
-        The pattern is used to match the token of a glyph, and the Pen is used 
-        to determine the colour of the glyph.
         """
         self.pens = [(re.compile(p[0]), p[1]) for p in pens]
 
