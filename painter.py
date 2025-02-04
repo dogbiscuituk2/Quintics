@@ -36,7 +36,7 @@ def adjust(symbols: List[Symbol], delta: int) -> None:
     for symbol in symbols:
         symbol.glyph_index += delta
             
-def concat_tokens(token_list: List[Token]) -> str:
+def concat(token_list: List[Token]) -> str:
     return ' '.join([token.string for token in token_list])
 
 def get_glyph_count(symbols: List[Symbol]) -> int:
@@ -50,18 +50,6 @@ def get_tex_length(token: str) -> int:
         return len(SingleStringMathTex(token))
     except Exception:
         return 0
-
-def make_pen(pattern: str, pen: Pen) -> tuple[str, Pen]:
-    """
-    Create a new pen to be used by the painter.
-    
-    pattern: A regular expression pattern used to match the token of a glyph.
-    
-    pen: The pen to be used to determine the colour of the glyph.
-    
-    Returns: A tuple containing the pattern and the pen.
-    """
-    return ([re.compile(pattern), pen])
 
 class Painter():
 
@@ -91,20 +79,13 @@ class Painter():
         self.opt = value
     
     def get_ink(self, pen: Pen) -> ManimColor:
-        """
-        Return the colour associated with the given pen.
-        
-        pen: The pen whose colour is to be returned.
-        
-        Returns: The colour associated with the given pen.
-        """
         return self.palette[pen.value] if pen.value >= 0 else self.ink_bg
 
     def get_pen(self, token: str) -> Pen:
         for map in self.pens:
             if (re.match(map[0], token)):
                 return map[1]
-        return Pen.WHITE
+        return Pen.GREY
     
     def paint(self, root: Mobject) -> None:
         """
@@ -161,7 +142,7 @@ class Painter():
                         dump_symbols('<', g1, g2)
                         start = g1[0].token_index
                         end = self.token_index
-                        string = concat_tokens(tokens[start:end])
+                        string = concat(tokens[start:end])
                         extra = get_tex_length(string) - get_glyph_count(g1 + g2)
                         g1[0].glyph_count += extra
                         adjust(g2, extra)
@@ -443,7 +424,7 @@ class Painter():
         The pattern is used to match the token of a glyph, and the Pen is used 
         to determine the colour of the glyph.
         """
-        self.pens = [make_pen(p[0], p[1]) for p in pens]
+        self.pens = [(re.compile(p[0]), p[1]) for p in pens]
 
 if __name__ == '__main__':
     config.verbosity = "CRITICAL"
