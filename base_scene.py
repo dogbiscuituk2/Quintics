@@ -104,6 +104,11 @@ class BaseScene(VoiceoverScene):
         ssmt: SingleStringMathTex = SingleStringMathTex(text)
         self.paint(ssmt)
         return ssmt
+    
+    def make_tex(self, text: str) -> MathTex:
+        tex: MathTex = MathTex(text)
+        self.paint(tex)
+        return tex
 
     def make_text(self, text: str, *args, **kwargs) -> Text:
         return Text(text, font_size=30, color=self.ink_fg, *args, **kwargs)

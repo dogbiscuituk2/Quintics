@@ -24,53 +24,43 @@ class Poly_08_General(BaseScene):
             ('z', Pen.CYAN)))
         
         with self.say("This is a general polynomial equation in one variable, x."):
-            F1 = self.make_ssmt(r'y=\sum_{i=0}^{n}a_ix^i')
+            F1 = self.make_tex(r'y=\sum_{i=0}^{n}a_ix^i')
             self.play(Create(F1))
 
         with self.say("It has degree n, where n is the highest power of x present."):
-            self.flash(F1[9])
+            self.flash(F1[0][9])
             F2 = MathTex(r'Degree=n').set_color(self.ink_fg)
             F2.next_to(F1, DOWN)
             self.play(Create(F2))
-            self.flash(F1[2])
+            self.flash(F1[0][2])
 
         with self.say("Note that this means a n is nonzero."):
-            F3 = self.make_ssmt(r'a_n\neq{0}')
+            F3 = self.make_tex(r'a_n\neq{0}')
             F3.next_to(F2, DOWN)
             self.play(Create(F3))
 
         with self.say("Let's unpack this sum."):
-            F4 = self.make_ssmt(r'y=a_nx^n+a_{n-1}x^{n-1}+a_{n-2}x^{n-2}+...+a_1x+a_0')
+            f4 = r'y=a_nx^n+a_{n-1}x^{n-1}+a_{n-2}x^{n-2}+...+a_1x+a_0'
+            F4 = self.make_tex(f4)
             arc = {"path_arc": PI}
             self.play(
-                TransformByGlyphMap(F1, F4))
-                    #([2,3,4,5,6], ShrinkToCenter),
-                    #([7], [2,7,16,29,33], arc),
-                    #([8], [3,8,9,10,17,18,19,30,34], arc),
-                    #([9], [4,11,20,31], arc),
-                    #([10], [5,12,13,14,21,22,23], arc),
-                    #(GrowFromCenter, [6,15,24,25,26,27,28,32])), 
-                    #run_time=2)
+                TransformByGlyphMap(F1, F4,
+                    ([2,3,4,5,6], ShrinkToCenter),
+                    ([7], [2,7,16,29,33], arc),
+                    ([8], [3,8,9,10,17,18,19,30,34], arc),
+                    ([9], [4,11,20,31], arc),
+                    ([10], [5,12,13,14,21,22,23], arc),
+                    (GrowFromCenter, [6,15,24,25,26,27,28,32])), 
+                    run_time=2)
 
-        self.wait(10)
-        return
-            
         with self.say("It has n roots, or values of x, for which y is zero."):            
-            F5 = self.make_ssmt(r'y=a_nx^n+a_{n-1}x^{n-1}+a_{n-2}x^{n-2}+...+a_1x+a_0=0')
+            f5 = f'{f4}=0'
+            F5 = self.make_tex(f5)
             self.play(TransformByGlyphMap(F4, F5, ([], [35, 36])))
 
         with self.say("To find these values, start by dividing throughout by a n."):
-
-            self.wait(10)
-
-            return
-
-            self.flash(F5[35]) # The zero on the RHS
-
-            F6a = self.make_ssmt(r'\frac{y}{a_n}=\frac{a_n}{a_n}x^n+\frac{a_{n-1}}{a_n}x^{n-1}+\frac{a_{n-2}}{a_n}x^{n-2}+...+\frac{a_1}{a_n}x+\frac{a_0}{a_n}=0')
-
-            self.play(TransformByGlyphMap(F5, F6a))
-
+            self.flash(F5[0][36]) # The zero on the RHS
+            F6a = self.make_tex(r'\frac{y}{a_n}=\frac{a_n}{a_n}x^n+\frac{a_{n-1}}{a_n}x^{n-1}+\frac{a_{n-2}}{a_n}x^{n-2}+...+\frac{a_1}{a_n}x+\frac{a_0}{a_n}=0')
             self.play(TransformByGlyphMap(
                 F5,
                 F6a,
@@ -78,30 +68,28 @@ class Poly_08_General(BaseScene):
                 (FadeIn, [2,3,8,9,18,19,30,31,44,45,51,52]),
                 introduce_individually=True))
             
-            return
-
             F6b = MathTex(r'\intertext{Let }').set_color(self.ink_fg)
-            F6c = self.make_ssmt(r'b_i=a_i/a_n:')
+            F6c = self.make_tex(r'b_i=a_i/a_n:')
             F6d = VGroup(F6b, F6c).arrange(RIGHT, aligned_edge=UP)
             F6d.next_to(F6a, UP, aligned_edge=LEFT)
             self.play(FadeOut(F2), FadeOut(F3), Create(F6d))
 
-            F6e = self.make_ssmt( \
+            F6e = self.make_tex( \
                 r'\frac{a_n}{a_n}x^n+\frac{a_{n-1}}{a_n}x^{n-1}+\frac{a_{n-2}}{a_n}x^{n-2}+...+' \
                     r'\frac{a_1}{a_n}x+\frac{a_0}{a_n}=0')
             self.play(TransformByGlyphMap(F6a, F6e, ([*ir(0,4)], ShrinkToCenter)), run_time=1.5)
 
-            F6f = self.make_ssmt( \
+            F6f = self.make_tex( \
                 r'x^n+\frac{a_{n-1}}{a_n}x^{n-1}+\frac{a_{n-2}}{a_n}x^{n-2}+...+' \
                     r'\frac{a_1}{a_n}x+\frac{a_0}{a_n}=0')
             self.play(TransformByGlyphMap(F6e, F6f, ([*ir(0,4)], ShrinkToCenter)), run_time=1.5)
 
-            F6g = self.make_ssmt( \
+            F6g = self.make_tex( \
                 r'x^n+b_{n-1}x^{n-1}+\frac{a_{n-2}}{a_n}x^{n-2}+...+' \
                     r'\frac{a_1}{a_n}x+\frac{a_0}{a_n}=0')
             self.play(TransformByGlyphMap(F6f, F6g, ([7,8,9], ShrinkToCenter)), run_time=1.5)
 
-            F6h = self.make_ssmt(r'x^n+b_{n-1}x^{n-1}+b_{n-2}x^{n-2}+...+b_1x+b_0=0')
+            F6h = self.make_tex(r'x^n+b_{n-1}x^{n-1}+b_{n-2}x^{n-2}+...+b_1x+b_0=0')
             self.play(
                 TransformByGlyphMap(
                     F6g,
@@ -118,12 +106,12 @@ class Poly_08_General(BaseScene):
             self.play(FadeOut(F6d))
 
         with self.say("If we know these roots, we can express the polynomial as a product of n linear factors."):
-            F7 = self.make_ssmt(r'=\prod_{j=1}^{n}(x-x_j)')
+            F7 = self.make_tex(r'=\prod_{j=1}^{n}(x-x_j)')
             F7.next_to(F6a, DOWN)
             self.play(Create(F7))
 
         with self.say("Each factor corresponds to a root value of the polynomial."):
-            F8 = self.make_ssmt(r'=(x-x_1)(x-x_2)(x-x_3)...(x-x_{n-1})(x-x_n)')
+            F8 = self.make_tex(r'=(x-x_1)(x-x_2)(x-x_3)...(x-x_{n-1})(x-x_n)')
             F8.next_to(F6a, DOWN)
             arc = {"path_arc": PI}
             self.play(
