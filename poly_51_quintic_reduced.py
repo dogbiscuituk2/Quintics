@@ -26,7 +26,7 @@ class Poly_51_Quintic_Reduced(BaseScene):
         z9 = 'z^5+5hz^4+10h^2z^3+10h^3z^2+5h^4z+h^5'
 
         Fz = [
-            [self.make_ssmt(s) for s in t] for t in [
+            [self.make_tex(s) for s in t] for t in [
                 [f'o{z}^5', f'a{z}^4', f'b{z}^3', f'c{z}^2', f'd{z}', 'e'],
                 [f'o{z2}^4', f'a{z2}^3', f'b{z2}^2', f'c{z2}'],
                 [f'o{z3}^3', f'a{z3}^2', f'b{z3}'],
@@ -38,8 +38,8 @@ class Poly_51_Quintic_Reduced(BaseScene):
                 [f'o{z9}'],
                 [f'o{z9}', 'az^4+4ahz^3+6ah^2z^2+4ah^3z+ah^4', 'bz^3+3bhz^2+3bh^2z+bh^3', 'cz^2+2chz+ch^2', 'dz+dh', 'e']]]
 
-        LHS = VGroup(*[self.make_ssmt(f'{s}o=') for s in ['x^1', 'y^1', 'y^1', 'x^5', 'ax^4', 'bx^3', 'cx^2', 'dx^1', 'eo^0']])
-        RHS = VGroup(*[self.make_ssmt(s) for s in ['oz+h', 'ox^5+ax^4+bx^3+cx^2+dx+e=0', 'oz^5+0z^4+pz^3+qz^2+rz+s']], *Fz[9])
+        LHS = VGroup(*[self.make_tex(f'{s}o=') for s in ['x^1', 'y^1', 'y^1', 'x^5', 'ax^4', 'bx^3', 'cx^2', 'dx^1', 'eo^0']])
+        RHS = VGroup(*[self.make_tex(s) for s in ['oz+h', 'ox^5+ax^4+bx^3+cx^2+dx+e=0', 'oz^5+0z^4+pz^3+qz^2+rz+s']], *Fz[9])
         ALL = VGroup(LHS, RHS)
 
         LHS.arrange(DOWN, aligned_edge=RIGHT, buff=0.1)
@@ -48,7 +48,7 @@ class Poly_51_Quintic_Reduced(BaseScene):
         EQU = [VGroup(LHS[i], RHS[i]) for i in range(9)]
 
         Y = self.make_matrix((['y^1'], ['x^5'], ['ax^4'], ['bx^3'], ['cx^2'], ['dx^1'], ['eo^0']), margin = 0)
-        EQ = self.make_ssmt('=')
+        EQ = self.make_tex('=')
         M = self.make_matrix((
             ('z^5', '0z^4', 'pz^3', 'qz^2', 'rz', 's'),
             ('z^5', '5hz^4', '10h^2z^3', '10h^3z^2', '5h^4z', 'h^5'),
@@ -68,8 +68,8 @@ class Poly_51_Quintic_Reduced(BaseScene):
 
         with self.say("We could solve it easily if we didn't have these intermediate powers."):
             self.box_on(*EQU[1][1][0][4:19])
-            s1 = self.make_ssmt('y=x^5+e=0')
-            s2 = self.make_ssmt('x=\\sqrt[5]{-e}')
+            s1 = self.make_tex('y=x^5+e=0')
+            s2 = self.make_tex('x=\\sqrt[5]{-e}')
             VGroup(s1, s2).arrange(DOWN)
             self.play(
                 TransformMatchingShapes(EQU[1].copy(), s1),
@@ -81,18 +81,18 @@ class Poly_51_Quintic_Reduced(BaseScene):
             self.play(Uncreate(s1))
 
         with self.say("In other words, transform it into so-called reduced form,"):
-            brace = Brace(Group(EQU[1], EQU[2]), LEFT, color=self.get_colour(grey))
+            brace = Brace(Group(EQU[1], EQU[2]), LEFT, color=self.ink_fg)
             self.play(FadeIn(brace), Create(EQU[2]))
             self.box_on(*EQU[2][1][0][4:8])
 
         with self.say("with this coefficient equal to zero."):
-            self.play(Indicate(EQU[2][1][0][5], color=self.get_colour(white), scale_factor=2, run_time=2))
+            self.play(Indicate(EQU[2][1][0][5], color=self.get_colour(Pen.WHITE), scale_factor=2, run_time=2))
 
         with self.say("This operation is technically known as a Tschirnhaus Transformation,"):
             image = ImageMobject("resources/Tschirnhaus.jpg")
             caption = MarkupText(
                     'Ehrenfried Walther von Tschirnhaus (1651-1708)',
-                    color=self.get_colour(grey)
+                    color=self.ink_fg
                 ).scale(0.25).rotate(-PI/2)
             picture = Group(image, caption).arrange(RIGHT, buff=0.1)
             picture.to_corner(DR, buff=0.5)
@@ -145,6 +145,9 @@ class Poly_51_Quintic_Reduced(BaseScene):
             for i in range(1, 5):
                 expand(i)
 
+        self.wait(10)
+        return
+
         with self.say("Multiply out the binomials."):
             for i in range(5, 9):
                 expand(i)
@@ -172,11 +175,11 @@ class Poly_51_Quintic_Reduced(BaseScene):
             return M[0][row * 6 + col]
         
         def indicate(items: List[VMobject], size: float = 1.2) -> None:
-            self.play(Indicate(VGroup(*items), color = self.get_colour(white), scale_factor = size))
+            self.play(Indicate(VGroup(*items), color = self.get_colour(Pen.WHITE), scale_factor = size))
 
         def new_target(row: int, col: int):
             z = ('z^5', 'z^4', 'z^3', 'z^2', 'z', '1')
-            mathTex: MathTex = self.make_ssmt(z[col])
+            mathTex: MathTex = self.make_tex(z[col])
             mathTex.move_to(get_element(row, col), RIGHT)
             Z2.append(mathTex)
             mathTex.generate_target()
@@ -210,7 +213,7 @@ class Poly_51_Quintic_Reduced(BaseScene):
                 transforms = [MoveToTarget(new_target(row, col)) for row in rows]
                 transforms.append(FadeOut(Z[0][col]))
                 for row in rows:
-                    transforms.append(rewrite(get_element(row, col), self.make_ssmt(m2[row][col])))
+                    transforms.append(rewrite(get_element(row, col), self.make_tex(m2[row][col])))
                 if col < 5:
                     indicate([get_element(row, col) for row in rows])
                 self.play(*transforms)
@@ -219,13 +222,13 @@ class Poly_51_Quintic_Reduced(BaseScene):
 
         self.wait(10)
 
-        F1 = self.make_ssmt('y=x^5+ax^4+bx^3+cx^2+dx+e')
-        F2 = self.make_ssmt('y=z^5+0z^4+pz^3+qz^2+rz+s')
-        F3 = self.make_ssmt('z=x-h')
-        F4 = self.make_ssmt('z=x+a/5')
+        F1 = self.make_tex('y=x^5+ax^4+bx^3+cx^2+dx+e')
+        F2 = self.make_tex('y=z^5+0z^4+pz^3+qz^2+rz+s')
+        F3 = self.make_tex('z=x-h')
+        F4 = self.make_tex('z=x+a/5')
 
         def setup(*args: str) -> MathTex:
-            return VGroup(*[self.make_ssmt(arg) for arg in args]).arrange(DOWN, aligned_edge = LEFT).move_to(2 * LEFT + DOWN)
+            return VGroup(*[self.make_tex(arg) for arg in args]).arrange(DOWN, aligned_edge = LEFT).move_to(2 * LEFT + DOWN)
 
         F5 = setup('0=5h+a', 'p=10h^2+4ah+b'  , 'q=10h^3+6ah^2+3bh+c', 'r=5h^4+4ah^3+3bh^2+2ch+d'   , 's=h^5+a^4+bh^3+ch^2+dh+e')
         F6 = setup('a=-5h' , 'p=10h^2-20h^2+b', 'q=10h^3-30h^3+3bh+c', 'r=5h^4-20h^4+3bh^2+2ch+d'   , 's=h^5-5h^5+bh^3+ch^2+dh+e')

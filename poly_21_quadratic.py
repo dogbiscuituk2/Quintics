@@ -23,10 +23,10 @@ class Poly_21_Quadratic(BaseScene):
             ('y', Pen.MAGENTA),
             ('z', Pen.CYAN)))
 
-        E1z = self.make_ssmt(r'y=\sum_{i=0}^{2}a_ix^i=0')
-        E1y = MathTex(r'Degree=n=2').set_color(self.get_text_colour())
-        E1b = self.make_ssmt(r'y=ax^2+bx+c')
-        E1c = self.make_ssmt(r'x=\frac{-b\pm\sqrt{b^2-4ac}}{2a}')
+        E1z = self.make_tex(r'y=\sum_{i=0}^{2}a_ix^i=0')
+        E1y = MathTex(r'Degree=n=2').set_color(self.ink_fg)
+        E1b = self.make_tex(r'y=ax^2+bx+c')
+        E1c = self.make_tex(r'x=\frac{-b\pm\sqrt{b^2-4ac}}{2a}')
 
         VGroup(E1z, E1y, E1b, E1c).arrange(DOWN)
 

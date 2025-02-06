@@ -23,9 +23,9 @@ class Poly_31_Cubic(BaseScene):
             ('y', Pen.MAGENTA),
             ('z', Pen.CYAN)))
 
-        E1z = self.make_ssmt(r'y=\sum_{i=0}^{3}a_ix^i=0')
-        E1y = MathTex(r'Degree=n=3').set_color(self.get_text_colour())
-        E1b = self.make_ssmt(r'y=x^3+ax^2+bx+c')
+        E1z = self.make_tex(r'y=\sum_{i=0}^{3}a_ix^i=0')
+        E1y = MathTex(r'Degree=n=3').set_color(self.ink_fg)
+        E1b = self.make_tex(r'y=x^3+ax^2+bx+c')
 
         G = VGroup(E1z, E1y, E1b).arrange(DOWN)
 
