@@ -39,9 +39,9 @@ class Poly_09_Constant(BaseScene):
 
         with self.say("This is because a n is constrained to be both zero and nonzero.") as tracker:
             self.play(Create(E1b))
-            #b1 = self.box(E1b)
-            #b2 = self.box(E1y[0][7:10])
-            b3 = self.box(E1z[0][13:17])
+            b1 = self.box(E1b)
+            b2 = self.box(E1y[0][7:10])
+            b3 = self.box(E1z[0][12:17])
             boxes = VGroup(b1, b2, b3)
             self.wait(tracker.duration + 2)
             self.play(FadeOut(E1z, E1y, E1b, *boxes))

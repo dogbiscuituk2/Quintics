@@ -58,7 +58,9 @@ class BaseScene(VoiceoverScene):
         return b
 
     def box_make(self, *args: Mobject) -> Polygon:
-        return SurroundingRectangle(args, self.get_colour(Pen.YELLOW))
+        result = SurroundingRectangle(*args)
+        result.set_color(self.get_colour(Pen.YELLOW))
+        return result
 
     def box_move(self, *args: Mobject) -> Animation:
         b = self.box_make(*args)
