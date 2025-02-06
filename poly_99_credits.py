@@ -1,16 +1,17 @@
 from manim import *
-from manim_voiceover.services.gtts import GTTSService
 import platform
 from base_scene import BaseScene
 
 TITLE = 'Solving the General Quintic Equation'
 SUBTITLE = 'An Ultraradical Animation'
-COPYRIGHT = '©2024 by John Michael Kerr'
+COPYRIGHT = '©2024-2025 by John Michael Kerr'
 
 class Poly_99_Credits(BaseScene):
 
+    def __init__(self):
+        BaseScene.__init__(self)
+
     def construct(self):
-        self.init()
 
         packages = [['python', platform.python_version()],
             *[[package, version(package)] for package in (
@@ -42,3 +43,13 @@ class Poly_99_Credits(BaseScene):
         self.wait(3)
         self.play(FadeOut(Credits))
         self.wait(1)
+
+if __name__ == "__main__":
+    import os
+    module_name = os.path.abspath(__file__).split(os.sep)[-1]
+    # py -m: run library module as a script (terminates option list)
+    # manim -a: all scenes, -p: preview, -ql: 480p15, -qm: 720p30,
+    # -qh: 1080p60, -qp: 1440p60, -qk: 2160p60.
+    command_line = f'py -m manim render -a -p -qp {module_name}'
+    print(command_line)
+    os.system(command_line)

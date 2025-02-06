@@ -58,9 +58,10 @@ class Poly_08_General(BaseScene):
             F5 = self.make_tex(f5)
             self.play(TransformByGlyphMap(F4, F5, ([], [35, 36])))
 
-        with self.say("To find these values, start by dividing throughout by a n."):
+        with self.say("To find these values, start by dividing by a n."):
             self.flash(F5[0][36]) # The zero on the RHS
-            F6a = self.make_tex(r'\frac{y}{a_n}=\frac{a_n}{a_n}x^n+\frac{a_{n-1}}{a_n}x^{n-1}+\frac{a_{n-2}}{a_n}x^{n-2}+...+\frac{a_1}{a_n}x+\frac{a_0}{a_n}=0')
+            F6a = self.make_tex(
+                r'\frac{y}{a_n}=\frac{a_n}{a_n}x^n+\frac{a_{n-1}}{a_n}x^{n-1}+\frac{a_{n-2}}{a_n}x^{n-2}+...+\frac{a_1}{a_n}x+\frac{a_0}{a_n}=0')
             self.play(TransformByGlyphMap(
                 F5,
                 F6a,
@@ -125,10 +126,20 @@ class Poly_08_General(BaseScene):
                     ([10], [5,11,17,26,27,28,34], arc),
                     ([11], [6,12,18,29,35], arc),
                     (GrowFromCenter, [19,20,24])), run_time=2)
-            
+
         with self.say("x 1, x 2, and so on, up to x n."):
             for g in ((4,6), (10,12), (16,18), (25,29), (33,35)):
                 self.flash(VGroup(*F8[0][g[0]:g[1]]), run_time=1)
             self.wait(2)
             self.play(FadeOut(F6h), FadeOut(F8))
             self.wait(2)
+
+if __name__ == "__main__":
+    import os
+    module_name = os.path.abspath(__file__).split(os.sep)[-1]
+    # py -m: run library module as a script (terminates option list)
+    # manim -a: all scenes, -p: preview, -ql: 480p15, -qm: 720p30,
+    # -qh: 1080p60, -qp: 1440p60, -qk: 2160p60.
+    command_line = f'py -m manim render -a -p -qp {module_name}'
+    print(command_line)
+    os.system(command_line)

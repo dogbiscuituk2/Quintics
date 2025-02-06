@@ -52,15 +52,15 @@ class BaseScene(VoiceoverScene):
     def options(self, value: Opt) -> None:
         self._painter.options = value
 
-    def box(self, *args: VMobject) -> Polygon:
+    def box(self, *args: Mobject) -> Polygon:
         b = self.box_make(*args)
         self.play(Create(b))
         return b
 
-    def box_make(self, *args: VMobject) -> Polygon:
-        return SurroundingRectangle(VGroup(*args), self.get_colour(Pen.YELLOW))
+    def box_make(self, *args: Mobject) -> Polygon:
+        return SurroundingRectangle(args, self.get_colour(Pen.YELLOW))
 
-    def box_move(self, *args: VMobject) -> Animation:
+    def box_move(self, *args: Mobject) -> Animation:
         b = self.box_make(*args)
         result = Create(b) if self._boxes == None else ReplacementTransform(self._boxes, b)
         self._boxes = b
@@ -71,7 +71,7 @@ class BaseScene(VoiceoverScene):
             self.play(Uncreate(self._boxes))
             self._boxes = None
 
-    def box_on(self, *args: VMobject) -> None:
+    def box_on(self, *args: Mobject) -> None:
         self.play(self.box_move(*args))
 
     def flash(self, tex: MathTex, run_time=2) -> None:

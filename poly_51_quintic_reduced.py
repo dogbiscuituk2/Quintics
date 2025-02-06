@@ -1,11 +1,19 @@
-from MF_Tools import *
-from painter_old import *
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
+"""
+"""
+
 from base_scene import BaseScene
+from MF_Tools import *
+from painter import *
 
 class Poly_51_Quintic_Reduced(BaseScene):
 
+    def __init__(self):
+        BaseScene.__init__(self)
+
     def construct(self):
-        self.init()
         
         z = '(z+h)'
         z2 = f'{z}{z}'
@@ -276,3 +284,13 @@ class Poly_51_Quintic_Reduced(BaseScene):
                 self.play(TransformMatchingShapes(F9[i], F8[i]))
         self.wait(3)
         self.play(FadeOut(F1), FadeOut(F2), FadeOut(F4), FadeOut(F7[0]), FadeOut(F8))
+
+if __name__ == "__main__":
+    import os
+    module_name = os.path.abspath(__file__).split(os.sep)[-1]
+    # py -m: run library module as a script (terminates option list)
+    # manim -a: all scenes, -p: preview, -ql: 480p15, -qm: 720p30,
+    # -qh: 1080p60, -qp: 1440p60, -qk: 2160p60.
+    command_line = f'py -m manim render -a -p -qp {module_name}'
+    print(command_line)
+    os.system(command_line)
