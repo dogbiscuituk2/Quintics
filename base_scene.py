@@ -139,4 +139,14 @@ class BaseScene(VoiceoverScene):
     def paint(self, mob: Mobject) -> None:
         self._painter.paint(mob)
 
+    @staticmethod
+    def run(file: str) -> None:
+        import os
+        module_name = os.path.abspath(file).split(os.sep)[-1]
+        # py -m: run library module as a script (terminates option list)
+        # manim -a: all scenes, -p: preview, -ql: 480p15, -qm: 720p30,
+        # -qh: 1080p60, -qp: 1440p60, -qk: 2160p60.
+        command_line = f'py -m manim render -a -p -ql {module_name}'
+        os.system(command_line)
+
 #endregion

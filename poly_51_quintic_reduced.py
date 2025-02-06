@@ -289,11 +289,4 @@ class Poly_51_Quintic_Reduced(BaseScene):
         self.play(FadeOut(F1), FadeOut(F2), FadeOut(F4), FadeOut(F7[0]), FadeOut(F8))
 
 if __name__ == "__main__":
-    import os
-    module_name = os.path.abspath(__file__).split(os.sep)[-1]
-    # py -m: run library module as a script (terminates option list)
-    # manim -a: all scenes, -p: preview, -ql: 480p15, -qm: 720p30,
-    # -qh: 1080p60, -qp: 1440p60, -qk: 2160p60.
-    command_line = f'py -m manim render -a -p -ql {module_name}'
-    print(command_line)
-    os.system(command_line)
+    BaseScene.run(__file__)
