@@ -53,6 +53,6 @@ if __name__ == "__main__":
     # py -m: run library module as a script (terminates option list)
     # manim -a: all scenes, -p: preview, -ql: 480p15, -qm: 720p30,
     # -qh: 1080p60, -qp: 1440p60, -qk: 2160p60.
-    command_line = f'py -m manim render -a -p -qp {module_name}'
+    command_line = f'py -m manim render -a -p -ql {module_name}'
     print(command_line)
     os.system(command_line)
