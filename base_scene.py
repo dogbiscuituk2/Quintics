@@ -112,6 +112,14 @@ class BaseScene(VoiceoverScene):
         self.paint(tex)
         return tex
 
+    def make_texes(self, *args: str) -> Generator[VGroup, None, None]:
+        tex = self.make_tex(r'\\'.join(args))[0]
+        start = 0
+        for arg in args:
+            end = start + len(MathTex(arg)[0])
+            yield tex[start:end]
+            start = end
+
     def make_text(self, text: str, *args, **kwargs) -> Text:
         return Text(text, font_size=30, color=self.ink_fg, *args, **kwargs)
 

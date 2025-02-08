@@ -14,12 +14,63 @@ class Poly_51_Quintic_Reduced(BaseScene):
         BaseScene.__init__(self)
 
     def construct(self):
-        
-        z = '(z+h)'
-        z2 = f'{z}{z}'
-        z3 = f'{z2}{z}'
-        z4 = f'{z3}{z}'
-        z5 = f'{z4}{z}'
+
+        self.set_pens((
+            ('o', Pen.BACKGROUND),
+            ('[a-e]', Pen.GREEN),
+            ('h', Pen.ORANGE),
+            ('[p-s]', Pen.YELLOW),
+            ('x', Pen.RED),
+            ('y', Pen.MAGENTA),
+            ('z', Pen.CYAN)))
+
+        o = 'x^5&=o'
+        a = 'ax^4&=a'
+        b = 'bx^3&=b'
+        c = 'cx^2&=c'
+        d = 'dx&=d'
+        e = 'e&=e'
+
+        p = '(z+h)'
+        p2 = f'{p}{p}'
+        p3 = f'{p2}{p}'
+        p4 = f'{p3}{p}'
+        p5 = f'{p4}{p}'
+
+        q2 = '(z^2+2hz+h^2)'
+        q3 = '(z^3+3hz^2+3h^2z+h^3)'
+        q4 = '(z^4+4hz^3+6h^2z^2+4h^3z+h^4)'
+        q5 = 'z^5+5hz^4+10h^2z^3+10h^3z^2+5h^4z+h^5'
+
+        f0 = [e]
+        f1 = [f'{d}{p}', f'{d}z+dh']
+        f2 = [f'{c}{p}^2', f'{c}{p2}', f'{c}{q2}', f'{c}z^2+2chz+ch^2']
+        f3 = [f'{b}{p}^3', f'{b}{p2}^2', f'{b}{p3}', f'{b}{q2}{p}', f'{b}{q3}', f'{b}z^3+3bhz^2+3bh^2z+bh^3']
+        f4 = [f'{a}{p}^4', f'{a}{p2}^3', f'{a}{p3}^2', f'{a}{p4}', f'{a}{q2}{p2}', f'{a}{q3}{p}', f'{a}{q4}', f'{a}z^4+4ahz^3+6ah^2z^2+4ah^3z+ah^4']
+        f5 = [f'{o}{p}^5', f'{o}{p2}^4', f'{o}{p3}^3', f'{o}{p4}^2', f'{o}{p5}', f'{o}{q2}{p3}', f'{o}{q3}{p2}', f'{o}{q4}{p}', f'{o}{q5}']
+
+        f = [f0, f1, f2, f3, f4, f5]
+
+        #for g in f:
+        #    h = VGroup(self.make_texes(*g))
+        #    self.play(Create(h))
+        #    self.wait(10)
+        #    self.play(Uncreate(h))
+
+        g = ['xo&=oz+h', 'yo&=ox^5+ax^4+bx^3+cx^2+dx+e=0', 'yo&=oz^5+0z^4+pz^3+qz^2+rz+s=0', o, a, b, c, d, e]
+        g[3] = f5[8]
+        G = VGroup(list(self.make_texes(*g)))
+
+        self.play(Create(G))
+        self.wait(10)
+        self.play(Uncreate(G))
+        return
+       
+        p = '(z+h)'
+        p2 = f'{p}{p}'
+        p3 = f'{p2}{p}'
+        p4 = f'{p3}{p}'
+        p5 = f'{p4}{p}'
         z6 = '(z^2+2hz+h^2)'
         z7 = '(z^3+3hz^2+3h^2z+h^3)'
         z8 = '(z^4+4hz^3+6h^2z^2+4h^3z+h^4)'
@@ -27,14 +78,14 @@ class Poly_51_Quintic_Reduced(BaseScene):
 
         Fz = [
             [self.make_tex(s) for s in t] for t in [
-                [f'o{z}^5', f'a{z}^4', f'b{z}^3', f'c{z}^2', f'd{z}', 'e'],
-                [f'o{z2}^4', f'a{z2}^3', f'b{z2}^2', f'c{z2}'],
-                [f'o{z3}^3', f'a{z3}^2', f'b{z3}'],
-                [f'o{z4}^2', f'a{z4}'],
-                [f'o{z5}'],
-                [f'o{z6}{z3}', f'a{z6}{z2}', f'b{z6}{z}', f'c{z6}'],
-                [f'o{z7}{z2}', f'a{z7}{z}', f'b{z7}'],
-                [f'o{z8}{z}', f'a{z8}'],
+                [f'o{p}^5', f'a{p}^4', f'b{p}^3', f'c{p}^2', f'd{p}', 'e'],
+                [f'o{p2}^4', f'a{p2}^3', f'b{p2}^2', f'c{p2}'],
+                [f'o{p3}^3', f'a{p3}^2', f'b{p3}'],
+                [f'o{p4}^2', f'a{p4}'],
+                [f'o{p5}'],
+                [f'o{z6}{p3}', f'a{z6}{p2}', f'b{z6}{p}', f'c{z6}'],
+                [f'o{z7}{p2}', f'a{z7}{p}', f'b{z7}'],
+                [f'o{z8}{p}', f'a{z8}'],
                 [f'o{z9}'],
                 [f'o{z9}', 'az^4+4ahz^3+6ah^2z^2+4ah^3z+ah^4', 'bz^3+3bhz^2+3bh^2z+bh^3', 'cz^2+2chz+ch^2', 'dz+dh', 'e']]]
 
@@ -67,7 +118,7 @@ class Poly_51_Quintic_Reduced(BaseScene):
             self.play(Create(EQU[1]))
 
         with self.say("We could solve it easily if we didn't have these intermediate powers."):
-            self.box_on(*EQU[1][1][0][4:19])
+            self.box_on(*EQU[1][1][0][4:18])
             s1 = self.make_tex('y=x^5+e=0')
             s2 = self.make_tex('x=\\sqrt[5]{-e}')
             VGroup(s1, s2).arrange(DOWN)
@@ -76,17 +127,17 @@ class Poly_51_Quintic_Reduced(BaseScene):
                 Create(s2))
 
         with self.say("To make a start, we might first try to get rid of the quartic, x to the fourth, term."):
-            self.box_on(*EQU[1][1][0][4:8])
+            self.box_on(*EQU[1][1][0][4:7])
             self.play(Uncreate(s2))
             self.play(Uncreate(s1))
 
         with self.say("In other words, transform it into so-called reduced form,"):
             brace = Brace(Group(EQU[1], EQU[2]), LEFT, color=self.ink_fg)
             self.play(FadeIn(brace), Create(EQU[2]))
-            self.box_on(*EQU[2][1][0][4:8])
+            self.box_on(*EQU[2][1][0][4:7])
 
         with self.say("with this coefficient equal to zero."):
-            self.play(Indicate(EQU[2][1][0][5], color=self.get_colour(Pen.WHITE), scale_factor=2, run_time=2))
+            self.play(Indicate(EQU[2][1][0][4], color=self.get_colour(Pen.WHITE), scale_factor=2, run_time=2))
 
         with self.say("This operation is technically known as a Tschirnhaus Transformation,"):
             image = ImageMobject("resources/Tschirnhaus.jpg")
@@ -178,8 +229,8 @@ class Poly_51_Quintic_Reduced(BaseScene):
             self.play(Indicate(VGroup(*items), color = self.get_colour(Pen.WHITE), scale_factor = size))
 
         def new_target(row: int, col: int):
-            z = ('z^5', 'z^4', 'z^3', 'z^2', 'z', '1')
-            mathTex: MathTex = self.make_tex(z[col])
+            p = ('z^5', 'z^4', 'z^3', 'z^2', 'z', '1')
+            mathTex: MathTex = self.make_tex(p[col])
             mathTex.move_to(get_element(row, col), RIGHT)
             Z2.append(mathTex)
             mathTex.generate_target()
@@ -238,8 +289,8 @@ class Poly_51_Quintic_Reduced(BaseScene):
         
         with self.say("Now we can read the matrix column by column, to get expressions for the new coefficients in terms of the old."):
             self.play(FadeOut(Y, EQ, M, M2[0], M2[1], Z[0][5], Z[1], Z[2], *Z2))
-            for f in (F5, F6, F7, F8):
-                VGroup(F1, F2, F3, f).arrange(DOWN, aligned_edge = LEFT)
+            for f_2 in (F5, F6, F7, F8):
+                VGroup(F1, F2, F3, f_2).arrange(DOWN, aligned_edge = LEFT)
             VGroup(F1, F2, F4, F8).arrange(DOWN, aligned_edge = LEFT)
 
             M6 = [
