@@ -139,6 +139,10 @@ class BaseScene(VoiceoverScene):
     def set_pens(self, map: List[tuple[str, Pen]]) -> None:
         self._painter.set_pens(map)
 
+    def substitute_tex(self, group: VGroup, index: int, value: VGroup) -> None:
+        value.move_to(group[index], aligned_edge=LEFT)
+        group[index] = value
+
 #region Private Implementation
 
     _boxes = None
@@ -152,9 +156,17 @@ class BaseScene(VoiceoverScene):
         import os
         module_name = os.path.abspath(file).split(os.sep)[-1]
         # py -m: run library module as a script (terminates option list)
-        # manim -a: all scenes, -p: preview, -ql: 480p15, -qm: 720p30,
-        # -qh: 1080p60, -qp: 1440p60, -qk: 2160p60.
-        command_line = f'py -m manim render -a -p -ql {module_name}'
-        os.system(command_line)
+        # manim -a: all scenes, -p: preview, -q?: quality.
+        console.clear()
+        q = input("""Select Quality or 0 to cancel:
+                  
+            1: 480p15
+            2: 720p30
+            3: 1080p60
+            4: 1440p60
+            5: 2160p60  """)
+        if len(q) == 1 and q in '12345':
+            command_line = f'py -m manim render -a -p -q{" lmhpk"[int(q)]} {module_name}'
+            os.system(command_line)
 
 #endregion

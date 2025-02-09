@@ -24,14 +24,15 @@ class Poly_51_Quintic_Reduced(BaseScene):
             ('y', Pen.MAGENTA),
             ('z', Pen.CYAN)))
 
-        o = 'x^5&=o'
+        o = 'ox^5&=o'
         a = 'ax^4&=a'
         b = 'bx^3&=b'
         c = 'cx^2&=c'
-        d = 'dx&=d'
-        e = 'e&=e'
+        d = 'odx&=d'
+        e = 'ooe&=e'
 
         p = '(z+h)'
+
         p2 = f'{p}{p}'
         p3 = f'{p2}{p}'
         p4 = f'{p3}{p}'
@@ -42,29 +43,101 @@ class Poly_51_Quintic_Reduced(BaseScene):
         q4 = '(z^4+4hz^3+6h^2z^2+4h^3z+h^4)'
         q5 = 'z^5+5hz^4+10h^2z^3+10h^3z^2+5h^4z+h^5'
 
-        f0 = [e]
-        f1 = [f'{d}{p}', f'{d}z+dh']
-        f2 = [f'{c}{p}^2', f'{c}{p2}', f'{c}{q2}', f'{c}z^2+2chz+ch^2']
-        f3 = [f'{b}{p}^3', f'{b}{p2}^2', f'{b}{p3}', f'{b}{q2}{p}', f'{b}{q3}', f'{b}z^3+3bhz^2+3bh^2z+bh^3']
-        f4 = [f'{a}{p}^4', f'{a}{p2}^3', f'{a}{p3}^2', f'{a}{p4}', f'{a}{q2}{p2}', f'{a}{q3}{p}', f'{a}{q4}', f'{a}z^4+4ahz^3+6ah^2z^2+4ah^3z+ah^4']
-        f5 = [f'{o}{p}^5', f'{o}{p2}^4', f'{o}{p3}^3', f'{o}{p4}^2', f'{o}{p5}', f'{o}{q2}{p3}', f'{o}{q3}{p2}', f'{o}{q4}{p}', f'{o}{q5}']
+        r1 = 'z+dh'
+        r2 = 'z^2+2chz+ch^2'
+        r3 = 'z^3+3bhz^2+3bh^2z+bh^3'
+        r4 = 'z^4+4ahz^3+6ah^2z^2+4ah^3z+ah^4'
 
-        f = [f0, f1, f2, f3, f4, f5]
+        f1 = [f'{d}{r1}']
+        f2 = [f'{c}{p2}', f'{c}{q2}', f'{c}{r2}']
+        f3 = [f'{b}{p2}^2', f'{b}{p3}', f'{b}{q2}{p}', f'{b}{q3}', f'{b}{r3}']
+        f4 = [f'{a}{p2}^3', f'{a}{p3}^2', f'{a}{p4}', f'{a}{q2}{p2}', f'{a}{q3}{p}', f'{a}{q4}', f'{a}{r4}']
+        f5 = [f'{o}{p2}^4', f'{o}{p3}^3', f'{o}{p4}^2', f'{o}{p5}', f'{o}{q2}{p3}', f'{o}{q3}{p2}', f'{o}{q4}{p}', f'{o}{q5}']
 
-        #for g in f:
-        #    h = VGroup(self.make_texes(*g))
-        #    self.play(Create(h))
-        #    self.wait(10)
-        #    self.play(Uncreate(h))
+        trans = 'xo&=oz+h'
+        monic = 'yo&=ox^5+ax^4+bx^3+cx^2+dx+e=0'
+        reduced = 'yo&=oz^5+0z^4+pz^3+qz^2+rz+s=0'
 
-        g = ['xo&=oz+h', 'yo&=ox^5+ax^4+bx^3+cx^2+dx+e=0', 'yo&=oz^5+0z^4+pz^3+qz^2+rz+s=0', o, a, b, c, d, e]
-        g[3] = f5[8]
+        g = [
+            trans,
+            monic,
+            reduced,
+            f'{o}{p}^5',
+            f'{a}{p}^4',
+            f'{b}{p}^3',
+            f'{c}{p}^2',
+            f'{d}{p}',
+            e
+        ]
+
         G = VGroup(list(self.make_texes(*g)))
 
-        self.play(Create(G))
+        with self.say("The degree five polynomial, the quintic, has five roots."):
+            self.play(Create(G[1]))
+
+        with self.say("We could solve it easily if we didn't have these intermediate powers."):
+            self.box_on(*G[1][7:21])
+            s1 = self.make_tex('y=x^5+e=0')
+            s2 = self.make_tex('x=\\sqrt[5]{-e}')
+            VGroup(s1, s2).arrange(DOWN)
+            self.play(
+                TransformMatchingShapes(G[1].copy(), s1),
+                Create(s2))
+
+        with self.say("To make a start, we might first try to get rid of the quartic, x to the fourth, term."):
+            self.box_on(*G[1][7:10])
+            self.play(Uncreate(s2))
+            self.play(Uncreate(s1))
+
+        with self.say("In other words, transform it into so-called reduced form,"):
+            brace = Brace(Group(G[1], G[2]), LEFT, color=self.ink_fg)
+            self.play(FadeIn(brace), Create(G[2]))
+            self.box_on(*G[2][7:10])
+
+        with self.say("with this coefficient equal to zero."):
+            self.play(Indicate(G[2][7], color=self.get_colour(Pen.WHITE), scale_factor=2, run_time=2))
+
+        with self.say("This operation is technically known as a Tschirnhaus Transformation,"):
+            image = ImageMobject("resources/Tschirnhaus.jpg")
+            caption = MarkupText(
+                    'Ehrenfried Walther von Tschirnhaus (1651-1708)',
+                    color=self.ink_fg
+                ).scale(0.25).rotate(-PI/2)
+            picture = Group(image, caption).arrange(RIGHT, buff=0.1)
+            picture.to_corner(DR, buff=0.5)
+            self.play(FadeIn(picture))
+            self.box_off()
+
+        with self.say("the simplest example of which is a linear substitution, such as x = z + some constant h."):
+            self.play(Create(G[0]))
+            self.box_on(G[0])
+
+        with self.say("Let's use this to express all these x powers in terms of z."):
+            E = G[1]
+            S = E[4:6], E[7:10], E[11:14], E[15:18], E[19:21], E[22:23]
+            #T = G[3][0:2], G[4][0:3], G[5][0:3], G[6][0:3], G[7][0:2], G[8][0:1]
+
+            self.play([TransformMatchingShapes(S[i].copy(), G[i+3][0:3], path_arc=-PI/2) for i in range(6)], run_time=2)
+            #self.play([FadeIn(G[i+3][-2:-1]) for i in range(6)])
+            #self.play([FadeIn(G[i+3]) for i in range(6)])
+
+            #for i in range(5):
+            #    self.play(TransformByGlyphMap(G[0].copy(), G[]))
+
+            #S = [E[2:4], E[5:8], E[9:12], E[13:16], E[17:19], E[20:21]]
+            #T = LHS[3:9]
+            #self.play([TransformMatchingShapes(S[i].copy(), T[i], path_arc=-PI/2) for i in range(6)], run_time=2)
+            #self.box_on(EQU[0][1][0][2:5])
+            #for i in range(5):
+            #    T = Fz[0][i].copy().move_to(EQU[i+3][1], LEFT)
+            #    EQU[i+3][1] = T
+            #    self.play(TransformMatchingShapes(EQU[0][1].copy(), T))
+            #self.play(FadeIn(EQU[8][1]))
+            #self.box_off()
+
         self.wait(10)
-        self.play(Uncreate(G))
         return
+    
        
         p = '(z+h)'
         p2 = f'{p}{p}'
