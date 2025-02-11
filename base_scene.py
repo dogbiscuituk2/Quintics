@@ -113,10 +113,10 @@ class BaseScene(VoiceoverScene):
         return tex
 
     def make_texes(self, *args: str) -> Generator[VGroup, None, None]:
-        tex = self.make_tex(r'\\'.join(args))[0]
+        tex = self.make_ssmt(r'\\'.join(args))
         start = 0
         for arg in args:
-            end = start + len(MathTex(arg)[0])
+            end = start + get_tex_length(arg)
             yield tex[start:end]
             start = end
 
@@ -153,10 +153,6 @@ class BaseScene(VoiceoverScene):
 
     @staticmethod
     def run(file: str) -> None:
-        import os
-        module_name = os.path.abspath(file).split(os.sep)[-1]
-        # py -m: run library module as a script (terminates option list)
-        # manim -a: all scenes, -p: preview, -q?: quality.
         console.clear()
         q = input("""Select Quality or 0 to cancel:
                   
@@ -166,6 +162,11 @@ class BaseScene(VoiceoverScene):
             4: 1440p60
             5: 2160p60  """)
         if len(q) == 1 and q in '12345':
+            print('')
+            import os
+            module_name = os.path.abspath(file).split(os.sep)[-1]
+            # py -m: run library module as a script (terminates option list)
+            # manim -a: all scenes, -p: preview, -q?: quality.
             command_line = f'py -m manim render -a -p -q{" lmhpk"[int(q)]} {module_name}'
             os.system(command_line)
 

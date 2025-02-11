@@ -42,12 +42,12 @@ def concat(token_list: List[Token]) -> str:
 def get_glyph_count(symbols: List[Symbol]) -> int:
     return sum(symbol.glyph_count for symbol in symbols)
 
-def get_tex_length(token: str) -> int:
-    match token:
+def get_tex_length(string: str) -> int:
+    match string:
         case r'\frac':
             return 1
     try:
-        return len(SingleStringMathTex(token))
+        return len(SingleStringMathTex(string))
     except Exception:
         return 0
 

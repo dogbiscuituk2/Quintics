@@ -32,28 +32,6 @@ class Poly_51_Quintic_Reduced(BaseScene):
         e = 'ooe&=e'
 
         p = '(z+h)'
-
-        p2 = f'{p}{p}'
-        p3 = f'{p2}{p}'
-        p4 = f'{p3}{p}'
-        p5 = f'{p4}{p}'
-
-        q2 = '(z^2+2hz+h^2)'
-        q3 = '(z^3+3hz^2+3h^2z+h^3)'
-        q4 = '(z^4+4hz^3+6h^2z^2+4h^3z+h^4)'
-        q5 = 'z^5+5hz^4+10h^2z^3+10h^3z^2+5h^4z+h^5'
-
-        r1 = 'z+dh'
-        r2 = 'z^2+2chz+ch^2'
-        r3 = 'z^3+3bhz^2+3bh^2z+bh^3'
-        r4 = 'z^4+4ahz^3+6ah^2z^2+4ah^3z+ah^4'
-
-        f1 = [f'{d}{r1}']
-        f2 = [f'{c}{p2}', f'{c}{q2}', f'{c}{r2}']
-        f3 = [f'{b}{p2}^2', f'{b}{p3}', f'{b}{q2}{p}', f'{b}{q3}', f'{b}{r3}']
-        f4 = [f'{a}{p2}^3', f'{a}{p3}^2', f'{a}{p4}', f'{a}{q2}{p2}', f'{a}{q3}{p}', f'{a}{q4}', f'{a}{r4}']
-        f5 = [f'{o}{p2}^4', f'{o}{p3}^3', f'{o}{p4}^2', f'{o}{p5}', f'{o}{q2}{p3}', f'{o}{q3}{p2}', f'{o}{q4}{p}', f'{o}{q5}']
-
         trans = 'xo&=oz+h'
         monic = 'yo&=ox^5+ax^4+bx^3+cx^2+dx+e=0'
         reduced = 'yo&=oz^5+0z^4+pz^3+qz^2+rz+s=0'
@@ -115,130 +93,80 @@ class Poly_51_Quintic_Reduced(BaseScene):
         with self.say("Let's use this to express all these x powers in terms of z."):
             E = G[1]
             S = E[4:6], E[7:10], E[11:14], E[15:18], E[19:21], E[22:23]
-            #T = G[3][0:2], G[4][0:3], G[5][0:3], G[6][0:3], G[7][0:2], G[8][0:1]
+            self.play([
+                TransformMatchingShapes(S[i].copy(), G[i+3][0:3], path_arc=-PI/2)
+                for i in range(6)], run_time=2)
+            for i in range(5):
+                self.play(TransformMatchingShapes(G[0][3:].copy(), G[i+3][3:]))
+            self.play(FadeIn(G[8][3:]))
+            self.box_off()
 
-            self.play([TransformMatchingShapes(S[i].copy(), G[i+3][0:3], path_arc=-PI/2) for i in range(6)], run_time=2)
-            #self.play([FadeIn(G[i+3][-2:-1]) for i in range(6)])
-            #self.play([FadeIn(G[i+3]) for i in range(6)])
-
-            #for i in range(5):
-            #    self.play(TransformByGlyphMap(G[0].copy(), G[]))
-
-            #S = [E[2:4], E[5:8], E[9:12], E[13:16], E[17:19], E[20:21]]
-            #T = LHS[3:9]
-            #self.play([TransformMatchingShapes(S[i].copy(), T[i], path_arc=-PI/2) for i in range(6)], run_time=2)
-            #self.box_on(EQU[0][1][0][2:5])
-            #for i in range(5):
-            #    T = Fz[0][i].copy().move_to(EQU[i+3][1], LEFT)
-            #    EQU[i+3][1] = T
-            #    self.play(TransformMatchingShapes(EQU[0][1].copy(), T))
-            #self.play(FadeIn(EQU[8][1]))
-            #self.box_off()
-
-        self.wait(10)
-        return
-    
-       
-        p = '(z+h)'
         p2 = f'{p}{p}'
         p3 = f'{p2}{p}'
         p4 = f'{p3}{p}'
         p5 = f'{p4}{p}'
-        z6 = '(z^2+2hz+h^2)'
-        z7 = '(z^3+3hz^2+3h^2z+h^3)'
-        z8 = '(z^4+4hz^3+6h^2z^2+4h^3z+h^4)'
-        z9 = 'z^5+5hz^4+10h^2z^3+10h^3z^2+5h^4z+h^5'
 
-        Fz = [
-            [self.make_tex(s) for s in t] for t in [
-                [f'o{p}^5', f'a{p}^4', f'b{p}^3', f'c{p}^2', f'd{p}', 'e'],
-                [f'o{p2}^4', f'a{p2}^3', f'b{p2}^2', f'c{p2}'],
-                [f'o{p3}^3', f'a{p3}^2', f'b{p3}'],
-                [f'o{p4}^2', f'a{p4}'],
-                [f'o{p5}'],
-                [f'o{z6}{p3}', f'a{z6}{p2}', f'b{z6}{p}', f'c{z6}'],
-                [f'o{z7}{p2}', f'a{z7}{p}', f'b{z7}'],
-                [f'o{z8}{p}', f'a{z8}'],
-                [f'o{z9}'],
-                [f'o{z9}', 'az^4+4ahz^3+6ah^2z^2+4ah^3z+ah^4', 'bz^3+3bhz^2+3bh^2z+bh^3', 'cz^2+2chz+ch^2', 'dz+dh', 'e']]]
+        f = [
+                [f'{o}{p2}^4', f'{o}{p3}^3', f'{o}{p4}^2', f'{o}{p5}'],
+                [f'{a}{p2}^3', f'{a}{p3}^2', f'{a}{p4}'],
+                [f'{b}{p2}^2', f'{b}{p3}'],
+                [f'{c}{p2}']
+            ]
 
-        LHS = VGroup(*[self.make_tex(f'{s}o=') for s in ['x^1', 'y^1', 'y^1', 'x^5', 'ax^4', 'bx^3', 'cx^2', 'dx^1', 'eo^0']])
-        RHS = VGroup(*[self.make_tex(s) for s in ['oz+h', 'ox^5+ax^4+bx^3+cx^2+dx+e=0', 'oz^5+0z^4+pz^3+qz^2+rz+s']], *Fz[9])
-        ALL = VGroup(LHS, RHS)
+        with self.say("Expand these powers."):
+            self.play(FadeOut(picture))
+            for i in range(4):
+                animations = []
+                for j in range(4-i):
+                    S = G[j+3]
+                    T = self.make_tex(f[j][i])
+                    T.move_to(S, aligned_edge=LEFT)
+                    animations.append(TransformMatchingShapes(S, T))
+                    G[j+3] = T
+                self.play(*animations)
 
-        LHS.arrange(DOWN, aligned_edge=RIGHT, buff=0.1)
-        RHS.arrange(DOWN, aligned_edge=LEFT, buff=0.1)
-        ALL.arrange(RIGHT, aligned_edge=DOWN)
-        EQU = [VGroup(LHS[i], RHS[i]) for i in range(9)]
+        q2 = '(z^2+2hz+h^2)'
+        q3 = '(z^3+3hz^2+3h^2z+h^3)'
+        q4 = '(z^4+4hz^3+6h^2z^2+4h^3z+h^4)'
+        q5 = 'z^5+5hz^4+10h^2z^3+10h^3z^2+5h^4z+h^5'
 
-        Y = self.make_matrix((['y^1'], ['x^5'], ['ax^4'], ['bx^3'], ['cx^2'], ['dx^1'], ['eo^0']), margin = 0)
-        EQ = self.make_tex('=')
-        M = self.make_matrix((
-            ('z^5', '0z^4', 'pz^3', 'qz^2', 'rz', 's'),
-            ('z^5', '5hz^4', '10h^2z^3', '10h^3z^2', '5h^4z', 'h^5'),
-            ('', 'az^4', '4ahz^3', '6ah^2z^2', '4ah^3z', 'ah^4'),
-            ('', '', 'bz^3', '3bhz^2', '3bh^2z', 'bh^3'),
-            ('', '', '', 'cz^2', '2chz', 'ch^2'),
-            ('', '', '', '', 'dz', 'dh'),
-            ('', '', '', '', '', 'e')),
-            padding = 1.75)
-        Z = self.make_matrix((('1'), ('1'), ('1'), ('1'), ('1'), ('1')), margin = 0)
-        VGroup(Y, EQ, M, Z).arrange(RIGHT, aligned_edge=DOWN)
-        EQ.move_to(EQ.get_center() + 2.8 * UP)
-        Z.move_to(Z.get_center() + 0.4 * UP)
+        f = [
+                [f'{o}{q2}{p3}', f'{o}{q3}{p2}', f'{o}{q4}{p}', f'{o}{q5}'],
+                [f'{a}{q2}{p2}', f'{a}{q3}{p}', f'{a}{q4}'],
+                [f'{b}{q2}{p}', f'{b}{q3}'],
+                [f'{c}{q2}'],
+            ]
+       
+        with self.say("Multiply out the binomials."):
+            for i in range(4):
+                animations = []
+                for j in range(4-i):
+                    S = G[j+3]
+                    T = self.make_tex(f[j][i])
+                    T.move_to(S, aligned_edge=LEFT)
+                    animations.append(TransformMatchingShapes(S, T))
+                    G[j+3] = T
+                self.play(*animations)
 
-        with self.say("The degree five polynomial, the quintic, has five roots."):
-            self.play(Create(EQU[1]))
+        f = [
+                f'{a}z^4+4ahz^3+6ah^2z^2+4ah^3z+ah^4',
+                f'{b}z^3+3bhz^2+3bh^2z+bh^3',
+                f'{c}z^2+2chz+ch^2',
+                f'{d}z+dh',
+            ]
 
-        with self.say("We could solve it easily if we didn't have these intermediate powers."):
-            self.box_on(*EQU[1][1][0][4:18])
-            s1 = self.make_tex('y=x^5+e=0')
-            s2 = self.make_tex('x=\\sqrt[5]{-e}')
-            VGroup(s1, s2).arrange(DOWN)
-            self.play(
-                TransformMatchingShapes(EQU[1].copy(), s1),
-                Create(s2))
+        with self.say("Distribute the original coefficients."):
+            for j in range(4):
+                S = G[j+4]
+                T = self.make_tex(f[j])
+                T.move_to(S, aligned_edge=LEFT)
+                self.play(TransformMatchingShapes(S, T))
+                G[j+3] = T
+            self.play(FadeOut(G[0], brace, G[1], G[2][-2:]))
 
-        with self.say("To make a start, we might first try to get rid of the quartic, x to the fourth, term."):
-            self.box_on(*EQU[1][1][0][4:7])
-            self.play(Uncreate(s2))
-            self.play(Uncreate(s1))
+        self.wait(10)
+        return
 
-        with self.say("In other words, transform it into so-called reduced form,"):
-            brace = Brace(Group(EQU[1], EQU[2]), LEFT, color=self.ink_fg)
-            self.play(FadeIn(brace), Create(EQU[2]))
-            self.box_on(*EQU[2][1][0][4:7])
-
-        with self.say("with this coefficient equal to zero."):
-            self.play(Indicate(EQU[2][1][0][4], color=self.get_colour(Pen.WHITE), scale_factor=2, run_time=2))
-
-        with self.say("This operation is technically known as a Tschirnhaus Transformation,"):
-            image = ImageMobject("resources/Tschirnhaus.jpg")
-            caption = MarkupText(
-                    'Ehrenfried Walther von Tschirnhaus (1651-1708)',
-                    color=self.ink_fg
-                ).scale(0.25).rotate(-PI/2)
-            picture = Group(image, caption).arrange(RIGHT, buff=0.1)
-            picture.to_corner(DR, buff=0.5)
-            self.play(FadeIn(picture))
-            self.box_off()
-
-        with self.say("the simplest example of which is a linear substitution, such as x = z + some constant h."):
-            self.box_on(EQU[0])
-            self.play(Create(EQU[0]))
-
-        with self.say("Let's use this to express all these x powers in terms of z."):
-            E = EQU[1][1][0]
-            S = [E[2:4], E[5:8], E[9:12], E[13:16], E[17:19], E[20:21]]
-            T = LHS[3:9]
-            self.play([TransformMatchingShapes(S[i].copy(), T[i], path_arc=-PI/2) for i in range(6)], run_time=2)
-            self.box_on(EQU[0][1][0][2:5])
-            for i in range(5):
-                T = Fz[0][i].copy().move_to(EQU[i+3][1], LEFT)
-                EQU[i+3][1] = T
-                self.play(TransformMatchingShapes(EQU[0][1].copy(), T))
-            self.play(FadeIn(EQU[8][1]))
-            self.box_off()
 
         def expand(i: int, immediate: bool = False) -> None:
 
@@ -263,6 +191,23 @@ class Poly_51_Quintic_Reduced(BaseScene):
                 if i in range(5, 9):
                     animations.append(move_box(1))
                 self.play(animations)
+
+       
+        Y = self.make_matrix((['y^1'], ['x^5'], ['ax^4'], ['bx^3'], ['cx^2'], ['dx^1'], ['eo^0']), margin = 0)
+        EQ = self.make_tex('=')
+        M = self.make_matrix((
+            ('z^5', '0z^4', 'pz^3', 'qz^2', 'rz', 's'),
+            ('z^5', '5hz^4', '10h^2z^3', '10h^3z^2', '5h^4z', 'h^5'),
+            ('', 'az^4', '4ahz^3', '6ah^2z^2', '4ah^3z', 'ah^4'),
+            ('', '', 'bz^3', '3bhz^2', '3bh^2z', 'bh^3'),
+            ('', '', '', 'cz^2', '2chz', 'ch^2'),
+            ('', '', '', '', 'dz', 'dh'),
+            ('', '', '', '', '', 'e')),
+            padding = 1.75)
+        Z = self.make_matrix((('1'), ('1'), ('1'), ('1'), ('1'), ('1')), margin = 0)
+        VGroup(Y, EQ, M, Z).arrange(RIGHT, aligned_edge=DOWN)
+        EQ.move_to(EQ.get_center() + 2.8 * UP)
+        Z.move_to(Z.get_center() + 0.4 * UP)
 
         with self.say("Expand these powers."):
             self.play(FadeOut(picture))
