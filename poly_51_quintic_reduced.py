@@ -48,32 +48,35 @@ class Poly_51_Quintic_Reduced(BaseScene):
             e
         ]
 
-        G = VGroup(list(self.make_texes(*g)))
+        G = self.make_texes(*g)
 
         with self.say("The degree five polynomial, the quintic, has five roots."):
             self.play(Create(G[1]))
 
         with self.say("We could solve it easily if we didn't have these intermediate powers."):
-            self.box_on(*G[1][7:21])
-            s1 = self.make_tex('y=x^5+e=0')
-            s2 = self.make_tex('x=\\sqrt[5]{-e}')
-            VGroup(s1, s2).arrange(DOWN)
+            self.box_on(*G[1][0][7:21])
+            T1 = self.make_tex('y=x^5+e=0')
+            T2 = self.make_tex('x=\\sqrt[5]{-e}')
+            VGroup(T1, T2).arrange(DOWN)
             self.play(
-                TransformMatchingShapes(G[1].copy(), s1),
-                Create(s2))
+                TransformByGlyphMap(
+                    G[1].copy(),
+                    T1,
+                    ([1,3,*ir(7,20)],FadeOut),
+                    ([6,21],[6])),
+                Create(T2)
+            )
 
         with self.say("To make a start, we might first try to get rid of the quartic, x to the fourth, term."):
-            self.box_on(*G[1][7:10])
-            self.play(Uncreate(s2))
-            self.play(Uncreate(s1))
-
+            self.box_on(*G[1][0][7:10])
+            self.play(Uncreate(T2))
+            self.play(Uncreate(T1))
         with self.say("In other words, transform it into so-called reduced form,"):
             brace = Brace(Group(G[1], G[2]), LEFT, color=self.ink_fg)
             self.play(FadeIn(brace), Create(G[2]))
-            self.box_on(*G[2][7:10])
-
+            self.box_on(*G[2][0][7:10])
         with self.say("with this coefficient equal to zero."):
-            self.play(Indicate(G[2][7], color=self.get_colour(Pen.WHITE), scale_factor=2, run_time=2))
+            self.play(Indicate(G[2][0][7], color=self.get_colour(Pen.WHITE), scale_factor=2, run_time=2))
 
         with self.say("This operation is technically known as a Tschirnhaus Transformation,"):
             image = ImageMobject("resources/Tschirnhaus.jpg")
@@ -91,14 +94,14 @@ class Poly_51_Quintic_Reduced(BaseScene):
             self.box_on(G[0])
 
         with self.say("Let's use this to express all these x powers in terms of z."):
-            E = G[1]
+            E = G[1][0]
             S = E[4:6], E[7:10], E[11:14], E[15:18], E[19:21], E[22:23]
             self.play([
-                TransformMatchingShapes(S[i].copy(), G[i+3][0:3], path_arc=-PI/2)
+                TransformMatchingShapes(S[i].copy(), G[i+3][0][0:3], path_arc=-PI/2)
                 for i in range(6)], run_time=2)
             for i in range(5):
-                self.play(TransformMatchingShapes(G[0][3:].copy(), G[i+3][3:]))
-            self.play(FadeIn(G[8][3:]))
+                self.play(TransformMatchingShapes(G[0][0][3:].copy(), G[i+3][0][3:]))
+            self.play(FadeIn(G[8][0][3:]))
             self.box_off()
 
         p2 = f'{p}{p}'
@@ -106,63 +109,53 @@ class Poly_51_Quintic_Reduced(BaseScene):
         p4 = f'{p3}{p}'
         p5 = f'{p4}{p}'
 
-        f = [
-                [f'{o}{p2}^4', f'{o}{p3}^3', f'{o}{p4}^2', f'{o}{p5}'],
-                [f'{a}{p2}^3', f'{a}{p3}^2', f'{a}{p4}'],
-                [f'{b}{p2}^2', f'{b}{p3}'],
-                [f'{c}{p2}']
-            ]
-
-        with self.say("Expand these powers."):
-            self.play(FadeOut(picture))
+        def transform(formulae: List[List[str]]) -> None:
+            self.box_on(G[3][0][4:], G[7][0][4:])
             for i in range(4):
                 animations = []
                 for j in range(4-i):
                     S = G[j+3]
-                    T = self.make_tex(f[j][i])
+                    T = self.make_tex(formulae[j][i])
                     T.move_to(S, aligned_edge=LEFT)
                     animations.append(TransformMatchingShapes(S, T))
                     G[j+3] = T
+                animations.append(self.box_move(G[3][0][4:], G[6-i][0][4:]))
                 self.play(*animations)
+            self.box_off()
+
+        with self.say("Expand these powers."):
+            self.play(FadeOut(picture))
+            transform([
+                [f'{o}{p2}^4', f'{o}{p3}^3', f'{o}{p4}^2', f'{o}{p5}'],
+                [f'{a}{p2}^3', f'{a}{p3}^2', f'{a}{p4}'],
+                [f'{b}{p2}^2', f'{b}{p3}'],
+                [f'{c}{p2}']])
 
         q2 = '(z^2+2hz+h^2)'
         q3 = '(z^3+3hz^2+3h^2z+h^3)'
         q4 = '(z^4+4hz^3+6h^2z^2+4h^3z+h^4)'
         q5 = 'z^5+5hz^4+10h^2z^3+10h^3z^2+5h^4z+h^5'
 
-        f = [
+        with self.say("Multiply out the binomials."):
+            transform([
                 [f'{o}{q2}{p3}', f'{o}{q3}{p2}', f'{o}{q4}{p}', f'{o}{q5}'],
                 [f'{a}{q2}{p2}', f'{a}{q3}{p}', f'{a}{q4}'],
                 [f'{b}{q2}{p}', f'{b}{q3}'],
-                [f'{c}{q2}'],
-            ]
-       
-        with self.say("Multiply out the binomials."):
-            for i in range(4):
-                animations = []
-                for j in range(4-i):
-                    S = G[j+3]
-                    T = self.make_tex(f[j][i])
-                    T.move_to(S, aligned_edge=LEFT)
-                    animations.append(TransformMatchingShapes(S, T))
-                    G[j+3] = T
-                self.play(*animations)
-
-        f = [
-                f'{a}z^4+4ahz^3+6ah^2z^2+4ah^3z+ah^4',
-                f'{b}z^3+3bhz^2+3bh^2z+bh^3',
-                f'{c}z^2+2chz+ch^2',
-                f'{d}z+dh',
-            ]
+                [f'{c}{q2}']])
 
         with self.say("Distribute the original coefficients."):
+            formulae = [
+                    f'{a}z^4+4ahz^3+6ah^2z^2+4ah^3z+ah^4',
+                    f'{b}z^3+3bhz^2+3bh^2z+bh^3',
+                    f'{c}z^2+2chz+ch^2',
+                    f'{d}z+dh']
             for j in range(4):
                 S = G[j+4]
-                T = self.make_tex(f[j])
+                T = self.make_tex(formulae[j])
                 T.move_to(S, aligned_edge=LEFT)
                 self.play(TransformMatchingShapes(S, T))
-                G[j+3] = T
-            self.play(FadeOut(G[0], brace, G[1], G[2][-2:]))
+                G[j+4] = T
+            self.play(FadeOut(G[0], brace, G[1], G[2][0][-2:]))
 
         self.wait(10)
         return

@@ -95,7 +95,10 @@ class BaseScene(VoiceoverScene):
         rows: int = len(matrix)
         cols: int = len(matrix[0])
         strings: List[str] = [[t for t in row] for row in matrix]
-        matrix: Matrix = Matrix(strings, bracket_h_buff = margin, h_buff = padding)
+        matrix: Matrix = Matrix(
+            strings,
+            bracket_h_buff = margin,
+            h_buff = padding)
         matrix.set_color(self.ink_fg)
         for row in range(rows):
             for col in range(cols):
@@ -106,19 +109,25 @@ class BaseScene(VoiceoverScene):
         ssmt: SingleStringMathTex = SingleStringMathTex(text)
         self.paint(ssmt)
         return ssmt
-    
-    def make_tex(self, text: str) -> MathTex:
-        tex: MathTex = MathTex(text)
-        self.paint(tex)
-        return tex
 
-    def make_texes(self, *args: str) -> Generator[VGroup, None, None]:
+    def make_ssmts(self, *args: str) -> Generator[VGroup, None, None]:
         tex = self.make_ssmt(r'\\'.join(args))
         start = 0
         for arg in args:
             end = start + get_tex_length(arg)
             yield tex[start:end]
             start = end
+    
+    def make_tex(self, text: str) -> MathTex:
+        tex: MathTex = MathTex(text)
+        self.paint(tex)
+        return tex
+    
+    def make_texes(self, *args: str) -> VGroup:
+        ssmts = VGroup(list(self.make_ssmts(*args)))
+        return VGroup(*[
+            self.make_tex(args[i]).move_to(ssmts[i], aligned_edge=LEFT)
+            for i in range(len(args))])
 
     def make_text(self, text: str, *args, **kwargs) -> Text:
         return Text(text, font_size=30, color=self.ink_fg, *args, **kwargs)
