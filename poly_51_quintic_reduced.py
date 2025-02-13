@@ -109,9 +109,9 @@ class Poly_51_Quintic_Reduced(BaseScene):
         p4 = f'{p3}{p}'
         p5 = f'{p4}{p}'
 
-        def transform(formulae: List[List[str]]) -> None:
-            self.box_on(G[3][0][4:], G[7][0][4:])
+        def do_animations(formulae: List[List[str]]) -> None:
             for i in range(4):
+                self.box_on(G[3], G[6-i])
                 animations = []
                 for j in range(4-i):
                     S = G[j+3]
@@ -119,17 +119,20 @@ class Poly_51_Quintic_Reduced(BaseScene):
                     T.move_to(S, aligned_edge=LEFT)
                     animations.append(TransformMatchingShapes(S, T))
                     G[j+3] = T
-                animations.append(self.box_move(G[3][0][4:], G[6-i][0][4:]))
+                animations.append(self.box_move(G[3], G[6-i]))
                 self.play(*animations)
+                #self.box_on(G[3], G[5-i])
             self.box_off()
 
         with self.say("Expand these powers."):
             self.play(FadeOut(picture))
-            transform([
-                [f'{o}{p2}^4', f'{o}{p3}^3', f'{o}{p4}^2', f'{o}{p5}'],
-                [f'{a}{p2}^3', f'{a}{p3}^2', f'{a}{p4}'],
-                [f'{b}{p2}^2', f'{b}{p3}'],
-                [f'{c}{p2}']])
+            do_animations(
+                [
+                    [f'{o}{p2}^4', f'{o}{p3}^3', f'{o}{p4}^2', f'{o}{p5}'],
+                    [f'{a}{p2}^3', f'{a}{p3}^2', f'{a}{p4}'],
+                    [f'{b}{p2}^2', f'{b}{p3}'],
+                    [f'{c}{p2}']
+                ])
 
         q2 = '(z^2+2hz+h^2)'
         q3 = '(z^3+3hz^2+3h^2z+h^3)'
@@ -137,11 +140,13 @@ class Poly_51_Quintic_Reduced(BaseScene):
         q5 = 'z^5+5hz^4+10h^2z^3+10h^3z^2+5h^4z+h^5'
 
         with self.say("Multiply out the binomials."):
-            transform([
-                [f'{o}{q2}{p3}', f'{o}{q3}{p2}', f'{o}{q4}{p}', f'{o}{q5}'],
-                [f'{a}{q2}{p2}', f'{a}{q3}{p}', f'{a}{q4}'],
-                [f'{b}{q2}{p}', f'{b}{q3}'],
-                [f'{c}{q2}']])
+            do_animations(
+                [
+                    [f'{o}{q2}{p3}', f'{o}{q3}{p2}', f'{o}{q4}{p}', f'{o}{q5}'],
+                    [f'{a}{q2}{p2}', f'{a}{q3}{p}', f'{a}{q4}'],
+                    [f'{b}{q2}{p}', f'{b}{q3}'],
+                    [f'{c}{q2}']
+                ])
 
         with self.say("Distribute the original coefficients."):
             formulae = [
