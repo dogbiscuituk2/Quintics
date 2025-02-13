@@ -109,9 +109,18 @@ class Poly_51_Quintic_Reduced(BaseScene):
         p4 = f'{p3}{p}'
         p5 = f'{p4}{p}'
 
-        def do_animations(formulae: List[List[str]]) -> None:
+        def do_animations(phase: int, formulae: List[List[str]]) -> None:
+
+            def foo(i: int, bump: int):
+                match phase:
+                    case 1:
+                        return [G[3][0][4:], G[6-i][0][4:]]
+                    case 2:
+                        k = 6 * i + 15 + bump
+                        return [G[3][0][4:k], G[6-i][0][4:k]]
+
             for i in range(4):
-                self.box_on(G[3], G[6-i])
+                self.box_on(*foo(i, 0))
                 animations = []
                 for j in range(4-i):
                     S = G[j+3]
@@ -119,14 +128,14 @@ class Poly_51_Quintic_Reduced(BaseScene):
                     T.move_to(S, aligned_edge=LEFT)
                     animations.append(TransformMatchingShapes(S, T))
                     G[j+3] = T
-                animations.append(self.box_move(G[3], G[6-i]))
+                animations.append(self.box_move(*foo(i, 1)))
                 self.play(*animations)
-                #self.box_on(G[3], G[5-i])
             self.box_off()
 
         with self.say("Expand these powers."):
             self.play(FadeOut(picture))
             do_animations(
+                1,
                 [
                     [f'{o}{p2}^4', f'{o}{p3}^3', f'{o}{p4}^2', f'{o}{p5}'],
                     [f'{a}{p2}^3', f'{a}{p3}^2', f'{a}{p4}'],
@@ -141,6 +150,7 @@ class Poly_51_Quintic_Reduced(BaseScene):
 
         with self.say("Multiply out the binomials."):
             do_animations(
+                2,
                 [
                     [f'{o}{q2}{p3}', f'{o}{q3}{p2}', f'{o}{q4}{p}', f'{o}{q5}'],
                     [f'{a}{q2}{p2}', f'{a}{q3}{p}', f'{a}{q4}'],
