@@ -36,7 +36,7 @@ class Poly_51_Quintic_Reduced(BaseScene):
         monic = 'yo&=ox^5+ax^4+bx^3+cx^2+dx+e=0'
         reduced = 'yo&=oz^5+0z^4+pz^3+qz^2+rz+s=0'
 
-        g = [
+        Equations = self.make_texes(
             trans,
             monic,
             reduced,
@@ -45,22 +45,19 @@ class Poly_51_Quintic_Reduced(BaseScene):
             f'{b}{p}^3',
             f'{c}{p}^2',
             f'{d}{p}',
-            e
-        ]
-
-        G = self.make_texes(*g)
+            e)
 
         with self.say("The degree five polynomial, the quintic, has five roots."):
-            self.play(Create(G[1]))
+            self.play(Create(Equations[1]))
 
         with self.say("We could solve it easily if we didn't have these intermediate powers."):
-            self.box_on(*G[1][0][7:21])
+            self.box_on(*Equations[1][0][7:21])
             T1 = self.make_tex('y=x^5+e=0')
             T2 = self.make_tex('x=\\sqrt[5]{-e}')
             VGroup(T1, T2).arrange(DOWN)
             self.play(
                 TransformByGlyphMap(
-                    G[1].copy(),
+                    Equations[1].copy(),
                     T1,
                     ([1,3,*ir(7,20)],FadeOut),
                     ([6,21],[6])),
@@ -68,15 +65,15 @@ class Poly_51_Quintic_Reduced(BaseScene):
             )
 
         with self.say("To make a start, we might first try to get rid of the quartic, x to the fourth, term."):
-            self.box_on(*G[1][0][7:10])
+            self.box_on(*Equations[1][0][7:10])
             self.play(Uncreate(T2))
             self.play(Uncreate(T1))
         with self.say("In other words, transform it into so-called reduced form,"):
-            brace = Brace(Group(G[1], G[2]), LEFT, color=self.ink_fg)
-            self.play(FadeIn(brace), Create(G[2]))
-            self.box_on(*G[2][0][7:10])
+            brace = Brace(Group(Equations[1], Equations[2]), LEFT, color=self.ink_fg)
+            self.play(FadeIn(brace), Create(Equations[2]))
+            self.box_on(*Equations[2][0][7:10])
         with self.say("with this coefficient equal to zero."):
-            self.play(Indicate(G[2][0][7], color=self.get_colour(Pen.WHITE), scale_factor=2, run_time=2))
+            self.play(Indicate(Equations[2][0][7], color=self.get_colour(Pen.WHITE), scale_factor=2, run_time=2))
 
         with self.say("This operation is technically known as a Tschirnhaus Transformation,"):
             image = ImageMobject("resources/Tschirnhaus.jpg")
@@ -90,18 +87,18 @@ class Poly_51_Quintic_Reduced(BaseScene):
             self.box_off()
 
         with self.say("the simplest example of which is a linear substitution, such as x = z + some constant h."):
-            self.play(Create(G[0]))
-            self.box_on(G[0])
+            self.play(Create(Equations[0]))
+            self.box_on(Equations[0])
 
         with self.say("Let's use this to express all these x powers in terms of z."):
-            E = G[1][0]
+            E = Equations[1][0]
             S = E[4:6], E[7:10], E[11:14], E[15:18], E[19:21], E[22:23]
             self.play([
-                TransformMatchingShapes(S[i].copy(), G[i+3][0][0:3], path_arc=-PI/2)
+                TransformMatchingShapes(S[i].copy(), Equations[i+3][0][0:3], path_arc=-PI/2)
                 for i in range(6)], run_time=2)
             for i in range(5):
-                self.play(TransformMatchingShapes(G[0][0][3:].copy(), G[i+3][0][3:]))
-            self.play(FadeIn(G[8][0][3:]))
+                self.play(TransformMatchingShapes(Equations[0][0][3:].copy(), Equations[i+3][0][3:]))
+            self.play(FadeIn(Equations[8][0][3:]))
             self.box_off()
 
         p2 = f'{p}{p}'
@@ -111,24 +108,26 @@ class Poly_51_Quintic_Reduced(BaseScene):
 
         def do_animations(phase: int, formulae: List[List[str]]) -> None:
 
-            def foo(i: int, bump: int):
+            def box(i: int, bump: int) -> Tuple[Group]:
+                Hi = Equations[3][0]
+                Lo = Equations[6-i][0]
                 match phase:
                     case 1:
-                        return [G[3][0][4:], G[6-i][0][4:]]
+                        return Hi[4:], Lo[4:]
                     case 2:
-                        k = 6 * i + 15 + bump
-                        return [G[3][0][4:k], G[6-i][0][4:k]]
+                        k = 6*i+15+bump
+                        return Hi[4:k], Lo[4:k]
 
             for i in range(4):
-                self.box_on(*foo(i, 0))
+                self.box_on(*box(i, 0))
                 animations = []
                 for j in range(4-i):
-                    S = G[j+3]
-                    T = self.make_tex(formulae[j][i])
-                    T.move_to(S, aligned_edge=LEFT)
-                    animations.append(TransformMatchingShapes(S, T))
-                    G[j+3] = T
-                animations.append(self.box_move(*foo(i, 1)))
+                    Old = Equations[j+3]
+                    New = self.make_tex(formulae[j][i])
+                    New.move_to(Old, aligned_edge=LEFT)
+                    animations.append(TransformMatchingShapes(Old, New))
+                    Equations[j+3] = New
+                animations.append(self.box_move(*box(i, 1)))
                 self.play(*animations)
             self.box_off()
 
@@ -165,12 +164,12 @@ class Poly_51_Quintic_Reduced(BaseScene):
                     f'{c}z^2+2chz+ch^2',
                     f'{d}z+dh']
             for j in range(4):
-                S = G[j+4]
+                S = Equations[j+4]
                 T = self.make_tex(formulae[j])
                 T.move_to(S, aligned_edge=LEFT)
                 self.play(TransformMatchingShapes(S, T))
-                G[j+4] = T
-            self.play(FadeOut(G[0], brace, G[1], G[2][0][-2:]))
+                Equations[j+4] = T
+            self.play(FadeOut(Equations[0], brace, Equations[1], Equations[2][0][-2:]))
 
         self.wait(10)
         return
