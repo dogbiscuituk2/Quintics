@@ -58,7 +58,7 @@ class BaseScene(VoiceoverScene):
         return b
 
     def box_make(self, *args: Mobject) -> Polygon:
-        result = SurroundingRectangle(*args)
+        result = SurroundingRectangle(*args, corner_radius=0.1)
         result.set_color(self.get_colour(Pen.YELLOW))
         return result
 
