@@ -14,6 +14,7 @@ The BaseScene class is a subclass of the Manim Scene class and the Manim
 VoiceoverScene class.
 """
 
+from collections.abc import Sequence
 import contextlib
 from inspect import currentframe
 from manim import *
@@ -23,7 +24,7 @@ from latex_rice import *
 from options import Opt
 from painter import *
 
-config.background_color = BLACK
+config.background_color = ManimColor("#101010")
 config.max_files_cached = 999
 config.verbosity = "CRITICAL"
 
@@ -59,7 +60,7 @@ class BaseScene(VoiceoverScene):
 
     def box_make(self, *args: Mobject) -> Polygon:
         result = SurroundingRectangle(*args, corner_radius=0.1)
-        result.set_color(self.get_colour(Pen.YELLOW))
+        result.set_color(self.get_ink(Pen.YELLOW))
         return result
 
     def box_move(self, *args: Mobject) -> Animation:
@@ -80,12 +81,32 @@ class BaseScene(VoiceoverScene):
         self.play(
             Indicate(
                 tex,
-                color=self.get_colour(Pen.WHITE),
+                color=self.get_ink(Pen.WHITE),
                 run_time=run_time,
                 scale_factor=2))
 
-    def get_colour(self, pen: Pen) -> ManimColor:
+    def get_ink(self, pen: Pen) -> ManimColor:
         return self._painter.get_ink(pen) if pen.value >= 0 else self.ink_bg
+    
+    def get_token_ink(self, token: str) -> ManimColor:
+        return self._painter.get_token_ink(token)
+    
+    def make_axes(
+            self,
+            width: float,
+            height: float,
+            xrange: Sequence[float],
+            yrange: Sequence[float]) -> Axes:
+        axes = Axes(
+            x_length=width,
+            y_length=height,
+            x_range=xrange,
+            y_range=yrange,
+            axis_config={'color': self.ink_fg},
+            x_axis_config={},
+            y_axis_config={},
+            tips=False)
+        return axes
 
     def make_matrix(
             self,
@@ -162,21 +183,22 @@ class BaseScene(VoiceoverScene):
 
     @staticmethod
     def run(file: str) -> None:
+        import os
         console.clear()
-        q = input("""Select Quality or 0 to cancel:
+        resolutions = input("""Select Quality or 0 to cancel:
                   
-            1: 480p15
-            2: 720p30
-            3: 1080p60
-            4: 1440p60
-            5: 2160p60  """)
-        if len(q) == 1 and q in '12345':
-            print('')
-            import os
-            module_name = os.path.abspath(file).split(os.sep)[-1]
-            # py -m: run library module as a script (terminates option list)
-            # manim -a: all scenes, -p: preview, -q?: quality.
-            command_line = f'py -m manim render -a -p -q{" lmhpk"[int(q)]} {module_name}'
-            os.system(command_line)
+            0: 480p15
+            1: 720p30
+            2: 1080p60
+            3: 1440p60
+            4: 2160p60  """)
+        print('')
+        for resolution in resolutions:
+            if resolution in '01234':
+                module_name = os.path.abspath(file).split(os.sep)[-1]
+                # py -m: run library module as a script (terminates option list)
+                # manim -a: all scenes, -p: preview, -q?: quality.
+                command_line = f'py -m manim render -a -p -q{"lmhpk"[int(resolution)]} {module_name}'
+                os.system(command_line)
 
 #endregion

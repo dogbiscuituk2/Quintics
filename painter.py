@@ -68,7 +68,7 @@ class Painter():
 
     @property
     def ink_fg(self) -> ManimColor:
-        return self.get_ink(self.get_pen('FG'))
+        return self.get_token_ink('FG')
 
     @property
     def options(self) -> Opt:
@@ -86,6 +86,9 @@ class Painter():
             if (re.match(map[0], token)):
                 return map[1]
         return Pen.GREY
+    
+    def get_token_ink(self, token: str) -> ManimColor:
+        return self.get_ink(self.get_pen(token))
     
     def paint(self, root: Mobject) -> None:
         """

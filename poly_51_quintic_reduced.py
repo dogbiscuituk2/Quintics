@@ -45,7 +45,7 @@ class Poly_51_Quintic_Reduced(BaseScene):
             f'{b}{p}^3',
             f'{c}{p}^2',
             f'{d}{p}',
-            e)
+            e).shift(UP*0.5)
 
         with self.say("The degree five polynomial, the quintic, has five roots."):
             self.play(Create(Equations[1]))
@@ -64,16 +64,33 @@ class Poly_51_Quintic_Reduced(BaseScene):
                 Create(T2)
             )
 
+        def poly(x: float, h: float = 0) -> float:
+            x += h
+            return (x+5)*(x+3)*(x+2)*(x-1)*(x-4)
+
         with self.say("To make a start, we might first try to get rid of the quartic, x to the fourth, term."):
             self.box_on(*Equations[1][0][7:10])
-            self.play(Uncreate(T2))
-            self.play(Uncreate(T1))
+            axes = self.make_axes(
+                5,
+                5,
+                [-5.75, 4.35, 1],
+                [-500, 500, 100],
+                ).shift(DOWN * 1.4)
+            x_plot = axes.plot(lambda x: poly(x))
+            x_plot.color = self.get_token_ink('x')
+            z_plot = axes.plot(lambda x: poly(x, -1))
+            z_plot.color = self.get_token_ink('z')
+            self.play(FadeOut(T1, T2))
+            self.play(Create(axes), run_time=2)
+            self.play(Create(x_plot), run_time=2)
+
         with self.say("In other words, transform it into so-called reduced form,"):
             brace = Brace(Group(Equations[1], Equations[2]), LEFT, color=self.ink_fg)
             self.play(FadeIn(brace), Create(Equations[2]))
             self.box_on(*Equations[2][0][7:10])
+            self.play(Create(z_plot), run_time=2)
         with self.say("with this coefficient equal to zero."):
-            self.play(Indicate(Equations[2][0][7], color=self.get_colour(Pen.WHITE), scale_factor=2, run_time=2))
+            self.play(Indicate(Equations[2][0][7], color=self.get_ink(Pen.WHITE), scale_factor=2, run_time=2))
 
         with self.say("This operation is technically known as a Tschirnhaus Transformation,"):
             image = ImageMobject("resources/Tschirnhaus.jpg")
@@ -100,6 +117,9 @@ class Poly_51_Quintic_Reduced(BaseScene):
                 self.play(TransformMatchingShapes(Equations[0][0][3:].copy(), Equations[i+3][0][3:]))
             self.play(FadeIn(Equations[8][0][3:]))
             self.box_off()
+
+        self.wait(10)
+        return
 
         p2 = f'{p}{p}'
         p3 = f'{p2}{p}'
