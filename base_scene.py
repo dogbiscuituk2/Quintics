@@ -102,10 +102,13 @@ class BaseScene(VoiceoverScene):
             y_length=height,
             x_range=xrange,
             y_range=yrange,
-            axis_config={'color': self.ink_fg},
+            axis_config={
+                'color': self.ink_fg,
+                'tick_size': 0.05,
+                'tip_height': 0.1,
+                'tip_width': 0.1},
             x_axis_config={},
-            y_axis_config={},
-            tips=False)
+            y_axis_config={})
         return axes
 
     def make_matrix(
