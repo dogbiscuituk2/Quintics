@@ -202,6 +202,7 @@ class BaseScene(VoiceoverScene):
                 # py -m: run library module as a script (terminates option list)
                 # manim -a: all scenes, -p: preview, -q?: quality.
                 command_line = f'py -m manim render -a -p -q{"lmhpk"[int(resolution)]} {module_name}'
+                print(command_line)
                 os.system(command_line)
 
 #endregion

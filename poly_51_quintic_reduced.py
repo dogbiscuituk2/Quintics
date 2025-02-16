@@ -5,6 +5,7 @@
 """
 
 from base_scene import BaseScene
+import math
 from MF_Tools import *
 from painter import *
 
@@ -14,7 +15,7 @@ class Poly_51_Quintic_Reduced(BaseScene):
         BaseScene.__init__(self)
 
     def construct(self):
-
+        
         self.set_pens((
             ('o', Pen.BACKGROUND),
             ('[a-e]', Pen.GREEN),
@@ -50,53 +51,38 @@ class Poly_51_Quintic_Reduced(BaseScene):
         with self.say("The degree five polynomial, the quintic, has five roots."):
             self.play(Create(Equations[1]))
 
-        with self.say("We could solve it easily if we didn't have these intermediate powers."):
+            roots = -5, -3, -2, +1, +4
+            axes = self.make_axes(5, 5, [-6, 6, 1], [-600, 600, 100])
+            dots = VGroup(*[
+                Dot(axes.coords_to_point(x, 0), radius=0.07)
+                for x in roots])
+            plot = axes.plot(
+                lambda x: math.prod([(x - root) for root in roots]),
+                [-5.75, 4.35, 0.05])
+            x_trace = VGroup(plot, dots)
+            x_trace.color = self.get_token_ink('x')
+            z_trace = x_trace.copy()
+            z_trace.color = self.get_token_ink('z')
+            graph = VGroup(axes, x_trace, z_trace)
+            graph.shift(DOWN*0.75)
+            self.play(FadeIn(axes))
+            self.play(Create(x_trace[0]), Create(dots), run_time=2)
+
+        with self.say("We could solve it easily if we didn't have all these intermediate powers of x."):
             self.box_on(*Equations[1][0][7:21])
-            T1 = self.make_tex('y=x^5+e=0')
-            T2 = self.make_tex('x=\\sqrt[5]{-e}')
-            VGroup(T1, T2).arrange(DOWN)
-            self.play(
-                TransformByGlyphMap(
-                    Equations[1].copy(),
-                    T1,
-                    ([1,3,*ir(7,20)],FadeOut),
-                    ([6,21],[6])),
-                Create(T2)
-            )
-
-        def plot(axes: Axes, token: str):
-
-            def poly(x: float) -> float:
-                return (x+5)*(x+3)*(x+2)*(x-1)*(x-4)
-
-            plot = axes.plot(poly, [-5.75, 4.33, 0.1])
-            plot.color = self.get_token_ink(token)
-            return plot
 
         with self.say("To make a start, we might first try to get rid of the quartic, x to the fourth, term."):
             self.box_on(*Equations[1][0][7:10])
-            axes = self.make_axes(5, 5, [-6, 6, 1], [-600, 600, 100], ).shift(DOWN * 1.4)
-            x_plot = plot(axes, 'x')
-            z_plot = plot(axes, 'z')
-            self.play(FadeOut(T1, T2))
-            self.play(Create(axes), run_time=2)
-            self.play(Create(x_plot), run_time=2)
 
         with self.say("In other words, transform it into so-called reduced form,"):
             brace = Brace(Group(Equations[1], Equations[2]), LEFT, color=self.ink_fg)
             self.play(FadeIn(brace), Create(Equations[2]))
             self.box_on(*Equations[2][0][7:10])
-            self.play(Create(z_plot), run_time=2)
 
-
-            z_plot.shift(RIGHT)
-            self.play(Create(z_plot))
+            z_trace.shift(RIGHT)
 
         with self.say("with this coefficient equal to zero."):
             self.play(Indicate(Equations[2][0][7], color=self.get_ink(Pen.WHITE), scale_factor=2, run_time=2))
-
-        self.wait(10)
-        return
 
         with self.say("This operation is technically known as a Tschirnhaus Transformation,"):
             image = ImageMobject("resources/Tschirnhaus.jpg")
@@ -119,13 +105,11 @@ class Poly_51_Quintic_Reduced(BaseScene):
             self.play([
                 TransformMatchingShapes(S[i].copy(), Equations[i+3][0][0:3], path_arc=-PI/2)
                 for i in range(6)], run_time=2)
+            self.play(FadeOut(graph))
             for i in range(5):
                 self.play(TransformMatchingShapes(Equations[0][0][3:].copy(), Equations[i+3][0][3:]))
             self.play(FadeIn(Equations[8][0][3:]))
             self.box_off()
-
-        self.wait(10)
-        return
 
         p2 = f'{p}{p}'
         p3 = f'{p2}{p}'
