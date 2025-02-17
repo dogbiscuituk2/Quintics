@@ -59,7 +59,7 @@ class Poly_51_Quintic_Reduced(BaseScene):
                 for x in roots])
             plot = axes.plot(
                 lambda x: math.prod([(x - root) for root in roots]),
-                [-5.75, 4.35, 0.05])
+                [-5.825, 4.395, 0.02])
             x_trace = VGroup(plot, dots)
             x_trace.color = self.get_token_ink('x')
             z_trace = x_trace.copy()
@@ -97,11 +97,10 @@ class Poly_51_Quintic_Reduced(BaseScene):
         with self.say("the simplest example of which is a linear substitution, such as x = z + some constant h."):
             self.play(Create(Equations[0]))
             self.box_on(Equations[0])
-            for dx in (2, -3, 2):
-                self.play(z_trace.animate.shift(0.4*dx*RIGHT), run_time=1)
+            for dx in (2.5, -3.5, 2.0):
+                self.play(z_trace.animate.shift(0.34*dx*RIGHT), run_time=1)
 
         with self.say("Let's use this to express all these x powers in terms of z."):
-            self.play(FadeOut(graph))
             E = Equations[1][0]
             S = E[4:6], E[7:10], E[11:14], E[15:18], E[19:21], E[22:23]
             self.play([
@@ -111,6 +110,7 @@ class Poly_51_Quintic_Reduced(BaseScene):
                     path_arc=-PI/2)
                 for i in range(6)],
                 run_time=2)
+            self.play(FadeOut(graph))
             for i in range(5):
                 self.play(
                     TransformMatchingShapes(
