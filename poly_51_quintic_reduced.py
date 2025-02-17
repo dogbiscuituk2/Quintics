@@ -84,7 +84,7 @@ class Poly_51_Quintic_Reduced(BaseScene):
             self.play(Indicate(Equations[2][0][7], color=self.get_ink(Pen.WHITE), scale_factor=2, run_time=2))
 
         with self.say("This operation is technically known as a Tschirnhaus Transformation,"):
-            image = ImageMobject("resources/Tschirnhaus_colour.jpg")
+            image = ImageMobject("resources/Tschirnhaus_colour.jpg") # www.palette.fm - Polar Luster
             caption = MarkupText(
                     'Ehrenfried Walther von Tschirnhaus (1651-1708)',
                     color=self.ink_fg
