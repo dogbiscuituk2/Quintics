@@ -37,7 +37,7 @@ class Poly_51_Quintic_Reduced(BaseScene):
         p = '(z+h)'
         trans = 'xo&=oz+h'
         monic = 'yo&=ox^5+ax^4+bx^3+cx^2+dx+e=0'
-        reduced = 'yo&=oz^5+0z^4+pz^3+qz^2+rz+s=0'
+        reduced = 'yo&=oz^5+0z^4+pz^3+qz^2+rz+s'
 
         Equations = self.make_texes(
             trans,
@@ -57,7 +57,7 @@ class Poly_51_Quintic_Reduced(BaseScene):
             axes = self.make_axes(6, 4.25, [-7, 7, 1], [-600, 600, 100])
             border = SurroundingRectangle(axes, buff=0, corner_radius=0.1, color=self.ink_fg)
             dots = VGroup(*[
-                Dot(axes.coords_to_point(x, 0), radius=0.07)
+                Dot(axes.c2p(x, 0), radius=0.07)
                 for x in roots])
             plot = axes.plot(
                 lambda x: math.prod([(x - root) for root in roots]),
@@ -67,7 +67,6 @@ class Poly_51_Quintic_Reduced(BaseScene):
             z_trace = x_trace.copy()
             z_trace.color = self.get_token_ink('z')
             graph = VGroup(axes, x_trace, z_trace, border)
-            #graph.shift(DOWN*0.75)
             graph.shift(DOWN)
             self.play(FadeIn(border, axes))
             self.play(Create(x_trace[0]), Create(dots), run_time=2)
@@ -101,8 +100,9 @@ class Poly_51_Quintic_Reduced(BaseScene):
         with self.say("the simplest example of which is a linear substitution, such as x = z + some constant h."):
             self.play(Create(Equations[0]))
             self.box_on(Equations[0])
+            scale = axes.c2p(1, 0)[0] - axes.c2p(0, 0)[0]
             for dx in (2.5, -3.5, 2.0):
-                self.play(z_trace.animate.shift(0.34*dx*RIGHT), run_time=1)
+                self.play(z_trace.animate.shift(scale*dx*RIGHT), run_time=1)
 
         with self.say("Let's use this to express all these x powers in terms of z."):
             E = Equations[1][0]
@@ -191,8 +191,9 @@ class Poly_51_Quintic_Reduced(BaseScene):
                 T.move_to(S, aligned_edge=LEFT)
                 self.play(TransformMatchingShapes(S, T))
                 Equations[j+4] = T
-            self.play(FadeOut(Equations[0], brace, Equations[1], Equations[2][0][-2:]))
-            self.play(VGroup(*Equations[2:]).animate.move_to(ORIGIN))
+            self.play(FadeOut(Equations[0], brace, Equations[1]))
+            Equations2 = VGroup(*Equations[2:])
+            self.play(Equations2.animate.move_to(ORIGIN))
 
         with self.say("Now recall that this first z equation is just the sum of the six below it."):
             self.box_on(Equations[2])
@@ -200,6 +201,23 @@ class Poly_51_Quintic_Reduced(BaseScene):
             self.box_on(*[Equations[i] for i in range(3, 9)])
             self.wait(2)
             self.box_off()
+
+        Y = self.make_matrix((['y'], ['x^5'], ['ax^4'], ['bx^3'], ['cx^2'], ['dx'], ['e']), margin = 0)
+        EQ = self.make_tex('=')
+        M = self.make_matrix((
+            ('z^5', '0z^4', 'pz^3', 'qz^2', 'rz', 's'),
+            ('z^5', '5hz^4', '10h^2z^3', '10h^3z^2', '5h^4z', 'h^5'),
+            ('', 'az^4', '4ahz^3', '6ah^2z^2', '4ah^3z', 'ah^4'),
+            ('', '', 'bz^3', '3bhz^2', '3bh^2z', 'bh^3'),
+            ('', '', '', 'cz^2', '2chz', 'ch^2'),
+            ('', '', '', '', 'dz', 'dh'),
+            ('', '', '', '', '', 'e')),
+            padding = 1.75)
+        Z = self.make_matrix((('1'), ('1'), ('1'), ('1'), ('1'), ('1')), margin = 0)
+        EQ.move_to(M, LEFT)
+        Y.move_to(EQ, LEFT)
+        G3 = VGroup(Y, EQ, M, Z).arrange(RIGHT)
+        self.play(TransformMatchingShapes(Equations2, G3))
 
         self.wait(10)
         return
