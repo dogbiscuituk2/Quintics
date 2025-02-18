@@ -15,6 +15,8 @@ class Poly_51_Quintic_Reduced(BaseScene):
         BaseScene.__init__(self)
 
     def construct(self):
+
+        #self.options |= Opt.DEBUG_SILENT
         
         self.set_pens((
             ('o', Pen.BACKGROUND),
@@ -46,13 +48,13 @@ class Poly_51_Quintic_Reduced(BaseScene):
             f'{b}{p}^3',
             f'{c}{p}^2',
             f'{d}{p}',
-            e).shift(UP*0.5)
+            e) # .shift(UP*0.5)
 
         with self.say("The degree five polynomial, the quintic, has five roots."):
             self.play(Create(Equations[1]))
 
             roots = -5, -3, -2, +1, +4
-            axes = self.make_axes(4.5, 4.5, [-7, 7, 1], [-600, 600, 100])
+            axes = self.make_axes(6, 4.25, [-7, 7, 1], [-600, 600, 100])
             border = SurroundingRectangle(axes, buff=0, corner_radius=0.1, color=self.ink_fg)
             dots = VGroup(*[
                 Dot(axes.coords_to_point(x, 0), radius=0.07)
@@ -65,7 +67,8 @@ class Poly_51_Quintic_Reduced(BaseScene):
             z_trace = x_trace.copy()
             z_trace.color = self.get_token_ink('z')
             graph = VGroup(axes, x_trace, z_trace, border)
-            graph.shift(DOWN*0.75)
+            #graph.shift(DOWN*0.75)
+            graph.shift(DOWN)
             self.play(FadeIn(border, axes))
             self.play(Create(x_trace[0]), Create(dots), run_time=2)
 
@@ -89,9 +92,10 @@ class Poly_51_Quintic_Reduced(BaseScene):
                     'Ehrenfried Walther von Tschirnhaus (1651-1708)',
                     color=self.ink_fg
                 ).scale(0.25).rotate(-PI/2)
-            picture = Group(image, caption).arrange(RIGHT, buff=0.1)
-            picture.to_corner(DR, buff=0.5)
-            self.play(FadeIn(picture))
+            picture = Group(image, caption).arrange(RIGHT, buff=0.2)
+            picture.to_corner(DR, buff=0.7).shift((picture.width+1)*RIGHT)
+            self.add(picture)
+            self.play(picture.animate.shift((picture.width+0.5)*LEFT), run_time=2)
             self.box_off()
 
         with self.say("the simplest example of which is a linear substitution, such as x = z + some constant h."):
@@ -188,36 +192,18 @@ class Poly_51_Quintic_Reduced(BaseScene):
                 self.play(TransformMatchingShapes(S, T))
                 Equations[j+4] = T
             self.play(FadeOut(Equations[0], brace, Equations[1], Equations[2][0][-2:]))
+            self.play(VGroup(*Equations[2:]).animate.move_to(ORIGIN))
+
+        with self.say("Now recall that this first z equation is just the sum of the six below it."):
+            self.box_on(Equations[2])
+            self.wait(2)
+            self.box_on(*[Equations[i] for i in range(3, 9)])
+            self.wait(2)
+            self.box_off()
 
         self.wait(10)
         return
 
-
-        def expand(i: int, immediate: bool = False) -> None:
-
-            def move_box(grow: int=0) -> Animation:
-                return self.box_move(*[EQU[j+3][1][0][k] for k in range(1, 6*(i-3)+grow) for j in range(0, 9-i)])
-
-            if i in range(5, 9):
-                self.play(move_box())
-            fz = Fz[i]
-            animations = []
-            for j in range(1 if immediate else 0, len(fz)):
-                source = EQU[j+3][1]
-                target = fz[j]
-                target.move_to(source, aligned_edge=LEFT)
-                animation = TransformMatchingShapes(source, target)
-                if immediate:
-                    self.play(animation)
-                else:
-                    animations.append(animation)
-                EQU[j+3][1] = target
-            if not immediate:
-                if i in range(5, 9):
-                    animations.append(move_box(1))
-                self.play(animations)
-
-       
         Y = self.make_matrix((['y^1'], ['x^5'], ['ax^4'], ['bx^3'], ['cx^2'], ['dx^1'], ['eo^0']), margin = 0)
         EQ = self.make_tex('=')
         M = self.make_matrix((
@@ -233,22 +219,6 @@ class Poly_51_Quintic_Reduced(BaseScene):
         VGroup(Y, EQ, M, Z).arrange(RIGHT, aligned_edge=DOWN)
         EQ.move_to(EQ.get_center() + 2.8 * UP)
         Z.move_to(Z.get_center() + 0.4 * UP)
-
-        with self.say("Expand these powers."):
-            self.play(FadeOut(picture))
-            for i in range(1, 5):
-                expand(i)
-
-        self.wait(10)
-        return
-
-        with self.say("Multiply out the binomials."):
-            for i in range(5, 9):
-                expand(i)
-            self.box_off()
-
-        with self.say("Distribute the original coefficients."):
-            expand(9, immediate=True)
 
         with self.say("Now recall that this first z equation is just the sum of the six below it."):
             self.box_on(EQU[2])

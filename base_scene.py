@@ -162,6 +162,7 @@ class BaseScene(VoiceoverScene):
         print(f"{frame.f_lineno}: {text}")
         if Opt.DEBUG_SILENT in self.options:
             return contextlib.suppress()
+            #return contextlib.nullcontext
         # Specify language & disable language check to avoid GTTS bugs.
         return self.voiceover(text, lang='en', lang_check=False)
     
@@ -187,13 +188,14 @@ class BaseScene(VoiceoverScene):
     def run(file: str) -> None:
         import os
         console.clear()
-        resolutions = input("""Select Quality or 0 to cancel:
-                  
-            0: 480p15
-            1: 720p30
+        resolutions = input("""
+            0:  480p15
+            1:  720p30
             2: 1080p60
             3: 1440p60
-            4: 2160p60  """)
+            4: 2160p60
+                            
+            Select resolution(s):  """)
         print('')
         for resolution in resolutions:
             if resolution in '01234':
