@@ -19,7 +19,7 @@ class Poly_51_Quintic_Reduced(BaseScene):
         #self.options |= Opt.DEBUG_SILENT
         
         self.set_pens((
-            ('o', Pen.BACKGROUND),
+            #('o', Pen.BACKGROUND),
             ('[a-e]', Pen.GREEN),
             ('h', Pen.ORANGE),
             ('[p-s]', Pen.YELLOW),
@@ -31,8 +31,8 @@ class Poly_51_Quintic_Reduced(BaseScene):
         a = 'ax^4&=a'
         b = 'bx^3&=b'
         c = 'cx^2&=c'
-        d = 'odx&=d'
-        e = 'ooe&=e'
+        d = 'dxo&=d'
+        e = 'eoo&=e'
 
         p = '(z+h)'
         trans = 'xo&=oz+h'
