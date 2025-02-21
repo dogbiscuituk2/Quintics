@@ -51,42 +51,6 @@ def get_tex_length(string: str) -> int:
     except Exception:
         return 0
 
-def sub_ssmt(tex: SingleStringMathTex, start: int, end: int) -> VGroup:
-    """
-                 1         2         3
-    012345678901234567890123456789012  <-- String Index
-    y=\sum_{i=0}^\infty \frac{1}{x^2}
-
-    0  1  2     3  4  5  6  7  8  9  10      11    12 13 14 15 16 17 18 19  <-- Token Index ('T')
-    y  =  \sum  _  {  i  =  0  }  ^  \infty  \frac  {  1  }  {  x  ^  2  }
-
-    0  1  2  3  4  5  6  7  8  9 10  <-- Glyph Index ('G')
-    y  =  ∞  Σ  i  =  0  1  /  x  2
-
-    Symbols
-
-    T0.G0.BLUE
-    T1.G1.GREY
-    T2.G3.MAGENTA
-    T5.G4.YELLOW
-    T6.G5.GREY
-    T7.G6.GREY
-    T10.G2.CYAN
-    T13.G7.GREY
-    T11.G8.GREEN
-    T16.G9.BLUE
-    T18.G10.BLUE
-
-    """
-
-    try:
-        tokens = tex.tokens
-        symbols = tex.symbols
-    except AttributeError:
-        Painter().parse(tex)
-        tokens = tex.tokens
-        symbols = tex.symbols
-
 class Painter():
 
     opt: Opt = Opt.DEFAULT
@@ -387,11 +351,9 @@ class Painter():
                             return parse_token(token)
 
                 tokens: List[Token] = []
-                symbols: List[Symbol] = []
-
                 text: str = ssmt.tex_string
                 if not text:
-                    return symbols
+                    return []
                 tokens.clear()
                 for match in re.finditer(PAT_TOKEN, text):
                     span = match.span()
@@ -404,13 +366,10 @@ class Painter():
                 self.token_index = 0
                 self.glyph_index = 0
                 while more():
-                    syms = parse_unit()
-
-                    print(apply_paint)
-
+                    symbols = parse_unit()
                     if apply_paint:
                         pen = Pen.BACKGROUND
-                        for symbol in syms:
+                        for symbol in symbols:
                             start = symbol.glyph_index
                             stop = start + symbol.glyph_count
                             if stop > start:
@@ -423,9 +382,6 @@ class Painter():
                                     if index >= 0 and index < len(ssmt):
                                         glyph = ssmt[index]
                                         glyph.set_color(colour)
-                    symbols.extend(syms)
-                ssmt.tokens = tokens
-                ssmt.symbols = symbols
 
             if type(node) is SingleStringMathTex:
                 parse_ssmt(node)
@@ -464,12 +420,7 @@ class Painter():
 if __name__ == '__main__':
     config.verbosity = "CRITICAL"
     painter = Painter()
-    #painter.options |= Opt.DEBUG_SYMBOLS
+    painter.options |= Opt.DEBUG_SYMBOLS
     tex = MathTex('x^5+3x^4-2x^3+7x^2-5x+11')
     painter.parse(tex)
     ssmt = tex[0]
-    print(ssmt.tex_string)
-    print(ssmt.tokens)
-    print(ssmt.symbols)
-#    sub = sub_ssmt(ssmt, 0, 3)
-#    print(sub)

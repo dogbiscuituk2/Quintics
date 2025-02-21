@@ -172,12 +172,6 @@ class BaseScene(VoiceoverScene):
     def set_pens(self, map: List[tuple[str, Pen]]) -> None:
         self._painter.set_pens(map)
 
-    def substitute_tex(self, group: VGroup, index: int, value: VGroup) -> None:
-        value.move_to(group[index], aligned_edge=LEFT)
-        group[index] = value
-
-#region Private Implementation
-
     _boxes = None
     _painter: Painter
     
