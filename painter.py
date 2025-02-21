@@ -51,6 +51,42 @@ def get_tex_length(string: str) -> int:
     except Exception:
         return 0
 
+def sub_ssmt(tex: SingleStringMathTex, start: int, end: int) -> VGroup:
+    """
+                 1         2         3
+    012345678901234567890123456789012  <-- String Index
+    y=\sum_{i=0}^\infty \frac{1}{x^2}
+
+    0  1  2     3  4  5  6  7  8  9  10      11    12 13 14 15 16 17 18 19  <-- Token Index ('T')
+    y  =  \sum  _  {  i  =  0  }  ^  \infty  \frac  {  1  }  {  x  ^  2  }
+
+    0  1  2  3  4  5  6  7  8  9 10  <-- Glyph Index ('G')
+    y  =  ∞  Σ  i  =  0  1  /  x  2
+
+    Symbols
+
+    T0.G0.BLUE
+    T1.G1.GREY
+    T2.G3.MAGENTA
+    T5.G4.YELLOW
+    T6.G5.GREY
+    T7.G6.GREY
+    T10.G2.CYAN
+    T13.G7.GREY
+    T11.G8.GREEN
+    T16.G9.BLUE
+    T18.G10.BLUE
+
+    """
+
+    try:
+        tokens = tex.tokens
+        symbols = tex.symbols
+    except AttributeError:
+        Painter().parse(tex)
+        tokens = tex.tokens
+        symbols = tex.symbols
+
 class Painter():
 
     opt: Opt = Opt.DEFAULT
@@ -91,19 +127,17 @@ class Painter():
         return self.get_ink(self.get_pen(token))
     
     def paint(self, root: Mobject) -> None:
-        """
-        Apply colours to the glyphs in the given Mobject tree.
+        self.parse(root, apply_paint = True)
 
-        root: The root object to be painted.
-        """
+    def parse(self, root: Mobject, apply_paint: bool = False) -> None:
 
-        def paint_node(node: Mobject) -> None:
+        def parse_node(node: Mobject) -> None:
 
-            def paint_ssmt(tex: SingleStringMathTex) -> None:
+            def parse_ssmt(ssmt: SingleStringMathTex) -> None:
                 """
                 Apply colours to the glyphs in the given SingleStringMathTex object.
 
-                tex: The SingleStringMathTex object to be painted.
+                tex: The SingleStringMathTex object to be parsed.
 
                 '\\left.', '\\right.' not implemented.
                 """
@@ -111,7 +145,7 @@ class Painter():
                 def more() -> bool:
                     return self.token_index < len(tokens)
 
-                def paint_unit() -> List[Symbol]:
+                def parse_unit() -> List[Symbol]:
 
                     def accept(token: str) -> None:
                         if (peek() != token):
@@ -139,9 +173,9 @@ class Painter():
                             if flag == '>':
                                 print()
 
-                    def paint_accent() -> List[Symbol]:
-                        g1 = paint_symbol()
-                        g2 = paint_unit() if more() else []
+                    def parse_accent() -> List[Symbol]:
+                        g1 = parse_symbol()
+                        g2 = parse_unit() if more() else []
                         dump_symbols('<', g1, g2)
                         start = g1[0].token_index
                         end = self.token_index
@@ -154,10 +188,10 @@ class Painter():
                         dump_symbols('>', g1, g2)
                         return g1 + g2
 
-                    def paint_aggregate(prototype: str) -> List[Symbol]:
-                        g1 = paint_symbol()
-                        g2 = paint_shift('_')
-                        g3 = paint_shift('^')
+                    def parse_aggregate(prototype: str) -> List[Symbol]:
+                        g1 = parse_symbol()
+                        g2 = parse_shift('_')
+                        g3 = parse_shift('^')
                         dump_symbols('<', g1, g2, g3)
                         n1 = get_glyph_count(g1)
                         n2 = get_glyph_count(g2)
@@ -188,10 +222,10 @@ class Painter():
                         dump_symbols('>', g1, g2, g3)
                         return g1 + g2 + g3
 
-                    def paint_frac() -> List[Symbol]:
-                        g1 = paint_symbol()
-                        g2 = paint_unit()
-                        g3 = paint_unit()
+                    def parse_frac() -> List[Symbol]:
+                        g1 = parse_symbol()
+                        g2 = parse_unit()
+                        g3 = parse_unit()
                         dump_symbols('<', g1, g2, g3)
                         n1 = get_glyph_count(g1)
                         n2 = get_glyph_count(g2)
@@ -200,11 +234,11 @@ class Painter():
                         dump_symbols('>', g1, g2, g3)
                         return g2 + g1 + g3
                 
-                    def paint_math(token: str) -> List[Symbol]:
+                    def parse_math(token: str) -> List[Symbol]:
                         extra = 4 if token.endswith('brace') else 2 if token.endswith('arrow') else 1
                         flip = token not in [r'\underline', r'\underbrace']
-                        g1 = paint_symbol()
-                        g2 = paint_unit() if more() else []
+                        g1 = parse_symbol()
+                        g2 = parse_unit() if more() else []
                         dump_symbols('<', g1, g2)
                         n1 = get_glyph_count(g1)
                         n2 = get_glyph_count(g2)
@@ -219,13 +253,13 @@ class Painter():
                         dump_symbols('>', g1, g2)
                         return g1 + g2
 
-                    def paint_script():
+                    def parse_script():
                         self.sticky = Opt.SUBSUPER in self.options
-                        symbols = paint_shift(token)
+                        symbols = parse_shift(token)
                         self.sticky = False
                         return symbols
 
-                    def paint_shift(token: str) -> List[Symbol]:
+                    def parse_shift(token: str) -> List[Symbol]:
                         '''
                         If the current token is either '_' or '^' then return the next unit,
                         otherwise return the empty list.
@@ -234,10 +268,10 @@ class Painter():
                         '''
                         if peek() == token:
                             accept(token)
-                            return paint_unit()
+                            return parse_unit()
                         return []
 
-                    def paint_size(token: str) -> List[Symbol]:
+                    def parse_size(token: str) -> List[Symbol]:
                         '''
                         Paint a delimiter symbol correctly, when the symbol is preceded by a 
                         static or dynamic size modifier.
@@ -264,7 +298,7 @@ class Painter():
                             token_L = tokens[left]
                             token_R = tokens[right]
                             snip = text[0:token_L.start] + text[token_L.end:token_R.start] + text[token_R.end:]
-                            return 1 + (len(tex) - get_tex_length(snip)) // 2
+                            return 1 + (len(ssmt) - get_tex_length(snip)) // 2
 
                         token_index = self.token_index
                         accept(token)
@@ -287,31 +321,31 @@ class Painter():
                         self.glyph_index += gap
                         return [symbol]
 
-                    def paint_sqrt() -> List[Symbol]:
-                        g1 = paint_symbol()
+                    def parse_sqrt() -> List[Symbol]:
+                        g1 = parse_symbol()
                         if peek() == '[':
                             colour = g1[0].pen
-                            g2 = paint_string('[', ']')
+                            g2 = parse_string('[', ']')
                             for symbol in g2:
                                 symbol.pen = colour
                             g1 += g2
-                        g3 = paint_unit() if more() else []
+                        g3 = parse_unit() if more() else []
                         return g1 + g3
                 
-                    def paint_string(begin: str = '', end: str = '') -> List[Symbol]:
+                    def parse_string(begin: str = '', end: str = '') -> List[Symbol]:
                         if begin:
                             accept(begin)
                         symbols = []
                         while more() and peek() != end:
-                            symbols += paint_unit()
+                            symbols += parse_unit()
                         if end:
                             accept(end)
                         return symbols
                 
-                    def paint_symbol() -> List[Symbol]:
-                        return paint_token(peek())
+                    def parse_symbol() -> List[Symbol]:
+                        return parse_token(peek())
                 
-                    def paint_token(token: str) -> List[Symbol]:
+                    def parse_token(token: str) -> List[Symbol]:
                         token_count = 1
                         glyph_count = get_tex_length(token)
                         if not self.sticky:
@@ -328,35 +362,36 @@ class Painter():
 
                     token = peek()
                     if re.match(PAT_INT, token):
-                        return paint_aggregate(prototype = r'\int')
+                        return parse_aggregate(prototype = r'\int')
                     if re.match(PAT_LARGE, token):
-                        return paint_aggregate(prototype = r'\sum')
+                        return parse_aggregate(prototype = r'\sum')
                     if re.match(PAT_ACCENT, token):
-                        return paint_accent()
+                        return parse_accent()
                     if re.match(PAT_MATH, token):
-                        return paint_math(token)
+                        return parse_math(token)
                     if re.match(PAT_SIZE, token):
-                        return paint_size(token)
+                        return parse_size(token)
                     match token:
                         case r'\frac':
-                            return paint_frac()
+                            return parse_frac()
                         case r'\sqrt':
-                            return paint_sqrt()
+                            return parse_sqrt()
                         case '{':
-                            result = paint_string('{', '}')
+                            result = parse_string('{', '}')
                             return result
                         case '_':
-                            return paint_script()
+                            return parse_script()
                         case '^':
-                            return paint_script()
+                            return parse_script()
                         case _:
-                            return paint_token(token)
+                            return parse_token(token)
 
                 tokens: List[Token] = []
+                symbols: List[Symbol] = []
 
-                text: str = tex.tex_string
+                text: str = ssmt.tex_string
                 if not text:
-                    return
+                    return symbols
                 tokens.clear()
                 for match in re.finditer(PAT_TOKEN, text):
                     span = match.span()
@@ -368,32 +403,37 @@ class Painter():
                     tokens.append(token)
                 self.token_index = 0
                 self.glyph_index = 0
-                if Opt.DEBUG_NOPAINT in self.options:
-                    return
                 while more():
-                    symbols = paint_unit()
-                    pen = Pen.BACKGROUND
-                    for symbol in symbols:
-                        start = symbol.glyph_index
-                        stop = start + symbol.glyph_count
-                        if stop > start:
-                            if Opt.DEBUG_COLOURS in self.options:
-                                pen = Pen(pen.value + 1) if pen.value < 21 else Pen(0)
-                            else:
-                                pen = symbol.pen
-                            colour = self.get_ink(pen)
-                            for index in range(start, stop):
-                                if index >= 0 and index < len(tex):
-                                    glyph = tex[index]
-                                    glyph.set_color(colour)
+                    syms = parse_unit()
+
+                    print(apply_paint)
+
+                    if apply_paint:
+                        pen = Pen.BACKGROUND
+                        for symbol in syms:
+                            start = symbol.glyph_index
+                            stop = start + symbol.glyph_count
+                            if stop > start:
+                                if Opt.DEBUG_COLOURS in self.options:
+                                    pen = Pen(pen.value + 1) if pen.value < 21 else Pen(0)
+                                else:
+                                    pen = symbol.pen
+                                colour = self.get_ink(pen)
+                                for index in range(start, stop):
+                                    if index >= 0 and index < len(ssmt):
+                                        glyph = ssmt[index]
+                                        glyph.set_color(colour)
+                    symbols.extend(syms)
+                ssmt.tokens = tokens
+                ssmt.symbols = symbols
 
             if type(node) is SingleStringMathTex:
-                paint_ssmt(node)
+                parse_ssmt(node)
             elif isinstance(node, VMobject):
                 for child in node.submobjects:
-                    paint_node(child)
+                    parse_node(child)
 
-        paint_node(root)
+        parse_node(root)
 
     def set_inks(self, inks: List[ManimColor]) -> None:
         """
@@ -424,4 +464,12 @@ class Painter():
 if __name__ == '__main__':
     config.verbosity = "CRITICAL"
     painter = Painter()
-    painter.options |= Opt.DEBUG_SYMBOLS
+    #painter.options |= Opt.DEBUG_SYMBOLS
+    tex = MathTex('x^5+3x^4-2x^3+7x^2-5x+11')
+    painter.parse(tex)
+    ssmt = tex[0]
+    print(ssmt.tex_string)
+    print(ssmt.tokens)
+    print(ssmt.symbols)
+#    sub = sub_ssmt(ssmt, 0, 3)
+#    print(sub)

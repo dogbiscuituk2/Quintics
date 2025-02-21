@@ -14,8 +14,6 @@ from labels import *
 from latex_rice import *
 from painter import *
 
-config.background_color = BLACK
-
 class TestAll(BaseScene):
 
     def __init__(self):
@@ -133,22 +131,22 @@ class TestAll(BaseScene):
         #self.options |= Opt.DEBUG_SYMBOLS
         #self.options |= Opt.DEBUG_TEX
 
-        show_group("Scratchpad", [r'a_1 + f^2 + i_3 + p^4 * t_5 / x^6'])
-        show_group("Greek and Hebrew Letters", SYM_GREEK, flip=True)
-        show_group("Mathematical constructions", EXP_MATH, cols=3)
+        show_group("Scratchpad", [r'y=\sum_{i=0}^\infty \frac{1}{x^2}'])
+        #show_group("Greek and Hebrew Letters", SYM_GREEK, flip=True)
+        #show_group("Mathematical constructions", EXP_MATH, cols=3)
         #show_group("Static delimiters", EXP_DELIM_STATIC, cols=2, rows=10, flip=True)
-        show_group("Dynamic delimiters", EXP_DELIM_DYNAMIC, cols = 1)
+        #show_group("Dynamic delimiters", EXP_DELIM_DYNAMIC, cols = 1)
 
-        show_group("Integrals", EXP_INT, 1)
-        show_group("Variable sized symbols", EXP_LARGE)
-        show_group("Standard function names", SYM_FUNC, flip=True)
+        #show_group("Integrals", EXP_INT, 1)
+        #show_group("Variable sized symbols", EXP_LARGE)
+        #show_group("Standard function names", SYM_FUNC, flip=True)
         #show_group("Binary operation and relation symbols", SYM_OPS, 5)
         #show_group("Arrow symbols", SYM_ARROW)
 
         #show_group("Miscellaneous symbols", SYM_MISC)
-        show_group("Math mode accents", EXP_ACCENT)
-        show_group("Other styles - math mode only", EXP_STYLE, 1)
-        show_group("Font sizes", EXP_FONT, 1)
+        #show_group("Math mode accents", EXP_ACCENT)
+        #show_group("Other styles - math mode only", EXP_STYLE, 1)
+        #show_group("Font sizes", EXP_FONT, 1)
         #show_group("All symbols", SYM_ALL, flip=True)
 
         #self.options &= ~Opt.DEBUG_COLOURS
@@ -159,8 +157,10 @@ class TestAll(BaseScene):
         #self.options &= ~Opt.DEBUG_SYMBOLS
         #self.options &= ~Opt.DEBUG_TEX
 
+if __name__ == "__main__":
+    BaseScene.run(__file__)
 
-if __name__=="__main__":
-    with tempconfig({"quality": "medium_quality", "disable_caching": True}):
-        scene = TestAll()
-        scene.render()
+#if __name__=="__main__":
+#    with tempconfig({"quality": "medium_quality", "disable_caching": True}):
+#        scene = TestAll()
+#        scene.render()

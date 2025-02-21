@@ -29,9 +29,6 @@ class Opt(Flag):
     DEBUG_LABELS = auto()
     """Show index_labels for each MathTex or Text."""
 
-    DEBUG_NOPAINT = auto()
-    """Skip the re-painting of glyphs."""
-
     DEBUG_SILENT = auto()
     """Mute all voiceover calls."""
 

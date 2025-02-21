@@ -16,8 +16,8 @@ class Token():
         self.length = length
         self.string = string
 
-    #def __repr__(self) -> str:
-    #    return f'[{self.start}:{self.end}] {self.string}'
+    def __repr__(self) -> str:
+        return f'[{self.start}:{self.end}] {self.string}'
 
     @property
     def end(self) -> int:

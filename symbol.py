@@ -42,6 +42,9 @@ class Symbol():
     def __str__(self) -> str:
         return f'{self._token_range}.{self._glyph_range}.{self.pen.name}'
 
+    def __repr__(self) -> str:
+        return f'{self._token_range}.{self._glyph_range}.{self.pen.name}'
+
     @property
     def _glyph_range(self) -> str:
         return self._make_range('G', self.glyph_index, self.glyph_count)
