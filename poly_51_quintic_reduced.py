@@ -5,6 +5,7 @@
 """
 
 from base_scene import BaseScene
+from labels import *
 import math
 from MF_Tools import *
 from painter import *
@@ -218,38 +219,40 @@ class Poly_51_Quintic_Reduced(BaseScene):
         EQ.move_to(M, LEFT)
         Y.move_to(EQ, LEFT)
         G3 = VGroup(Y, EQ, M, Z).arrange(RIGHT)
-        self.play(TransformMatchingShapes(Equations2, G3))
+
+        opera = [
+            [3, 7, 11, 15, 19, 22],
+            [3, 7, 12, 19, 26, 31],
+            [3, 7, 13, 20, 26],
+            [3, 7, 13, 19],
+            [3, 7, 12],
+            [3, 6],
+            [3]]
+        stage = [[], [], [], []]
+        for row in range(7):
+            equ = Equations2[row][0]
+            stage[0].append(TransformMatchingShapes(equ[0:3], Y[0][row]))
+            stage[1].append(TransformMatchingShapes(equ[3:4], EQ) if row == 3 else FadeOut(equ[3:4]))
+            opus = opera[row]
+            for col in range(len(opus)):
+                lop = opus[col]
+                if col > 0:
+                    stage[2].append(FadeOut(equ[lop:lop+1]))
+                src = equ[lop+1:opus[col+1]] if col < len(opus)-1 else equ[lop+1:]
+                tgt = M[0][row * 6 + col + (0 if row < 2 else row-1)]
+                stage[3].append(TransformMatchingShapes(src, tgt))
+
+        with self.say("All seven of these equations are identities, true for every choice of x and corresponding z."):
+            self.play(*stage[0])
+            self.play(FadeIn(Y[1:3]))
+            self.play(*stage[1])
+            self.play(*stage[2])
+            self.play(*stage[3], run_time=2)
+            self.play(FadeIn(M[1:3], Z))
 
         self.wait(10)
         return
 
-        Y = self.make_matrix((['y^1'], ['x^5'], ['ax^4'], ['bx^3'], ['cx^2'], ['dx^1'], ['eo^0']), margin = 0)
-        EQ = self.make_tex('=')
-        M = self.make_matrix((
-            ('z^5', '0z^4', 'pz^3', 'qz^2', 'rz', 's'),
-            ('z^5', '5hz^4', '10h^2z^3', '10h^3z^2', '5h^4z', 'h^5'),
-            ('', 'az^4', '4ahz^3', '6ah^2z^2', '4ah^3z', 'ah^4'),
-            ('', '', 'bz^3', '3bhz^2', '3bh^2z', 'bh^3'),
-            ('', '', '', 'cz^2', '2chz', 'ch^2'),
-            ('', '', '', '', 'dz', 'dh'),
-            ('', '', '', '', '', 'e')),
-            padding = 1.75)
-        Z = self.make_matrix((('1'), ('1'), ('1'), ('1'), ('1'), ('1')), margin = 0)
-        VGroup(Y, EQ, M, Z).arrange(RIGHT, aligned_edge=DOWN)
-        EQ.move_to(EQ.get_center() + 2.8 * UP)
-        Z.move_to(Z.get_center() + 0.4 * UP)
-
-        with self.say("Now recall that this first z equation is just the sum of the six below it."):
-            self.box_on(EQU[2])
-            self.wait(2)
-            self.box_on(*[EQU[i] for i in range(3, 9)])
-            self.wait(2)
-            self.box_off()
-
-        with self.say("All seven of these equations are identities, true for every choice of x and corresponding z."):
-            self.play(FadeOut(*EQU[0], *EQU[1], brace))
-            self.play(TransformMatchingShapes(VGroup(*[EQU[i][0] for i in range(2, 9)]), Y), Create(EQ))
-            self.play(TransformMatchingShapes(VGroup(*[EQU[i][1] for i in range(2, 9)]), M), Create(Z))
 
         Z2 = [] # Will hold the powers of z which fly into column vector Z1
         M2 = [] # Will hold the replacement terms for the main matrix
@@ -271,13 +274,13 @@ class Poly_51_Quintic_Reduced(BaseScene):
 
         def rewrite(src: MathTex, tgt: MathTex) -> Transform:
             M2.append(tgt)
-            s = src.tex_string.replace('^', '')
-            i = s.find('z')
+            lhs = src.tex_string.replace('^', '')
+            i = lhs.find('z')
             maps = [([1], [1])]
             if i == 1:
                 maps = [([1,2], ShrinkToCenter), (GrowFromCenter, [1])]
             elif i > 1:
-                maps = [([i] if len(s) <= i + 1 else [i, i + 1], ShrinkToCenter)]
+                maps = [([i] if len(lhs) <= i + 1 else [i, i + 1], ShrinkToCenter)]
             return TransformByGlyphMap(src, tgt.move_to(src.get_center()), *maps)
         
         m2 = (

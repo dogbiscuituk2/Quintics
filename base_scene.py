@@ -17,6 +17,7 @@ VoiceoverScene class.
 from collections.abc import Sequence
 import contextlib
 from inspect import currentframe
+from labels import *
 from manim import *
 from manim_voiceover import VoiceoverScene
 from manim_voiceover.services.gtts import GTTSService
@@ -52,6 +53,11 @@ class BaseScene(VoiceoverScene):
     @options.setter
     def options(self, value: Opt) -> None:
         self._painter.options = value
+
+    def add_labels(self, *objs: VMobject) -> VGroup:
+        labels = get_labels(*objs)
+        self.add(labels)
+        return labels
 
     def box(self, *args: Mobject) -> Polygon:
         b = self.box_make(*args)
