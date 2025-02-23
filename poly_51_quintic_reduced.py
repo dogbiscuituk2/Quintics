@@ -66,13 +66,13 @@ class Poly_51_Quintic_Reduced(BaseScene):
                 [-5.825, 4.395, 0.02])
             x_plot.color = self.get_token_ink('a')
             x_trace = VGroup(x_plot, x_dots)
-            #x_trace.color = self.get_token_ink('x')
+
             z_dots = x_dots.copy()
             z_dots.color = self.get_token_ink('z')
             z_plot = x_plot.copy()
             z_plot.color = self.get_token_ink('p')
             z_trace = VGroup(z_plot, z_dots)
-            #z_trace.color = self.get_token_ink('z')
+            
             graph = VGroup(axes, x_trace, z_trace, border)
             graph.shift(DOWN)
             self.play(FadeIn(border, axes))
