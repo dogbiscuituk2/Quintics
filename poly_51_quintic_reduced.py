@@ -57,20 +57,26 @@ class Poly_51_Quintic_Reduced(BaseScene):
             roots = -5, -3, -2, +1, +4
             axes = self.make_axes(6, 4.25, [-7, 7, 1], [-600, 600, 100])
             border = SurroundingRectangle(axes, buff=0, corner_radius=0.1, color=self.ink_fg)
-            dots = VGroup(*[
+            x_dots = VGroup(*[
                 Dot(axes.c2p(x, 0), radius=0.07)
                 for x in roots])
-            plot = axes.plot(
+            x_dots.color = self.get_token_ink('x')
+            x_plot = axes.plot(
                 lambda x: math.prod([(x - root) for root in roots]),
                 [-5.825, 4.395, 0.02])
-            x_trace = VGroup(plot, dots)
-            x_trace.color = self.get_token_ink('x')
-            z_trace = x_trace.copy()
-            z_trace.color = self.get_token_ink('z')
+            x_plot.color = self.get_token_ink('a')
+            x_trace = VGroup(x_plot, x_dots)
+            #x_trace.color = self.get_token_ink('x')
+            z_dots = x_dots.copy()
+            z_dots.color = self.get_token_ink('z')
+            z_plot = x_plot.copy()
+            z_plot.color = self.get_token_ink('p')
+            z_trace = VGroup(z_plot, z_dots)
+            #z_trace.color = self.get_token_ink('z')
             graph = VGroup(axes, x_trace, z_trace, border)
             graph.shift(DOWN)
             self.play(FadeIn(border, axes))
-            self.play(Create(x_trace[0]), Create(dots), run_time=2)
+            self.play(Create(x_trace[0]), Create(x_dots), run_time=2)
 
         with self.say("We could solve it easily if we didn't have all these intermediate powers of x."):
             self.box_on(*Equ[1][0][8:22])
@@ -206,7 +212,7 @@ class Poly_51_Quintic_Reduced(BaseScene):
 
         Y = self.make_matrix((['yo'], ['x^5'], ['ax^4'], ['bx^3'], ['cx^2'], ['dx'], ['e']), margin = 0)
         EQ = self.make_tex('=')
-        M = self.make_matrix((
+        M1 = self.make_matrix((
             ('z^5', '0z^4', 'pz^3', 'qz^2', 'rz', 's'),
             ('z^5', '5hz^4', '10h^2z^3', '10h^3z^2', '5h^4z', 'h^5'),
             ('', 'az^4', '4ahz^3', '6ah^2z^2', '4ah^3z', 'ah^4'),
@@ -215,12 +221,15 @@ class Poly_51_Quintic_Reduced(BaseScene):
             ('', '', '', '', 'dz', 'dh'),
             ('', '', '', '', '', 'e')),
             padding = 1.75)
-        Z = self.make_matrix((('1'), ('1'), ('1'), ('1'), ('1'), ('1')), margin = 0)
-        EQ.move_to(M, LEFT)
+        Z = self.make_matrix((('1'), ('1'), ('1'), ('1'), ('1'), ('1')), margin = 0.25)
+        EQ.move_to(M1, LEFT)
         Y.move_to(EQ, LEFT)
-        G3 = VGroup(Y, EQ, M, Z).arrange(RIGHT)
+        VGroup(Y, EQ, M1, Z).arrange(RIGHT)
+            
+        def get_element(row: int, col: int):
+            return M1[0][row * 6 + col][0]
 
-        opera = [
+        opera = [ # index of '+' operand
             [3, 7, 11, 15, 19, 22],
             [3, 7, 12, 19, 26, 31],
             [3, 7, 13, 20, 26],
@@ -238,8 +247,14 @@ class Poly_51_Quintic_Reduced(BaseScene):
                 lop = opus[col]
                 if col > 0:
                     stage[2].append(FadeOut(equ[lop:lop+1]))
-                src = equ[lop+1:opus[col+1]] if col < len(opus)-1 else equ[lop+1:]
-                tgt = M[0][row * 6 + col + (0 if row < 2 else row-1)]
+                start = lop + 1
+                if col < len(opus)-1:
+                    if row < 2 and col == 0:
+                        lop += 1
+                    src = equ[start:opus[col+1]]
+                else:
+                    src = equ[lop+1:]
+                tgt = get_element(row, col + (0 if row < 2 else row-1))
                 stage[3].append(TransformMatchingShapes(src, tgt))
 
         with self.say("All seven of these equations are identities, true for every choice of x and corresponding z."):
@@ -248,7 +263,13 @@ class Poly_51_Quintic_Reduced(BaseScene):
             self.play(*stage[1])
             self.play(*stage[2])
             self.play(*stage[3], run_time=2)
-            self.play(FadeIn(M[1:3], Z))
+            self.play(FadeIn(M1[1:3], Z))
+
+        for col in range(5):
+            for row in range(col + 2):
+                src = get_element(row, col)
+                idx = -2 if col < 4 else -1
+                self.play(Transform(src[idx:].copy(), Z[0][col]))
 
         self.wait(10)
         return
@@ -258,7 +279,7 @@ class Poly_51_Quintic_Reduced(BaseScene):
         M2 = [] # Will hold the replacement terms for the main matrix
 
         def get_element(row: int, col: int):
-            return M[0][row * 6 + col]
+            return M1[0][row * 6 + col]
         
         def indicate(items: List[VMobject], size: float = 1.2) -> None:
             self.play(Indicate(VGroup(*items), color = self.get_colour(Pen.WHITE), scale_factor = size))
@@ -323,7 +344,7 @@ class Poly_51_Quintic_Reduced(BaseScene):
         F9 = setup('h=-a/5', 'p=b-2a^2/5'     , 'q=c-3ab/5+4a^3/25'  , 'r=d-2ac/5+3a^2b/25-3a^4/125', 's=e-ad/5+a^2c/25-a^3b/125-4a^5/3125')
         
         with self.say("Now we can read the matrix column by column, to get expressions for the new coefficients in terms of the old."):
-            self.play(FadeOut(Y, EQ, M, M2[0], M2[1], Z[0][5], Z[1], Z[2], *Z2))
+            self.play(FadeOut(Y, EQ, M1, M2[0], M2[1], Z[0][5], Z[1], Z[2], *Z2))
             for f_2 in (F5, F6, F7, F8):
                 VGroup(F1, F2, F3, f_2).arrange(DOWN, aligned_edge = LEFT)
             VGroup(F1, F2, F4, F8).arrange(DOWN, aligned_edge = LEFT)
