@@ -112,11 +112,20 @@ class Poly_51_Quintic_Reduced(BaseScene):
         with self.say("the simplest example of which is a linear substitution, such as x = z + some constant h."):
             self.play(Create(Equ[0]))
             self.box_on(Equ[0])
-            scale = axes.c2p(1, 0)[0] - axes.c2p(0, 0)[0]
-            for dx in (2.5, -3.5, 2.0):
-                self.play(z_trace.animate.shift(scale*dx*RIGHT), run_time=1)
+            self.add(z_trace)
 
-                # https://docs.manim.community/en/stable/reference/manim.mobject.text.numbers.Variable.html
+            scale = (axes.c2p(1, 0)[0] - axes.c2p(0, 0)[0]) * LEFT
+            h = 0.0
+            H = Variable(h, self.make_ssmt("h"), num_decimal_places=2)
+            H.move_to(axes, UL).shift((RIGHT+DOWN)*0.5)
+            H.label.set_color(self.get_token_ink('h'))
+            H.value.set_color(self.ink_fg)
+            self.play(Write(H))
+            z_trace.add_updater(lambda trace:
+                trace.move_to(x_trace).shift(scale * H.tracker.get_value()))
+            for h in [-2.5, +1, -1]:
+                self.play(H.tracker.animate.set_value(h), run_time=2)
+                self.wait()
 
         with self.say("Let's use this to express all these x powers in terms of z."):
             E = Equ[1][0]
@@ -128,7 +137,7 @@ class Poly_51_Quintic_Reduced(BaseScene):
                     path_arc=-PI/2)
                 for i in range(6)],
                 run_time=2)
-            self.play(FadeOut(graph))
+            self.play(FadeOut(graph, H))
             for i in range(5):
                 self.play(
                     TransformMatchingShapes(
