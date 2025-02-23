@@ -49,34 +49,40 @@ class Poly_51_Quintic_Reduced(BaseScene):
             f'{b}{p}^3',
             f'{c}{p}^2',
             f'{d}{p}',
-            e) # .shift(UP*0.5)
+            e)
+
+        def make_trace(
+            plot: ParametricFunction,
+            plot_token: str,
+            dots: VGroup,
+            dots_token: str) -> VGroup:
+            plot.color = self.get_token_ink(plot_token)
+            dots.color = self.get_token_ink(dots_token)
+            return VGroup(plot, dots)
 
         with self.say("The degree five polynomial, the quintic, has five roots."):
             self.play(Create(Equ[1]))
 
             roots = -5, -3, -2, +1, +4
             axes = self.make_axes(6, 4.25, [-7, 7, 1], [-600, 600, 100])
-            border = SurroundingRectangle(axes, buff=0, corner_radius=0.1, color=self.ink_fg)
-            x_dots = VGroup(*[
+            border = SurroundingRectangle(
+                axes,
+                buff=0,
+                corner_radius=0.1,
+                color=self.ink_fg)
+            dots = VGroup(*[
                 Dot(axes.c2p(x, 0), radius=0.07)
                 for x in roots])
-            x_dots.color = self.get_token_ink('x')
-            x_plot = axes.plot(
+            plot = axes.plot(
                 lambda x: math.prod([(x - root) for root in roots]),
                 [-5.825, 4.395, 0.02])
-            x_plot.color = self.get_token_ink('a')
-            x_trace = VGroup(x_plot, x_dots)
-
-            z_dots = x_dots.copy()
-            z_dots.color = self.get_token_ink('z')
-            z_plot = x_plot.copy()
-            z_plot.color = self.get_token_ink('p')
-            z_trace = VGroup(z_plot, z_dots)
-            
+            x_trace = make_trace(plot, 'a', dots, 'x')
+            z_trace = make_trace(plot.copy(), 'p', dots.copy(), 'z')
             graph = VGroup(axes, x_trace, z_trace, border)
             graph.shift(DOWN)
+
             self.play(FadeIn(border, axes))
-            self.play(Create(x_trace[0]), Create(x_dots), run_time=2)
+            self.play(Create(plot), Create(dots), run_time=2)
 
         with self.say("We could solve it easily if we didn't have all these intermediate powers of x."):
             self.box_on(*Equ[1][0][8:22])
