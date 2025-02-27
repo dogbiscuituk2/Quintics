@@ -212,8 +212,10 @@ class Poly_51_Quintic_Reduced(BaseScene):
                 S = Equ[j+4]
                 T = self.make_tex(formulae[j])
                 T.move_to(S, aligned_edge=LEFT)
-                self.play(TransformMatchingShapes(S, T))
+                self.box_on(S)
+                self.play(TransformMatchingShapes(S, T), self.box_move(T))
                 Equ[j+4] = T
+            self.box_off()
             self.play(FadeOut(Equ[0], brace, Equ[1]))
             Equations2 = VGroup(*Equ[2:])
             self.play(Equations2.animate.move_to(ORIGIN))
@@ -224,25 +226,28 @@ class Poly_51_Quintic_Reduced(BaseScene):
             self.box_on(*[Equ[i] for i in range(3, 9)])
             self.wait(2)
             self.box_off()
+            
+        def get_element(row: int, col: int):
+            return M1[0][row * 6 + col][0]
+
+        def set_element(row: int, col: int, value: VMobject):
+            M1[0][row * 6 + col] = value
 
         Y = self.make_matrix((['yo'], ['x^5'], ['ax^4'], ['bx^3'], ['cx^2'], ['dx'], ['e']), margin = 0)
         EQ = self.make_tex('=')
         M1 = self.make_matrix((
             ('z^5', '0z^4', 'pz^3', 'qz^2', 'rz', 's'),
             ('z^5', '5hz^4', '10h^2z^3', '10h^3z^2', '5h^4z', 'h^5'),
-            ('', 'az^4', '4ahz^3', '6ah^2z^2', '4ah^3z', 'ah^4'),
-            ('', '', 'bz^3', '3bhz^2', '3bh^2z', 'bh^3'),
-            ('', '', '', 'cz^2', '2chz', 'ch^2'),
-            ('', '', '', '', 'dz', 'dh'),
-            ('', '', '', '', '', 'e')),
+            ('0', 'az^4', '4ahz^3', '6ah^2z^2', '4ah^3z', 'ah^4'),
+            ('0', '0', 'bz^3', '3bhz^2', '3bh^2z', 'bh^3'),
+            ('0', '0', '0', 'cz^2', '2chz', 'ch^2'),
+            ('0', '0', '0', '0', 'dz', 'dh'),
+            ('0', '0', '0', '0', '0', 'e')),
             padding = 1.75)
         Z = self.make_matrix((('1'), ('1'), ('1'), ('1'), ('1'), ('1')), margin = 0.25)
         EQ.move_to(M1, LEFT)
         Y.move_to(EQ, LEFT)
         VGroup(Y, EQ, M1, Z).arrange(RIGHT)
-            
-        def get_element(row: int, col: int):
-            return M1[0][row * 6 + col][0]
 
         opera = [ # index of '+' operand
             [3, 7, 11, 15, 19, 22],
@@ -253,9 +258,12 @@ class Poly_51_Quintic_Reduced(BaseScene):
             [3, 6],
             [3]]
         stage = [[], [], [], []]
+        Y0 = Y[0]
         for row in range(7):
             equ = Equations2[row][0]
-            stage[0].append(TransformMatchingShapes(equ[0:3], Y[0][row]))
+            stage[0].append(TransformMatchingShapes(equ[0:3], Y0[row]))
+            if row != 3:
+                stage[1].append(FadeOut(equ[3:4]))
             stage[1].append(TransformMatchingShapes(equ[3:4], EQ) if row == 3 else FadeOut(equ[3:4]))
             opus = opera[row]
             for col in range(len(opus)):
@@ -266,11 +274,11 @@ class Poly_51_Quintic_Reduced(BaseScene):
                 if col < len(opus)-1:
                     if row < 2 and col == 0:
                         lop += 1
-                    src = equ[start:opus[col+1]]
+                    S = equ[start:opus[col+1]]
                 else:
-                    src = equ[lop+1:]
-                tgt = get_element(row, col + (0 if row < 2 else row-1))
-                stage[3].append(TransformMatchingShapes(src, tgt))
+                    S = equ[lop+1:]
+                T = get_element(row, col + (0 if row < 2 else row-1))
+                stage[3].append(TransformMatchingShapes(S, T))
 
         with self.say("All seven of these equations are identities, true for every choice of x and corresponding z."):
             self.play(*stage[0])
@@ -280,11 +288,42 @@ class Poly_51_Quintic_Reduced(BaseScene):
             self.play(*stage[3], run_time=2)
             self.play(FadeIn(M1[1:3], Z))
 
+        Z0 = Z[0]
         for col in range(5):
+            idx = -2 if col < 4 else -1
+            T = Z0[col]
+            transforms = []
             for row in range(col + 2):
-                src = get_element(row, col)
-                idx = -2 if col < 4 else -1
-                self.play(Transform(src[idx:].copy(), Z[0][col]))
+                R = get_element(row, col)
+                S = R[idx:]
+                if row == 0:
+                    U = S.copy()
+                    U.move_to(T)
+                    transforms.append(Transform(T, U))
+                transforms.append(Transform(S.copy(), U))
+                transforms.append(FadeOut(S, run_time=0.01)) ###############
+            self.play(transforms)
+            if col == 0:
+                transforms = []
+                for row in range(2):
+                    V = Z0[5].copy()
+                    V.move_to(get_element(row, 0))
+                    set_element(row, 0, V)
+                    transforms.append(FadeIn(V))
+                self.play(transforms)
+
+        def make_line(m: Matrix) -> Line:
+            y = (
+                m[0][0].get_corner(DOWN)[1] + 
+                m.get_rows()[1][0].get_corner(UP)[1]) / 2
+            return Line(
+                (m[1].get_center()[0], y, 0),
+                (m[2].get_center()[0], y, 0),
+                color = self.ink_fg)
+
+        Line1 = make_line(Y)
+        Line2 = make_line(M1)
+        self.play(Create(Line1), Create(Line2))
 
         self.wait(10)
         return
@@ -308,16 +347,16 @@ class Poly_51_Quintic_Reduced(BaseScene):
             mathTex.target.move_to(Z[0][col], DOWN)
             return mathTex
 
-        def rewrite(src: MathTex, tgt: MathTex) -> Transform:
-            M2.append(tgt)
-            lhs = src.tex_string.replace('^', '')
+        def rewrite(S: MathTex, T: MathTex) -> Transform:
+            M2.append(T)
+            lhs = S.tex_string.replace('^', '')
             i = lhs.find('z')
             maps = [([1], [1])]
             if i == 1:
                 maps = [([1,2], ShrinkToCenter), (GrowFromCenter, [1])]
             elif i > 1:
                 maps = [([i] if len(lhs) <= i + 1 else [i, i + 1], ShrinkToCenter)]
-            return TransformByGlyphMap(src, tgt.move_to(src.get_center()), *maps)
+            return TransformByGlyphMap(S, T.move_to(S.get_center()), *maps)
         
         m2 = (
             ('1', '0', 'p', 'q', 'r', 's'),
