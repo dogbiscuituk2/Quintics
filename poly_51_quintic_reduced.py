@@ -124,8 +124,8 @@ class Poly_51_Quintic_Reduced(BaseScene):
             z_trace.add_updater(lambda trace:
                 trace.move_to(x_trace).shift(scale * H.tracker.get_value()))
             for h in [-2.5, +1, -1]:
-                self.play(H.tracker.animate.set_value(h), run_time=2)
-                self.wait()
+                self.play(H.tracker.animate.set_value(h), run_time=1.25)
+                self.wait(0.25)
 
         with self.say("Let's use this to express all these x powers in terms of z."):
             E = Equ[1][0]
@@ -284,11 +284,11 @@ class Poly_51_Quintic_Reduced(BaseScene):
 
         with self.say("All seven of these equations are identities, true for every choice of x and corresponding z."):
             self.play(*stage[0])
-            self.play(FadeIn(Y[1:3]))
+            self.play(FadeIn(Y.get_brackets()))
             self.play(*stage[1])
             self.play(*stage[2])
             self.play(*stage[3], run_time=2)
-            self.play(FadeIn(M1[1:3], Z))
+            self.play(FadeIn(M1.get_brackets(), Z))
 
         Z0 = Z[0]
         for col in range(5):
@@ -327,66 +327,15 @@ class Poly_51_Quintic_Reduced(BaseScene):
 
             return VGroup(make_line(Y), make_line(M1))
 
-        Lines = make_lines()
-        self.play(Create(Lines))
+        with self.say("So every value above the line is equal to the sum of the values below it, "
+                      "and we can now read the matrix column by column, to get expressions for "
+                      "the new coefficients in terms of the old."):
+            Lines = make_lines()
+            self.play(Create(Lines))
 
         self.wait(10)
         return
 
-
-        Z2 = [] # Will hold the powers of z which fly into column vector Z1
-        M2 = [] # Will hold the replacement terms for the main matrix
-
-        def get_element(row: int, col: int):
-            return M1[0][row * 6 + col]
-        
-        def indicate(items: List[VMobject], size: float = 1.2) -> None:
-            self.play(Indicate(VGroup(*items), color = self.get_colour(Pen.WHITE), scale_factor = size))
-
-        def new_target(row: int, col: int):
-            p = ('z^5', 'z^4', 'z^3', 'z^2', 'z', '1')
-            mathTex: MathTex = self.make_tex(p[col])
-            mathTex.move_to(get_element(row, col), RIGHT)
-            Z2.append(mathTex)
-            mathTex.generate_target()
-            mathTex.target.move_to(Z[0][col], DOWN)
-            return mathTex
-
-        def rewrite(S: MathTex, T: MathTex) -> Transform:
-            M2.append(T)
-            lhs = S.tex_string.replace('^', '')
-            i = lhs.find('z')
-            maps = [([1], [1])]
-            if i == 1:
-                maps = [([1,2], ShrinkToCenter), (GrowFromCenter, [1])]
-            elif i > 1:
-                maps = [([i] if len(lhs) <= i + 1 else [i, i + 1], ShrinkToCenter)]
-            return TransformByGlyphMap(S, T.move_to(S.get_center()), *maps)
-        
-        m2 = (
-            ('1', '0', 'p', 'q', 'r', 's'),
-            ('1', '5h', '10h^2', '10h^3', '5h^4', 'h^5'),
-            ('', 'a', '4ah', '6ah^2', '4ah^3', 'ah^4'),
-            ('', '', 'b', '3bh', '3bh^2', 'bh^3'),
-            ('', '', '', 'c', '2ch', 'ch^2'),
-            ('', '', '', '', 'd', 'dh'),
-            ('', '', '', '', '', 'e'))
-
-        with self.say("If we now consider the case z equals one, then all of these z powers vanish from the matrix."):
-            for col in range(6):
-                transforms: List[Transform] = []
-                rows = range(col + 2)
-                transforms = [MoveToTarget(new_target(row, col)) for row in rows]
-                transforms.append(FadeOut(Z[0][col]))
-                for row in rows:
-                    transforms.append(rewrite(get_element(row, col), self.make_tex(m2[row][col])))
-                if col < 5:
-                    indicate([get_element(row, col) for row in rows])
-                self.play(*transforms)
-            #for row in range(7):
-            #    M2.append(self.make_tex(m2[row][5]))
-
-        self.wait(10)
 
         F1 = self.make_tex('y=x^5+ax^4+bx^3+cx^2+dx+e')
         F2 = self.make_tex('y=z^5+0z^4+pz^3+qz^2+rz+s')
