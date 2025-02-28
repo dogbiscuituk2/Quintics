@@ -36,9 +36,9 @@ class Poly_51_Quintic_Reduced(BaseScene):
         e = 'e&=e'
 
         p = '(z+h)'
-        trans = 'x&=z+h'
-        monic = 'y&=x^5+ax^4+bx^3+cx^2+dx+e=0'
-        reduced = 'y&=z^5+0z^4+pz^3+qz^2+rz+s'
+        trans = r'x\phantom{o}&=\phantom{o}z+h'
+        monic = r'y\phantom{o}&=\phantom{o}x^5+ax^4+bx^3+cx^2+dx+e=0'
+        reduced = r'y\phantom{o}&=\phantom{o}z^5+0z^4+pz^3+qz^2+rz+s'
 
         Equ = self.make_texes(
             trans,
