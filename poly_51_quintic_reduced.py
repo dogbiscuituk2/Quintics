@@ -20,7 +20,7 @@ class Poly_51_Quintic_Reduced(BaseScene):
         #self.options |= Opt.DEBUG_SILENT
         
         self.set_pens((
-            ('o', Pen.BACKGROUND),
+            #('o', Pen.BACKGROUND),
             ('[a-e]', Pen.GREEN),
             ('h', Pen.ORANGE),
             ('[p-s]', Pen.YELLOW),
@@ -28,17 +28,17 @@ class Poly_51_Quintic_Reduced(BaseScene):
             ('y', Pen.MAGENTA),
             ('z', Pen.CYAN)))
 
-        o = 'ox^5&=o'
+        o = r'x^5&=\phantom{o}'
         a = 'ax^4&=a'
         b = 'bx^3&=b'
         c = 'cx^2&=c'
-        d = 'odx&=d'
-        e = 'ooe&=e'
+        d = 'dx&=d'
+        e = 'e&=e'
 
         p = '(z+h)'
-        trans = 'xo&=oz+h'
-        monic = 'oyo&=ox^5+ax^4+bx^3+cx^2+dx+e=0'
-        reduced = 'oyo&=oz^5+0z^4+pz^3+qz^2+rz+s'
+        trans = 'x&=z+h'
+        monic = 'y&=x^5+ax^4+bx^3+cx^2+dx+e=0'
+        reduced = 'y&=z^5+0z^4+pz^3+qz^2+rz+s'
 
         Equ = self.make_texes(
             trans,
@@ -85,18 +85,18 @@ class Poly_51_Quintic_Reduced(BaseScene):
             self.play(Create(plot), Create(dots), run_time=2)
 
         with self.say("We could solve it easily if we didn't have all these intermediate powers of x."):
-            self.box_on(*Equ[1][0][8:22])
+            self.box_on(*Equ[1][0][5:19])
 
         with self.say("To make a start, we might first try to get rid of the quartic, x to the fourth, term."):
-            self.box_on(*Equ[1][0][8:11])
+            self.box_on(*Equ[1][0][5:8])
 
         with self.say("In other words, transform it into so-called reduced form,"):
             brace = Brace(Group(Equ[1], Equ[2]), LEFT, color=self.ink_fg)
             self.play(FadeIn(brace), Create(Equ[2]))
-            self.box_on(*Equ[2][0][8:11])
+            self.box_on(*Equ[2][0][5:8])
 
         with self.say("with this coefficient equal to zero."):
-            self.play(Indicate(Equ[2][0][8], color=self.get_ink(Pen.WHITE), scale_factor=2, run_time=2))
+            self.play(Indicate(Equ[2][0][5], color=self.get_ink(Pen.WHITE), scale_factor=2, run_time=2))
 
         with self.say("This operation is technically known as a Tschirnhaus Transformation,"):
             image = ImageMobject("resources/Tschirnhaus_colour.jpg") # www.palette.fm - Polar Luster
@@ -129,11 +129,11 @@ class Poly_51_Quintic_Reduced(BaseScene):
 
         with self.say("Let's use this to express all these x powers in terms of z."):
             E = Equ[1][0]
-            S = E[5:7], E[8:11], E[12:15], E[16:19], E[20:22], E[23:24]
+            S = E[2:4], E[5:8], E[9:12], E[13:16], E[17:19], E[20:21]
             self.play([
                 TransformMatchingShapes(
                     S[i].copy(),
-                    Equ[i+3][0][0:3],
+                    Equ[i+3][0][0:len(S[i])],
                     path_arc=-PI/2)
                 for i in range(6)],
                 run_time=2)
@@ -141,9 +141,9 @@ class Poly_51_Quintic_Reduced(BaseScene):
             for i in range(5):
                 self.play(
                     TransformMatchingShapes(
-                        Equ[0][0][3:].copy(),
-                        Equ[i+3][0][3:]))
-            self.play(FadeIn(Equ[8][0][3:]))
+                        Equ[0][0][2:].copy(),
+                        Equ[i+3][0][2:]))
+            self.play(FadeIn(Equ[8][0][1:]))
             self.box_off()
 
         p2 = f'{p}{p}'
@@ -153,15 +153,15 @@ class Poly_51_Quintic_Reduced(BaseScene):
 
         def do_animations(phase: int, formulae: List[List[str]]) -> None:
 
-            def box(i: int, bump: int) -> Tuple[Group]:
+            def box(i: int, bump: int) -> List[Group]:
                 Hi = Equ[3][0]
                 Lo = Equ[6-i][0]
                 match phase:
                     case 1:
-                        return Hi[4:], Lo[4:]
+                        return [Equ[3][0][3:], Equ[4][0][4:], Equ[5][0][4:], Equ[6][0][4:]][0:4-i]
                     case 2:
-                        k = 6*i+15+bump
-                        return Hi[4:k], Lo[4:k]
+                        k = 6*i+13+bump
+                        return [Equ[3][0][3:k], Equ[4][0][4:k], Equ[5][0][4:k], Equ[6][0][4:k]][0:4-i]
 
             for i in range(4):
                 self.box_on(*box(i, 0))
@@ -233,7 +233,7 @@ class Poly_51_Quintic_Reduced(BaseScene):
         def set_element(row: int, col: int, value: VMobject):
             M1[0][row * 6 + col] = value
 
-        Y = self.make_matrix((['yo'], ['x^5'], ['ax^4'], ['bx^3'], ['cx^2'], ['dx'], ['e']), margin = 0)
+        Y = self.make_matrix((['y'], ['x^5'], ['ax^4'], ['bx^3'], ['cx^2'], ['dx'], ['e']), margin = 0)
         EQ = self.make_tex('=')
         M1 = self.make_matrix((
             ('z^5', '0z^4', 'pz^3', 'qz^2', 'rz', 's'),
@@ -249,23 +249,25 @@ class Poly_51_Quintic_Reduced(BaseScene):
         Y.move_to(EQ, LEFT)
         VGroup(Y, EQ, M1, Z).arrange(RIGHT)
 
-        opera = [ # index of '+' operand
-            [3, 7, 11, 15, 19, 22],
-            [3, 7, 12, 19, 26, 31],
+        opera = [ # index of '=', '+' operators
+            [1, 4, 8, 12, 16, 19],
+            [2, 5, 10, 17, 24, 29],
             [3, 7, 13, 20, 26],
             [3, 7, 13, 19],
             [3, 7, 12],
-            [3, 6],
-            [3]]
+            [2, 5],
+            [1]]
         stage = [[], [], [], []]
         Y0 = Y[0]
         for row in range(7):
             equ = Equations2[row][0]
-            stage[0].append(TransformMatchingShapes(equ[0:3], Y0[row]))
-            if row != 3:
-                stage[1].append(FadeOut(equ[3:4]))
-            stage[1].append(TransformMatchingShapes(equ[3:4], EQ) if row == 3 else FadeOut(equ[3:4]))
             opus = opera[row]
+            p = opus[0]
+            q = p + 1
+            stage[0].append(TransformMatchingShapes(equ[0:p], Y0[row]))
+            if row != 3:
+                stage[1].append(FadeOut(equ[p:q]))
+            stage[1].append(TransformMatchingShapes(equ[p:q], EQ) if row == 3 else FadeOut(equ[p:q]))
             for col in range(len(opus)):
                 lop = opus[col]
                 if col > 0:

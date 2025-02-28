@@ -217,6 +217,13 @@ class Painter():
                         dump_symbols('>', g1, g2)
                         return g1 + g2
 
+                    def parse_phantom() -> List[Symbol]:
+                        pop()
+                        glyph_index = self.glyph_index
+                        parse_unit()
+                        self.glyph_index = glyph_index
+                        return []
+
                     def parse_script():
                         self.sticky = Opt.SUBSUPER in self.options
                         symbols = parse_shift(token)
@@ -338,6 +345,8 @@ class Painter():
                     match token:
                         case r'\frac':
                             return parse_frac()
+                        case r'\phantom':
+                            return parse_phantom()
                         case r'\sqrt':
                             return parse_sqrt()
                         case '{':
