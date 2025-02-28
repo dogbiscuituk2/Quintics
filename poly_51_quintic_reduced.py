@@ -238,11 +238,11 @@ class Poly_51_Quintic_Reduced(BaseScene):
         M1 = self.make_matrix((
             ('z^5', '0z^4', 'pz^3', 'qz^2', 'rz', 's'),
             ('z^5', '5hz^4', '10h^2z^3', '10h^3z^2', '5h^4z', 'h^5'),
-            ('0', 'az^4', '4ahz^3', '6ah^2z^2', '4ah^3z', 'ah^4'),
-            ('0', '0', 'bz^3', '3bhz^2', '3bh^2z', 'bh^3'),
-            ('0', '0', '0', 'cz^2', '2chz', 'ch^2'),
-            ('0', '0', '0', '0', 'dz', 'dh'),
-            ('0', '0', '0', '0', '0', 'e')),
+            ('', 'az^4', '4ahz^3', '6ah^2z^2', '4ah^3z', 'ah^4'),
+            ('', '', 'bz^3', '3bhz^2', '3bh^2z', 'bh^3'),
+            ('', '', '', 'cz^2', '2chz', 'ch^2'),
+            ('', '', '', '', 'dz', 'dh'),
+            ('', '', '', '', '', 'e')),
             padding = 1.75)
         Z = self.make_matrix((('1'), ('1'), ('1'), ('1'), ('1'), ('1')), margin = 0.25)
         EQ.move_to(M1, LEFT)
@@ -312,18 +312,21 @@ class Poly_51_Quintic_Reduced(BaseScene):
                     transforms.append(FadeIn(V))
                 self.play(transforms)
 
-        def make_line(m: Matrix) -> Line:
-            y = (
-                m[0][0].get_corner(DOWN)[1] + 
-                m.get_rows()[1][0].get_corner(UP)[1]) / 2
-            return Line(
-                (m[1].get_center()[0], y, 0),
-                (m[2].get_center()[0], y, 0),
-                color = self.ink_fg)
+        def make_lines() -> VGroup:
 
-        Line1 = make_line(Y)
-        Line2 = make_line(M1)
-        self.play(Create(Line1), Create(Line2))
+            def make_line(m: Matrix) -> Line:
+                y = (
+                    m[0][0].get_corner(DOWN)[1] + 
+                    m.get_rows()[1][0].get_corner(UP)[1]) / 2
+                return Line(
+                    (m[1].get_center()[0], y, 0),
+                    (m[2].get_center()[0], y, 0),
+                    color = self.ink_fg)
+
+            return VGroup(make_line(Y), make_line(M1))
+
+        Lines = make_lines()
+        self.play(Create(Lines))
 
         self.wait(10)
         return
