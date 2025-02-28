@@ -28,23 +28,24 @@ class Poly_51_Quintic_Reduced(BaseScene):
             ('y', Pen.MAGENTA),
             ('z', Pen.CYAN)))
 
-        o = r'x^5&=\phantom{o}'
+        o = r'\phantom{o}'
+        u = f'x^5&={o}'
         a = 'ax^4&=a'
         b = 'bx^3&=b'
         c = 'cx^2&=c'
-        d = 'dx&=d'
-        e = 'e&=e'
+        d = f'dx{o}&=d'
+        e = f'e{o}{o}&=e'
 
         p = '(z+h)'
-        trans = r'x\phantom{o}&=\phantom{o}z+h'
-        monic = r'y\phantom{o}&=\phantom{o}x^5+ax^4+bx^3+cx^2+dx+e=0'
-        reduced = r'y\phantom{o}&=\phantom{o}z^5+0z^4+pz^3+qz^2+rz+s'
+        trans = f'x{o}&={o}z+h'
+        monic = f'y{o}&={o}x^5+ax^4+bx^3+cx^2+dx+e=0'
+        reduced = f'y{o}&={o}z^5+0z^4+pz^3+qz^2+rz+s'
 
         Equ = self.make_texes(
             trans,
             monic,
             reduced,
-            f'{o}{p}^5',
+            f'{u}{p}^5',
             f'{a}{p}^4',
             f'{b}{p}^3',
             f'{c}{p}^2',
@@ -154,8 +155,6 @@ class Poly_51_Quintic_Reduced(BaseScene):
         def do_animations(phase: int, formulae: List[List[str]]) -> None:
 
             def box(i: int, bump: int) -> List[Group]:
-                Hi = Equ[3][0]
-                Lo = Equ[6-i][0]
                 match phase:
                     case 1:
                         return [Equ[3][0][3:], Equ[4][0][4:], Equ[5][0][4:], Equ[6][0][4:]][0:4-i]
@@ -181,7 +180,7 @@ class Poly_51_Quintic_Reduced(BaseScene):
             do_animations(
                 1,
                 [
-                    [f'{o}{p2}^4', f'{o}{p3}^3', f'{o}{p4}^2', f'{o}{p5}'],
+                    [f'{u}{p2}^4', f'{u}{p3}^3', f'{u}{p4}^2', f'{u}{p5}'],
                     [f'{a}{p2}^3', f'{a}{p3}^2', f'{a}{p4}'],
                     [f'{b}{p2}^2', f'{b}{p3}'],
                     [f'{c}{p2}']
@@ -196,7 +195,7 @@ class Poly_51_Quintic_Reduced(BaseScene):
             do_animations(
                 2,
                 [
-                    [f'{o}{q2}{p3}', f'{o}{q3}{p2}', f'{o}{q4}{p}', f'{o}{q5}'],
+                    [f'{u}{q2}{p3}', f'{u}{q3}{p2}', f'{u}{q4}{p}', f'{u}{q5}'],
                     [f'{a}{q2}{p2}', f'{a}{q3}{p}', f'{a}{q4}'],
                     [f'{b}{q2}{p}', f'{b}{q3}'],
                     [f'{c}{q2}']
