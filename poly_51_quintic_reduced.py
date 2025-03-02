@@ -28,23 +28,19 @@ class Poly_51_Quintic_Reduced(BaseScene):
             ('y', Pen.MAGENTA),
             ('z', Pen.CYAN)))
 
-        o = r'\phantom{o}'
+        o = r'\phantom{o}' # hard space
         u = f'x^5&={o}'
         a = 'ax^4&=a'
         b = 'bx^3&=b'
         c = 'cx^2&=c'
         d = f'dx{o}&=d'
         e = f'e{o}{o}&=e'
-
         p = '(z+h)'
-        trans = f'x{o}&={o}z+h'
-        monic = f'y{o}&={o}x^5+ax^4+bx^3+cx^2+dx+e=0'
-        reduced = f'y{o}&={o}z^5+0z^4+pz^3+qz^2+rz+s'
 
         Equ = self.make_texes(
-            trans,
-            monic,
-            reduced,
+            f'x{o}&={o}z+h',
+            f'y{o}&={o}x^5+ax^4+bx^3+cx^2+dx+e=0',
+            f'y{o}&={o}z^5+0z^4+pz^3+qz^2+rz+s',
             f'{u}{p}^5',
             f'{a}{p}^4',
             f'{b}{p}^3',
@@ -203,10 +199,10 @@ class Poly_51_Quintic_Reduced(BaseScene):
 
         with self.say("Distribute the original coefficients."):
             formulae = [
-                    f'{a}z^4+4ahz^3+6ah^2z^2+4ah^3z+ah^4',
-                    f'{b}z^3+3bhz^2+3bh^2z+bh^3',
-                    f'{c}z^2+2chz+ch^2',
-                    f'{d}z+dh']
+                f'{a}z^4+4ahz^3+6ah^2z^2+4ah^3z+ah^4',
+                f'{b}z^3+3bhz^2+3bh^2z+bh^3',
+                f'{c}z^2+2chz+ch^2',
+                f'{d}z+dh']
             for j in range(4):
                 S = Equ[j+4]
                 T = self.make_tex(formulae[j])
@@ -226,14 +222,14 @@ class Poly_51_Quintic_Reduced(BaseScene):
             self.wait(2)
             self.box_off()
             
-        def get_element(row: int, col: int):
-            return M1[0][row * 6 + col][0]
+        def get_element(matrix: Matrix, row: int, col: int):
+            return matrix[0][row * 6 + col][0]
 
-        def set_element(row: int, col: int, value: VMobject):
-            M1[0][row * 6 + col] = value
+        def set_element(matrix: Matrix, row: int, col: int, value: VMobject):
+            matrix[0][row * 6 + col] = value
 
-        Y = self.make_matrix((['y'], ['x^5'], ['ax^4'], ['bx^3'], ['cx^2'], ['dx'], ['e']), margin = 0)
-        EQ = self.make_tex('=')
+        Y1 = self.make_matrix((['y'], ['x^5'], ['ax^4'], ['bx^3'], ['cx^2'], ['dx'], ['e']), margin = 0)
+        E1 = self.make_tex('=')
         M1 = self.make_matrix((
             ('z^5', '0z^4', 'pz^3', 'qz^2', 'rz', 's'),
             ('z^5', '5hz^4', '10h^2z^3', '10h^3z^2', '5h^4z', 'h^5'),
@@ -243,10 +239,10 @@ class Poly_51_Quintic_Reduced(BaseScene):
             ('', '', '', '', 'dz', 'dh'),
             ('', '', '', '', '', 'e')),
             padding = 1.75)
-        Z = self.make_matrix((('1'), ('1'), ('1'), ('1'), ('1'), ('1')), margin = 0.25)
-        EQ.move_to(M1, LEFT)
-        Y.move_to(EQ, LEFT)
-        VGroup(Y, EQ, M1, Z).arrange(RIGHT)
+        Z1 = self.make_matrix([('1') for _ in range(6)], margin = 0.25)
+        E1.move_to(M1, LEFT)
+        Y1.move_to(E1, LEFT)
+        VGroup(Y1, E1, M1, Z1).arrange(RIGHT)
 
         opera = [ # index of '=', '+' operators
             [1, 4, 8, 12, 16, 19],
@@ -257,61 +253,65 @@ class Poly_51_Quintic_Reduced(BaseScene):
             [2, 5],
             [1]]
         stage = [[], [], [], []]
-        Y0 = Y[0]
-        for row in range(7):
-            equ = Equations2[row][0]
-            opus = opera[row]
+        Y0 = Y1[0]
+        for new_row in range(7):
+            eq1 = Equations2[new_row][0]
+            opus = opera[new_row]
             p = opus[0]
             q = p + 1
-            stage[0].append(TransformMatchingShapes(equ[0:p], Y0[row]))
-            if row != 3:
-                stage[1].append(FadeOut(equ[p:q]))
-            stage[1].append(TransformMatchingShapes(equ[p:q], EQ) if row == 3 else FadeOut(equ[p:q]))
-            for col in range(len(opus)):
-                lop = opus[col]
-                if col > 0:
-                    stage[2].append(FadeOut(equ[lop:lop+1]))
+            stage[0].append(TransformMatchingShapes(eq1[0:p], Y0[new_row]))
+            if new_row != 3:
+                stage[1].append(FadeOut(eq1[p:q]))
+            stage[1].append(TransformMatchingShapes(eq1[p:q], E1) if new_row == 3 else FadeOut(eq1[p:q]))
+            for new_col in range(len(opus)):
+                lop = opus[new_col]
+                if new_col > 0:
+                    stage[2].append(FadeOut(eq1[lop:lop+1]))
                 start = lop + 1
-                if col < len(opus)-1:
-                    if row < 2 and col == 0:
+                if new_col < len(opus)-1:
+                    if new_row < 2 and new_col == 0:
                         lop += 1
-                    S = equ[start:opus[col+1]]
+                    S = eq1[start:opus[new_col+1]]
                 else:
-                    S = equ[lop+1:]
-                T = get_element(row, col + (0 if row < 2 else row-1))
+                    S = eq1[lop+1:]
+                T = get_element(M1, new_row, new_col + (0 if new_row < 2 else new_row-1))
                 stage[3].append(TransformMatchingShapes(S, T))
 
         with self.say("All seven of these equations are identities, true for every choice of x and corresponding z."):
-            self.play(*stage[0])
-            self.play(FadeIn(Y.get_brackets()))
-            self.play(*stage[1])
-            self.play(*stage[2])
-            self.play(*stage[3], run_time=2)
-            self.play(FadeIn(M1.get_brackets(), Z))
+            self.play(*stage[0]) # Show the Y1 column verctor.
+            self.play(FadeIn(Y1.get_brackets())) # Show Y1's brackets.
+            self.play(*stage[1]) # Coalesce the '=' signs.
+            self.play(*stage[2]) # Hide the '+' signs.
+            self.play(*stage[3], run_time=2) # Adjust the layout of matrix M1.
+            self.play(FadeIn(M1.get_brackets(), Z1)) # Show M1's brackets & Z1.
 
-        Z0 = Z[0]
-        for col in range(5):
-            idx = -2 if col < 4 else -1
-            T = Z0[col]
+        transforms = []
+        def fly(source: Mobject, target: Mobject, arc: float) -> None:
+            transforms.append(ReplacementTransform(source, target, path_arc=arc, run_time=2))
+
+        Z0 = Z1[0]
+        for new_col in range(5):
+            idx = -2 if new_col < 4 else -1
+            T = Z0[new_col]
             transforms = []
-            for row in range(col + 2):
-                R = get_element(row, col)
+            for new_row in range(new_col + 2):
+                R = get_element(M1, new_row, new_col)
                 S = R[idx:]
-                if row == 0:
+                if new_row == 0:
                     U = S.copy()
                     U.move_to(T)
-                    transforms.append(Transform(T, U))
-                transforms.append(Transform(S.copy(), U))
-                transforms.append(FadeOut(S, run_time=0.01)) ###############
-            self.play(transforms)
-            if col == 0:
+                    fly(T, U, -PI/2)
+                fly(S.copy(), U, -PI/2)
+                transforms.append(FadeOut(S, run_time=0.01))
+            self.play(transforms) # Move the powers of z from M1 into Z1.
+            if new_col == 0:
                 transforms = []
-                for row in range(2):
+                for new_row in range(2):
                     V = Z0[5].copy()
-                    V.move_to(get_element(row, 0))
-                    set_element(row, 0, V)
+                    V.move_to(get_element(M1, new_row, 0), aligned_edge=DOWN)
+                    M1[0][6*new_row] = V
                     transforms.append(FadeIn(V))
-                self.play(transforms)
+                self.play(transforms) # Set '1's in the first column of M1.
 
         def make_lines() -> VGroup:
 
@@ -324,16 +324,92 @@ class Poly_51_Quintic_Reduced(BaseScene):
                     (m[2].get_center()[0], y, 0),
                     color = self.ink_fg)
 
-            return VGroup(make_line(Y), make_line(M1))
+            return VGroup(make_line(Y1), make_line(M1))
 
-        with self.say("So every value above the line is equal to the sum of the values below it, "
-                      "and we can now read the matrix column by column, to get expressions for "
-                      "the new coefficients in terms of the old."):
+        with self.say("So every value above the line is equal to the sum of the values below it."):
             Lines = make_lines()
             self.play(Create(Lines))
 
+        Y2 = self.make_matrix((['0'], ['p'], ['q'], ['r'], ['s']), margin = 0)
+        E2 = self.make_tex('=')
+        M2 = self.make_matrix((
+            ('a', '5h', '', '', '', ''),
+            ('b', '4ah', '10h^2', '', '', ''),
+            ('c', '3bh', '6ah^2', '10h^3', '', ''),
+            ('d', '2ch', '3bh^2', '4ah^3', '5h^4', ''),
+            ('e', 'dh', 'ch^2', 'bh^3', 'ah^4', 'h^5')),
+            padding = 1.75)
+        Z2 = self.make_matrix([('1') for _ in range(5)], margin = 0.25)
+        E2.move_to(M2, LEFT)
+        Y2.move_to(E2, LEFT)
+        VGroup(Y2, E2, M2, Z2).arrange(RIGHT)
+
+        transforms = []
+        for new_row in range(5):
+            old_col = new_row+1
+            fly(get_element(M1, 0, old_col)[0], Y2[0][new_row], 0.7*PI)
+            for new_col in range(new_row+2):
+                old_row = new_row+2-new_col
+                S = get_element(M1, old_row, old_col)
+                match old_col:
+                    case 5:
+                        pass
+                    case 4:
+                        S = S[0:-1]
+                    case _:
+                        S = S[0:-2]
+                T = get_element(M2, new_row, new_col)
+                fly(S, T, -PI/4)
+
+        with self.say("Reading the matrix column by column, we can express the new coefficients in terms of the old."):
+            self.play(FadeOut(Y1, E1, M1.get_brackets(), M1[0][0], M1[0][6], Lines, Z1))
+            self.play(transforms)
+            self.play(FadeIn(Y2.get_brackets(), E2, M2.get_brackets(), Z2))
+            self.wait(2)
+
+        formulae = [
+            [f'0{o}&={o}a+5h', f'p{o}&={o}b+4ah+10h^2', f'q{o}&={o}c+3bh+6ah^2+10h^3', f'r{o}&={o}d+2ch+3bh^2+4ah^3+5h^4', f's{o}&={o}e+dh+ch^2+bh^3+a^4+h^5'],
+            [f'a=-5h' , 'p=10h^2-20h^2+b', f'q=10h^3-30h^3+3bh+c', f'r=5h^4-20h^4+3bh^2+2ch+d'   , f's=h^5-5h^5+bh^3+ch^2+dh+e'],
+            [f'h=-a/5', 'p=-10h^2+b'     , f'q=-20h^3+3bh+c'     , f'r=-15h^4+3bh^2+2ch+d'       , f's=-4h^5+bh^3+ch^2+dh+e'],
+            [f'h=-a/5', 'p=b-10h^2'      , f'q=c+3bh-20h^3'      , f'r=d+2ch+3bh^2-15h^4'        , f's=e+dh+ch^2+bh^3-4h^5'],
+            [f'h=-a/5', 'p=b-2a^2/5'     , f'q=c-3ab/5+4a^3/25'  , f'r=d-2ac/5+3a^2b/25-3a^4/125', f's=e-ad/5+a^2c/25-a^3b/125-4a^5/3125']]
+
+        for row in range(5):
+            equ = self.make_tex(formulae[0][row])
+            equ.move_to(Equ[row+3], aligned_edge = LEFT)
+            Equ[row+3] = equ
+        Equ[3:8].arrange(DOWN, aligned_edge = LEFT)
+
+        self.play(Create(equ))
+
+        #self.play(Create(Equ[0]))
+        #self.play(Create(Equ[1]))
+        #self.play(Create(Equ[2]))
+        self.play(Create(Equ[3]))
+        self.play(Create(Equ[4]))
+        self.play(Create(Equ[5]))
+        self.play(Create(Equ[6]))
+        self.play(Create(Equ[7]))
+        
         self.wait(10)
         return
+
+
+
+        self.play(FadeIn(Y2, E2, M2, Z2))
+
+
+        for new_col in range(5):
+            Equ[new_col+3] = self.make_tex(formulae[0][new_col])
+            Equ.arrange(DOWN, aligned_edge = LEFT)
+
+        for new_row in range(8):
+            self.play(Create(Equ[new_row]))
+
+
+
+
+
 
 
         F1 = self.make_tex('y=x^5+ax^4+bx^3+cx^2+dx+e')
@@ -351,7 +427,7 @@ class Poly_51_Quintic_Reduced(BaseScene):
         F9 = setup('h=-a/5', 'p=b-2a^2/5'     , 'q=c-3ab/5+4a^3/25'  , 'r=d-2ac/5+3a^2b/25-3a^4/125', 's=e-ad/5+a^2c/25-a^3b/125-4a^5/3125')
         
         with self.say("Now we can read the matrix column by column, to get expressions for the new coefficients in terms of the old."):
-            self.play(FadeOut(Y, EQ, M1, M2[0], M2[1], Z[0][5], Z[1], Z[2], *Z2))
+            self.play(FadeOut(Y1, E1, M1, M2[0], M2[1], Z1[0][5], Z1[1], Z1[2], *Z2))
             for f_2 in (F5, F6, F7, F8):
                 VGroup(F1, F2, F3, f_2).arrange(DOWN, aligned_edge = LEFT)
             VGroup(F1, F2, F4, F8).arrange(DOWN, aligned_edge = LEFT)

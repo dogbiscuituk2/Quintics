@@ -162,13 +162,15 @@ class BaseScene(VoiceoverScene):
         return Text(text, font_size=30, color=self.ink_fg, *args, **kwargs)
 
     def say(self, text: str):
+
+        #self.next_section(skip_animations=True)
+
         frame = currentframe()
         while frame.f_code.co_name != 'construct':
             frame = frame.f_back
         print(f"{frame.f_lineno}: {text}")
         if Opt.DEBUG_SILENT in self.options:
             return contextlib.suppress()
-            #return contextlib.nullcontext
         # Specify language & disable language check to avoid GTTS bugs.
         return self.voiceover(text, lang='en', lang_check=False)
     
