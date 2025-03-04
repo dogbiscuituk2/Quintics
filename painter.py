@@ -51,21 +51,40 @@ def get_tex_length(string: str) -> int:
     except Exception:
         return 0
 
-def ssmt_find_token(ssmt: SingleStringMathTex, token_string: str) -> Generator[VGroup, None, None]:
-    print(f'Searching for "{token_string}" in "{ssmt.tex_string}"')
+def get_token_glyphs(
+        ssmt: SingleStringMathTex,
+        pattern: str
+        ) -> Generator[VGroup, None, None]:
+    """
+    Generates a VGroup of glyphs for each occurrence of
+    a single token pattern in a SingleStringMathTex.
+    """
+    for symbols in get_token_symbols(ssmt, pattern):
+        group = VGroup()
+        for symbol in symbols:
+            first = symbol.glyph_index
+            last = first + symbol.glyph_count
+            print(first, last)
+            group.add(*ssmt[first:last])
+        yield group
+
+def get_token_symbols(
+        ssmt: SingleStringMathTex,
+        pattern: str
+        ) -> Generator[List[Symbol], None, None]:
+    """
+    Generates a List of Symbols for each occurrence of
+    a single token pattern in a SingleStringMathTex.
+    """
     tokens: List[Token] = ssmt.tokens
-    print('tokens:', tokens)
     symbols: List[Symbol] = ssmt.symbols
-    print('symbols:', symbols)
     for token_index, token in enumerate(tokens):
-        if token.string == token_string:
-            filtered_symbols = filter(
-                lambda s: token_index in range(s.token_index, s.token_index + s.token_count),
-                symbols)
-            group = VGroup()
-            for symbol in filtered_symbols:
-                group.add(*ssmt[symbol.glyph_index:symbol.glyph_index+symbol.glyph_count])
-            yield group
+        if re.match(pattern, token.string):
+            yield [*filter(
+                lambda s: token_index in range(
+                    s.token_index,
+                    s.token_index + s.token_count),
+                symbols)]
 
 def ssmt_split(ssmt: SingleStringMathTex, *tokens: str) -> List[VGroup]:
     tokens: List[Token] = ssmt.tokens
@@ -456,8 +475,18 @@ if __name__ == '__main__':
     config.verbosity = "CRITICAL"
     painter = Painter()
     painter.options |= Opt.DEBUG_SYMBOLS
-    tex = SingleStringMathTex('x^5+3x^4-2x^3+7x^2-5x+11')
+    #                                         1            2          3
+    #                           012 34 567 8 90 1234 56 78901234 5678901
+    tex = SingleStringMathTex(r'y=x^5+\sin{y}3x^4-2x^3+\sin(z)7x^2-5w+11')
     painter.paint(tex)
-    result = list(ssmt_find_token(tex, 'x'))
+
+    result = list(get_token_symbols(tex, r'[a-z]|\\sin'))
     for foo in result:
         print(foo)
+        print(type(foo))
+
+    result = list(get_token_glyphs(tex, r'[a-z]|\\sin'))
+    for foo in result:
+        print(foo)
+        print(type(foo))
+
