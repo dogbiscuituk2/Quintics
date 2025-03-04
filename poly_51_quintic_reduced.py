@@ -285,10 +285,10 @@ class Poly_51_Quintic_Reduced(BaseScene):
             self.play(*stage[3], run_time=2) # Adjust the layout of matrix M1.
             self.play(FadeIn(M1.get_brackets(), Z1)) # Show M1's brackets & Z1.
 
-        transforms = []
         def fly(source: Mobject, target: Mobject, arc: float) -> None:
-            transforms.append(ReplacementTransform(source, target, path_arc=arc, run_time=2))
+            return ReplacementTransform(source, target, path_arc=arc, run_time=1.5)
 
+        transforms = []
         Z0 = Z1[0]
         for new_col in range(5):
             idx = -2 if new_col < 4 else -1
@@ -300,8 +300,8 @@ class Poly_51_Quintic_Reduced(BaseScene):
                 if new_row == 0:
                     U = S.copy()
                     U.move_to(T)
-                    fly(T, U, -PI/2)
-                fly(S.copy(), U, -PI/2)
+                    transforms.append(fly(T, U, -PI/2))
+                transforms.append(fly(S.copy(), U, -PI/2))
                 transforms.append(FadeOut(S, run_time=0.01))
             self.play(transforms) # Move the powers of z from M1 into Z1.
             if new_col == 0:
@@ -344,10 +344,11 @@ class Poly_51_Quintic_Reduced(BaseScene):
         Y2.move_to(E2, LEFT)
         VGroup(Y2, E2, M2, Z2).arrange(RIGHT)
 
-        transforms = []
+        transforms1 = []
+        transforms2 = []
         for new_row in range(5):
             old_col = new_row+1
-            fly(get_element(M1, 0, old_col)[0], Y2[0][new_row], 0.7*PI)
+            transforms1.append(fly(get_element(M1, 0, old_col)[0], Y2[0][new_row], -PI/4))
             for new_col in range(new_row+2):
                 old_row = new_row+2-new_col
                 S = get_element(M1, old_row, old_col)
@@ -359,11 +360,12 @@ class Poly_51_Quintic_Reduced(BaseScene):
                     case _:
                         S = S[0:-2]
                 T = get_element(M2, new_row, new_col)
-                fly(S, T, -PI/4)
+                transforms2.append(fly(S, T, -PI/4))
 
         with self.say("Reading the matrix column by column, we can express the new coefficients in terms of the old."):
             self.play(FadeOut(Y1, E1, M1.get_brackets(), M1[0][0], M1[0][6], Lines, Z1))
-            self.play(transforms)
+            self.play(transforms1)
+            self.play(transforms2)
             self.play(FadeIn(Y2.get_brackets(), E2, M2.get_brackets(), Z2))
             self.wait(2)
 
@@ -380,16 +382,21 @@ class Poly_51_Quintic_Reduced(BaseScene):
             Equ[row+3] = equ
         Equ[3:8].arrange(DOWN, aligned_edge = LEFT)
 
-        self.play(Create(equ))
+        #for row in range(5):
+        #    for col in range(row+2):
+                
+
+        #self.play(Create(equ))
 
         #self.play(Create(Equ[0]))
         #self.play(Create(Equ[1]))
         #self.play(Create(Equ[2]))
-        self.play(Create(Equ[3]))
-        self.play(Create(Equ[4]))
-        self.play(Create(Equ[5]))
-        self.play(Create(Equ[6]))
-        self.play(Create(Equ[7]))
+
+        #self.play(Create(Equ[3]))
+        #self.play(Create(Equ[4]))
+        #self.play(Create(Equ[5]))
+        #self.play(Create(Equ[6]))
+        #self.play(Create(Equ[7]))
         
         self.wait(10)
         return
