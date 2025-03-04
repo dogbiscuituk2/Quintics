@@ -51,6 +51,31 @@ def get_tex_length(string: str) -> int:
     except Exception:
         return 0
 
+def ssmt_find_token(ssmt: SingleStringMathTex, token_string: str) -> Generator[VGroup, None, None]:
+    print(f'Searching for "{token_string}" in "{ssmt.tex_string}"')
+    tokens: List[Token] = ssmt.tokens
+    print('tokens:', tokens)
+    symbols: List[Symbol] = ssmt.symbols
+    print('symbols:', symbols)
+    for token_index, token in enumerate(tokens):
+        if token.string == token_string:
+            filtered_symbols = filter(
+                lambda s: token_index in range(s.token_index, s.token_index + s.token_count),
+                symbols)
+            group = VGroup()
+            for symbol in filtered_symbols:
+                group.add(*ssmt[symbol.glyph_index:symbol.glyph_index+symbol.glyph_count])
+            yield group
+
+def ssmt_split(ssmt: SingleStringMathTex, *tokens: str) -> List[VGroup]:
+    tokens: List[Token] = ssmt.tokens
+    symbols: List[Symbol] = ssmt.symbols
+    for token_index, token in enumerate(tokens):
+        s = symbols.where(lambda s: token_index in range(s.token_index, s.token_index + s.token_count))
+        if token.string in tokens:
+            ssmt.tokens[token_index].string = ' '
+    pass
+
 class Painter():
 
     opt: Opt = Opt.DEFAULT
@@ -107,7 +132,7 @@ class Painter():
                 """
 
                 def more() -> bool:
-                    return self.token_index < len(tokens)
+                    return self.token_index < len(ssmt.tokens)
 
                 def parse_unit() -> List[Symbol]:
 
@@ -118,7 +143,7 @@ class Painter():
                     
                     def peek() -> str:
                         index = self.token_index
-                        return tokens[index].string if more() else ''
+                        return ssmt.tokens[index].string if more() else ''
                     
                     def pop() -> str:
                         token = peek()
@@ -143,7 +168,7 @@ class Painter():
                         dump_symbols('<', g1, g2)
                         start = g1[0].token_index
                         end = self.token_index
-                        string = concat(tokens[start:end])
+                        string = concat(ssmt.tokens[start:end])
                         extra = get_tex_length(string) - get_glyph_count(g1 + g2)
                         g1[0].glyph_count += extra
                         adjust(g2, extra)
@@ -258,7 +283,7 @@ class Painter():
 
                         def get_parens() -> Generator[Tuple[int, int], None, None]:
                             lefts = []
-                            for index, token in enumerate(tokens):
+                            for index, token in enumerate(ssmt.tokens):
                                 match token.string:
                                     case r'\left':
                                         lefts.append(index)
@@ -266,8 +291,8 @@ class Painter():
                                         yield (lefts.pop(), index)
 
                         def get_gap(left: int, right: int) -> int:
-                            token_L = tokens[left]
-                            token_R = tokens[right]
+                            token_L = ssmt.tokens[left]
+                            token_R = ssmt.tokens[right]
                             snip = text[0:token_L.start] + text[token_L.end:token_R.start] + text[token_R.end:]
                             return 1 + (len(ssmt) - get_tex_length(snip)) // 2
 
@@ -359,11 +384,11 @@ class Painter():
                         case _:
                             return parse_token(token)
 
-                tokens: List[Token] = []
+                ssmt.tokens = []
+                ssmt.symbols = []
                 text: str = ssmt.tex_string
                 if not text:
-                    return []
-                tokens.clear()
+                    return
                 for match in re.finditer(PAT_TOKEN, text):
                     span = match.span()
                     start = span[0]
@@ -371,11 +396,12 @@ class Painter():
                     length = end - start
                     string = text[start:end]
                     token = Token(start=start, length=length, string=string)
-                    tokens.append(token)
+                    ssmt.tokens.append(token)
                 self.token_index = 0
                 self.glyph_index = 0
                 while more():
                     symbols = parse_unit()
+                    ssmt.symbols.extend(symbols)
                     if apply_paint:
                         pen = Pen.BACKGROUND
                         for symbol in symbols:
@@ -430,6 +456,8 @@ if __name__ == '__main__':
     config.verbosity = "CRITICAL"
     painter = Painter()
     painter.options |= Opt.DEBUG_SYMBOLS
-    tex = MathTex('x^5+3x^4-2x^3+7x^2-5x+11')
-    painter.parse(tex)
-    ssmt = tex[0]
+    tex = SingleStringMathTex('x^5+3x^4-2x^3+7x^2-5x+11')
+    painter.paint(tex)
+    result = list(ssmt_find_token(tex, 'x'))
+    for foo in result:
+        print(foo)

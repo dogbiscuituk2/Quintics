@@ -47,7 +47,10 @@ class TestAll(BaseScene):
                     add_tex(lines[row], item)
 
                 def add_tex(line: List[SVGMobject], item: str) -> None:
-                    line.append(self.make_ssmt(item))
+                    ssmt = self.make_ssmt(item)
+                    print(*ssmt.tokens)
+                    print(*ssmt.symbols)
+                    line.append(ssmt)
                     line.append(self.make_text(item))
 
                 try:
