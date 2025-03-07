@@ -225,9 +225,6 @@ class Poly_51_Quintic_Reduced(BaseScene):
         def get_element(matrix: Matrix, row: int, col: int):
             return matrix[0][row * 6 + col][0]
 
-        def set_element(matrix: Matrix, row: int, col: int, value: VMobject):
-            matrix[0][row * 6 + col] = value
-
         Y1 = self.make_matrix((['y'], ['x^5'], ['ax^4'], ['bx^3'], ['cx^2'], ['dx'], ['e']), margin = 0)
         E1 = self.make_tex('=')
         M1 = self.make_matrix((
@@ -243,6 +240,10 @@ class Poly_51_Quintic_Reduced(BaseScene):
         E1.move_to(M1, LEFT)
         Y1.move_to(E1, LEFT)
         VGroup(Y1, E1, M1, Z1).arrange(RIGHT)
+
+        #opera = [get_token_symbols(ssmt, '[=+]') for ssmt in Equations2[2:9]]
+        #for rr in opera:
+        #    print(*rr)
 
         opera = [ # index of '=', '+' operators
             [1, 4, 8, 12, 16, 19],

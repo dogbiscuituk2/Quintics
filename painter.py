@@ -11,7 +11,11 @@ The pen index is an integer that corresponds to an index in the colours list.
 The Painter class is used to apply colours to the glyphs in a MathTex object.
 
 Mobject
- +- VMobject
++-- VMobject
+    +-- VMobjectFromSVGPath
+    +-- Polygram
+    |   +-- Polygon
+    |       +- Rectangle
     +- SVGMobject
        +- Text
        +- SingleStringMathTex
@@ -42,6 +46,20 @@ def concat(token_list: List[Token]) -> str:
 def get_glyph_count(symbols: List[Symbol]) -> int:
     return sum(symbol.glyph_count for symbol in symbols)
 
+def get_ssmt_symbols(ssmt: SingleStringMathTex) -> List[Symbol]:
+    try:
+        return ssmt.symbols
+    except AttributeError:
+        Painter().parse(ssmt)
+    return ssmt.symbols
+    
+def get_ssmt_tokens(ssmt: SingleStringMathTex) -> List[Token]:
+    try:
+        return ssmt.tokens
+    except AttributeError:
+        Painter().parse(ssmt)
+    return ssmt.tokens
+
 def get_tex_length(string: str) -> int:
     match string:
         case r'\frac':
@@ -54,18 +72,25 @@ def get_tex_length(string: str) -> int:
 def get_token_glyphs(
         ssmt: SingleStringMathTex,
         pattern: str
-        ) -> Generator[VGroup, None, None]:
+        ) -> Generator[List[VMobjectFromSVGPath], None, None]:
     """
-    Generates a VGroup of glyphs for each occurrence of
+    Generates one VGroup of glyphs (VMobject) for each occurrence of
     a single token pattern in a SingleStringMathTex.
+
+    Args:
+        ssmt    : The SingleStringMathTex to be processed.
+        pattern : A regex pattern matching a single token.
+
+    Returns:
+        One VGroup of VMobject for each occurrence of the token in the tex.
     """
     for symbols in get_token_symbols(ssmt, pattern):
-        group = VGroup()
+        group = []
         for symbol in symbols:
             first = symbol.glyph_index
             last = first + symbol.glyph_count
             print(first, last)
-            group.add(*ssmt[first:last])
+            group.extend(ssmt[first:last])
         yield group
 
 def get_token_symbols(
@@ -73,11 +98,28 @@ def get_token_symbols(
         pattern: str
         ) -> Generator[List[Symbol], None, None]:
     """
-    Generates a List of Symbols for each occurrence of
+    Generates one List[Symbol] for each occurrence of
     a single token pattern in a SingleStringMathTex.
+
+    Args:
+        ssmt    : The SingleStringMathTex to be processed.
+        pattern : A regex pattern matching a single token.
+
+    Returns:
+        One List[Symbol] for each occurrence of the token in the tex.
+
+    Example:
+        tex = SingleStringMathTex('y=x^2+2x+1')
+        print(*list(get_token_symbols(tex, '[xy]')))
+
+    Output:
+        [T0.G0.GREY] [T2.G2.GREY] [T7.G6.GREY]
+
+        x & y are found at token indices (T) 0, 2 and 7, while the
+        corresponding glyphs have indices (G) 0, 2 and 6.
     """
-    tokens: List[Token] = ssmt.tokens
-    symbols: List[Symbol] = ssmt.symbols
+    tokens: List[Token] = get_ssmt_tokens(ssmt)
+    symbols: List[Symbol] = get_ssmt_symbols(ssmt)
     for token_index, token in enumerate(tokens):
         if re.match(pattern, token.string):
             yield [*filter(
@@ -85,6 +127,23 @@ def get_token_symbols(
                     s.token_index,
                     s.token_index + s.token_count),
                 symbols)]
+            
+def get_token_glyph_indices(
+        ssmt: SingleStringMathTex,
+        pattern: str
+        ) -> List[int]:
+    """
+    """
+    get_token_symbols(ssmt, pattern)
+    pass
+            
+def parse_ssmt(ssmt: SingleStringMathTex) -> SingleStringMathTex:
+    try:
+        _ = ssmt.Symbols
+    except AttributeError:
+        Painter().parse(ssmt)
+    return ssmt
+
 
 def ssmt_split(ssmt: SingleStringMathTex, *tokens: str) -> List[VGroup]:
     tokens: List[Token] = ssmt.tokens
@@ -475,18 +534,18 @@ if __name__ == '__main__':
     config.verbosity = "CRITICAL"
     painter = Painter()
     painter.options |= Opt.DEBUG_SYMBOLS
-    #                                         1            2          3
-    #                           012 34 567 8 90 1234 56 78901234 5678901
-    tex = SingleStringMathTex(r'y=x^5+\sin{y}3x^4-2x^3+\sin(z)7x^2-5w+11')
-    painter.paint(tex)
 
-    result = list(get_token_symbols(tex, r'[a-z]|\\sin'))
-    for foo in result:
-        print(foo)
-        print(type(foo))
+    #tex = SingleStringMathTex(r'\frac{y}{z}=x^5+\sin{y}3x^4-2x^3+\sin(z)7x^2-5w+11')
+    #painter.paint(tex)
 
-    result = list(get_token_glyphs(tex, r'[a-z]|\\sin'))
-    for foo in result:
-        print(foo)
-        print(type(foo))
+    #result = list(get_token_glyphs(tex, r'[a-z]|\\sin|\\frac'))
+    #for foo in result:
+    #    print(foo)
+    #    print(type(foo))
+    #    for baz in foo:
+    #        print(type(baz))
 
+    #result = list(get_token_symbols(tex, r'[a-z]|\\sin'))
+    #for foo in result:
+    #    print(foo)
+    #    print(type(foo))
