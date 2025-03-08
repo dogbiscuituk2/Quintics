@@ -44,6 +44,10 @@ class Symbol():
 
     def __repr__(self) -> str:
         return f'{self._token_range}.{self._glyph_range}.{self.pen.name}'
+    
+    @property
+    def slice(self) -> range:
+        return range(self.glyph_index, self.glyph_index + self.glyph_count)
 
     @property
     def _glyph_range(self) -> str:

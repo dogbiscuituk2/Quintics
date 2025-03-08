@@ -104,7 +104,6 @@ class Poly_51_Quintic_Reduced(BaseScene):
             picture.to_corner(DR, buff=0.7).shift((picture.width+1)*RIGHT)
             self.add(picture)
             self.play(picture.animate.shift((picture.width+0.5)*LEFT), run_time=2)
-            self.box_off()
 
         with self.say("the simplest example of which is a linear substitution, such as x = z + some constant h."):
             self.play(Create(Equ[0]))
@@ -141,7 +140,6 @@ class Poly_51_Quintic_Reduced(BaseScene):
                         Equ[0][0][2:].copy(),
                         Equ[i+3][0][2:]))
             self.play(FadeIn(Equ[8][0][1:]))
-            self.box_off()
 
         p2 = f'{p}{p}'
         p3 = f'{p2}{p}'
@@ -169,7 +167,6 @@ class Poly_51_Quintic_Reduced(BaseScene):
                     Equ[j+3] = New
                 animations.append(self.box_move(*box(i, 1)))
                 self.play(*animations)
-            self.box_off()
 
         with self.say("Expand these powers."):
             self.play(FadeOut(picture))
@@ -241,18 +238,13 @@ class Poly_51_Quintic_Reduced(BaseScene):
         Y1.move_to(E1, LEFT)
         VGroup(Y1, E1, M1, Z1).arrange(RIGHT)
 
-        #opera = [get_token_symbols(smt, '[=+]') for smt in Equations2[2:9]]
-        #for rr in opera:
-        #    print(*rr)
+        opera = [ # index of '=', '+' operator glyphs
+            get_glyph_starts(Equations2[new_row][0], '[+=]')
+            for new_row in range(7)
+        ]
 
-        opera = [ # index of '=', '+' operators
-            [1, 4, 8, 12, 16, 19],
-            [2, 5, 10, 17, 24, 29],
-            [3, 7, 13, 20, 26],
-            [3, 7, 13, 19],
-            [3, 7, 12],
-            [2, 5],
-            [1]]
+        print(opera)
+
         stage = [[], [], [], []]
         Y0 = Y1[0]
         for new_row in range(7):
@@ -340,7 +332,7 @@ class Poly_51_Quintic_Reduced(BaseScene):
             ('d', '2ch', '3bh^2', '4ah^3', '5h^4', ''),
             ('e', 'dh', 'ch^2', 'bh^3', 'ah^4', 'h^5')),
             padding = 1.75)
-        Z2 = self.make_matrix([('1') for _ in range(5)], margin = 0.25)
+        Z2 = self.make_matrix([('1') for _ in range(6)], margin = 0.25)
         E2.move_to(M2, LEFT)
         Y2.move_to(E2, LEFT)
         VGroup(Y2, E2, M2, Z2).arrange(RIGHT)

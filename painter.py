@@ -35,10 +35,6 @@ from symbol import Symbol
 from typing import Generator, Tuple
 
 PAT_TOKEN = r"\\{|\\}|\\\||\\[A-Za-z]+|\\\\|\\\,|[^&\s]"
-
-def adjust(symbols: List[Symbol], delta: int) -> None:
-    for symbol in symbols:
-        symbol.glyph_index += delta
             
 def concat(token_list: List[Token]) -> str:
     return ' '.join([token.string for token in token_list])
@@ -53,39 +49,29 @@ def ensure_parsed(smt: SingleStringMathTex) -> SingleStringMathTex:
 def get_glyph_count(symbols: List[Symbol]) -> int:
     return sum(symbol.glyph_count for symbol in symbols)
 
-def get_glyph_ranges(
-        smt: SingleStringMathTex,
-        pat: str
-        ) -> Generator[range, None, None]:
+def get_glyph_ranges(smt: SingleStringMathTex, pat: str) -> List[range]:
     """
     Example:
-        tex = SingleStringMathTex('y=ax^2+bx+c')
-        pat = '[a-z]'
-        print(*list(get_token_glyph_ranges(tex, pat)))
+    smt = SingleStringMathTex('y=ax^2+bx+c')
+    pat = '[a-z]'
+    print(get_glyph_ranges(smt, pat))
 
     Output:
-        range(0, 1) range(2, 3) range(3, 4) range(6, 7) range(7, 8) range(9, 10)
+        [range(0, 1), range(2, 3), range(3, 4), range(6, 7), range(7, 8), range(9, 10)]
     """
-    for symbol in get_token_symbols(smt, pat):
-        first = symbol.glyph_index
-        last = first + symbol.glyph_count
-        yield range(first, last)
+    return [symbol.slice for symbol in get_token_symbols(smt, pat)]
 
-def get_glyph_starts(
-        smt: SingleStringMathTex,
-        pat: str
-        ) -> Generator[int, None, None]:
+def get_glyph_starts(smt: SingleStringMathTex, pat: str) -> List[int]:
     """
     Example:
-        tex = SingleStringMathTex('y=ax^2+bx+c')
-        pat = '[a-z]'
-        print(*list(get_token_glyph_indices(tex, pat)))
+    smt = SingleStringMathTex('y=ax^2+bx+c')
+    pat = '[a-z]'
+    print(get_glyph_starts(smt, pat))
 
     Output:
-        0 2 3 6 7 9
+        [0, 2, 3, 6, 7, 9]
     """
-    for symbol in get_token_symbols(smt, pat):
-        yield symbol.glyph_index
+    return [symbol.glyph_index for symbol in get_token_symbols(smt, pat)]
 
 def get_smt_symbols(smt: SingleStringMathTex) -> List[Symbol]:
     return ensure_parsed(smt).symbols
@@ -124,29 +110,28 @@ def get_token_glyphs(
         group.extend(smt[first:last])
         yield group
 
-def get_token_symbols(
-        smt: SingleStringMathTex,
-        pat: str
-        ) -> Generator[Symbol, None, None]:
+def get_token_symbols(smt: SingleStringMathTex, pat: str ) -> List[Symbol]:
     """
-    Yield one List[Symbol] for each occurrence of a
-    single token pattern in a SingleStringMathTex.
+    Find every Symbol containing a given single token pattern in a
+    SingleStringMathTex.
 
     Args:
         smt : The SingleStringMathTex to be processed.
         pat : A regex pattern matching a single token.
 
     Returns:
-        One List[Symbol] for each occurrence of the token in the tex.
+        A List[Symbol] of every symbol in the SingleStringMathTex
+        containing he given single token pattern.
 
     Example:
         smt = SingleStringMathTex('y=ax^2+bx+c')
         pat = '[a-z]'
-        print(*list(get_token_symbols(smt, pat)))
+        print(get_token_symbols(smt, pat))
 
     Output:
-        T0.G0.GREY T2.G2.GREY T3.G3.GREY T7.G6.GREY T8.G7.GREY T10.G9.GREY
+        [T0.G0.GREY, T2.G2.GREY, T3.G3.GREY, T7.G6.GREY, T8.G7.GREY, T10.G9.GREY]
     """
+    result = []
     tokens: List[Token] = get_smt_tokens(smt)
     symbols: List[Symbol] = get_smt_symbols(smt)
     for token_index, token in enumerate(tokens):
@@ -154,7 +139,12 @@ def get_token_symbols(
             for symbol in symbols:
                 offset = token_index - symbol.token_index
                 if offset >= 0 and offset < symbol.token_count:
-                    yield symbol
+                    result.append(symbol)
+    return result
+
+def shift_glyphs(symbols: List[Symbol], shift: int) -> None:
+    for symbol in symbols:
+        symbol.glyph_index += shift
 
 def smt_split(smt: SingleStringMathTex, *tokens: str) -> List[VGroup]:
     tokens: List[Token] = smt.tokens
@@ -258,9 +248,9 @@ class Painter():
                         start = g1[0].token_index
                         end = self.token_index
                         string = concat(smt.tokens[start:end])
-                        extra = get_tex_length(string) - get_glyph_count(g1 + g2)
-                        g1[0].glyph_count += extra
-                        adjust(g2, extra)
+                        shift = get_tex_length(string) - get_glyph_count(g1 + g2)
+                        g1[0].glyph_count += shift
+                        shift_glyphs(g2, shift)
                         if Opt.ACCENT in self.options:
                             g1[0].pen = g2[0].pen
                         dump_symbols('>', g1, g2)
@@ -282,8 +272,8 @@ class Painter():
                                 # integrand on the right. Note that the bounds rendering order
                                 # is the opposite of their occurrence order in the text,
                                 # necessitating the following adjustments.
-                                adjust(g2, n3)
-                                adjust(g3, -n2)
+                                shift_glyphs(g2, n3)
+                                shift_glyphs(g3, -n2)
                             case r'\sum':
                                 # Expressions in the "\sum" family are rendered with the upper
                                 # bounds, summation sign, and lower bounds, stacked vertically 
@@ -291,9 +281,9 @@ class Painter():
                                 # that all three items in the vertical stack require adjustment 
                                 # because their rendering order is completely different from 
                                 # their occurrence order in the text.
-                                adjust(g3, -(n1+n2))
-                                adjust(g1, n3)
-                                adjust(g2, n3)
+                                shift_glyphs(g3, -(n1+n2))
+                                shift_glyphs(g1, n3)
+                                shift_glyphs(g2, n3)
                             case _:
                                 # All other aggregates are rendered as-is.
                                 pass
@@ -307,8 +297,8 @@ class Painter():
                         dump_symbols('<', g1, g2, g3)
                         n1 = get_glyph_count(g1)
                         n2 = get_glyph_count(g2)
-                        adjust(g1, n2)
-                        adjust(g2, -n1)
+                        shift_glyphs(g1, n2)
+                        shift_glyphs(g2, -n1)
                         dump_symbols('>', g1, g2, g3)
                         return g2 + g1 + g3
                 
@@ -326,8 +316,8 @@ class Painter():
                             if flip:
                                 n1 = get_glyph_count(g1)
                                 n2 = get_glyph_count(g2)
-                                adjust(g1, -n2)
-                                adjust(g2, +n1)
+                                shift_glyphs(g1, -n2)
+                                shift_glyphs(g2, +n1)
                         dump_symbols('>', g1, g2)
                         return g1 + g2
 
@@ -544,14 +534,14 @@ class Painter():
 if __name__ == '__main__':
     config.verbosity = "CRITICAL"
 
-    tex = SingleStringMathTex('y=ax^2+bx+c')
+    smt = SingleStringMathTex('y=ax^2+bx+c')
     pat = '[a-z]'
-    print(*list(get_token_symbols(tex, pat)))
-    print(*list(get_glyph_ranges(tex, pat)))
-    print(*list(get_glyph_starts(tex, pat)))
+    print(get_token_symbols(smt, pat))
+    print(get_glyph_ranges(smt, pat))
+    print(get_glyph_starts(smt, pat))
 
-    painter = Painter()
-    painter.options |= Opt.DEBUG_SYMBOLS
+    #painter = Painter()
+    #painter.options |= Opt.DEBUG_SYMBOLS
 
     #tex = SingleStringMathTex(r'\frac{y}{z}=x^5+\sin{y}3x^4-2x^3+\sin(z)7x^2-5w+11')
     #painter.paint(tex)
