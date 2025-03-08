@@ -113,7 +113,7 @@ class Poly_51_Quintic_Reduced(BaseScene):
 
             scale = (axes.c2p(1, 0)[0] - axes.c2p(0, 0)[0]) * LEFT
             h = 0.0
-            H = Variable(h, self.make_ssmt("h"), num_decimal_places=2)
+            H = Variable(h, self.make_smt("h"), num_decimal_places=2)
             H.move_to(axes, UL).shift((RIGHT+DOWN)*0.5)
             H.label.set_color(self.get_token_ink('h'))
             H.value.set_color(self.ink_fg)
@@ -241,7 +241,7 @@ class Poly_51_Quintic_Reduced(BaseScene):
         Y1.move_to(E1, LEFT)
         VGroup(Y1, E1, M1, Z1).arrange(RIGHT)
 
-        #opera = [get_token_symbols(ssmt, '[=+]') for ssmt in Equations2[2:9]]
+        #opera = [get_token_symbols(smt, '[=+]') for smt in Equations2[2:9]]
         #for rr in opera:
         #    print(*rr)
 

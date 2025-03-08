@@ -134,13 +134,13 @@ class BaseScene(VoiceoverScene):
                 self.paint(matrix[0][row * cols + col])
         return matrix
 
-    def make_ssmt(self, text: str) -> SingleStringMathTex:
-        ssmt: SingleStringMathTex = SingleStringMathTex(text)
-        self.paint(ssmt)
-        return ssmt
+    def make_smt(self, text: str) -> SingleStringMathTex:
+        smt: SingleStringMathTex = SingleStringMathTex(text)
+        self.paint(smt)
+        return smt
 
-    def make_ssmts(self, *args: str) -> Generator[VGroup, None, None]:
-        tex = self.make_ssmt(r'\\'.join(args))
+    def make_smts(self, *args: str) -> Generator[VGroup, None, None]:
+        tex = self.make_smt(r'\\'.join(args))
         start = 0
         for arg in args:
             end = start + get_tex_length(arg)
@@ -153,9 +153,9 @@ class BaseScene(VoiceoverScene):
         return tex
     
     def make_texes(self, *args: str) -> VGroup:
-        ssmts = VGroup(list(self.make_ssmts(*args)))
+        smts = VGroup(list(self.make_smts(*args)))
         return VGroup(*[
-            self.make_tex(args[i]).move_to(ssmts[i], aligned_edge=LEFT)
+            self.make_tex(args[i]).move_to(smts[i], aligned_edge=LEFT)
             for i in range(len(args))])
 
     def make_text(self, text: str, *args, **kwargs) -> Text:

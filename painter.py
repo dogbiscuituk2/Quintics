@@ -43,22 +43,55 @@ def adjust(symbols: List[Symbol], delta: int) -> None:
 def concat(token_list: List[Token]) -> str:
     return ' '.join([token.string for token in token_list])
 
+def ensure_parsed(smt: SingleStringMathTex) -> SingleStringMathTex:
+    try:
+        _ = smt.Symbols
+    except AttributeError:
+        Painter().parse(smt)
+    return smt
+
 def get_glyph_count(symbols: List[Symbol]) -> int:
     return sum(symbol.glyph_count for symbol in symbols)
 
-def get_ssmt_symbols(ssmt: SingleStringMathTex) -> List[Symbol]:
-    try:
-        return ssmt.symbols
-    except AttributeError:
-        Painter().parse(ssmt)
-    return ssmt.symbols
+def get_glyph_ranges(
+        smt: SingleStringMathTex,
+        pat: str
+        ) -> Generator[range, None, None]:
+    """
+    Example:
+        tex = SingleStringMathTex('y=ax^2+bx+c')
+        pat = '[a-z]'
+        print(*list(get_token_glyph_ranges(tex, pat)))
+
+    Output:
+        range(0, 1) range(2, 3) range(3, 4) range(6, 7) range(7, 8) range(9, 10)
+    """
+    for symbol in get_token_symbols(smt, pat):
+        first = symbol.glyph_index
+        last = first + symbol.glyph_count
+        yield range(first, last)
+
+def get_glyph_starts(
+        smt: SingleStringMathTex,
+        pat: str
+        ) -> Generator[int, None, None]:
+    """
+    Example:
+        tex = SingleStringMathTex('y=ax^2+bx+c')
+        pat = '[a-z]'
+        print(*list(get_token_glyph_indices(tex, pat)))
+
+    Output:
+        0 2 3 6 7 9
+    """
+    for symbol in get_token_symbols(smt, pat):
+        yield symbol.glyph_index
+
+def get_smt_symbols(smt: SingleStringMathTex) -> List[Symbol]:
+    return ensure_parsed(smt).symbols
     
-def get_ssmt_tokens(ssmt: SingleStringMathTex) -> List[Token]:
-    try:
-        return ssmt.tokens
-    except AttributeError:
-        Painter().parse(ssmt)
-    return ssmt.tokens
+def get_smt_tokens(smt: SingleStringMathTex) -> List[Token]:
+    return ensure_parsed(smt).tokens
 
 def get_tex_length(string: str) -> int:
     match string:
@@ -70,88 +103,66 @@ def get_tex_length(string: str) -> int:
         return 0
 
 def get_token_glyphs(
-        ssmt: SingleStringMathTex,
-        pattern: str
-        ) -> Generator[List[VMobjectFromSVGPath], None, None]:
+        smt: SingleStringMathTex,
+        pat: str
+        ) -> Generator[List[VMobject], None, None]:
     """
-    Generates one VGroup of glyphs (VMobject) for each occurrence of
-    a single token pattern in a SingleStringMathTex.
+    Yield one List[VMobject] for each occurrence of a
+    single token pattern in a SingleStringMathTex.
 
     Args:
-        ssmt    : The SingleStringMathTex to be processed.
-        pattern : A regex pattern matching a single token.
+        smt : The SingleStringMathTex to be processed.
+        pat : A regex pattern matching a single token.
 
     Returns:
-        One VGroup of VMobject for each occurrence of the token in the tex.
+        One List[VMobject] for each occurrence of the token in the tex.
     """
-    for symbols in get_token_symbols(ssmt, pattern):
+    for symbol in get_token_symbols(smt, pat):
         group = []
-        for symbol in symbols:
-            first = symbol.glyph_index
-            last = first + symbol.glyph_count
-            print(first, last)
-            group.extend(ssmt[first:last])
+        first = symbol.glyph_index
+        last = first + symbol.glyph_count
+        group.extend(smt[first:last])
         yield group
 
 def get_token_symbols(
-        ssmt: SingleStringMathTex,
-        pattern: str
-        ) -> Generator[List[Symbol], None, None]:
+        smt: SingleStringMathTex,
+        pat: str
+        ) -> Generator[Symbol, None, None]:
     """
-    Generates one List[Symbol] for each occurrence of
-    a single token pattern in a SingleStringMathTex.
+    Yield one List[Symbol] for each occurrence of a
+    single token pattern in a SingleStringMathTex.
 
     Args:
-        ssmt    : The SingleStringMathTex to be processed.
-        pattern : A regex pattern matching a single token.
+        smt : The SingleStringMathTex to be processed.
+        pat : A regex pattern matching a single token.
 
     Returns:
         One List[Symbol] for each occurrence of the token in the tex.
 
     Example:
-        tex = SingleStringMathTex('y=x^2+2x+1')
-        print(*list(get_token_symbols(tex, '[xy]')))
+        smt = SingleStringMathTex('y=ax^2+bx+c')
+        pat = '[a-z]'
+        print(*list(get_token_symbols(smt, pat)))
 
     Output:
-        [T0.G0.GREY] [T2.G2.GREY] [T7.G6.GREY]
-
-        x & y are found at token indices (T) 0, 2 and 7, while the
-        corresponding glyphs have indices (G) 0, 2 and 6.
+        T0.G0.GREY T2.G2.GREY T3.G3.GREY T7.G6.GREY T8.G7.GREY T10.G9.GREY
     """
-    tokens: List[Token] = get_ssmt_tokens(ssmt)
-    symbols: List[Symbol] = get_ssmt_symbols(ssmt)
+    tokens: List[Token] = get_smt_tokens(smt)
+    symbols: List[Symbol] = get_smt_symbols(smt)
     for token_index, token in enumerate(tokens):
-        if re.match(pattern, token.string):
-            yield [*filter(
-                lambda s: token_index in range(
-                    s.token_index,
-                    s.token_index + s.token_count),
-                symbols)]
-            
-def get_token_glyph_indices(
-        ssmt: SingleStringMathTex,
-        pattern: str
-        ) -> List[int]:
-    """
-    """
-    get_token_symbols(ssmt, pattern)
-    pass
-            
-def parse_ssmt(ssmt: SingleStringMathTex) -> SingleStringMathTex:
-    try:
-        _ = ssmt.Symbols
-    except AttributeError:
-        Painter().parse(ssmt)
-    return ssmt
+        if re.match(pat, token.string):
+            for symbol in symbols:
+                offset = token_index - symbol.token_index
+                if offset >= 0 and offset < symbol.token_count:
+                    yield symbol
 
-
-def ssmt_split(ssmt: SingleStringMathTex, *tokens: str) -> List[VGroup]:
-    tokens: List[Token] = ssmt.tokens
-    symbols: List[Symbol] = ssmt.symbols
+def smt_split(smt: SingleStringMathTex, *tokens: str) -> List[VGroup]:
+    tokens: List[Token] = smt.tokens
+    symbols: List[Symbol] = smt.symbols
     for token_index, token in enumerate(tokens):
         s = symbols.where(lambda s: token_index in range(s.token_index, s.token_index + s.token_count))
         if token.string in tokens:
-            ssmt.tokens[token_index].string = ' '
+            smt.tokens[token_index].string = ' '
     pass
 
 class Painter():
@@ -200,7 +211,7 @@ class Painter():
 
         def parse_node(node: Mobject) -> None:
 
-            def parse_ssmt(ssmt: SingleStringMathTex) -> None:
+            def parse_smt(smt: SingleStringMathTex) -> None:
                 """
                 Apply colours to the glyphs in the given SingleStringMathTex object.
 
@@ -210,7 +221,7 @@ class Painter():
                 """
 
                 def more() -> bool:
-                    return self.token_index < len(ssmt.tokens)
+                    return self.token_index < len(smt.tokens)
 
                 def parse_unit() -> List[Symbol]:
 
@@ -221,7 +232,7 @@ class Painter():
                     
                     def peek() -> str:
                         index = self.token_index
-                        return ssmt.tokens[index].string if more() else ''
+                        return smt.tokens[index].string if more() else ''
                     
                     def pop() -> str:
                         token = peek()
@@ -246,7 +257,7 @@ class Painter():
                         dump_symbols('<', g1, g2)
                         start = g1[0].token_index
                         end = self.token_index
-                        string = concat(ssmt.tokens[start:end])
+                        string = concat(smt.tokens[start:end])
                         extra = get_tex_length(string) - get_glyph_count(g1 + g2)
                         g1[0].glyph_count += extra
                         adjust(g2, extra)
@@ -361,7 +372,7 @@ class Painter():
 
                         def get_parens() -> Generator[Tuple[int, int], None, None]:
                             lefts = []
-                            for index, token in enumerate(ssmt.tokens):
+                            for index, token in enumerate(smt.tokens):
                                 match token.string:
                                     case r'\left':
                                         lefts.append(index)
@@ -369,10 +380,10 @@ class Painter():
                                         yield (lefts.pop(), index)
 
                         def get_gap(left: int, right: int) -> int:
-                            token_L = ssmt.tokens[left]
-                            token_R = ssmt.tokens[right]
+                            token_L = smt.tokens[left]
+                            token_R = smt.tokens[right]
                             snip = text[0:token_L.start] + text[token_L.end:token_R.start] + text[token_R.end:]
-                            return 1 + (len(ssmt) - get_tex_length(snip)) // 2
+                            return 1 + (len(smt) - get_tex_length(snip)) // 2
 
                         token_index = self.token_index
                         accept(token)
@@ -462,9 +473,9 @@ class Painter():
                         case _:
                             return parse_token(token)
 
-                ssmt.tokens = []
-                ssmt.symbols = []
-                text: str = ssmt.tex_string
+                smt.tokens = []
+                smt.symbols = []
+                text: str = smt.tex_string
                 if not text:
                     return
                 for match in re.finditer(PAT_TOKEN, text):
@@ -474,12 +485,12 @@ class Painter():
                     length = end - start
                     string = text[start:end]
                     token = Token(start=start, length=length, string=string)
-                    ssmt.tokens.append(token)
+                    smt.tokens.append(token)
                 self.token_index = 0
                 self.glyph_index = 0
                 while more():
                     symbols = parse_unit()
-                    ssmt.symbols.extend(symbols)
+                    smt.symbols.extend(symbols)
                     if apply_paint:
                         pen = Pen.BACKGROUND
                         for symbol in symbols:
@@ -492,12 +503,12 @@ class Painter():
                                     pen = symbol.pen
                                 colour = self.get_ink(pen)
                                 for index in range(start, stop):
-                                    if index >= 0 and index < len(ssmt):
-                                        glyph = ssmt[index]
+                                    if index >= 0 and index < len(smt):
+                                        glyph = smt[index]
                                         glyph.set_color(colour)
 
             if type(node) is SingleStringMathTex:
-                parse_ssmt(node)
+                parse_smt(node)
             elif isinstance(node, VMobject):
                 for child in node.submobjects:
                     parse_node(child)
@@ -532,6 +543,13 @@ class Painter():
 
 if __name__ == '__main__':
     config.verbosity = "CRITICAL"
+
+    tex = SingleStringMathTex('y=ax^2+bx+c')
+    pat = '[a-z]'
+    print(*list(get_token_symbols(tex, pat)))
+    print(*list(get_glyph_ranges(tex, pat)))
+    print(*list(get_glyph_starts(tex, pat)))
+
     painter = Painter()
     painter.options |= Opt.DEBUG_SYMBOLS
 
