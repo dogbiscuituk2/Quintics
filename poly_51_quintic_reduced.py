@@ -37,7 +37,18 @@ class Poly_51_Quintic_Reduced(BaseScene):
         e = f'e{o}{o}&=e'
         p = '(z+h)'
 
-        Equ = self.make_texes(
+        """
+             x  =  z + h
+             y  =  x⁵ + ax⁴ + bx³ + cx² + dx + e
+             y  =  z⁵ + 0z⁴ + pz³ + qz² + rz + s
+             x⁵ =  (z + h)⁵
+            ax⁴ = a(z + h)⁴
+            bx³ = b(z + h)³
+            cx² = c(z + h)²
+            dx  = (z + h)⁵
+            e   = e
+        """
+        Equ1 = self.make_texes(
             f'x{o}&={o}z+h',
             f'y{o}&={o}x^5+ax^4+bx^3+cx^2+dx+e=0',
             f'y{o}&={o}z^5+0z^4+pz^3+qz^2+rz+s',
@@ -58,7 +69,7 @@ class Poly_51_Quintic_Reduced(BaseScene):
             return VGroup(plot, dots)
 
         with self.say("The degree five polynomial, the quintic, has five roots."):
-            self.play(Create(Equ[1]))
+            self.play(Create(Equ1[1]))
 
             roots = -5, -3, -2, +1, +4
             axes = self.make_axes(6, 4.25, [-7, 7, 1], [-600, 600, 100])
@@ -82,18 +93,18 @@ class Poly_51_Quintic_Reduced(BaseScene):
             self.play(Create(plot), Create(dots), run_time=2)
 
         with self.say("We could solve it easily if we didn't have all these intermediate powers of x."):
-            self.box_on(*Equ[1][0][5:19])
+            self.box_on(*Equ1[1][0][5:19])
 
         with self.say("To make a start, we might first try to get rid of the quartic, x to the fourth, term."):
-            self.box_on(*Equ[1][0][5:8])
+            self.box_on(*Equ1[1][0][5:8])
 
         with self.say("In other words, transform it into so-called reduced form,"):
-            brace = Brace(Group(Equ[1], Equ[2]), LEFT, color=self.ink_fg)
-            self.play(FadeIn(brace), Create(Equ[2]))
-            self.box_on(*Equ[2][0][5:8])
+            brace = Brace(Group(Equ1[1], Equ1[2]), LEFT, color=self.ink_fg)
+            self.play(FadeIn(brace), Create(Equ1[2]))
+            self.box_on(*Equ1[2][0][5:8])
 
         with self.say("with this coefficient equal to zero."):
-            self.play(Indicate(Equ[2][0][5], color=self.get_ink(Pen.WHITE), scale_factor=2, run_time=2))
+            self.play(Indicate(Equ1[2][0][5], color=self.get_ink(Pen.WHITE), scale_factor=2, run_time=2))
 
         with self.say("This operation is technically known as a Tschirnhaus Transformation,"):
             image = ImageMobject("resources/Tschirnhaus_colour.jpg") # www.palette.fm - Polar Luster
@@ -106,8 +117,8 @@ class Poly_51_Quintic_Reduced(BaseScene):
             self.play(picture.animate.shift((picture.width+0.5)*LEFT), run_time=2)
 
         with self.say("the simplest example of which is a linear substitution, such as x = z + some constant h."):
-            self.play(Create(Equ[0]))
-            self.box_on(Equ[0])
+            self.play(Create(Equ1[0]))
+            self.box_on(Equ1[0])
             self.add(z_trace)
 
             scale = (axes.c2p(1, 0)[0] - axes.c2p(0, 0)[0]) * LEFT
@@ -124,12 +135,12 @@ class Poly_51_Quintic_Reduced(BaseScene):
                 self.wait(0.25)
 
         with self.say("Let's use this to express all these x powers in terms of z."):
-            E = Equ[1][0]
+            E = Equ1[1][0]
             S = E[2:4], E[5:8], E[9:12], E[13:16], E[17:19], E[20:21]
             self.play([
                 TransformMatchingShapes(
                     S[i].copy(),
-                    Equ[i+3][0][0:len(S[i])],
+                    Equ1[i+3][0][0:len(S[i])],
                     path_arc=-PI/2)
                 for i in range(6)],
                 run_time=2)
@@ -137,9 +148,9 @@ class Poly_51_Quintic_Reduced(BaseScene):
             for i in range(5):
                 self.play(
                     TransformMatchingShapes(
-                        Equ[0][0][2:].copy(),
-                        Equ[i+3][0][2:]))
-            self.play(FadeIn(Equ[8][0][1:]))
+                        Equ1[0][0][2:].copy(),
+                        Equ1[i+3][0][2:]))
+            self.play(FadeIn(Equ1[8][0][1:]))
 
         p2 = f'{p}{p}'
         p3 = f'{p2}{p}'
@@ -151,20 +162,20 @@ class Poly_51_Quintic_Reduced(BaseScene):
             def box(i: int, bump: int) -> List[Group]:
                 match phase:
                     case 1:
-                        return [Equ[3][0][3:], Equ[4][0][4:], Equ[5][0][4:], Equ[6][0][4:]][0:4-i]
+                        return [Equ1[3][0][3:], Equ1[4][0][4:], Equ1[5][0][4:], Equ1[6][0][4:]][0:4-i]
                     case 2:
                         k = 6*i+13+bump
-                        return [Equ[3][0][3:k], Equ[4][0][4:k], Equ[5][0][4:k], Equ[6][0][4:k]][0:4-i]
+                        return [Equ1[3][0][3:k], Equ1[4][0][4:k], Equ1[5][0][4:k], Equ1[6][0][4:k]][0:4-i]
 
             for i in range(4):
                 self.box_on(*box(i, 0))
                 animations = []
                 for j in range(4-i):
-                    Old = Equ[j+3]
+                    Old = Equ1[j+3]
                     New = self.make_tex(formulae[j][i])
                     New.move_to(Old, aligned_edge=LEFT)
                     animations.append(TransformMatchingShapes(Old, New))
-                    Equ[j+3] = New
+                    Equ1[j+3] = New
                 animations.append(self.box_move(*box(i, 1)))
                 self.play(*animations)
 
@@ -201,21 +212,21 @@ class Poly_51_Quintic_Reduced(BaseScene):
                 f'{c}z^2+2chz+ch^2',
                 f'{d}z+dh']
             for j in range(4):
-                S = Equ[j+4]
+                S = Equ1[j+4]
                 T = self.make_tex(formulae[j])
                 T.move_to(S, aligned_edge=LEFT)
                 self.box_on(S)
                 self.play(TransformMatchingShapes(S, T), self.box_move(T))
-                Equ[j+4] = T
+                Equ1[j+4] = T
             self.box_off()
-            self.play(FadeOut(Equ[0], brace, Equ[1]))
-            Equations2 = VGroup(*Equ[2:])
+            self.play(FadeOut(Equ1[0], brace, Equ1[1]))
+            Equations2 = VGroup(*Equ1[2:])
             self.play(Equations2.animate.move_to(ORIGIN))
 
         with self.say("Now recall that this first z equation is just the sum of the six below it."):
-            self.box_on(Equ[2])
+            self.box_on(Equ1[2])
             self.wait(2)
-            self.box_on(*[Equ[i] for i in range(3, 9)])
+            self.box_on(*[Equ1[i] for i in range(3, 9)])
             self.wait(2)
             self.box_off()
             
@@ -371,9 +382,9 @@ class Poly_51_Quintic_Reduced(BaseScene):
 
         for row in range(5):
             equ = self.make_tex(formulae[0][row])
-            equ.move_to(Equ[row+3], aligned_edge = LEFT)
-            Equ[row+3] = equ
-        Equ[3:8].arrange(DOWN, aligned_edge = LEFT)
+            equ.move_to(Equ1[row+3], aligned_edge = LEFT)
+            Equ1[row+3] = equ
+        Equ1[3:8].arrange(DOWN, aligned_edge = LEFT)
 
         #for row in range(5):
         #    for col in range(row+2):
@@ -400,11 +411,11 @@ class Poly_51_Quintic_Reduced(BaseScene):
 
 
         for new_col in range(5):
-            Equ[new_col+3] = self.make_tex(formulae[0][new_col])
-            Equ.arrange(DOWN, aligned_edge = LEFT)
+            Equ1[new_col+3] = self.make_tex(formulae[0][new_col])
+            Equ1.arrange(DOWN, aligned_edge = LEFT)
 
         for new_row in range(8):
-            self.play(Create(Equ[new_row]))
+            self.play(Create(Equ1[new_row]))
 
 
 
