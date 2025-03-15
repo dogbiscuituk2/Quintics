@@ -28,36 +28,70 @@ class Poly_51_Quintic_Reduced(BaseScene):
             ('y', Pen.MAGENTA),
             ('z', Pen.CYAN)))
 
-        o = r'\phantom{o}' # hard space
-        u = f'x^5&={o}'
-        a = 'ax^4&=a'
-        b = 'bx^3&=b'
-        c = 'cx^2&=c'
-        d = f'dx{o}&=d'
-        e = f'e{o}{o}&=e'
-        p = '(z+h)'
+        o = r'\phantom{o}'  # hard space
+        u = f'x^5&={o}'     #  x⁵ =
+        a = 'ax^4&=a'       # ax⁴ = a
+        b = 'bx^3&=b'       # bx³ = b
+        c = 'cx^2&=c'       # cx² = c
+        d = f'dx{o}&=d'     # dx  = d
+        e = f'e{o}{o}&=e'   # e   = e
 
-        """
-             x  =  z + h
-             y  =  x⁵ + ax⁴ + bx³ + cx² + dx + e
-             y  =  z⁵ + 0z⁴ + pz³ + qz² + rz + s
-             x⁵ =  (z + h)⁵
-            ax⁴ = a(z + h)⁴
-            bx³ = b(z + h)³
-            cx² = c(z + h)²
-            dx  = (z + h)⁵
-            e   = e
-        """
+        p = '(z+h)'         # (z+h)
+        p2 = f'{p}{p}'      # (z+h)(z+h)
+        p3 = f'{p2}{p}'     # (z+h)(z+h)(z+h)
+        p4 = f'{p3}{p}'     # (z+h)(z+h)(z+h)(z+h)
+        p5 = f'{p4}{p}'     # (z+h)(z+h)(z+h)(z+h)(z+h)
+
+        q2 = '(z^2+2hz+h^2)'                            # (z² + 2hz + h²)
+        q3 = '(z^3+3hz^2+3h^2z+h^3)'                    # (z³ + 3hz² + 3h²z + h³)
+        q4 = '(z^4+4hz^3+6h^2z^2+4h^3z+h^4)'            # (z⁴ + 4hz³ + 6h²z² + 4h³z + h⁴)
+        q5 = 'z^5+5hz^4+10h^2z^3+10h^3z^2+5h^4z+h^5'    # z⁵ + 5hz⁴ + 10h²z³ + 10h³z² + 5h⁴z + h⁵
+
+        r1 = [[
+            f'{u}{p2}^4',   #  x⁵ =  (z+h)(z+h)⁴
+            f'{u}{p3}^3',   #  x⁵ =  (z+h)(z+h)(z+h)³
+            f'{u}{p4}^2',   #  x⁵ =  (z+h)(z+h)(z+h)(z+h)²
+            f'{u}{p5}',     #  x⁵ =  (z+h)(z+h)(z+h)(z+h)(z+h)
+        ],[ f'{a}{p2}^3',   # ax⁴ = a(z+h)(z+h)³
+            f'{a}{p3}^2',   # ax⁴ = a(z+h)(z+h)(z+h)²
+            f'{a}{p4}',     # ax⁴ = a(z+h)(z+h)(z+h)(z+h)
+        ],[ f'{b}{p2}^2',   # bx³ = b(z+h)(z+h)²
+            f'{b}{p3}',     # bx³ = b(z+h)(z+h)(z+h)
+        ],[ f'{c}{p2}',     # cx² = c(z+h)(z+h)
+        ]]
+
+# ²³⁴⁵
+
+        r2 = [[
+            f'{u}{q2}{p3}', #  x⁵ = (z²+2hz+h²)(z+h)(z+h)(z+h)
+            f'{u}{q3}{p2}', #  x⁵ = (z³+3hz²+3h²z+h³)(z+h)(z+h)
+            f'{u}{q4}{p}',  #  x⁵ = (z⁴+4hz³+6h²z²+4h³z+h⁴)(z+h)
+            f'{u}{q5}',     #  x⁵ =  z⁵+5hz⁴+10h²z³+10h³z²+5h⁴z+h⁵
+        ],[ f'{a}{q2}{p2}', # ax⁴ = a(z²+2hz+h²)(z+h)(z+h)
+            f'{a}{q3}{p}',  # ax⁴ = a(z³+3hz²+3h²z+h³)(z+h)
+            f'{a}{q4}',     # ax⁴ = a(z⁴+4hz³+6h²z²+4h³z+h⁴)
+        ],[ f'{b}{q2}{p}',  # bx³ = b(z²+2hz+h²)(z+h)
+            f'{b}{q3}',     # bx³ = b(z³+3hz²+3h²z+h³)
+        ],[ f'{c}{q2}',     # cx² = c(z²+2hz+h²)
+        ]]
+
+        r3 = [
+            f'{a}z^4+4ahz^3+6ah^2z^2+4ah^3z+ah^4',  # ax⁴ = az⁴+4ahz³+6ah²z²+4ah³z+ah⁴
+            f'{b}z^3+3bhz^2+3bh^2z+bh^3',           # bx³ = bz³+3bhz²+3bh²z+bh³
+            f'{c}z^2+2chz+ch^2',                    # cx² = cz²+2chz+ch²
+            f'{d}z+dh',                             # dx  = dz+dh
+        ]
+
         Equ1 = self.make_texes(
-            f'x{o}&={o}z+h',
-            f'y{o}&={o}x^5+ax^4+bx^3+cx^2+dx+e=0',
-            f'y{o}&={o}z^5+0z^4+pz^3+qz^2+rz+s',
-            f'{u}{p}^5',
-            f'{a}{p}^4',
-            f'{b}{p}^3',
-            f'{c}{p}^2',
-            f'{d}{p}',
-            e)
+            f'x{o}&={o}z+h',                        #  x  =  z + h
+            f'y{o}&={o}x^5+ax^4+bx^3+cx^2+dx+e=0',  #  y  =  x⁵ + ax⁴ + bx³ + cx² + dx + e
+            f'y{o}&={o}z^5+0z^4+pz^3+qz^2+rz+s',    #  y  =  z⁵ + 0z⁴ + pz³ + qz² + rz + s
+            f'{u}{p}^5',                            #  x⁵ =  (z + h)⁵
+            f'{a}{p}^4',                            # ax⁴ = a(z + h)⁴
+            f'{b}{p}^3',                            # bx³ = b(z + h)³
+            f'{c}{p}^2',                            # cx² = c(z + h)²
+            f'{d}{p}',                              # dx  = d(z + h)⁵
+            e)                                      # e   = e
 
         def make_trace(
             plot: ParametricFunction,
@@ -135,7 +169,7 @@ class Poly_51_Quintic_Reduced(BaseScene):
                 self.wait(0.25)
 
         with self.say("Let's use this to express all these x powers in terms of z."):
-            E = Equ1[1][0]
+            E = Equ1[1][0] # y  =  x⁵ + ax⁴ + bx³ + cx² + dx + e
             S = E[2:4], E[5:8], E[9:12], E[13:16], E[17:19], E[20:21]
             self.play([
                 TransformMatchingShapes(
@@ -151,11 +185,6 @@ class Poly_51_Quintic_Reduced(BaseScene):
                         Equ1[0][0][2:].copy(),
                         Equ1[i+3][0][2:]))
             self.play(FadeIn(Equ1[8][0][1:]))
-
-        p2 = f'{p}{p}'
-        p3 = f'{p2}{p}'
-        p4 = f'{p3}{p}'
-        p5 = f'{p4}{p}'
 
         def do_animations(phase: int, formulae: List[List[str]]) -> None:
 
@@ -181,39 +210,15 @@ class Poly_51_Quintic_Reduced(BaseScene):
 
         with self.say("Expand these powers."):
             self.play(FadeOut(picture))
-            do_animations(
-                1,
-                [
-                    [f'{u}{p2}^4', f'{u}{p3}^3', f'{u}{p4}^2', f'{u}{p5}'],
-                    [f'{a}{p2}^3', f'{a}{p3}^2', f'{a}{p4}'],
-                    [f'{b}{p2}^2', f'{b}{p3}'],
-                    [f'{c}{p2}']
-                ])
-
-        q2 = '(z^2+2hz+h^2)'
-        q3 = '(z^3+3hz^2+3h^2z+h^3)'
-        q4 = '(z^4+4hz^3+6h^2z^2+4h^3z+h^4)'
-        q5 = 'z^5+5hz^4+10h^2z^3+10h^3z^2+5h^4z+h^5'
+            do_animations(1, r1)
 
         with self.say("Multiply out the binomials."):
-            do_animations(
-                2,
-                [
-                    [f'{u}{q2}{p3}', f'{u}{q3}{p2}', f'{u}{q4}{p}', f'{u}{q5}'],
-                    [f'{a}{q2}{p2}', f'{a}{q3}{p}', f'{a}{q4}'],
-                    [f'{b}{q2}{p}', f'{b}{q3}'],
-                    [f'{c}{q2}']
-                ])
+            do_animations(2, r2)
 
         with self.say("Distribute the original coefficients."):
-            formulae = [
-                f'{a}z^4+4ahz^3+6ah^2z^2+4ah^3z+ah^4',
-                f'{b}z^3+3bhz^2+3bh^2z+bh^3',
-                f'{c}z^2+2chz+ch^2',
-                f'{d}z+dh']
             for j in range(4):
                 S = Equ1[j+4]
-                T = self.make_tex(formulae[j])
+                T = self.make_tex(r3[j])
                 T.move_to(S, aligned_edge=LEFT)
                 self.box_on(S)
                 self.play(TransformMatchingShapes(S, T), self.box_move(T))

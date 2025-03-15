@@ -122,6 +122,9 @@ def get_token_symbols(smt: SingleStringMathTex, pat: str ) -> List[Symbol]:
                     result.append(symbol)
     return result
 
+def prep_text(text: str) -> str:
+    text.replace()
+
 def shift_glyphs(symbols: List[Symbol], shift: int) -> None:
     for symbol in symbols:
         symbol.glyph_index += shift
