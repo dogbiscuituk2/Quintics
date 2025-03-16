@@ -130,9 +130,6 @@ _sub_super_table = str.maketrans(
     '0123456789+-=()abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWY')
 
 def prep_text(text: str) -> str:
-    """
-    Nonbreak space: ·
-    """
 
     def encode_sub_super(text: str, is_sub: bool) -> str:
 
