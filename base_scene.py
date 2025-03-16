@@ -135,7 +135,8 @@ class BaseScene(VoiceoverScene):
         return matrix
 
     def make_smt(self, text: str) -> SingleStringMathTex:
-        smt: SingleStringMathTex = SingleStringMathTex(text)
+        foo = prep_text(text)
+        smt: SingleStringMathTex = SingleStringMathTex(prep_text(text))
         self.paint(smt)
         return smt
 
@@ -148,7 +149,7 @@ class BaseScene(VoiceoverScene):
             start = end
     
     def make_tex(self, text: str) -> MathTex:
-        tex: MathTex = MathTex(text)
+        tex: MathTex = MathTex(prep_text(text))
         self.paint(tex)
         return tex
     

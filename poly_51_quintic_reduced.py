@@ -28,70 +28,55 @@ class Poly_51_Quintic_Reduced(BaseScene):
             ('y', Pen.MAGENTA),
             ('z', Pen.CYAN)))
 
-        o = r'\phantom{o}'  # hard space
-        u = f'x^5&={o}'     #  x⁵ =
-        a = 'ax^4&=a'       # ax⁴ = a
-        b = 'bx^3&=b'       # bx³ = b
-        c = 'cx^2&=c'       # cx² = c
-        d = f'dx{o}&=d'     # dx  = d
-        e = f'e{o}{o}&=e'   # e   = e
-
-        p = '(z+h)'         # (z+h)
-        p2 = f'{p}{p}'      # (z+h)(z+h)
-        p3 = f'{p2}{p}'     # (z+h)(z+h)(z+h)
-        p4 = f'{p3}{p}'     # (z+h)(z+h)(z+h)(z+h)
-        p5 = f'{p4}{p}'     # (z+h)(z+h)(z+h)(z+h)(z+h)
-
-        q2 = '(z^2+2hz+h^2)'                            # (z² + 2hz + h²)
-        q3 = '(z^3+3hz^2+3h^2z+h^3)'                    # (z³ + 3hz² + 3h²z + h³)
-        q4 = '(z^4+4hz^3+6h^2z^2+4h^3z+h^4)'            # (z⁴ + 4hz³ + 6h²z² + 4h³z + h⁴)
-        q5 = 'z^5+5hz^4+10h^2z^3+10h^3z^2+5h^4z+h^5'    # z⁵ + 5hz⁴ + 10h²z³ + 10h³z² + 5h⁴z + h⁵
-
         r1 = [[
-            f'{u}{p2}^4',   #  x⁵ =  (z+h)(z+h)⁴
-            f'{u}{p3}^3',   #  x⁵ =  (z+h)(z+h)(z+h)³
-            f'{u}{p4}^2',   #  x⁵ =  (z+h)(z+h)(z+h)(z+h)²
-            f'{u}{p5}',     #  x⁵ =  (z+h)(z+h)(z+h)(z+h)(z+h)
-        ],[ f'{a}{p2}^3',   # ax⁴ = a(z+h)(z+h)³
-            f'{a}{p3}^2',   # ax⁴ = a(z+h)(z+h)(z+h)²
-            f'{a}{p4}',     # ax⁴ = a(z+h)(z+h)(z+h)(z+h)
-        ],[ f'{b}{p2}^2',   # bx³ = b(z+h)(z+h)²
-            f'{b}{p3}',     # bx³ = b(z+h)(z+h)(z+h)
-        ],[ f'{c}{p2}',     # cx² = c(z+h)(z+h)
+            'x⁵ &=· (z+h)(z+h)⁴',
+            'x⁵ &=· (z+h)(z+h)(z+h)³',
+            'x⁵ &=· (z+h)(z+h)(z+h)(z+h)²',
+            'x⁵ &=· (z+h)(z+h)(z+h)(z+h)(z+h)',
+        ],[
+            'ax⁴ &= a(z+h)(z+h)³',
+            'ax⁴ &= a(z+h)(z+h)(z+h)²',
+            'ax⁴ &= a(z+h)(z+h)(z+h)(z+h)',
+        ],[
+            'bx³ &= b(z+h)(z+h)²',
+            'bx³ &= b(z+h)(z+h)(z+h)',
+        ],[
+            'cx² &= c(z+h)(z+h)',
         ]]
 
-# ²³⁴⁵
-
         r2 = [[
-            f'{u}{q2}{p3}', #  x⁵ = (z²+2hz+h²)(z+h)(z+h)(z+h)
-            f'{u}{q3}{p2}', #  x⁵ = (z³+3hz²+3h²z+h³)(z+h)(z+h)
-            f'{u}{q4}{p}',  #  x⁵ = (z⁴+4hz³+6h²z²+4h³z+h⁴)(z+h)
-            f'{u}{q5}',     #  x⁵ =  z⁵+5hz⁴+10h²z³+10h³z²+5h⁴z+h⁵
-        ],[ f'{a}{q2}{p2}', # ax⁴ = a(z²+2hz+h²)(z+h)(z+h)
-            f'{a}{q3}{p}',  # ax⁴ = a(z³+3hz²+3h²z+h³)(z+h)
-            f'{a}{q4}',     # ax⁴ = a(z⁴+4hz³+6h²z²+4h³z+h⁴)
-        ],[ f'{b}{q2}{p}',  # bx³ = b(z²+2hz+h²)(z+h)
-            f'{b}{q3}',     # bx³ = b(z³+3hz²+3h²z+h³)
-        ],[ f'{c}{q2}',     # cx² = c(z²+2hz+h²)
+            f'x⁵ &=· (z²+2hz+h²)(z+h)(z+h)(z+h)',
+            f'x⁵ &=· (z³+3hz²+3h²z+h³)(z+h)(z+h)',
+            f'x⁵ &=· (z⁴+4hz³+6h²z²+4h³z+h⁴)(z+h)',
+            f'x⁵ &=· z⁵+5hz⁴+10h²z³+10h³z²+5h⁴z+h⁵',
+        ],[
+            'ax⁴ &= a(z²+2hz+h²)(z+h)(z+h)',
+            'ax⁴ &= a(z³+3hz²+3h²z+h³)(z+h)',
+            'ax⁴ &= a(z⁴+4hz³+6h²z²+4h³z+h⁴)',
+        ],[ 
+            'bx³ &= b(z²+2hz+h²)(z+h)',
+            'bx³ &= b(z³+3hz²+3h²z+h³)',
+        ],[ 
+            'cx² &= c(z²+2hz+h²)',
         ]]
 
         r3 = [
-            f'{a}z^4+4ahz^3+6ah^2z^2+4ah^3z+ah^4',  # ax⁴ = az⁴+4ahz³+6ah²z²+4ah³z+ah⁴
-            f'{b}z^3+3bhz^2+3bh^2z+bh^3',           # bx³ = bz³+3bhz²+3bh²z+bh³
-            f'{c}z^2+2chz+ch^2',                    # cx² = cz²+2chz+ch²
-            f'{d}z+dh',                             # dx  = dz+dh
+            'ax⁴ &= az⁴+4ahz³+6ah²z²+4ah³z+ah⁴',
+            'bx³ &= bz³+3bhz²+3bh²z+bh³',
+            'cx² &= cz²+2chz+ch²',
+            'dx· &= dz+dh',
         ]
 
         Equ1 = self.make_texes(
-            f'x{o}&={o}z+h',                        #  x  =  z + h
-            f'y{o}&={o}x^5+ax^4+bx^3+cx^2+dx+e=0',  #  y  =  x⁵ + ax⁴ + bx³ + cx² + dx + e
-            f'y{o}&={o}z^5+0z^4+pz^3+qz^2+rz+s',    #  y  =  z⁵ + 0z⁴ + pz³ + qz² + rz + s
-            f'{u}{p}^5',                            #  x⁵ =  (z + h)⁵
-            f'{a}{p}^4',                            # ax⁴ = a(z + h)⁴
-            f'{b}{p}^3',                            # bx³ = b(z + h)³
-            f'{c}{p}^2',                            # cx² = c(z + h)²
-            f'{d}{p}',                              # dx  = d(z + h)⁵
-            e)                                      # e   = e
+            'x·&=·z+h',
+            f'y ·&=· x⁵+ax⁴+bx³+cx²+dx+e=0',
+            f'y ·&=· z⁵+0z⁴+pz³+qz²+rz+s',
+            f'x⁵ &=· (z+h)⁵',
+            'ax⁴ &= a(z+h)⁴',
+            'bx³ &= b(z+h)³',
+            'cx² &= c(z+h)²',
+            'dx· &= d(z+h)',
+            'e·· &= e')
 
         def make_trace(
             plot: ParametricFunction,
@@ -259,19 +244,17 @@ class Poly_51_Quintic_Reduced(BaseScene):
             for new_row in range(7)
         ]
 
-        print(opera)
-
         stage = [[], [], [], []]
         Y0 = Y1[0]
         for new_row in range(7):
             eq1 = Equations2[new_row][0]
             opus = opera[new_row]
-            p = opus[0]
-            q = p + 1
-            stage[0].append(TransformMatchingShapes(eq1[0:p], Y0[new_row]))
+            p1 = opus[0]
+            q = p1 + 1
+            stage[0].append(TransformMatchingShapes(eq1[0:p1], Y0[new_row]))
             if new_row != 3:
-                stage[1].append(FadeOut(eq1[p:q]))
-            stage[1].append(TransformMatchingShapes(eq1[p:q], E1) if new_row == 3 else FadeOut(eq1[p:q]))
+                stage[1].append(FadeOut(eq1[p1:q]))
+            stage[1].append(TransformMatchingShapes(eq1[p1:q], E1) if new_row == 3 else FadeOut(eq1[p1:q]))
             for new_col in range(len(opus)):
                 lop = opus[new_col]
                 if new_col > 0:
@@ -379,11 +362,11 @@ class Poly_51_Quintic_Reduced(BaseScene):
             self.wait(2)
 
         formulae = [
-            [f'0{o}&={o}a+5h', f'p{o}&={o}b+4ah+10h^2', f'q{o}&={o}c+3bh+6ah^2+10h^3', f'r{o}&={o}d+2ch+3bh^2+4ah^3+5h^4', f's{o}&={o}e+dh+ch^2+bh^3+a^4+h^5'],
-            [f'a=-5h' , 'p=10h^2-20h^2+b', f'q=10h^3-30h^3+3bh+c', f'r=5h^4-20h^4+3bh^2+2ch+d'   , f's=h^5-5h^5+bh^3+ch^2+dh+e'],
-            [f'h=-a/5', 'p=-10h^2+b'     , f'q=-20h^3+3bh+c'     , f'r=-15h^4+3bh^2+2ch+d'       , f's=-4h^5+bh^3+ch^2+dh+e'],
-            [f'h=-a/5', 'p=b-10h^2'      , f'q=c+3bh-20h^3'      , f'r=d+2ch+3bh^2-15h^4'        , f's=e+dh+ch^2+bh^3-4h^5'],
-            [f'h=-a/5', 'p=b-2a^2/5'     , f'q=c-3ab/5+4a^3/25'  , f'r=d-2ac/5+3a^2b/25-3a^4/125', f's=e-ad/5+a^2c/25-a^3b/125-4a^5/3125']]
+            ['0·&={o}a+5h', 'p·&=·b+4ah+10h^2', 'q·&=·c+3bh+6ah^2+10h^3', 'r·&=·d+2ch+3bh^2+4ah^3+5h^4', 's·&=·e+dh+ch^2+bh^3+a^4+h^5'],
+            ['a=-5h' , 'p=10h^2-20h^2+b', 'q=10h^3-30h^3+3bh+c', 'r=5h^4-20h^4+3bh^2+2ch+d'   , 's=h^5-5h^5+bh^3+ch^2+dh+e'],
+            ['h=-a/5', 'p=-10h^2+b'     , 'q=-20h^3+3bh+c'     , 'r=-15h^4+3bh^2+2ch+d'       , 's=-4h^5+bh^3+ch^2+dh+e'],
+            ['h=-a/5', 'p=b-10h^2'      , 'q=c+3bh-20h^3'      , 'r=d+2ch+3bh^2-15h^4'        , 's=e+dh+ch^2+bh^3-4h^5'],
+            ['h=-a/5', 'p=b-2a^2/5'     , 'q=c-3ab/5+4a^3/25'  , 'r=d-2ac/5+3a^2b/25-3a^4/125', 's=e-ad/5+a^2c/25-a^3b/125-4a^5/3125']]
 
         for row in range(5):
             equ = self.make_tex(formulae[0][row])

@@ -86,7 +86,7 @@ def get_tex_length(string: str) -> int:
         case r'\frac':
             return 1
     try:
-        return len(SingleStringMathTex(string))
+        return len(SingleStringMathTex(prep_text(string)))
     except Exception:
         return 0
 
@@ -122,8 +122,30 @@ def get_token_symbols(smt: SingleStringMathTex, pat: str ) -> List[Symbol]:
                     result.append(symbol)
     return result
 
+_subscripts = '₀₁₂₃₄₅₆₇₈₉₊₋₌₍₎ₐₑₕᵢⱼₖₗₘₙₒₚᵣₛₜᵤᵥₓ'
+_superscripts = '⁰¹²³⁴⁵⁶⁷⁸⁹⁺⁻⁼⁽⁾ᵃᵇᶜᵈᵉᶠᵍʰⁱʲᵏˡᵐⁿᵒᵖ𐞥ʳˢᵗᵘᵛʷˣʸᶻᴬᴮꟲᴰᴱꟳᴳᴴᴵᴶᴷᴸᴹᴺᴼᴾꟴᴿᵀᵁⱽᵂ𐞲'
+_sub_super_table = str.maketrans(
+    f'{_subscripts}{_superscripts}',
+    '0123456789+-=()aehijklmnoprstuvx'
+    '0123456789+-=()abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWY')
+
 def prep_text(text: str) -> str:
-    text.replace()
+    """
+    Nonbreak space: ·
+    """
+
+    def encode_sub_super(text: str, is_sub: bool) -> str:
+
+        def handle_match(match: re.Match[str], symbol: str) -> str:
+            text = match.string[match.start() : match.end()].translate(_sub_super_table)
+            return f'{symbol}{text}' if len(text) < 2 else f'{symbol}{{{text}}}'
+
+        (pattern, symbol) = (_subscripts, '_') if is_sub else (_superscripts, '^')
+        return re.sub(f'[{pattern}]+', lambda match: handle_match(match, symbol), text)
+
+    for is_sub in [True, False]:
+        text = encode_sub_super(text, is_sub)
+    return text.replace('·', r'\phantom{o}')
 
 def shift_glyphs(symbols: List[Symbol], shift: int) -> None:
     for symbol in symbols:
@@ -541,5 +563,9 @@ class Painter():
 if __name__ == '__main__':
     config.verbosity = "CRITICAL"
 
-    smt = SingleStringMathTex('y=x^5+5hx^4+10h^2x^3+10h^3x^2+5h^4x+h^5')
-    print([len(s) for s in split_smt(smt)])
+    src = 'x' + _subscripts + _superscripts
+    tgt = prep_text(src)
+    print(tgt)
+
+    #smt = SingleStringMathTex('y=x^5+5hx^4+10h^2x^3+10h^3x^2+5h^4x+h^5')
+    #print([len(s) for s in split_smt(smt)])
