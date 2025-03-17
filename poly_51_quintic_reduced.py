@@ -105,25 +105,25 @@ class Poly_51_Quintic_Reduced(BaseScene):
 
         z1 = [('1') for _ in range(6)]
 
-        e4 = ((
-            '0 &= a+5h',
-            'p &= b+4ah+10h²',
-            'q &= c+3bh+6ah²+10h³',
-            'r &= d+2ch+3bh²+4ah³+5h⁴',
-            's &= e+dh+ch²+bh³+ah⁴+h⁵',
-        ),(
+        e4 = ((                         # e4[0]
+            '0 = a+5h',
+            'p = b+4ah+10h²',
+            'q = c+3bh+6ah²+10h³',
+            'r = d+2ch+3bh²+4ah³+5h⁴',
+            's = e+dh+ch²+bh³+ah⁴+h⁵',
+        ),(                             # e4[1]
             'a =-5h',
             'p = b-20h²+10h²',
             'q = c+3bh-30h³+10h³',
             'r = d+2ch+3bh²-20h⁴+5h⁴',
             's = e+dh+ch²+bh³-5h⁵+h⁵',
-        ),(
+        ),(                             # e4[2]
             'h =-a/5',
             'p = b-10h²',
             'q = c+3bh-20h³',
             'r = d+2ch+3bh²-15h⁴',
             's = e+dh+ch²+bh³-4h⁵',
-        ),(
+        ),(                             # e4[3]
             'h =-a/5',
             'p = b-2a²/5',
             'q = c-3ab/5+4a³/25',
@@ -209,8 +209,8 @@ class Poly_51_Quintic_Reduced(BaseScene):
                 self.wait(0.25)
 
         with self.say("Let's use this to express all these x powers in terms of z."):
-            E = E0[1][0] # y = x⁵ + ax⁴ + bx³ + cx² + dx + e
-            S = E[2:4], E[5:8], E[9:12], E[13:16], E[17:19], E[20:21]
+            T = E0[1][0] # y = x⁵ + ax⁴ + bx³ + cx² + dx + e
+            S = T[2:4], T[5:8], T[9:12], T[13:16], T[17:19], T[20:21]
             self.play([
                 TransformMatchingShapes(
                     S[i].copy(),
@@ -409,33 +409,101 @@ class Poly_51_Quintic_Reduced(BaseScene):
             equ.move_to(E0[row+3], aligned_edge=LEFT)
             E0[row+3] = equ
         E0[3:8].arrange(DOWN, aligned_edge=LEFT)
-        foo = []
-        bar = []
+        terms = []
+        signs = []
         for row in range(5):
-            E = split_smt(E0[row+3][0])
-            foo.append(TransformMatchingShapes(Y1[0][row], E[0]))
+            T = split_smt(E0[row+3][0])
+            terms.append(TransformMatchingShapes(Y1[0][row], T[0]))
             for col in range(row+2):
-                bar.append(E[2*col+1])
-                foo.append(TransformMatchingShapes(get_element(M1, row, col), E[2*(col+1)]))
-        self.play(foo)
-        self.play(FadeIn(*bar))
-
-        arc = {"path_arc": PI}
+                signs.append(T[2*col+1])
+                terms.append(TransformMatchingShapes(get_element(M1, row, col), T[2*(col+1)]))
+        self.play(terms)
+        self.play(FadeIn(*signs))
 
         with self.say(
             """
             This h substitution avoids a lot of ugly fractions with powers of five denominators in the results. 
-            Apply the substitution, collect like powers of h, and reorder for clarity. 
+            Apply the substitution, and collect like powers of h. 
             """):
-            self.box_on(E0[3])
-            self.wait(1)
 
-            E = self.make_tex(e4[1][0])
-            E.move_to(E0[3], aligned_edge=LEFT)
-            #self.play(TransformByGlyphMap(E0[3], E, ([0], FadeOut), ([1], [1])))
-            self.play(TransformMatchingShapes(E0[3], E), self.box_move(E))
+            S = E0[3]                                                   # 0 = a + 5h
+            T = self.make_tex(e4[1][0]).move_to(S, aligned_edge=LEFT)   # a = -5h
+            self.box_on(S)
+            self.play(
+                TransformByGlyphMap(S, T, ([0], FadeOut), ([2], [0])),
+                self.box_move(T))
 
-            E = self.make_tex(e4[1][0])
+            S = E0[4]                                                   # p = b + 4ah + 10h²
+            T = self.make_tex(e4[1][1]).move_to(S, aligned_edge=LEFT)   # p = b - 20h² + 10h²
+            U = S[0][3:7]
+            V = T[0][3:8]
+            self.box_on(U)
+            self.play(
+                TransformByGlyphMap(S, T, (FadeIn, [7])),
+                self.box_move(V))
+
+            S = T                                                       # p = b - 20h² + 10h²
+            T = self.make_tex(e4[2][1]).move_to(S, aligned_edge=LEFT)   # p = b - 10h²
+            U = S[0][3:13]
+            V = T[0][3:8]
+            self.box_on(U)
+            self.play(
+                TransformByGlyphMap(S, T, (ir(8,12), FadeOut)),
+                self.box_move(V))
+
+            S = E0[5]                                                   # q = c + 3bh + 6ah² + 10h³
+            T = self.make_tex(e4[1][2]).move_to(S, aligned_edge=LEFT)   # q = c + 3bh - 30h³ + 10h³
+            U = S[0][7:12]
+            V = T[0][7:12]
+            self.box_on(U)
+            self.play(
+                TransformByGlyphMap(S, T, (ir(0,16), ir(0,16))),
+                self.box_move(V))
+
+            S = T                                                       # q = c + 3bh - 30h³ + 10h³
+            T = self.make_tex(e4[2][2]).move_to(S, aligned_edge=LEFT)   # q = c + 3bh - 20h³
+            U = S[0][7:17]
+            V = T[0][7:12]
+            self.box_on(U)
+            self.play(
+                TransformByGlyphMap(S, T, (ir(12,16), FadeOut)),
+                self.box_move(V))
+
+            S = E0[6]                                                   # r = d + 2ch + 3bh² + 4ah³ + 5h⁴
+            T = self.make_tex(e4[1][3]).move_to(S, aligned_edge=LEFT)   # r = d + 2ch + 3bh² - 20h⁴ + 5h⁴
+            U = S[0][12:17]
+            V = T[0][12:17]
+            self.box_on(U)
+            self.play(
+                TransformByGlyphMap(S, T, (ir(0,20), ir(0,20))),
+                self.box_move(V))
+
+            S = T                                                       # r = d + 2ch + 3bh² - 20h⁴ + 5h⁴
+            T = self.make_tex(e4[2][3]).move_to(S, aligned_edge=LEFT)   # r = d + 2ch + 3bh² - 15h⁴
+            U = S[0][12:21]
+            V = T[0][12:17]
+            self.box_on(U)
+            self.play(
+                TransformByGlyphMap(S, T, (ir(17,20), FadeOut)),
+                self.box_move(V))
+
+            S = E0[7]                                                   # s = e + dh + ch² + bh³ + ah⁴ + h⁵
+            T = self.make_tex(e4[1][4]).move_to(S, aligned_edge=LEFT)   # s = e + dh + ch² + bh³ - 5h⁵ + h⁵
+            U = S[0][14:18]
+            V = T[0][14:18]
+            self.box_on(U)
+            self.play(
+                TransformByGlyphMap(S, T, (ir(0,20), ir(0,20))),
+                self.box_move(V))
+
+            S = T                                                       # s = e + dh + ch² + bh³ - 5h⁵ + h⁵
+            T = self.make_tex(e4[2][4]).move_to(S, aligned_edge=LEFT)   # s = e + dh + ch² + bh³ - 4h⁵
+            U = S[0][14:21]
+            V = T[0][14:18]
+            self.box_on(U)
+            self.play(
+                TransformByGlyphMap(S, T, (ir(18,20), FadeOut)),
+                self.box_move(V))
 
         self.wait(10)
         return
