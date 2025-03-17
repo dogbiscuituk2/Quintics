@@ -123,7 +123,7 @@ class BaseScene(VoiceoverScene):
             padding: float = 1.3) -> Matrix:
         rows: int = len(matrix)
         cols: int = len(matrix[0])
-        strings: List[str] = [[t for t in row] for row in matrix]
+        strings: List[str] = [[prep_text(t) for t in row] for row in matrix]
         matrix: Matrix = Matrix(
             strings,
             bracket_h_buff = margin,
@@ -135,7 +135,6 @@ class BaseScene(VoiceoverScene):
         return matrix
 
     def make_smt(self, text: str) -> SingleStringMathTex:
-        foo = prep_text(text)
         smt: SingleStringMathTex = SingleStringMathTex(prep_text(text))
         self.paint(smt)
         return smt
