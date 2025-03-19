@@ -25,6 +25,11 @@ from latex_rice import *
 from options import Opt
 from painter import *
 
+class Animate(Enum):
+    OFF = auto()
+    ON = auto()
+    NO_CHANGE = auto()
+
 config.background_color = ManimColor("#101010")
 config.max_files_cached = 999
 config.verbosity = "CRITICAL"
@@ -37,6 +42,7 @@ class BaseScene(VoiceoverScene):
     def setup(self):
         self.set_speech_service(GTTSService())
         self._painter = Painter()
+        self._skip_animations = False
 
     @property
     def ink_bg(self) -> ManimColor:
@@ -161,10 +167,13 @@ class BaseScene(VoiceoverScene):
     def make_text(self, text: str, *args, **kwargs) -> Text:
         return Text(text, font_size=30, color=self.ink_fg, *args, **kwargs)
 
-    def say(self, text: str):
-
-        #self.next_section(skip_animations=True)
-
+    def say(self, text: str, animate: Animate = Animate.NO_CHANGE) -> None:
+        match animate:
+            case Animate.OFF:
+                self._skip_animations = True
+            case Animate.ON:
+                self._skip_animations = False
+        self.next_section(skip_animations=self._skip_animations)
         frame = currentframe()
         while frame.f_code.co_name != 'construct':
             frame = frame.f_back
@@ -182,6 +191,7 @@ class BaseScene(VoiceoverScene):
 
     _boxes = None
     _painter: Painter
+    _skip_animations: bool
     
     def paint(self, mob: Mobject) -> None:
         self._painter.paint(mob)

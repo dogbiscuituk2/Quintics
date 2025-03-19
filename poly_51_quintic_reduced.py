@@ -4,7 +4,7 @@
 """
 """
 
-from base_scene import BaseScene
+from base_scene import Animate, BaseScene
 from labels import *
 import math
 from MF_Tools import *
@@ -17,7 +17,7 @@ class Poly_51_Quintic_Reduced(BaseScene):
 
     def construct(self):
 
-        self.options |= Opt.DEBUG_SILENT
+        #self.options |= Opt.DEBUG_SILENT
         
         self.set_pens((
             #('o', Pen.BACKGROUND),
@@ -142,9 +142,7 @@ class Poly_51_Quintic_Reduced(BaseScene):
         
         E = self.make_texes(*e1)
 
-        #self.next_section(skip_animations=True)
-
-        with self.say("The degree five polynomial, the quintic, has five roots."):
+        with self.say("The degree five polynomial, the quintic, has five roots.", animate=Animate.ON):
             self.play(Create(E[1]))
 
             roots = -5, -3, -2, +1, +4
@@ -422,8 +420,6 @@ class Poly_51_Quintic_Reduced(BaseScene):
         self.play(terms)
         self.play(FadeIn(*signs))
 
-        #self.next_section(skip_animations=False)
-
         with self.say(
             """
             This h substitution avoids a lot of ugly fractions with powers of five denominators in the results. 
@@ -455,7 +451,7 @@ class Poly_51_Quintic_Reduced(BaseScene):
             do(6,2,3,12,21,17,(ir(17,20),FadeOut))  # r=d+2ch+3bh²-20h⁴+5h⁴ -> r=d+2ch+3bh²-15h⁴
             do(7,1,4,14,18,18,(ir(0,20),ir(0,20)))  # s=e+dh+ch²+bh³+ah⁴+h⁵ -> s=e+dh+ch²+bh³-5h⁵+h⁵
             do(7,2,4,14,21,18,(ir(18,20),FadeOut))  # s=e+dh+ch²+bh³-5h⁵+h⁵ -> s=e+dh+ch²+bh³-4h⁵
-            do(3,2,0,0,5,6,([0],[3]),([3],[5]),([4],[0]),(FadeIn,[4]))  # a=-5h -> h=-a/5
+            do(3,2,0,0,5,6,([0],[3]),([3],[5]),([4],[0]),(FadeIn,[4]))       # a=-5h -> h=-a/5
             self.wait(2)
 
         with self.say("Here are those ugly power of five denominators, if you prefer:"):
