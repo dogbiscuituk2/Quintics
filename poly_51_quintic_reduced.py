@@ -498,6 +498,13 @@ class Poly_51_Quintic_Reduced(BaseScene):
             self.box_on(*F[4:8])
             self.wait()
             self.box_off()
+            self.wait(2)
+
+        with self.say("Next, we'll see how to get rid of the next intermediate term, the cubic."):
+            self.box_on(F[2][9:12])
+            self.play(FadeOut(F[0:1], F[3:]), run_time=3)
+            self.box_off()
+            self.play(FadeOut(F), run_time=3)
 
         self.wait(10)
         return
