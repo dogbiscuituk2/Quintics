@@ -131,6 +131,12 @@ class Poly_51_Quintic_Reduced(BaseScene):
             's = e-ad/5+a²c/25-a³b/125-4a⁵/3125',
         ))
 
+        e6 = (
+            'x = z+h',
+            'y = x⁵+ax⁴+bx³+cx²+dx+e=0',
+            'y = z⁵+0z⁴+pz³+qz²+rz+s',
+        )
+
         def make_trace(
             plot: ParametricFunction,
             plot_token: str,
@@ -142,7 +148,7 @@ class Poly_51_Quintic_Reduced(BaseScene):
         
         E = self.make_texes(*e1)
 
-        with self.say("The degree five polynomial, the quintic, has five roots.", animate=Animate.ON):
+        with self.say("The degree five polynomial, the quintic, has five roots."):
             self.play(Create(E[1]))
 
             roots = -5, -3, -2, +1, +4
@@ -466,7 +472,7 @@ class Poly_51_Quintic_Reduced(BaseScene):
             self.box_off()
             self.wait(2)
 
-        with self.say("Maybe not."):
+        with self.say("Maybe not.", animate=Animate.ON):
             animations = []
             for row in range(4):
                 S = E[row+4]
@@ -475,6 +481,23 @@ class Poly_51_Quintic_Reduced(BaseScene):
                 E[row+4] = T
             self.play(*animations)
             self.wait(2)
+
+        with self.say("So, we have finally managed to transform the original monic quintic,"):
+            F = VGroup(*[self.make_tex(e6[row]) for row in range(3)], *E[3:8].copy())
+            F.arrange(DOWN, aligned_edge=LEFT)
+            self.play(ReplacementTransform(E[3:8], F[3:8]))
+            self.play(FadeIn(F[0:3]))
+            self.box_on(F[1])
+            self.wait()
+
+        with self.say("into reduced form, "):
+            self.box_on(F[2])
+            self.wait()
+
+        with self.say("with these values for the new coefficients."):
+            self.box_on(*F[4:8])
+            self.wait()
+            self.box_off()
 
         self.wait(10)
         return
