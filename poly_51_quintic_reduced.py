@@ -482,29 +482,27 @@ class Poly_51_Quintic_Reduced(BaseScene):
             self.play(*animations)
             self.wait(2)
 
-        with self.say("So, we have finally managed to transform the original monic quintic,"):
+        with self.say("So, we have finally managed to transform the original monic quintic into reduced form, "):
             F = VGroup(*[self.make_tex(e6[row]) for row in range(3)], *E[3:8].copy())
             F.arrange(DOWN, aligned_edge=LEFT)
             self.play(ReplacementTransform(E[3:8], F[3:8]))
             self.play(FadeIn(F[0:3]))
             self.box_on(F[1])
             self.wait()
-
-        with self.say("into reduced form, "):
             self.box_on(F[2])
             self.wait()
 
         with self.say("with these values for the new coefficients."):
             self.box_on(*F[4:8])
-            self.wait()
+            self.wait(5)
             self.box_off()
             self.wait(2)
 
-        with self.say("Next, we'll see how to get rid of the next intermediate term, the cubic."):
-            self.box_on(F[2][9:12])
-            self.play(FadeOut(F[0:1], F[3:]), run_time=3)
+        with self.say("Later, we'll see how to get rid of the next intermediate term, the cubic."):
+            self.box_on(F[2][0][9:12])
+            self.play(FadeOut(F[0:2], F[3:]), run_time=5)
             self.box_off()
-            self.play(FadeOut(F), run_time=3)
+            self.play(FadeOut(F[2]), run_time=5)
 
         self.wait(10)
         return
