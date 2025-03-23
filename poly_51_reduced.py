@@ -414,7 +414,7 @@ class Poly_51_Reduced(BaseScene):
         with self.say("Let's test this reduced form using a numerical example."):
             self.play(Create(E[1]))
 
-        with self.say("This is actually the same quintic that was used in the earlier illustration."):
+        with self.say("This is the same quintic we saw earlier."):
             graph.shift(3.5*RIGHT)
             self.play(FadeIn(border, axes))
             self.play(Create(plot), Create(dots), run_time=2)
@@ -426,25 +426,43 @@ class Poly_51_Reduced(BaseScene):
             S = autopilot(S, t[2], 2, 17, 18) # y &= (x³+10x²+31x+30)(x-1)(x-4)
             S = autopilot(S, t[3], 2, 23, 20) # y &= (x⁴+9x³+21x²-x-30)(x-4)
             S = autopilot(S, t[4], 2, 28, 29) # y &= x⁵+5x⁴-15x³-85x²-26x+120'
-            E[0] = S
+            E[1] = S
             self.box_off()
             self.play(Create(E[2][0]))
 
-        with self.say("then use these to calculate the coefficients of the new, reduced equation."):
+        with self.say("then use these to calculate the new coefficients for the reduced equation."):
             for row in range(3,8):
                 self.play(Create(E[row]))
                 E[row] = autopilot(E[row], e7[row][1], 2, 0, 0)
             self.box_off()
 
-        with self.say("The result is the same graph as before, shifted one unit in the positive x direction."):
+        with self.say("Stick a pin in that, and let's go back briefly to the product of factors form."):
+            E[1] = autopilot(E[1], e7[1][0], 2, 0, 0)
+            self.box_off()
+
+        with self.say("The new graph has the same shape as before, just shifted one unit to the right."):
             self.play(
+                Create(E[0]),
                 Create(z_trace),
                 FadeOut(E[2]))
+            E[0] = autopilot(E[0], e7[0][1], 2, 0, 0)
+            self.play(FadeOut(E[3]))
+            self.box_off()
+            
+        with self.say("So to find its roots, just add one to each of the original equation's roots."):
             E[2] = self.make_tex(e7[2][1]).move_to(E[2], aligned_edge=LEFT)
             self.play(Create(E[2]))
+
+        with self.say("If our method is sound, then expanding this product should give the same coefficients as before."):
+            self.box_on(E[2])
+
+        with self.say("Here goes..."):
             E[2] = autopilot(E[2], e7[2][2], 2, 0, 0)
+        
+        with self.say("And it does!"):
+            self.box_on(E[4][0][2:], E[7][0][2:])
+            self.play(FadeOut(E[0:2]))
             self.box_off()
-            self.play(FadeOut(E[3:]))
 
         self.wait(10)
         return
