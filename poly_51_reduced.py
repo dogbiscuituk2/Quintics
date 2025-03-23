@@ -9,8 +9,9 @@ from labels import *
 import math
 from MF_Tools import *
 from painter import *
+from poly_51_reduced_equations import *
 
-class Poly_51_Quintic_Reduced(BaseScene):
+class Poly_51_Reduced(BaseScene):
 
     def __init__(self):
         BaseScene.__init__(self)
@@ -27,115 +28,23 @@ class Poly_51_Quintic_Reduced(BaseScene):
             ('x', Pen.RED),
             ('y', Pen.MAGENTA),
             ('z', Pen.CYAN)))
-        
-        e1 = (
-            ' x· &= ·z+h',
-            ' y· &= ·x⁵+ax⁴+bx³+cx²+dx+e=0',
-            ' y· &= ·z⁵+0z⁴+pz³+qz²+rz+s',
-            ' x⁵ &= ·(z+h)⁵',
-            'ax⁴ &= a(z+h)⁴',
-            'bx³ &= b(z+h)³',
-            'cx² &= c(z+h)²',
-            'dx· &= d(z+h)',
-            'e·· &= e',
-        )
 
-        e2 = ((
-            'x⁵ &= ·(z+h)(z+h)⁴',
-            'x⁵ &= ·(z+h)(z+h)(z+h)³',
-            'x⁵ &= ·(z+h)(z+h)(z+h)(z+h)²',
-            'x⁵ &= ·(z+h)(z+h)(z+h)(z+h)(z+h)',
-        ),(
-            'ax⁴ &= a(z+h)(z+h)³',
-            'ax⁴ &= a(z+h)(z+h)(z+h)²',
-            'ax⁴ &= a(z+h)(z+h)(z+h)(z+h)',
-        ),(
-            'bx³ &= b(z+h)(z+h)²',
-            'bx³ &= b(z+h)(z+h)(z+h)',
-        ),(
-            'cx² &= c(z+h)(z+h)',
-        ))
-
-        e3 = ((
-            'x⁵ &= ·(z²+2hz+h²)(z+h)(z+h)(z+h)',
-            'x⁵ &= ·(z³+3hz²+3h²z+h³)(z+h)(z+h)',
-            'x⁵ &= ·(z⁴+4hz³+6h²z²+4h³z+h⁴)(z+h)',
-            'x⁵ &= ·z⁵+5hz⁴+10h²z³+10h³z²+5h⁴z+h⁵',
-        ),(
-            'ax⁴ &= a(z²+2hz+h²)(z+h)(z+h)',
-            'ax⁴ &= a(z³+3hz²+3h²z+h³)(z+h)',
-            'ax⁴ &= a(z⁴+4hz³+6h²z²+4h³z+h⁴)',
-        ),( 
-            'bx³ &= b(z²+2hz+h²)(z+h)',
-            'bx³ &= b(z³+3hz²+3h²z+h³)',
-        ),( 
-            'cx² &= c(z²+2hz+h²)',
-        ))
-
-        e4 = (
-            'ax⁴ &= az⁴+4ahz³+6ah²z²+4ah³z+ah⁴',
-            'bx³ &= bz³+3bhz²+3bh²z+bh³',
-            'cx² &= cz²+2chz+ch²',
-            'dx· &= dz+dh',
-        )
-
-        y1 = ('y', 'x⁵', 'ax⁴', 'bx³', 'cx²', 'dx', 'e')
-
-        m1 = (
-            ('z⁵',  '0z⁴',    'pz³',    'qz²',    'rz',  's' ),
-            ('z⁵', '5hz⁴', '10h²z³', '10h³z²',  '5h⁴z',  'h⁵'),
-            (  '',  'az⁴', '4ah³z³', '6ah²z²', '4ah³z', 'ah⁴'),
-            (  '',     '',    'bz³',  '3bhz²', '3bh²z', 'bh³'),
-            (  '',     '',       '',    'cz²',  '2chz', 'ch²'),
-            (  '',     '',       '',       '',    'dz', 'dh' ),
-            (  '',     '',       '',       '',      '', 'e'  ),
-        )
-
-        z1 = [('1') for _ in range(6)]
-
-        y2 = ('0', 'p', 'q', 'r', 's')
-
-        m2 = (
-            ('a',  '5h',     '',     '',    '',   ''),
-            ('b', '4ah', '10h²',     '',    '',   ''),
-            ('c', '3bh', '6ah²', '10h³',    '',   ''),
-            ('d', '2ch', '3bh²', '4ah³', '5h⁴',   ''),
-            ('e',  'dh',  'ch²',  'bh³', 'ah⁴', 'h⁵'),
-        )
-
-        z2 = [('1') for _ in range(6)]
-
-        e5 = ((                         # e4[0]
-            '0 = a+5h',
-            'p = b+4ah+10h²',
-            'q = c+3bh+6ah²+10h³',
-            'r = d+2ch+3bh²+4ah³+5h⁴',
-            's = e+dh+ch²+bh³+ah⁴+h⁵',
-        ),(                             # e4[1]
-            'a =-5h',
-            'p = b-20h²+10h²',
-            'q = c+3bh-30h³+10h³',
-            'r = d+2ch+3bh²-20h⁴+5h⁴',
-            's = e+dh+ch²+bh³-5h⁵+h⁵',
-        ),(                             # e4[2]
-            'h =-a/5',
-            'p = b-10h²',
-            'q = c+3bh-20h³',
-            'r = d+2ch+3bh²-15h⁴',
-            's = e+dh+ch²+bh³-4h⁵',
-        ),(                             # e4[3]
-            'h =-a/5',
-            'p = b-2a²/5',
-            'q = c-3ab/5+4a³/25',
-            'r = d-2ac/5+3a²b/25-3a⁴/125',
-            's = e-ad/5+a²c/25-a³b/125-4a⁵/3125',
-        ))
-
-        e6 = (
-            'x = z+h',
-            'y = x⁵+ax⁴+bx³+cx²+dx+e=0',
-            'y = z⁵+0z⁴+pz³+qz²+rz+s',
-        )
+        def autopilot(S: MathTex, t: str, a: int, b: int, c: int, *glyph_map: tuple) -> MathTex:
+            """
+            TransformByGlyphMap one MathTex into another, boxing the changed region.
+            """
+            T = self.make_tex(t).move_to(S, aligned_edge=LEFT)
+            if b == 0:
+                b = len(S[0])
+            if c == 0:
+                c = len(T[0])
+            self.box_on(S[0][a:b])
+            self.play(
+                TransformByGlyphMap(S, T, *glyph_map)
+                if len(glyph_map) > 0
+                else TransformMatchingShapes(S, T),
+                self.box_move(T[0][a:c]))
+            return T
 
         def make_trace(
             plot: ParametricFunction,
@@ -429,7 +338,7 @@ class Poly_51_Quintic_Reduced(BaseScene):
         with self.say(
             """
             This h substitution avoids a lot of ugly fractions with powers of five denominators in the results. 
-            Apply the substitution, and collect like powers of h. 
+            Apply the substitution, collecting like powers of h. 
             """):
 
             def do(
@@ -439,14 +348,8 @@ class Poly_51_Quintic_Reduced(BaseScene):
                     a: int,
                     b: int,
                     c: int,
-                    *glyph_map: tuple) -> MathTex:
-                S = E[s]
-                T = self.make_tex(e5[phase][row]).move_to(S, aligned_edge=LEFT)
-                self.box_on(S[0][a:b])
-                self.play(
-                    TransformByGlyphMap(S, T, *glyph_map),
-                    self.box_move(T[0][a:c]))
-                E[s] = T
+                    *glyph_map: tuple) -> None:
+                E[s] = autopilot(E[s], e5[phase][row], a, b, c, *glyph_map)
 
             do(3,1,0,0,6,5,([0],FadeOut),([2],[0])) # 0=a+5h                -> a=-5h
             do(4,1,1,3,7,8,(FadeIn,[7]))            # p=b+4ah+10h²          -> p=b-20h²+10h²
@@ -470,10 +373,11 @@ class Poly_51_Quintic_Reduced(BaseScene):
                     self.box_move(T))
                 E[row+4] = T
             self.box_off()
+            self.play(FadeOut(E[3]))
             self.wait(2)
 
-        with self.say("Maybe not.", animate=Animate.ON):
-            animations = []
+        with self.say("Or maybe not!"):
+            animations = [FadeIn(E[3])]
             for row in range(4):
                 S = E[row+4]
                 T = self.make_tex(e5[2][row+1]).move_to(S, aligned_edge=LEFT)
@@ -482,7 +386,7 @@ class Poly_51_Quintic_Reduced(BaseScene):
             self.play(*animations)
             self.wait(2)
 
-        with self.say("So, we have finally managed to transform the original monic quintic into reduced form, "):
+        with self.say("So we have finally managed to transform the original monic quintic into reduced form, "):
             F = VGroup(*[self.make_tex(e6[row]) for row in range(3)], *E[3:8].copy())
             F.arrange(DOWN, aligned_edge=LEFT)
             self.play(ReplacementTransform(E[3:8], F[3:8]))
@@ -502,7 +406,38 @@ class Poly_51_Quintic_Reduced(BaseScene):
             self.box_on(F[2][0][9:12])
             self.play(FadeOut(F[0:2], F[3:]), run_time=5)
             self.box_off()
-            self.play(FadeOut(F[2]), run_time=5)
+            self.play(FadeOut(F[2]), run_time=2)
+
+        E = self.make_texes(*[e[0] for e in e7])
+        E.shift(0.5*UP + 1.5*LEFT)
+
+        with self.say("Let's test this reduced form using a numerical example."):
+            self.play(Create(E[1]))
+
+        with self.say("This is actually the same quintic that was used in the earlier illustration."):
+            graph.shift(3.5*RIGHT)
+            self.play(FadeIn(border, axes))
+            self.play(Create(plot), Create(dots), run_time=2)
+
+        with self.say("Multiply out all these factors to find its coefficients, "):
+            S = E[1]
+            t = e7[1]                         # y &= (x+5)(x+3)(x+2)(x-1)(x-4)
+            S = autopilot(S, t[1], 2, 12, 12) # y &= (x²+8x+15)(x+2)(x-1)(x-4)
+            S = autopilot(S, t[2], 2, 17, 18) # y &= (x³+10x²+31x+30)(x-1)(x-4)
+            S = autopilot(S, t[3], 2, 23, 20) # y &= (x⁴+9x³+21x²-x-30)(x-4)
+            S = autopilot(S, t[4], 2, 28, 29) # y &= x⁵+5x⁴-15x³-85x²-26x+120'
+            E[0] = S
+            self.box_off()
+            self.play(Create(E[2][0]))
+
+        with self.say("then use these to calculate the coefficients new, reduced equation."):
+            for row in range(3,8):
+                self.play(Create(E[row]))
+                E[row] = autopilot(E[row], e7[row][1], 2, 0, 0)
+            self.box_off()
+
+        with self.say("The result is the same graph as before, shifted one unit in the positive x direction."):
+            self.play(Create(z_trace))
 
         self.wait(10)
         return

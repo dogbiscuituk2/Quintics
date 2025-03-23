@@ -77,6 +77,8 @@ class BaseScene(VoiceoverScene):
 
     def box_move(self, *args: Mobject) -> Animation:
         b = self.box_make(*args)
+        if b == self._boxes:
+            return None
         result = Create(b) if self._boxes == None else ReplacementTransform(self._boxes, b)
         self._boxes = b
         return result
