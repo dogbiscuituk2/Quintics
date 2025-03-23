@@ -430,14 +430,21 @@ class Poly_51_Reduced(BaseScene):
             self.box_off()
             self.play(Create(E[2][0]))
 
-        with self.say("then use these to calculate the coefficients new, reduced equation."):
+        with self.say("then use these to calculate the coefficients of the new, reduced equation."):
             for row in range(3,8):
                 self.play(Create(E[row]))
                 E[row] = autopilot(E[row], e7[row][1], 2, 0, 0)
             self.box_off()
 
         with self.say("The result is the same graph as before, shifted one unit in the positive x direction."):
-            self.play(Create(z_trace))
+            self.play(
+                Create(z_trace),
+                FadeOut(E[2]))
+            E[2] = self.make_tex(e7[2][1]).move_to(E[2], aligned_edge=LEFT)
+            self.play(Create(E[2]))
+            E[2] = autopilot(E[2], e7[2][2], 2, 0, 0)
+            self.box_off()
+            self.play(FadeOut(E[3:]))
 
         self.wait(10)
         return
