@@ -441,10 +441,9 @@ class Poly_51_Reduced(BaseScene):
             self.box_off()
 
         with self.say("The new graph has the same shape as before, just shifted one unit to the right."):
-            self.play(
-                Create(E[0]),
-                Create(z_trace),
-                FadeOut(E[2]))
+            self.play(FadeOut(E[2]))
+            self.play(Create(E[0]))
+            self.play(Create(z_trace))
             E[0] = autopilot(E[0], e7[0][1], 2, 0, 0)
             self.play(FadeOut(E[3]))
             self.box_off()

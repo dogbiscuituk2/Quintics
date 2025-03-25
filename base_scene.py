@@ -17,6 +17,7 @@ VoiceoverScene class.
 from collections.abc import Sequence
 import contextlib
 from inspect import currentframe
+from time import strftime
 from labels import *
 from manim import *
 from manim_voiceover import VoiceoverScene
@@ -33,6 +34,9 @@ class Animate(Enum):
 config.background_color = ManimColor("#101010")
 config.max_files_cached = 999
 config.verbosity = "CRITICAL"
+
+def minsec(t: float) -> str:
+    return f'{int(t)//60:02d}:{int(t)%60:02d}'
 
 class BaseScene(VoiceoverScene):
 
@@ -169,7 +173,7 @@ class BaseScene(VoiceoverScene):
     def make_text(self, text: str, *args, **kwargs) -> Text:
         return Text(text, font_size=30, color=self.ink_fg, *args, **kwargs)
 
-    def say(self, text: str, animate: Animate = Animate.NO_CHANGE) -> None:
+    def say(self, text: str, animate: Animate = Animate.NO_CHANGE):
         match animate:
             case Animate.OFF:
                 self._skip_animations = True
@@ -179,12 +183,12 @@ class BaseScene(VoiceoverScene):
         frame = currentframe()
         while frame.f_code.co_name != 'construct':
             frame = frame.f_back
-        print(f"{frame.f_lineno}: {text}")
+        print(f"{minsec(self.renderer.time)} line {frame.f_lineno}: {text}")
         if Opt.DEBUG_SILENT in self.options:
             return contextlib.suppress()
         # Specify language & disable language check to avoid GTTS bugs.
         return self.voiceover(text, lang='en', lang_check=False)
-    
+
     def set_inks(self, inks: dict[str, ManimColor]) -> None:
         self._painter.set_inks(inks)
     
@@ -219,5 +223,3 @@ class BaseScene(VoiceoverScene):
                 command_line = f'py -m manim render -a -p -q{"lmhpk"[int(resolution)]} {module_name}'
                 print(command_line)
                 os.system(command_line)
-
-#endregion
