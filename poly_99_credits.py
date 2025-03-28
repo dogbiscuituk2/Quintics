@@ -13,12 +13,18 @@ class Poly_99_Credits(BaseScene):
 
     def construct(self):
 
-        packages = [['python', platform.python_version()],
-            *[[package, version(package)] for package in (
-            'manim',
-            'manim-voiceover',
-            'mf-tools',
-            )]]
+        packages = [
+            ['python', platform.python_version()],
+            *[
+                [package, version(package)] for package in
+                (
+                    'manim',
+                    'manim-voiceover',
+                    'mf-tools',
+                )
+            ],
+            ['ffmpeg', '7.0.2'],
+        ]
 
         rows = len(packages)
         cols = [[self.make_text(packages[row][col]) for row in range(rows)] for col in range(2)]
@@ -31,10 +37,10 @@ class Poly_99_Credits(BaseScene):
             self.make_text('Thank you for watching', slant=ITALIC),
             self.make_text(f'"{TITLE} : {SUBTITLE}"'),
             self.make_text(COPYRIGHT),
-            self.make_text(''),
-            self.make_text('Software used:', slant=ITALIC),
+            self.make_text('-o-'),
+            self.make_text('Free software used:', slant=ITALIC),
             VersionTable,
-            self.make_text(''),
+            self.make_text('-o-'),
             self.make_text('All images used in this work are in the public domain.', slant=ITALIC),
             ).arrange(DOWN)
 

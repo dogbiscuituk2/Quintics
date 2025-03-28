@@ -9,7 +9,7 @@ from labels import *
 import math
 from MF_Tools import *
 from painter import *
-from poly_51_reduced_equations import *
+from equations.poly_51 import *
 
 class Poly_51_Reduced(BaseScene):
 
@@ -448,20 +448,35 @@ class Poly_51_Reduced(BaseScene):
             self.play(FadeOut(E[3]))
             self.box_off()
             
-        with self.say("So to find its roots, just add one to each of the original equation's roots."):
+        with self.say("So its roots are easily found, by similarly shifting the original roots."):
+            n = len(E[1])-1
             E[2] = self.make_tex(e7[2][1]).move_to(E[2], aligned_edge=LEFT)
-            self.play(Create(E[2]))
+            self.play(TransformByGlyphMap(E[1].copy(), E[2], [(0,n),(0,n)]))
 
         with self.say("If our method is sound, then expanding this product should give the same coefficients as before."):
-            self.box_on(E[2])
+            for row in range(2, 7):
+                p = 2+7*(row-2)
+                E[2] = autopilot(E[2], e7[2][row], p, p+5, p+7, [FadeIn,(p+2,p+3)])
+            for row in range(7, 12):
+                p = 2+7*(11-row)
+                E[2] = autopilot(E[2], e7[2][row], p, p+7, p+5, [(p+2,p+3),FadeOut])
 
         with self.say("Here goes..."):
-            E[2] = autopilot(E[2], e7[2][2], 2, 0, 0)
+            E[2] = autopilot(E[2], e7[2][12], 2, 0, 0)
         
         with self.say("And it does!"):
             self.box_on(E[4][0][2:], E[7][0][2:])
             self.play(FadeOut(E[0:2]))
             self.box_off()
+
+            transforms = []
+            for row in range(4,8):
+                S = E[row][0][2:]
+                p = [4, 9, 15, 19][row - 4]
+                q = p + len(S)
+                T = E[2][0][p:q]
+                transforms.append(Transform(S.copy(), T, path_arc=PI/2))
+            self.play(*transforms, run_time=1.5)
 
         self.wait(10)
         return
