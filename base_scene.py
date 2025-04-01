@@ -192,7 +192,7 @@ class BaseScene(VoiceoverScene):
     def set_inks(self, inks: dict[str, ManimColor]) -> None:
         self._painter.set_inks(inks)
     
-    def set_pens(self, map: List[tuple[str, Pen]]) -> None:
+    def set_pens(self, *map: tuple[str, Pen]) -> None:
         self._painter.set_pens(map)
 
     _boxes = None

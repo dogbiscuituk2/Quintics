@@ -15,13 +15,13 @@ class Poly_21_Quadratic(BaseScene):
 
     def construct(self):
 
-        self.set_pens((
+        self.set_pens(
             ('[a-e]', Pen.GREEN),
             ('h', Pen.ORANGE),
             ('[p-s]', Pen.YELLOW),
             ('x', Pen.RED),
             ('y', Pen.MAGENTA),
-            ('z', Pen.CYAN)))
+            ('z', Pen.CYAN))
 
         E1z = self.make_tex(r'y=\sum_{i=0}^{2}a_ix^i=0')
         E1y = MathTex(r'Degree=n=2').set_color(self.ink_fg)

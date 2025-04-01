@@ -103,7 +103,7 @@ class TestAll(BaseScene):
 
         self.set_inks(PALETTE_SASHA)
 
-        self.set_pens([
+        self.set_pens(
             ('FG', Pen.GREY),
             #('oO|', Pen.BACKGROUND),
             (r'[a-eA-E]|\\alpha|\\beta|\\gamma|\\delta|\\epsilon', Pen.RED),
@@ -124,7 +124,7 @@ class TestAll(BaseScene):
             (PAT_ACCENT, Pen.YELLOW),
             (r'\\frac', Pen.GREEN),
             (r'\\sqrt|\\lim', Pen.ORANGE),
-        ])
+        )
 
         #self.options |= Opt.DEBUG_COLOURS
         #self.options |= Opt.DEBUG_FAST

@@ -174,14 +174,14 @@ class Poly_51_Reduced(BaseScene):
 
         #self.options |= Opt.DEBUG_SILENT
         
-        self.set_pens((
+        self.set_pens(
             #('o', Pen.BACKGROUND),
             ('[a-e]', Pen.GREEN),
             ('h', Pen.ORANGE),
             ('[p-s]', Pen.YELLOW),
             ('x', Pen.RED),
             ('y', Pen.MAGENTA),
-            ('z', Pen.CYAN)))
+            ('z', Pen.CYAN))
 
         def autopilot(S: MathTex, t: str, a: int, b: int, c: int, *glyph_map: tuple) -> MathTex:
             """
@@ -241,7 +241,7 @@ class Poly_51_Reduced(BaseScene):
         with self.say("To make a start, we might first try to get rid of the quartic, x to the fourth, term."):
             self.box_on(*E[1][0][5:8])
 
-        with self.say("In other words, transform it into so-called reduced form,"):
+        with self.say("In other words, transform it into so-called Reduced Form,"):
             brace = Brace(Group(E[1], E[2]), LEFT, color=self.ink_fg)
             self.play(FadeIn(brace), Create(E[2]))
             self.box_on(*E[2][0][5:8])

@@ -31,14 +31,14 @@ class Poly_91_Newton(BaseScene):
 
     def construct(self):
 
-        self.set_pens((
+        self.set_pens(
             #('o', Pen.BACKGROUND),
             ('[a-e]', Pen.GREEN),
             ('h', Pen.ORANGE),
             ('[p-s]', Pen.YELLOW),
             ('x', Pen.RED),
             ('y', Pen.MAGENTA),
-            ('z', Pen.CYAN)))
+            ('z', Pen.CYAN))
 
         E1 = self.make_texes(*e1)
 

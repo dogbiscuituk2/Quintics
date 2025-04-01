@@ -15,7 +15,7 @@ class Poly_09_Constant(BaseScene):
 
     def construct(self):
 
-        self.set_pens((
+        self.set_pens(
             (r'\\frac', Pen.RED),
             (r'\\sqrt', Pen.ORANGE),
             (r'[a-e]|\\alpha|\\beta|\\gamma|\\delta|\\epsilon', Pen.GREEN),
@@ -23,7 +23,7 @@ class Poly_09_Constant(BaseScene):
             (r'[p-s]|\\pi|\\rho\|\\sigma', Pen.YELLOW),
             ('x', Pen.RED),
             ('y', Pen.MAGENTA),
-            ('z', Pen.CYAN)))
+            ('z', Pen.CYAN))
 
         E1z = self.make_tex(r'y=\sum_{i=0}^{0}a_ix^i=a_0=0')
         E1y = MathTex(r'Degree=n=0').set_color(self.ink_fg)
