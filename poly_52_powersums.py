@@ -23,7 +23,7 @@ e2 = (
 )
 
 e3 = (
-    r'S_m &= \sum_{j=1}^{n} x_j^m = x_1^m + x_2^m + x_3^m + \dots + x_{n-1}^m + x_n^m',
+    r'S_m>0 &= \sum_{j=1}^{n} x_j^m = x_1^m + x_2^m + x_3^m + \dots + x_{n-1}^m + x_n^m',
     r'S_m &= -ma_{n-m} - \sum_{j=1}^{m-1} a_{j+n-m} S_j, \quad a_{j<0} = 0',
 )
 
@@ -48,7 +48,7 @@ class Poly_52_PowerSums(BaseScene):
         
         E1 = self.make_texes(*e1)
         
-        with self.say("This is a general polynomial equation of degree n, in one variable, x."):
+        with self.say("This is the general polynomial of degree n, in one variable, x."):
             self.play(Create(E1[0]))
 
         with self.say("Let's unpack this sum."):
@@ -96,7 +96,11 @@ class Poly_52_PowerSums(BaseScene):
 
         with self.say("Vieta's formulae."):
             self.play(FadeOut(E1[0], E1[2], E1[3]))
-            G = VGroup(E1[1].copy(), E1[4].copy()).arrange(DOWN, aligned_edge=LEFT)
+            G = VGroup(
+                E1[1].copy(),
+                E1[4].copy(),
+                *self.make_texes(*e3),
+            ).arrange(DOWN, aligned_edge=LEFT)
             self.play(
                 Transform(E1[1], G[0]),
                 Transform(E1[4], G[1]))
@@ -104,7 +108,7 @@ class Poly_52_PowerSums(BaseScene):
         with self.say("For example, the coefficient of x to the power n minus one"):
             self.box_on(E1[1][0][5:9])
 
-        with self.say("is equal to minus the sum of the roots"):
+        with self.say("is equal to minus the sum of the roots, "):
             self.box_on(E1[4][0][4:14])
 
         with self.say("and the constant term"):
@@ -116,8 +120,16 @@ class Poly_52_PowerSums(BaseScene):
         with self.say("negated if n is odd."):
             self.box_on(E1[4][0][23:37])
             self.wait(2)
-            
-        self.box_off()
+
+        with self.say("Let S m be the sum of the m-th powers of all n roots."):
+            self.box_off()
+            self.play(Create(G[2]))
+
+        with self.say("Then we have this handy recurrence relation to compute these sums."):
+            self.play(Create(G[3]))
+
+        with self.say("We have already seen the formula for S 1"):
+            self.box_on(E1[4][0][4:14])
 
         self.wait(10)
 
