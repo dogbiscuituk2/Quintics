@@ -11,13 +11,11 @@ from painter import *
 
 e1 = (
     r'y &= \sum_{i=0}^{n>0} a_i x^i, \quad a_n=1',
-    r'&= x^n + a_{n-1}x^{n-1} + a_{n-2}x^{n-2} + \ldots + a_2 x^2 + a_1 x + a_0',
+    r'&= a_n x^n + a_{n-1}x^{n-1} + a_{n-2}x^{n-2} + \ldots + a_2 x^2 + a_1 x + a_0',
     r'&= (x-x_1)(x-x_2) \ldots (x-x_n)',
     r'&= \prod_{j=1}^{n} (x-x_j)',
-#),(
-#    r'S_{m>0} &= \sum_{j=1}^{n} x_j^m = x_1^m + x_2^m + \ldots + x_n^m',
-#),(
-#    r'S_m &= -ma_{n-m}-\sum_{j=1}^{m-1} a_{j+n-m} S_j, \quad a_{j<0}=0',
+    r'S_{m>0} &= \sum_{j=1}^{n} x_j^m = x_1^m + x_2^m + \ldots + x_n^m',
+    r'S_m &= -ma_{n-m}-\sum_{j=1}^{m-1} a_{j+n-m} S_j, \quad a_{j<0}=0',
 )
 
 #endregion
@@ -52,8 +50,11 @@ class Poly_91_Newton(BaseScene):
         with self.say("so it can also be expressed as the product of n linear factors. "):
             self.play(Create(E1[3]))
 
-        #with self.say("and let S m be the sum of the m-th powers of these roots."):
-        #    self.play(Create(E1[2]))
+        with self.say("and let S m be the sum of the m-th powers of these roots."):
+            self.play(Create(E1[4]))
+
+        with self.say("and let S m be the sum of the m-th powers of these roots."):
+            self.play(Create(E1[5]))
 
         #with self.say("We need to prove this recurrence relation between the power sums,"):
         #    p = 25

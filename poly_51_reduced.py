@@ -183,23 +183,6 @@ class Poly_51_Reduced(BaseScene):
             ('y', Pen.MAGENTA),
             ('z', Pen.CYAN))
 
-        def autopilot(S: MathTex, t: str, a: int, b: int, c: int, *glyph_map: tuple) -> MathTex:
-            """
-            TransformByGlyphMap one MathTex into another, boxing the changed region.
-            """
-            T = self.make_tex(t).move_to(S, aligned_edge=LEFT)
-            if b == 0:
-                b = len(S[0])
-            if c == 0:
-                c = len(T[0])
-            self.box_on(S[0][a:b])
-            self.play(
-                TransformByGlyphMap(S, T, *glyph_map)
-                if len(glyph_map) > 0
-                else TransformMatchingShapes(S, T),
-                self.box_move(T[0][a:c]))
-            return T
-
         def make_trace(
             plot: ParametricFunction,
             plot_token: str,

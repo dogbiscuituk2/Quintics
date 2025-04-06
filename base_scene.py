@@ -22,6 +22,7 @@ from labels import *
 from manim import *
 from manim_voiceover import VoiceoverScene
 from manim_voiceover.services.gtts import GTTSService
+from MF_Tools import *
 from latex_rice import *
 from options import Opt
 from painter import *
@@ -68,6 +69,31 @@ class BaseScene(VoiceoverScene):
         labels = get_labels(*objs)
         self.add(labels)
         return labels
+
+    def autopilot(
+            self,
+            S: MathTex,
+            t: str,
+            a: int=0,
+            b: int=0,
+            c: int=0,
+            *glyph_map: tuple) -> MathTex:
+        """
+        TransformByGlyphMap one MathTex into another, boxing the changed region.
+        """
+        T = self.make_tex(t).move_to(S, aligned_edge=LEFT)
+        if b == 0:
+            b = len(S[0])
+        if c == 0:
+            c = len(T[0])
+        self.box_on(S[0][a:b])
+        self.play(
+            TransformByGlyphMap(S, T, *glyph_map)
+            if len(glyph_map) > 0
+            else TransformMatchingShapes(S, T),
+            self.box_move(T[0][a:c]))
+        return T
+
 
     def box(self, *args: Mobject) -> Polygon:
         b = self.box_make(*args)

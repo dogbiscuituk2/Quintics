@@ -13,16 +13,17 @@ from painter import *
 
 e1 = 'z = x²+hx+k' 
 
-e2 = (
+e2 = (    
       r'y &= x⁵+px³+qx²+rx+s',
         r'&= \prod(x-x_i)',
     r'X_m &= \sum x_i^m',
+    r'X_m &= -ma_{n-m}-\sum_{i=1}^{m-1}a_{n-m+i}X_i',
     r'X_1 &= 0',
     r'X_2 &= -2p',
     r'X_3 &= -3q',
     r'X_4 &= -4r+2p²',
-    
-    #r'X_5 &= -5s-pX_3-qX_2',
+    r'X_5 &= -5s-pX_3-qX_2',
+
     #'X_6 &= -pX_4-qX_3-rX_2',
     #'X_7 &= -pX_5-qX_4-rX_3-sX_2',
     #'X_8 &= -pX_6-qX_5-rX_4-sX_3',
@@ -34,19 +35,19 @@ e3 = (
       r'y &= z⁵+0z³+uz²+vz+w',
         r'&= \prod(z-z_i)',
     r'Z_m &= \sum z_i^m',
+    r'Z_m &= -ma_{n-m}-\sum_{i=1}^{m-1}a_{n-m+i}Z_i',
     r'Z_1 &= 0',
     r'Z_2 &= 0',
-
-    #r'Z_3 &= -3u',
-    #r'Z_4 &= -4v',
-    #r'Z_5 &= -5w',
+    r'Z_3 &= -3u',
+    r'Z_4 &= -4v',
+    r'Z_5 &= -5w',
 )
 
 #endregion
 
 #region code
 
-class Poly_52_Principal(BaseScene):
+class Poly_53_Principal(BaseScene):
 
     def __init__(self):
         BaseScene.__init__(self)
@@ -74,9 +75,10 @@ class Poly_52_Principal(BaseScene):
 
         with self.say("this time to so-called Principal Form, "):
             self.play(Create(E3[0]))
-            self.box_on(E3[0][0][5:8])
+            self.box_on(E3[0])
 
         with self.say("with this coefficient equal to zero."):
+            self.box_on(E3[0][0][5:8])
             self.play(Indicate(E3[0][0][5], color=self.get_ink(Pen.WHITE), scale_factor=2, run_time=2))
 
         with self.say("Last time we used a linear transformation, so this time we'll try a quadratic."):
@@ -91,12 +93,22 @@ class Poly_52_Principal(BaseScene):
             self.play(Create(E3[1]))
             self.box_on(E3[1][0][9:11])
 
+        with self.say("Blah blah blah"):
+            self.play(Create(E2[2:]))
+
+        with self.say("Blah blah blah"):
+            self.play(Create(E3[2:]))
+
+
+        self.wait(10)
+        return
+
         with self.say(
             """
             Although we don't yet know the actual values of any of these roots, 
             in both cases we do know a lot about their so-called power sums, that is, 
             the sum of the five roots, the sum of their squares, of their cubes, and so on. 
-            These power sums are easily calculated from the coefficients. 
+            These power sums are simple combinations of the coefficients. 
             """):
             self.box_off()
 
@@ -105,6 +117,12 @@ class Poly_52_Principal(BaseScene):
 
         with self.say("and Z m the corresponding sum for the principal form."):
             self.play(Create(E3[2]))
+
+        with self.say("Here are the first few power sums for the reduced form."):
+            self.play(Create(E2[3:]))
+
+        with self.say("And for the principal form."):
+            self.play(Create(E3[3:]))
 
 
 

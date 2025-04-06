@@ -8,6 +8,14 @@ from base_scene import BaseScene
 from MF_Tools import *
 from painter import *
 
+#region data
+
+e01 = r'y=\sum_{i=0}^{n>0}a_ix^i'
+
+#endregion
+
+#region code
+
 class Poly_08_General(BaseScene):
 
     def __init__(self):
@@ -23,16 +31,16 @@ class Poly_08_General(BaseScene):
             ('y', Pen.MAGENTA),
             ('z', Pen.CYAN))
         
-        with self.say("This is a general polynomial equation in one variable, x."):
-            F1 = self.make_tex(r'y=\sum_{i=0}^{n}a_ix^i')
-            self.play(Create(F1))
+        with self.say("This is a general polynomial equation of degree n, in one variable, x."):
+            E1 = self.make_tex(e01)
+            self.play(Create(E1))
 
         with self.say("It has degree n, where n is the highest power of x present."):
-            self.flash(F1[0][9])
+            self.flash(E1[0][9])
             F2 = MathTex(r'Degree=n').set_color(self.ink_fg)
-            F2.next_to(F1, DOWN)
+            F2.next_to(E1, DOWN)
             self.play(Create(F2))
-            self.flash(F1[0][2])
+            self.flash(E1[0][2])
 
         with self.say("Note that this means a n is nonzero."):
             F3 = self.make_tex(r'a_n\neq{0}')
@@ -44,7 +52,7 @@ class Poly_08_General(BaseScene):
             F4 = self.make_tex(f4)
             arc = {"path_arc": PI}
             self.play(
-                TransformByGlyphMap(F1, F4,
+                TransformByGlyphMap(E1, F4,
                     ([2,3,4,5,6], ShrinkToCenter),
                     ([7], [2,7,16,29,33], arc),
                     ([8], [3,8,9,10,17,18,19,30,34], arc),
@@ -133,6 +141,8 @@ class Poly_08_General(BaseScene):
             self.wait(2)
             self.play(FadeOut(F6h), FadeOut(F8))
             self.wait(2)
+
+#endregion
 
 if __name__ == "__main__":
     BaseScene.run(__file__)
