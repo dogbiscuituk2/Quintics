@@ -24,8 +24,24 @@ e2 = (
 
 e3 = (
     r'S_{m>0} &= \sum_{j=1}^{n} x_j^m = x_1^m + x_2^m + x_3^m + \dots + x_{n-1}^m + x_n^m',
-    r'S_m &= -ma_{n-m} - \sum_{j=1}^{m-1} a_{j+n-m} S_j, \quad a_{j<0} = 0',
-    'S_1 &= -a_{n-1}'
+    r'S_m &= -ma_{n-m} - \sum_{j=1}^{m-1} a_{n-m+j} S_j, \quad a_{j<0} = 0',
+     'S_1 &= -a_{n-1}',
+     'S_2 &= -2a_{n-2} - a_{n-1} S_1',
+     'S_3 &= -3a_{n-3} - a_{n-2} S_1 - a_{n-1} S_2',
+     'S_4 &= -4a_{n-4} - a_{n-3} S_1 - a_{n-2} S_2 - a_{n-1} S_3',
+     'S_5 &= -5a_{n-5} - a_{n-4} S_1 - a_{n-3} S_2 - a_{n-2} S_3 - a_{n-1} S_4',
+)
+
+e4 = (
+    r'S_m &= -ma_{5-m} - \sum_{j=1}^{m-1} a_{5-m+j} S_j, \quad a_{j<0} = 0',
+     'S_1 &= -a_4',
+     'S_2 &= -2a_3 - a_4 S_1',
+     'S_3 &= -3a_2 - a_3 S_1 - a_4 S_2',
+     'S_4 &= -4a_1 - a_2 S_1 - a_3 S_2 - a_4 S_3',
+     'S_5 &= -5a_0 - a_1 S_1 - a_2 S_2 - a_3 S_3 - a_4 S_4',
+     'S_6 &= -a_0 S_1 - a_1 S_2 - a_2 S_3 - a_3 S_4 - a_4 S_5',
+     'S_7 &= -a_0 S_2 - a_1 S_3 - a_2 S_4 - a_3 S_5 - a_4 S_6',
+     'S_8 &= -a_0 S_3 - a_1 S_4 - a_2 S_5 - a_3 S_6 - a_4 S_7',
 )
 
 #endregion
@@ -48,6 +64,9 @@ class Poly_52_PowerSums(BaseScene):
             ('z', Pen.CYAN))
         
         E1 = self.make_texes(*e1)
+        E2 = self.make_texes(e2[0], e1[4], *e3[:3])
+        E3 = self.make_texes(*e3[1:])
+        E4 = self.make_texes(*e4)
         
         with self.say("This is the general polynomial of degree n, in one variable, x."):
             self.play(Create(E1[0]))
@@ -96,15 +115,10 @@ class Poly_52_PowerSums(BaseScene):
             self.play(Create(E1[4]))
 
         with self.say("Vieta's formulae."):
-            self.play(FadeOut(E1[0], E1[2], E1[3]))
-            G = VGroup(
-                E1[1].copy(),
-                E1[4].copy(),
-                *self.make_texes(*e3),
-            ).arrange(DOWN, aligned_edge=LEFT)
+            self.play(FadeOut(E1[0], E1[2:4]))
             self.play(
-                Transform(E1[1], G[0]),
-                Transform(E1[4], G[1]))
+                ReplacementTransform(E1[1], E2[0]),
+                ReplacementTransform(E1[4], E2[1]))
 
         with self.say("For example, the coefficient of x to the power n minus one"):
             self.box_on(E1[1][0][5:9])
@@ -124,17 +138,29 @@ class Poly_52_PowerSums(BaseScene):
 
         with self.say("Let S m be the sum of the m-th powers of all n roots."):
             self.box_off()
-            self.play(Create(G[2]))
+            self.play(Create(E2[2]))
 
         with self.say("Then we have this handy recurrence relation to compute these sums."):
-            self.play(Create(G[3]))
+            self.play(Create(E2[3]))
 
         with self.say("We've already seen the formula for S 1"):
             self.box_on(E1[4][0][4:14])
-            self.play(Create(G[4]))
+            self.play(Create(E2[4]))
             self.box_on(E1[1][0][5:9])
             self.wait()
             self.box_off()
+
+        with self.say("Here are a few more power sums in the series."):
+            self.play(FadeOut(E2[:3]))
+            self.play(
+                ReplacementTransform(E2[3], E3[0]),
+                ReplacementTransform(E2[4], E3[1]))
+            self.play(Create(E3[2:]))
+
+        with self.say("Since we are dealing with the quintic, let's now replace n with 5."):
+            self.play(
+                *[ReplacementTransform(E3[row], E4[row]) for row in range(6)],
+                FadeIn(E4[6:]))
 
         self.wait(10)
 
