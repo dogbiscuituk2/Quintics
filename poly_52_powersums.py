@@ -23,8 +23,9 @@ e2 = (
 )
 
 e3 = (
-    r'S_m>0 &= \sum_{j=1}^{n} x_j^m = x_1^m + x_2^m + x_3^m + \dots + x_{n-1}^m + x_n^m',
+    r'S_{m>0} &= \sum_{j=1}^{n} x_j^m = x_1^m + x_2^m + x_3^m + \dots + x_{n-1}^m + x_n^m',
     r'S_m &= -ma_{n-m} - \sum_{j=1}^{m-1} a_{j+n-m} S_j, \quad a_{j<0} = 0',
+    'S_1 &= -a_{n-1}'
 )
 
 #endregion
@@ -128,8 +129,12 @@ class Poly_52_PowerSums(BaseScene):
         with self.say("Then we have this handy recurrence relation to compute these sums."):
             self.play(Create(G[3]))
 
-        with self.say("We have already seen the formula for S 1"):
+        with self.say("We've already seen the formula for S 1"):
             self.box_on(E1[4][0][4:14])
+            self.play(Create(G[4]))
+            self.box_on(E1[1][0][5:9])
+            self.wait()
+            self.box_off()
 
         self.wait(10)
 
