@@ -59,6 +59,19 @@ e6 = (
     'S_{10} &= -a S_9 - b S_8 - c S_7 - d S_6 - e S_5',
 )
 
+e7 = (
+    'S_1 &= -a',
+    'S_2 &= +a^2 - 2b',
+    'S_3 &= -a^3 + 3ab - 3c',
+    'S_4 &= +a^4 - 4a^2b + 4ac + 2b^2 - 4d',
+    'S_5 &= -a S_4 - b S_3 - c S_2 - d S_1 - 5e',
+    'S_6 &= -a S_5 - b S_4 - c S_3 - d S_2 - e S_1',
+    'S_7 &= -a S_6 - b S_5 - c S_4 - d S_3 - e S_2',
+    'S_8 &= -a S_7 - b S_6 - c S_5 - d S_4 - e S_3',
+    'S_9 &= -a S_8 - b S_7 - c S_6 - d S_5 - e S_4',
+    'S_{10} &= -a S_9 - b S_8 - c S_7 - d S_6 - e S_5',
+)
+
 #endregion
 
 #region Code
