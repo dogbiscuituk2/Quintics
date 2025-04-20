@@ -24,39 +24,39 @@ e2 = (
 
 e3 = (
     r'S_{m>0} &= \sum_{j=1}^{n} x_j^m = x_1^m + x_2^m + x_3^m + \dots + x_{n-1}^m + x_n^m',
-    r'S_m &= -ma_{n-m} - \sum_{j=1}^{m-1} a_{n-m+j} S_j, \quad a_{j<0} = 0',
+    r'S_m &= -(\sum_{j=1}^{m-1} a_{n-m+j} S_j) - ma_{n-m}, \quad a_{j<0} = 0',
      'S_1 &= -a_{n-1}',
-     'S_2 &= -2a_{n-2} - a_{n-1} S_1',
-     'S_3 &= -3a_{n-3} - a_{n-2} S_1 - a_{n-1} S_2',
-     'S_4 &= -4a_{n-4} - a_{n-3} S_1 - a_{n-2} S_2 - a_{n-1} S_3',
-     'S_5 &= -5a_{n-5} - a_{n-4} S_1 - a_{n-3} S_2 - a_{n-2} S_3 - a_{n-1} S_4',
+     'S_2 &= -a_{n-1} S_1 - 2a_{n-2}',
+     'S_3 &= -a_{n-1} S_2 - a_{n-2} S_1 - 3a_{n-3}',
+     'S_4 &= -a_{n-1} S_3 - a_{n-2} S_2 - a_{n-3} S_1 - 4a_{n-4}',
+     'S_5 &= -a_{n-1} S_4 - a_{n-2} S_3 - a_{n-3} S_2 - a_{n-4} S_1 - 5a_{n-5}',
 )
 
 e4 = (
-    r'S_m &= -ma_{5-m} - \sum_{j=1}^{m-1} a_{5-m+j} S_j, \quad a_{j<0} = 0',
+    r'S_m &= -(\sum_{j=1}^{m-1} a_{5-m+j} S_j) - ma_{5-m}, \quad a_{j<0} = 0',
     'S_1 &= -a_4',
-    'S_2 &= -2a_3 - a_4 S_1',
-    'S_3 &= -3a_2 - a_3 S_1 - a_4 S_2',
-    'S_4 &= -4a_1 - a_2 S_1 - a_3 S_2 - a_4 S_3',
-    'S_5 &= -5a_0 - a_1 S_1 - a_2 S_2 - a_3 S_3 - a_4 S_4',
-    'S_6 &= -a_0 S_1 - a_1 S_2 - a_2 S_3 - a_3 S_4 - a_4 S_5',
-    'S_7 &= -a_0 S_2 - a_1 S_3 - a_2 S_4 - a_3 S_5 - a_4 S_6',
-    'S_8 &= -a_0 S_3 - a_1 S_4 - a_2 S_5 - a_3 S_6 - a_4 S_7',
-    'S_9 &= -a_0 S_4 - a_1 S_5 - a_2 S_6 - a_3 S_7 - a_4 S_8',
-    'S_{10} &= -a_0 S_5 - a_1 S_6 - a_2 S_7 - a_3 S_8 - a_4 S_9',
+    'S_2 &= -a_4 S_1 - 2a_3',
+    'S_3 &= -a_4 S_2 - a_3 S_1 - 3a_2',
+    'S_4 &= -a_4 S_3 - a_3 S_2 - a_2 S_1 - 4a_1',
+    'S_5 &= -a_4 S_4 - a_3 S_3 - a_2 S_2 - a_1 S_1 - 5a_0',
+    'S_6 &= -a_4 S_5 - a_3 S_4 - a_2 S_3 - a_1 S_2 - a_0 S_1',
+    'S_7 &= -a_4 S_6 - a_3 S_5 - a_2 S_4 - a_1 S_3 - a_0 S_2',
+    'S_8 &= -a_4 S_7 - a_3 S_6 - a_2 S_5 - a_1 S_4 - a_0 S_3',
+    'S_9 &= -a_4 S_8 - a_3 S_7 - a_2 S_6 - a_1 S_5 - a_0 S_4',
+    'S_{10} &= -a_4 S_9 - a_3 S_8 - a_2 S_7 - a_1 S_6 - a_0 S_5',
 )
 
 e6 = (
     'S_1 &= -a',
-    'S_2 &= -2b - a S_1',
-    'S_3 &= -3c - b S_1 - a S_2',
-    'S_4 &= -4d - c S_1 - b S_2 - a S_3',
-    'S_5 &= -5e - d S_1 - c S_2 - b S_3 - a S_4',
-    'S_6 &= -e S_1 - d S_2 - c S_3 - b S_4 - a S_5',
-    'S_7 &= -e S_2 - d S_3 - c S_4 - b S_5 - a S_6',
-    'S_8 &= -e S_3 - d S_4 - c S_5 - b S_6 - a S_7',
-    'S_9 &= -e S_4 - d S_5 - c S_6 - b S_7 - a S_8',
-    'S_{10} &= -e S_5 - d S_6 - c S_7 - b S_8 - a S_9',
+    'S_2 &= -a S_1 - 2b',
+    'S_3 &= -a S_2 - b S_1 - 3c',
+    'S_4 &= -a S_3 - b S_2 - c S_1 - 4d',
+    'S_5 &= -a S_4 - b S_3 - c S_2 - d S_1 - 5e',
+    'S_6 &= -a S_5 - b S_4 - c S_3 - d S_2 - e S_1',
+    'S_7 &= -a S_6 - b S_5 - c S_4 - d S_3 - e S_2',
+    'S_8 &= -a S_7 - b S_6 - c S_5 - d S_4 - e S_3',
+    'S_9 &= -a S_8 - b S_7 - c S_6 - d S_5 - e S_4',
+    'S_{10} &= -a S_9 - b S_8 - c S_7 - d S_6 - e S_5',
 )
 
 #endregion
@@ -178,23 +178,19 @@ class Poly_52_PowerSums(BaseScene):
             self.play([ReplacementTransform(E3[row], E4[row]) for row in range(6)])
             self.play(Create(E4[6:9]))
 
-        def foo(row: int, map) -> None:
-            return TransformByGlyphMap(E5[row], E6[row], (map, FadeOut))
-
-        def bar(row: int, map) -> None:
-            self.play(foo(row, map))
+        def foo(row: int, *glyphs: int) -> None:
+            return TransformByGlyphMap(E5[row], E6[row], (list(glyphs), FadeOut))
 
         with self.say("and the coefficients with the original single letter ones, a b c d e."):
             self.play(FadeOut(E3[0]))
             self.play(TransformMatchingShapes(E4, E5))
             self.wait(5)
-            bar(0, ([5]))
-            bar(1, ([6,9]))
-            bar(2, ([6,9,14]))
-            bar(3, ([6,9,14,19]))
-            bar(4, ([6,9,14,19,24]))
-            self.play(*[foo(row, ([5,10,15,20,25])) for row in range(5,9)])
-            bar(9, ([6,11,16,21,26]))
+            self.play(
+                foo(0,5),
+                *[foo(row,*([6,9,14,19,24][:row+1])) for row in range(1,5)],
+                *[foo(row,5,10,15,20,25) for row in range(5,9)],
+                foo(9,6,11,16,21,26)
+                )
 
         self.wait(10)
 
