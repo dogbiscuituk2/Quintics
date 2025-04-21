@@ -11,65 +11,65 @@ from painter import *
 #region data
 
 e1 = (
-    r'y &= \sum_{i=0}^{n>0} a_i x^i = 0',
-    r'y &= a_nx^n + a_{n-1}x^{n-1} + a_{n-2}x^{n-2} + \dots + a_1x + a_0 = 0',
-    r'y &= \prod_{j=1}^{n}(x - x_j) = 0',
-    r'y &= (x - x_1)(x - x_2)(x - x_3) \dots (x - x_{n-1})(x - x_n) = 0',
-    r'y &= x^n - (\sum_{j=1}^{n}x_j)x^{n-1} + \dots + (-1)^n(\prod_{j=1}^{n}x_j) = 0',
+    r'y &= \sum_{i=0}^{n>0} aᵢxⁱ = 0',
+    r'y &= aₙxⁿ + aₙ₋₁xⁿ⁻¹ + aₙ₋₂xⁿ⁻² + \dots + a₁x + a₀ = 0',
+    r'y &= \prod_{j=1}^{n}(x-xⱼ) = 0',
+    r'y &= (x-x₁)(x-x₂)(x-x₃) \dots (x-xₙ₋₁)(x-xₙ) = 0',
+    r'y &= xⁿ - (\sum_{j=1}^{n}xⱼ)xⁿ⁻¹ + \dots + (-1)ⁿ(\prod_{j=1}^{n}xⱼ) = 0',
 )
 
 e2 = (
-   r'y &= x^n + a_{n-1}x^{n-1} + a_{n-2}x^{n-2} + \dots + a_1x + a_0 = 0',
+   r'y &= xⁿ + aₙ₋₁xⁿ⁻¹ + aₙ₋₂xⁿ⁻² + \dots + a₁x + a₀ = 0',
 )
 
 e3 = (
-    r'S_{m>0} &= \sum_{j=1}^{n} x_j^m = x_1^m + x_2^m + x_3^m + \dots + x_{n-1}^m + x_n^m',
-    r'S_m &= -(\sum_{j=1}^{m-1} a_{n-m+j} S_j) - ma_{n-m}, \quad a_{j<0} = 0',
-     'S_1 &= -a_{n-1}',
-     'S_2 &= -a_{n-1} S_1 - 2a_{n-2}',
-     'S_3 &= -a_{n-1} S_2 - a_{n-2} S_1 - 3a_{n-3}',
-     'S_4 &= -a_{n-1} S_3 - a_{n-2} S_2 - a_{n-3} S_1 - 4a_{n-4}',
-     'S_5 &= -a_{n-1} S_4 - a_{n-2} S_3 - a_{n-3} S_2 - a_{n-4} S_1 - 5a_{n-5}',
+    r'S_{m>0} &= \sum_{j=1}^{n} xⱼ^m = x₁^m + x₂^m + x₃^m + \dots + xₙ₋₁^m + xₙ^m',
+    r'S_m &= -(\sum_{j=1}^{m-1} aₙ₋ₘ₊ⱼSⱼ) - maₙ₋ₘ, \quad a_{j<0} = 0',
+     'S₁ &= -aₙ₋₁',
+     'S₂ &= -aₙ₋₁S₁ - 2aₙ₋₂',
+     'S₃ &= -aₙ₋₁S₂ - aₙ₋₂S₁ - 3aₙ₋₃',
+     'S₄ &= -aₙ₋₁S₃ - aₙ₋₂S₂ - aₙ₋₃S₁ - 4aₙ₋₄',
+     'S₅ &= -aₙ₋₁S₄ - aₙ₋₂S₃ - aₙ₋₃S₂ - aₙ₋₄S₁ - 5aₙ₋₅',
 )
 
 e4 = (
-    r'S_m &= -(\sum_{j=1}^{m-1} a_{5-m+j} S_j) - ma_{5-m}, \quad a_{j<0} = 0',
-    'S_1 &= -a_4',
-    'S_2 &= -a_4 S_1 - 2a_3',
-    'S_3 &= -a_4 S_2 - a_3 S_1 - 3a_2',
-    'S_4 &= -a_4 S_3 - a_3 S_2 - a_2 S_1 - 4a_1',
-    'S_5 &= -a_4 S_4 - a_3 S_3 - a_2 S_2 - a_1 S_1 - 5a_0',
-    'S_6 &= -a_4 S_5 - a_3 S_4 - a_2 S_3 - a_1 S_2 - a_0 S_1',
-    'S_7 &= -a_4 S_6 - a_3 S_5 - a_2 S_4 - a_1 S_3 - a_0 S_2',
-    'S_8 &= -a_4 S_7 - a_3 S_6 - a_2 S_5 - a_1 S_4 - a_0 S_3',
-    'S_9 &= -a_4 S_8 - a_3 S_7 - a_2 S_6 - a_1 S_5 - a_0 S_4',
-    'S_{10} &= -a_4 S_9 - a_3 S_8 - a_2 S_7 - a_1 S_6 - a_0 S_5',
+    r'S_m &= -(\sum_{j=1}^{m-1} a₅₋ₘ₊ⱼSⱼ) - ma_{5-m}, \quad a_{j<0} = 0',
+    'S₁ &= -a₄',
+    'S₂ &= -a₄S₁ - 2a₃',
+    'S₃ &= -a₄S₂ - a₃S₁ - 3a₂',
+    'S₄ &= -a₄S₃ - a₃S₂ - a₂S₁ - 4a₁',
+    'S₅ &= -a₄S₄ - a₃S₃ - a₂S₂ - a₁S₁ - 5a₀',
+    'S₆ &= -a₄S₅ - a₃S₄ - a₂S₃ - a₁S₂ - a₀S₁',
+    'S₇ &= -a₄S₆ - a₃S₅ - a₂S₄ - a₁S₃ - a₀S₂',
+    'S₈ &= -a₄S₇ - a₃S₆ - a₂S₅ - a₁S₄ - a₀S₃',
+    'S₉ &= -a₄S₈ - a₃S₇ - a₂S₆ - a₁S₅ - a₀S₄',
+    'S₁₀ &= -a₄S₉ - a₃S₈ - a₂S₇ - a₁S₆ - a₀S₅',
 )
 
 e6 = (
-    'S_1 &= -a',
-    'S_2 &= -a S_1 - 2b',
-    'S_3 &= -a S_2 - b S_1 - 3c',
-    'S_4 &= -a S_3 - b S_2 - c S_1 - 4d',
-    'S_5 &= -a S_4 - b S_3 - c S_2 - d S_1 - 5e',
-    'S_6 &= -a S_5 - b S_4 - c S_3 - d S_2 - e S_1',
-    'S_7 &= -a S_6 - b S_5 - c S_4 - d S_3 - e S_2',
-    'S_8 &= -a S_7 - b S_6 - c S_5 - d S_4 - e S_3',
-    'S_9 &= -a S_8 - b S_7 - c S_6 - d S_5 - e S_4',
-    'S_{10} &= -a S_9 - b S_8 - c S_7 - d S_6 - e S_5',
+    'S₁ &= -a',
+    'S₂ &= -aS₁ - 2b',
+    'S₃ &= -aS₂ - bS₁ - 3c',
+    'S₄ &= -aS₃ - bS₂ - cS₁ - 4d',
+    'S₅ &= -aS₄ - bS₃ - cS₂ - dS₁ - 5e',
+    'S₆ &= -aS₅ - bS₄ - cS₃ - dS₂ - eS₁',
+    'S₇ &= -aS₆ - bS₅ - cS₄ - dS₃ - eS₂',
+    'S₈ &= -aS₇ - bS₆ - cS₅ - dS₄ - eS₃',
+    'S₉ &= -aS₈ - bS₇ - cS₆ - dS₅ - eS₄',
+    'S₁₀ &= -aS₉ - bS₈ - cS₇ - dS₆ - eS₅',
 )
 
 e7 = (
-    'S_1 &= -a',
-    'S_2 &= +a^2 - 2b',
-    'S_3 &= -a^3 + 3ab - 3c',
-    'S_4 &= +a^4 - 4a^2b + 4ac + 2b^2 - 4d',
-    'S_5 &= -a S_4 - b S_3 - c S_2 - d S_1 - 5e',
-    'S_6 &= -a S_5 - b S_4 - c S_3 - d S_2 - e S_1',
-    'S_7 &= -a S_6 - b S_5 - c S_4 - d S_3 - e S_2',
-    'S_8 &= -a S_7 - b S_6 - c S_5 - d S_4 - e S_3',
-    'S_9 &= -a S_8 - b S_7 - c S_6 - d S_5 - e S_4',
-    'S_{10} &= -a S_9 - b S_8 - c S_7 - d S_6 - e S_5',
+    'S₁ &= -a',
+    'S₂ &= +a² - 2b',
+    'S₃ &= -a³ + 3(ab - c)',
+    'S₄ &= +a⁴ - 4(a²b - ac + d) + 2b²',
+    'S₅ &= -a⁵ + 5(a³b - ab² - a²c + ad + bc - e)',
+    'S₆ &= -aS₅ - bS₄ - cS₃ - dS₂ - eS₁',
+    'S₇ &= -aS₆ - bS₅ - cS₄ - dS₃ - eS₂',
+    'S₈ &= -aS₇ - bS₆ - cS₅ - dS₄ - eS₃',
+    'S₉ &= -aS₈ - bS₇ - cS₆ - dS₅ - eS₄',
+    'S₁₀ &= -aS₉ - bS₈ - cS₇ - dS₆ - eS₅',
 )
 
 #endregion
@@ -97,6 +97,7 @@ class Poly_52_PowerSums(BaseScene):
         E4 = self.make_texes(*e4[:9])
         E5 = self.make_texes(*e4[1:])
         E6 = self.make_texes(*e6)
+        E7 = self.make_texes(*e7)
         
         with self.say("This is the general polynomial of degree n, in one variable, x."):
             self.play(Create(E1[0]))
@@ -192,7 +193,11 @@ class Poly_52_PowerSums(BaseScene):
             self.play(Create(E4[6:9]))
 
         def foo(row: int, *glyphs: int) -> None:
-            return TransformByGlyphMap(E5[row], E6[row], (list(glyphs), FadeOut))
+            return TransformByGlyphMap(
+                E5[row],
+                E6[row],
+                (list(glyphs), ShrinkToCenter),
+                remove_individually=True)
 
         with self.say("and the coefficients with the original single letter ones, a b c d e."):
             self.play(FadeOut(E3[0]))
@@ -200,10 +205,18 @@ class Poly_52_PowerSums(BaseScene):
             self.wait(5)
             self.play(
                 foo(0,5),
-                *[foo(row,*([6,9,14,19,24][:row+1])) for row in range(1,5)],
+                foo(1,5,11),
+                foo(2,5,10,16),
+                foo(3,5,10,15,21),
+                foo(4,5,10,15,20,26),
                 *[foo(row,5,10,15,20,25) for row in range(5,9)],
                 foo(9,6,11,16,21,26)
                 )
+            
+        with self.say("We could now substitute all the recurring S values, "):
+            for row in range(len(E7)):
+                self.play(TransformMatchingShapes(E6[row], E7[row]))
+            pass
 
         self.wait(10)
 
