@@ -61,11 +61,11 @@ e6 = (
 
 e7 = (
     'S₁ &= -a',
-    'S₂ &= +a² - 2b',
-    'S₃ &= -a³ + 3(ab - c)',
-    'S₄ &= +a⁴ - 4(a²b - ac + d) + 2b²',
-    'S₅ &= -a⁵ + 5(a³b - ab² - a²c + ad + bc - e)',
-    'S₆ &= -aS₅ - bS₄ - cS₃ - dS₂ - eS₁',
+    'S₂ &= a²-2b',
+    'S₃ &= -a³+3(ab-c)',
+    'S₄ &= a⁴-4(a²b-ac+d)+2b²',
+    'S₅ &= -a⁵+5(a³b-a²c+ad-e+bc-ab²)',
+    'S₆ &= a⁶-6(a⁴b-a³c+a²d-ae+2abc-bd)+9a²b²-2b³+3c²',
     'S₇ &= -aS₆ - bS₅ - cS₄ - dS₃ - eS₂',
     'S₈ &= -aS₇ - bS₆ - cS₅ - dS₄ - eS₃',
     'S₉ &= -aS₈ - bS₇ - cS₆ - dS₅ - eS₄',
